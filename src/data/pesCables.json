@@ -1,0 +1,58 @@
+[
+  {
+    "id": "PES-18",
+    "name": "Cáp Polyester PES-18",
+    "diameter_mm": 18,
+    "mbl_kN": 98,
+    "weight_kgpm": 0.22,
+    "ea_kN": 1850
+  },
+  {
+    "id": "PES-20",
+    "name": "Cáp Polyester PES-20",
+    "diameter_mm": 20,
+    "mbl_kN": 120,
+    "weight_kgpm": 0.28,
+    "ea_kN": 2300
+  },
+  {
+    "id": "PES-24",
+    "name": "Cáp Polyester PES-24",
+    "diameter_mm": 24,
+    "mbl_kN": 172,
+    "weight_kgpm": 0.40,
+    "ea_kN": 3300
+  },
+  {
+    "id": "PES-28",
+    "name": "Cáp Polyester PES-28",
+    "diameter_mm": 28,
+    "mbl_kN": 235,
+    "weight_kgpm": 0.54,
+    "ea_kN": 4500
+  },
+  {
+    "id": "PES-32",
+    "name": "Cáp Polyester PES-32",
+    "diameter_mm": 32,
+    "mbl_kN": 305,
+    "weight_kgpm": 0.71,
+    "ea_kN": 5900
+  },
+  {
+    "id": "PES-36",
+    "name": "Cáp Polyester PES-36",
+    "diameter_mm": 36,
+    "mbl_kN": 385,
+    "weight_kgpm": 0.90,
+    "ea_kN": 7450
+  },
+  {
+    "id": "PES-40",
+    "name": "Cáp Polyester PES-40",
+    "diameter_mm": 40,
+    "mbl_kN": 475,
+    "weight_kgpm": 1.11,
+    "ea_kN": 9200
+  }
+]

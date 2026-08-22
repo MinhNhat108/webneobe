@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Production build output
+dist/
+dist-ssr/
+
+# Environment and cache
+.env
+.env.local
+.env.*.local
+*.log
+.agentsroom/
+.agents/
+.claude/
+
+# Raw large document files
+Tài liệu hồ Huổi Vanh/
+public/docs_huoi_vanh/ANH1.jpg
+
+# IDE / Editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "sand",
+    "name": "Cát (Sand)",
+    "frictionDeadweight": 0.55,
+    "seabedFrictionLine": 1.0,
+    "cuDefault_kPa": 0
+  },
+  {
+    "id": "mud",
+    "name": "Bùn lòng hồ (Mud / Silt)",
+    "frictionDeadweight": 0.35,
+    "seabedFrictionLine": 0.8,
+    "cuDefault_kPa": 20
+  },
+  {
+    "id": "clay",
+    "name": "Sét / Đất dính bờ hồ (Clay / Cohesive)",
+    "frictionDeadweight": 0.45,
+    "seabedFrictionLine": 0.9,
+    "cuDefault_kPa": 40
+  },
+  {
+    "id": "rock",
+    "name": "Đá (Rock)",
+    "frictionDeadweight": 0.60,
+    "seabedFrictionLine": 0.5,
+    "cuDefault_kPa": 100
+  }
+]

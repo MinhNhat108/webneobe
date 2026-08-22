@@ -1,0 +1,20 @@
+[
+  {
+    "grade": "U1",
+    "name": "Cấp U1 (Thép thường)",
+    "c": 15.1,
+    "description": "Thép cacbon cường độ tiêu chuẩn"
+  },
+  {
+    "grade": "U2",
+    "name": "Cấp U2 (Cường độ cao)",
+    "c": 21.6,
+    "description": "Thép hợp kim xử lý nhiệt quy chuẩn"
+  },
+  {
+    "grade": "U3",
+    "name": "Cấp U3 (Cực cao)",
+    "c": 31.1,
+    "description": "Xích neo ngoài khơi chuyên dụng"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "danforth",
+    "name": "Danforth / Neo bản",
+    "hc": {
+      "sand": 12,
+      "mud": 8,
+      "clay": 10,
+      "rock": 2
+    }
+  },
+  {
+    "id": "ac14",
+    "name": "AC-14 (High Holding Power)",
+    "hc": {
+      "sand": 10,
+      "mud": 7,
+      "clay": 9,
+      "rock": 2
+    }
+  },
+  {
+    "id": "hall",
+    "name": "Hall (Stockless thông dụng)",
+    "hc": {
+      "sand": 4,
+      "mud": 2.5,
+      "clay": 3,
+      "rock": 1.5
+    }
+  },
+  {
+    "id": "stockless",
+    "name": "Stockless tiêu chuẩn",
+    "hc": {
+      "sand": 5,
+      "mud": 3,
+      "clay": 4,
+      "rock": 1.5
+    }
+  },
+  {
+    "id": "deadweight",
+    "name": "Khối bê tông trọng lực (Deadweight)",
+    "hc": {
+      "sand": 0.55,
+      "mud": 0.35,
+      "clay": 0.45,
+      "rock": 0.6
+    }
+  }
+]

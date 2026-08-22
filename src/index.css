@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-900 font-sans antialiased;
+  }
+
+  /* Numeric cells stay column-aligned so magnitudes compare at a glance. */
+  .font-mono,
+  table td,
+  input[type='number'] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Keyboard users must always see where they are. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white rounded;
+  }
+
+  /* Chromium spinner arrows are noise on engineering inputs. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    @apply appearance-none m-0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* ---- Surfaces -------------------------------------------------------- */
+  .card {
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm;
+  }
+  .card-pad {
+    @apply p-5 lg:p-6;
+  }
+  .card-header {
+    @apply flex items-start justify-between gap-4 border-b border-slate-100 pb-4 mb-5;
+  }
+  /* Input-form header: icon tile + title + subtitle. */
+  .form-card-header {
+    @apply flex items-center gap-3 border-b border-slate-100 pb-4;
+  }
+  .form-card-icon {
+    @apply p-2.5 rounded-lg shrink-0;
+  }
+  .card-title {
+    @apply text-base font-semibold text-slate-900;
+  }
+  .card-subtitle {
+    @apply text-xs text-slate-500 mt-0.5;
+  }
+  .section-stack {
+    @apply space-y-6 animate-fade-in;
+  }
+
+  /* ---- Forms ----------------------------------------------------------- */
+  .field-label {
+    @apply text-sm font-medium text-slate-700;
+  }
+  .field-unit {
+    @apply text-xs text-slate-500 font-mono font-medium;
+  }
+  .field-help {
+    @apply text-xs text-slate-500 leading-tight;
+  }
+  .field-input {
+    @apply w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900
+           font-mono transition-colors outline-none
+           focus:border-brand-500 focus:ring-2 focus:ring-brand-200;
+  }
+  .field-input-invalid {
+    @apply border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-300;
+  }
+  .field-input-disabled {
+    @apply bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed;
+  }
+  /* Input grids: engineering forms are dense, not a single column. */
+  .field-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-4;
+  }
+
+  /* ---- Tables ---------------------------------------------------------- */
+  .table-wrap {
+    @apply overflow-x-auto rounded-lg border border-slate-200;
+  }
+  .data-table {
+    @apply w-full text-left text-xs border-collapse;
+  }
+  .data-table thead {
+    @apply bg-slate-50 text-slate-700 uppercase font-semibold;
+  }
+  .data-table th {
+    @apply px-4 py-3 whitespace-nowrap border-b border-slate-200;
+  }
+  .data-table td {
+    @apply px-4 py-3 border-b border-slate-100 align-top;
+  }
+  .data-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .data-table tbody tr {
+    @apply transition-colors hover:bg-slate-50;
+  }
+  .num {
+    @apply font-mono text-right whitespace-nowrap;
+  }
+
+  /* ---- Status badges ---------------------------------------------------
+     Every badge carries an icon AND a word, never colour alone: the report is
+     printed and photocopied in black and white (SPEC AC 22).                */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border whitespace-nowrap;
+  }
+  .badge-pass {
+    @apply bg-emerald-100 text-emerald-800 border-emerald-300;
+  }
+  .badge-fail {
+    @apply bg-rose-100 text-rose-800 border-rose-300;
+  }
+  .badge-na {
+    @apply bg-amber-100 text-amber-800 border-amber-300;
+  }
+  .badge-skip {
+    @apply bg-slate-100 text-slate-600 border-slate-300 font-medium;
+  }
+  .badge-muted {
+    @apply bg-slate-100 text-slate-700 border-slate-200 font-medium;
+  }
+
+  /* ---- Buttons --------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center gap-1.5 rounded-lg text-xs font-semibold
+           transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5;
+  }
+  .btn-primary {
+    @apply bg-brand-600 hover:bg-brand-500 text-white shadow-sm;
+  }
+  .btn-dark {
+    @apply bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 shadow-sm;
+  }
+  .btn-ghost {
+    @apply text-slate-600 hover:text-slate-900 hover:bg-slate-100;
+  }
+
+  /* ---- Callouts -------------------------------------------------------- */
+  .callout {
+    @apply p-3.5 rounded-xl text-xs leading-relaxed border;
+  }
+  .callout-warn {
+    @apply bg-amber-50 border-amber-200 text-amber-900;
+  }
+  .callout-info {
+    @apply bg-slate-50 border-slate-200 text-slate-600;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ---- Print: A4 technical report ---------------------------------------- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10.5pt;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* SPEC AC 23: the engineering disclaimer must appear in the printed report.
+     It lives inside ReportView (`.print-page`), so it prints by default. The
+     screen chrome carries a second, `no-print` copy — printing both would
+     duplicate it. Anything that must survive printing gets `print-only-keep`. */
+  .print-only-keep {
+    display: block !important;
+  }
+
+  .print-page {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Colour is not reproducible in a photocopied report: force ink borders. */
+  .card,
+  .table-wrap,
+  .badge {
+    border-color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .data-table th,
+  .data-table td {
+    border-color: #000 !important;
+  }
+
+  .badge {
+    background: transparent !important;
+    color: #000 !important;
+  }
+
+  table, tr, thead, tbody {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* A long check table must still be allowed to flow across pages, with the
+     header repeated — only individual ROWS are kept whole. */
+  .data-table {
+    break-inside: auto;
+  }
+  .data-table thead {
+    display: table-header-group;
+  }
+  .data-table tr {
+    break-inside: avoid;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  a[href]::after {
+    content: '';
+  }
+}

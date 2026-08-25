@@ -33,6 +33,16 @@
         "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
         "AR_BROWSER_PROJECT_ID": "proj-1787149114320-i82f8x"
       }
+    },
+    "AgentsRoom-Browser": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\browser-mcp-server.cjs"
+      ],
+      "env": {
+        "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
+        "AR_BROWSER_PROJECT_ID": "proj-1787149114320-i82f8x"
+      }
     }
   }
 }

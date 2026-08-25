@@ -11,7 +11,7 @@ export interface ProjectStore {
   // All projects list (for multi-project management)
   projectList: Array<{ id: string; name: string; code: string; location: string; date: string; systemType: SystemType }>;
 
-  // For multi-raft projects (like Huổi Vanh 13 bè)
+  // For multi-raft projects (like Huổi Vanh 12 bè, kí hiệu BÈ 1..13 trừ BÈ 8)
   activeRaftId: number;
   raftsSummary: RaftSummaryItem[];
 
@@ -357,7 +357,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 3,
+      version: 4,
       migrate: (persistedState: any) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -367,6 +367,24 @@ export const useProjectStore = create<ProjectStore>()(
             persistedState.projectList.forEach((p: any) => {
               p.systemType = 'solar_fpv';
             });
+          }
+          // 2026-08-25 Bè 7+8 merge (13 -> 12 rafts): a browser that saved its
+          // state before this change still has the stale 13-raft summary
+          // (raft id 8 present) cached under this localStorage key. Detect
+          // that specific stale shape and re-sync just the raft layout to the
+          // current HUOI_VANH_RAFTS — do NOT touch it for a user's own custom
+          // (non-Huổi-Vanh) project, only when the cached raftsSummary still
+          // carries the removed id 8.
+          const hasStaleRaft8 = Array.isArray(persistedState.raftsSummary)
+            && persistedState.raftsSummary.some((r: any) => r?.id === 8);
+          if (hasStaleRaft8) {
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+            }
+            if (persistedState.activeRaftId === 8) {
+              persistedState.activeRaftId = 1;
+            }
           }
         }
         return persistedState;

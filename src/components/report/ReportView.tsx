@@ -200,22 +200,28 @@ export const ReportView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {results.checks.map(c => (
-                <tr key={c.id}>
-                  <td className="p-2 border-r border-slate-200 font-bold">{c.id}</td>
-                  <td className="p-2 border-r border-slate-200 font-sans">{c.label}</td>
-                  <td className="p-2 border-r border-slate-200 text-right font-bold">{c.displayActual}</td>
-                  <td className="p-2 border-r border-slate-200 text-right">{String(c.threshold)}</td>
-                  <td className="p-2 border-r border-slate-200 text-center">
-                    {c.margin !== null ? `${(c.margin * 100).toFixed(1)}%` : '-'}
-                  </td>
-                  <td className="p-2 text-center font-bold">
-                    <span className={c.status === 'PASS' ? 'text-emerald-700' : 'text-rose-700'}>
-                      {c.status === 'PASS' ? 'ĐẠT' : 'KHÔNG ĐẠT'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {results.checks.map(c => {
+                const isPass = c.status === 'PASS';
+                const isFail = c.status === 'FAIL';
+                const isSkip = c.status === 'SKIP';
+                const label = isPass ? 'ĐẠT' : isFail ? 'KHÔNG ĐẠT' : isSkip ? 'KHÔNG ÁP DỤNG' : 'N/A';
+                const colorCls = isPass ? 'text-emerald-700' : isFail ? 'text-rose-700' : 'text-slate-500';
+
+                return (
+                  <tr key={c.id} className={isSkip ? 'opacity-70 bg-slate-50/50' : undefined}>
+                    <td className="p-2 border-r border-slate-200 font-bold">{c.id}</td>
+                    <td className="p-2 border-r border-slate-200 font-sans">{c.label}</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{c.displayActual}</td>
+                    <td className="p-2 border-r border-slate-200 text-right">{String(c.threshold)}</td>
+                    <td className="p-2 border-r border-slate-200 text-center">
+                      {c.margin !== null ? `${(c.margin * 100).toFixed(1)}%` : '-'}
+                    </td>
+                    <td className="p-2 text-center font-bold">
+                      <span className={colorCls}>{label}</span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

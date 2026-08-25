@@ -105,7 +105,7 @@ export const AttachmentPanel: React.FC = () => {
             </p>
             <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-0.5 pl-1">
               <li>Bản vẽ mặt bằng bố trí hệ neo (.pdf)</li>
-              <li>Bảng tính neo rút gọn 13 bè (.xlsx)</li>
+              <li>Bảng tính neo rút gọn 12 bè (.xlsx)</li>
               <li>Ảnh phối cảnh hệ bè mặt trời (.jpg)</li>
             </ul>
           </div>

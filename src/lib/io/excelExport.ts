@@ -128,7 +128,7 @@ export function exportProjectToExcel(
       c.unit,
       String(c.threshold),
       c.margin !== null ? `${(c.margin * 100).toFixed(1)}%` : '-',
-      c.status === 'PASS' ? 'ĐẠT' : c.status === 'FAIL' ? 'KHÔNG ĐẠT' : 'KHÔNG TÍNH ĐƯỢC',
+      c.status === 'PASS' ? 'ĐẠT' : c.status === 'FAIL' ? 'KHÔNG ĐẠT' : c.status === 'SKIP' ? 'KHÔNG ÁP DỤNG' : 'KHÔNG TÍNH ĐƯỢC',
       c.note || ''
     ]);
   }
@@ -144,7 +144,7 @@ export function exportProjectToExcel(
   // 5. Sheet: DanhSach13Be (if summary available)
   if (raftsSummary && raftsSummary.length > 0) {
     const summaryRows: any[][] = [
-      ['BẢNG TỔNG HỢP 13 BÈ PIN HỒ HUỔI VANH'],
+      ['BẢNG TỔNG HỢP 12 BÈ PIN HỒ HUỔI VANH'],
       [''],
       ['Bè', 'Diện tích (m²)', 'Chu vi (m)', 'Dài (m)', 'Rộng (m)', 'Góc xoay (°)', 'Số tấm pin', 'Hệ số tập trung', 'Tổng số dây', 'Dây neo bờ', 'Dây neo đáy', 'Cáp chọn', 'Độ sâu (m)', 'Khoảng cách cọc đáy (m)']
     ];

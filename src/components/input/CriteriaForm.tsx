@@ -63,6 +63,26 @@ export const CriteriaForm: React.FC = () => {
           min={2.0}
           helpText="L_total / waterDepth ≥ 5.0"
         />
+
+        <NumberField
+          label="Khoảng hở đáy bè – đáy hồ tối thiểu (C8)"
+          value={criteria.minBedClearance_m}
+          onChange={(val) => updateCriteria({ minBedClearance_m: val })}
+          unit="m"
+          step={0.1}
+          min={0.2}
+          helpText="Mặc định theo 'Độ sâu tối thiểu cần dưới đáy bè' ở mục Môi trường nếu bỏ trống (1.0m)"
+        />
+
+        <NumberField
+          label="Khoảng cách dây neo tối đa (C9, cảnh báo)"
+          value={criteria.maxLineSpacing_m}
+          onChange={(val) => updateCriteria({ maxLineSpacing_m: val })}
+          unit="m"
+          step={0.5}
+          min={2.0}
+          helpText="P_bè / N_dây ≤ 15.0 — chỉ cảnh báo, không làm KHÔNG ĐẠT toàn hệ"
+        />
       </div>
     </div>
   );

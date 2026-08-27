@@ -62,7 +62,7 @@ export function runChecks(
   state: ProjectState,
   results: Intermediate
 ): { checks: CheckItem[]; overallVerdict: CheckStatus; governingCheck: CheckItem | null } {
-  const { criteria, line, anchor } = state;
+  const { criteria, line, anchor, env } = state;
   const checks: CheckItem[] = [];
 
   const isPileAnchor = anchor.mode === 'pile';
@@ -236,6 +236,53 @@ export function runChecks(
       deficit > 0
         ? `Cần bổ sung tối thiểu ${deficit.toFixed(2)} m chiều dài dây.`
         : 'Đủ chiều dài dây dự trữ nằm đáy.'));
+  }
+
+  // ---- C8 — safe clearance between raft draft and the lake bed ----------
+  // Threshold priority: an explicit criteria override, else the design
+  // requirement entered on the Environment form ("Độ sâu tối thiểu cần dưới
+  // đáy bè"), else the 1.0 m default from the spec.
+  const minClearance = criteria.minBedClearance_m ?? env.minWaterDepthUnderRaft_m ?? 1.0;
+  const c8: CheckSpec = {
+    id: 'C8',
+    label: 'Khoảng hở an toàn đáy bè – đáy hồ',
+    formula: 'Clearance = h_nước − mớn nước bè ≥ [min]',
+    unit: 'm',
+    threshold: `≥ ${minClearance} m`,
+    isMandatory: true
+  };
+  if (results.bedClearance_m === null) {
+    checks.push(notEvaluable(c8, 'Thiếu độ sâu nước hoặc mớn nước bè.'));
+  } else {
+    const clearance = results.bedClearance_m;
+    const utilization = clearance > 0
+      ? minClearance / clearance
+      : Number.POSITIVE_INFINITY;
+    checks.push(evaluated(c8, utilization, `${clearance.toFixed(2)} m`, clearance,
+      clearance < minClearance
+        ? `Đáy bè chỉ còn cách đáy hồ ${clearance.toFixed(2)} m — nguy cơ chạm đáy khi mực nước xuống thấp.`
+        : undefined));
+  }
+
+  // ---- C9 — average mooring-line spacing around the raft perimeter (warning) --
+  const maxSpacing = criteria.maxLineSpacing_m ?? 15.0;
+  const c9: CheckSpec = {
+    id: 'C9',
+    label: 'Khoảng cách trung bình giữa các dây neo',
+    formula: 'P_bè / N_dây ≤ [maxSpacing]',
+    unit: 'm',
+    threshold: `≤ ${maxSpacing} m`,
+    isMandatory: false
+  };
+  if (results.avgLineSpacing_m === null) {
+    checks.push(notEvaluable(c9, 'Thiếu chu vi bè hoặc số lượng dây neo.'));
+  } else {
+    const spacing = results.avgLineSpacing_m;
+    const utilization = maxSpacing > 0 ? spacing / maxSpacing : Number.POSITIVE_INFINITY;
+    checks.push(evaluated(c9, utilization, `${spacing.toFixed(1)} m`, spacing,
+      spacing > maxSpacing
+        ? `Khoảng cách dây neo trung bình ${spacing.toFixed(1)} m vượt khuyến nghị — cân nhắc bổ sung dây neo.`
+        : undefined));
   }
 
   // ---- Broms pile checks --------------------------------------------------

@@ -71,10 +71,14 @@ export function calculateLoads(
 
   if (isSolarFPV && (raft.solarPanelCount ?? 0) > 0) {
     // ---- SOLAR FPV MODE -------------------------------------------------
-    // Wind on the tilted panel array + wind on the float freeboard.
-    // Current and wave are NOT modelled separately here: they are folded into
-    // `waveCurrentFactor` as a surcharge on the wind load, which is why
-    // f_current_kN and f_wave_kN are reported as 0 in this mode.
+    // Wind on the tilted panel array + wind on the float freeboard, always
+    // computed the same way. What differs is how current/wave are folded in:
+    //   'fpv_combined' (default) : current + wave folded into a single
+    //     surcharge on the wind load via waveCurrentFactor (1.05) — cheap,
+    //     conservative shortcut for a sheltered reservoir.
+    //   'separate' : current and wave each get their own textbook formula
+    //     (same physics as the general branch below) and are simply summed
+    //     with the wind load — use when real current/wave data exist.
     const panelCount = raft.solarPanelCount ?? 0;
     const panelArea1 = raft.solarPanelArea_m2 ?? 2.701;
     const tiltDeg = raft.solarTilt_deg ?? 12.0;
@@ -94,8 +98,25 @@ export function calculateLoads(
     a_wind_m2 = a_panel_proj + a_float;
     f_wind_total_N = f_wind_panel_N + f_wind_float_N;
 
-    const waveCurrentFactor = env.waveCurrentFactor ?? 1.05;
-    f_env_total_N = f_wind_total_N * waveCurrentFactor * (env.combinationFactor ?? 1.0);
+    const mode = env.loadCombinationMode ?? 'fpv_combined';
+    if (mode === 'separate') {
+      // Current on the submerged float side + mean wave-drift, each computed
+      // independently and summed with wind (no 1.05 surcharge in this mode).
+      const a_cur_override = raft.currentAreaOverride_m2;
+      a_current_m2 = a_cur_override !== undefined && a_cur_override > 0
+        ? a_cur_override
+        : Math.max(0, (raft.width_m ?? 0) * (raft.draft_m ?? 0));
+      f_current_N = 0.5 * rho_water * (env.currentCd ?? 1.2) * a_current_m2 * currentV * currentV;
+
+      const hs = Math.max(0, env.waveHs_m ?? 0);
+      const beam = Math.max(0, raft.width_m ?? 0);
+      f_wave_N = 0.5 * rho_water * g * Math.pow(hs / 2.0, 2) * beam * (env.waveCd ?? 1.0);
+
+      f_env_total_N = (env.combinationFactor ?? 1.0) * (f_wind_total_N + f_current_N + f_wave_N);
+    } else {
+      const waveCurrentFactor = env.waveCurrentFactor ?? 1.05;
+      f_env_total_N = f_wind_total_N * waveCurrentFactor * (env.combinationFactor ?? 1.0);
+    }
   } else {
     // ---- GENERAL / HYDRODYNAMIC FLOATING RAFT MODE ----------------------
     const wOverride = raft.windAreaOverride_m2;

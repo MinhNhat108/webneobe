@@ -52,6 +52,21 @@ export interface EnvInput {
   airDensity: number;
   waterDensity: number;
   gravity: number;
+  /**
+   * How wind/current/wave are combined for a Solar-FPV raft (`isSolarFPV &&
+   * solarPanelCount > 0` in `loads.ts`).
+   *  - 'fpv_combined' (default when omitted): current + wave are folded into
+   *    a single surcharge on the wind load via `waveCurrentFactor` (1.05) —
+   *    the historical FPV shortcut, cheap and conservative for a sheltered
+   *    reservoir.
+   *  - 'separate': wind, current and wave are each computed with their own
+   *    textbook drag/wave-drift formula (same physics as the general
+   *    hydrodynamic branch) and simply summed — use when the site has real
+   *    current/wave data worth modelling on its own.
+   * Non-solar rafts always use the separate-term formulas regardless of this
+   * flag; it only selects between the two FPV shortcuts.
+   */
+  loadCombinationMode?: 'separate' | 'fpv_combined';
 }
 
 export interface LineInput {
@@ -96,9 +111,25 @@ export interface AnchorInput {
   soil: 'sand' | 'mud' | 'clay' | 'rock';
   cuShore_kPa: number;
   cuBed_kPa: number;
+  // Cohesionless (sand) Broms parameters — used when soilShore/soilBed === 'sand'.
+  phiShore_deg?: number;       // internal friction angle of the shore soil, degrees
+  gammaSubShore_kNm3?: number; // submerged unit weight of the shore soil, kN/m3
+  phiBed_deg?: number;         // internal friction angle of the lake-bed soil, degrees
+  gammaSubBed_kNm3?: number;   // submerged unit weight of the lake-bed soil, kN/m3
   sfPile: number;
   sfUplift: number;
   concreteRb_MPa: number;
+  // Pile cross-section shape — applies to both the shore and lake-bed piles.
+  // 'square' (default): D = side; 'circular': D = outer diameter, solid;
+  // 'pipe': D = outer diameter, hollow, wall thickness tWall_m.
+  shorePileShape?: 'square' | 'circular' | 'pipe';
+  shorePileTWall_m?: number;
+  shoreRebarArea_mm2?: number; // total longitudinal reinforcement area As, mm2 (0/undefined = plain concrete)
+  shoreRebarFy_MPa?: number;   // reinforcement yield strength, MPa (default 300 = CB300-V)
+  bedPileShape?: 'square' | 'circular' | 'pipe';
+  bedPileTWall_m?: number;
+  bedRebarArea_mm2?: number;
+  bedRebarFy_MPa?: number;
   // Shore pile
   shoreArm_e_m: number;
   shoreD_m: number;
@@ -130,6 +161,8 @@ export interface Criteria {
   maxLineSpacing_m: number;
   minScopeRatio: number;
   maxOffset_m: number;
+  /** C8 — minimum safe clearance between raft draft and the lake bed, m. Default 1.0. */
+  minBedClearance_m?: number;
 }
 
 export interface Attachment {
@@ -172,6 +205,21 @@ export interface CheckItem {
   note?: string;
 }
 
+/** Pile cross-section shape shared by the shore and lake-bed piles. */
+export type PileShape = 'square' | 'circular' | 'pipe';
+
+export interface PileSectionInput {
+  shape: PileShape;
+  /** Square: side length. Circular/pipe: OUTER diameter. */
+  D_m: number;
+  /** Pipe only: wall thickness. Ignored otherwise. */
+  tWall_m?: number;
+  /** Total longitudinal reinforcement area As, mm2. 0/undefined = plain concrete section. */
+  rebarArea_mm2?: number;
+  /** Reinforcement yield strength, MPa. Default 300 (CB300-V) when rebarArea_mm2 > 0. */
+  rebarFy_MPa?: number;
+}
+
 export interface BromsResult {
   g: number;
   p: number;
@@ -187,6 +235,14 @@ export interface BromsResult {
   concreteVolume_m3: number;
   orderedLength_m: number;
   isPassed: boolean;
+  /** Diagnostic breakdown — present when a PileSectionInput was supplied. */
+  soilModel?: 'clay' | 'sand';
+  shape?: PileShape;
+  effectiveWidth_m?: number;
+  perimeter_m?: number;
+  MrdConcrete_kNm?: number;
+  MrdSteel_kNm?: number;
+  Kp?: number; // Rankine passive coefficient (sand model only)
 }
 
 export interface CalcResults {
@@ -248,6 +304,12 @@ export interface CalcResults {
   bedCableAngle_deg?: number;
   bedCableTh_kN?: number;
   bedCableTv_kN?: number;
+
+  // C8 / C9 geometry
+  /** Clearance between raft draft and the lake bed, m (C8). */
+  bedClearance_m: number | null;
+  /** Average spacing between mooring lines around the raft perimeter, m (C9). */
+  avgLineSpacing_m: number | null;
 
   // Checks & Summary
   checks: CheckItem[];

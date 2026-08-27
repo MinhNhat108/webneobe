@@ -6,6 +6,7 @@ import { Waves, Wind } from 'lucide-react';
 export const EnvForm: React.FC = () => {
   const { currentProject, updateEnv } = useProjectStore();
   const env = currentProject.env;
+  const isSolar = currentProject.systemType === 'solar_fpv';
 
   return (
     <div className="card p-6 space-y-6">
@@ -86,9 +87,43 @@ export const EnvForm: React.FC = () => {
 
       {/* Wind & Current & Waves */}
       <div className="border-t border-slate-100 pt-4 space-y-4">
-        <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
-          <Waves className="w-4 h-4 text-sky-600" />
-          Tải trọng Gió, Sóng & Dòng chảy thiết kế
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
+            <Waves className="w-4 h-4 text-sky-600" />
+            Tải trọng Gió, Sóng & Dòng chảy thiết kế
+          </div>
+
+          {isSolar && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-500">Cách tổ hợp tải (FPV):</span>
+              <div className="flex rounded-lg bg-slate-100 p-1 border border-slate-200 text-xs">
+                <button
+                  type="button"
+                  onClick={() => updateEnv({ loadCombinationMode: 'fpv_combined' })}
+                  className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
+                    (env.loadCombinationMode ?? 'fpv_combined') === 'fpv_combined'
+                      ? 'bg-sky-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Gộp dòng chảy & sóng vào tải gió qua hệ số 1.05"
+                >
+                  Gộp hệ số 1.05
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateEnv({ loadCombinationMode: 'separate' })}
+                  className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
+                    env.loadCombinationMode === 'separate'
+                      ? 'bg-sky-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Tính riêng lực gió, dòng chảy và sóng theo công thức từng thành phần"
+                >
+                  Tính riêng biệt
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -129,7 +164,43 @@ export const EnvForm: React.FC = () => {
             unit="-"
             step={0.01}
             min={1.0}
-            helpText="Hệ số gia tăng tải trọng môi trường trong hồ (1.05)"
+            disabled={isSolar && env.loadCombinationMode === 'separate'}
+            helpText={isSolar && env.loadCombinationMode === 'separate'
+              ? 'Không dùng ở chế độ tính riêng biệt'
+              : 'Hệ số gia tăng tải trọng môi trường trong hồ (1.05)'}
+          />
+        </div>
+
+        {/* Wave/current detail terms — only load-bearing in 'separate' FPV mode
+            or the general (non-FPV) hydrodynamic branch, but always editable
+            here so switching modes never leaves them at a silent default. */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <NumberField
+            label="Chiều cao sóng thiết kế (Hs)"
+            value={env.waveHs_m}
+            onChange={(val) => updateEnv({ waveHs_m: val })}
+            unit="m"
+            step={0.05}
+            min={0}
+            helpText="Chiều cao sóng có nghĩa tại vị trí bè (F_wave)"
+          />
+          <NumberField
+            label="Hệ số cản sóng (Cd_wave)"
+            value={env.waveCd}
+            onChange={(val) => updateEnv({ waveCd: val })}
+            unit="-"
+            step={0.05}
+            min={0.1}
+            helpText="Hệ số phản xạ sóng dùng trong F_wave (1.0)"
+          />
+          <NumberField
+            label="Hệ số cản dòng chảy (Cd_current)"
+            value={env.currentCd}
+            onChange={(val) => updateEnv({ currentCd: val })}
+            unit="-"
+            step={0.05}
+            min={0.1}
+            helpText="Hệ số cản thủy động lực học cho F_current (1.2)"
           />
         </div>
 

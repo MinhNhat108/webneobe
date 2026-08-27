@@ -1,13 +1,42 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
 import { useProjectStore } from '../../store/useProjectStore';
-import { Map, ZoomIn, ZoomOut, RotateCcw, Filter, Compass } from 'lucide-react';
+import { Map as MapIcon, ZoomIn, ZoomOut, RotateCcw, Filter, Compass, Thermometer } from 'lucide-react';
+
+/** Heatmap colour by cable-tension utilization: Xanh < 0.7, Vàng 0.7–1.0, Đỏ > 1.0. */
+function utilizationColor(u: number | null | undefined): string {
+  if (u === null || u === undefined || !Number.isFinite(u)) return '#64748b'; // slate — no data
+  if (u < 0.7) return '#10b981'; // emerald
+  if (u <= 1.0) return '#f59e0b'; // amber
+  return '#ef4444'; // red
+}
+
+const raftKeyFromName = (name: string): number | null => {
+  const num = parseInt(name.replace(/\D/g, ''), 10);
+  return Number.isFinite(num) ? num : null;
+};
 
 export const MooringLayoutMap: React.FC = () => {
-  const { setActiveRaft } = useProjectStore();
+  const { setActiveRaft, activeRaftId, batchResults, calculateAllRafts } = useProjectStore();
   const [filterRaft, setFilterRaft] = useState<string>('ALL');
   const [selectedAnchor, setSelectedAnchor] = useState<MooringCoordinate | null>(null);
+
+  // Batch results drive the heatmap: each raft's OWN required-vs-actual MBL
+  // utilization (results.cableUtilization) is applied to every cable line of
+  // that raft's cluster — this app models one governing line tension per
+  // raft, not a per-line FEA, so that governing value is the honest colour
+  // to show for every line in the cluster rather than a fabricated spread.
+  useEffect(() => {
+    if (batchResults.length === 0) calculateAllRafts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const raftUtilization = useMemo(() => {
+    const map = new Map<string, number | null>();
+    for (const b of batchResults) map.set(b.raft.name, b.results.cableUtilization);
+    return map;
+  }, [batchResults]);
 
   // Zoom & Pan state
   const [scale, setScale] = useState<number>(1.2);
@@ -84,7 +113,7 @@ export const MooringLayoutMap: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
         <div className="flex items-center gap-3">
           <div className="form-card-icon bg-sky-50 text-sky-600">
-            <Map className="w-5 h-5" />
+            <MapIcon className="w-5 h-5" />
           </div>
           <div>
             <h3 className="card-title">
@@ -161,17 +190,30 @@ export const MooringLayoutMap: React.FC = () => {
             <Compass className="w-4 h-4" />
             Phương Bắc (N)
           </div>
-          <div className="flex items-center gap-2 text-[11px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-            <span>Cọc Neo Bờ (Shore Pile)</span>
+          <div className="flex items-center gap-1.5 font-semibold text-slate-300 pt-1 border-t border-slate-700/60">
+            <Thermometer className="w-3.5 h-3.5" />
+            Heatmap hệ số căng dây (η)
           </div>
           <div className="flex items-center gap-2 text-[11px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
-            <span>Cọc Neo Đáy Lòng Hồ (Bed Pile)</span>
+            <span className="w-3 h-0.5 rounded-full inline-block" style={{ background: '#10b981' }}></span>
+            <span>η &lt; 0.7 (an toàn)</span>
           </div>
           <div className="flex items-center gap-2 text-[11px]">
-            <span className="w-3 h-0.5 bg-sky-400 inline-block"></span>
-            <span>Dây cáp neo</span>
+            <span className="w-3 h-0.5 rounded-full inline-block" style={{ background: '#f59e0b' }}></span>
+            <span>η 0.7 – 1.0 (cận giới hạn)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px]">
+            <span className="w-3 h-0.5 rounded-full inline-block" style={{ background: '#ef4444' }}></span>
+            <span>η &gt; 1.0 (vượt tải)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] pt-1 border-t border-slate-700/60">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
+            <span>Cọc Bờ</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block ml-2"></span>
+            <span>Cọc Đáy</span>
+          </div>
+          <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-700/60">
+            Click vào tên bè hoặc dây neo để chọn bè tính toán
           </div>
         </div>
 
@@ -211,7 +253,7 @@ export const MooringLayoutMap: React.FC = () => {
           </defs>
           <rect width={svgWidth} height={svgHeight} fill="url(#grid)" />
 
-          {/* Mooring Lines */}
+          {/* Mooring Lines — stroke coloured by tension-utilization heatmap */}
           <g>
             {displayedCoords.map((c, idx) => {
               const x1 = toSvgX(c.xRaft);
@@ -219,16 +261,27 @@ export const MooringLayoutMap: React.FC = () => {
               const x2 = toSvgX(c.xAnchor);
               const y2 = toSvgY(c.yAnchor);
               const isShore = c.type === 'SHORE';
+              const raftId = raftKeyFromName(c.raft);
+              const isActiveRaft = raftId !== null && raftId === activeRaftId;
+              const heat = utilizationColor(raftUtilization.get(c.raft));
 
               return (
-                <g key={idx} className="cursor-pointer" onClick={() => setSelectedAnchor(c)}>
+                <g
+                  key={idx}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setSelectedAnchor(c);
+                    if (raftId !== null) setActiveRaft(raftId);
+                  }}
+                >
                   <line
                     x1={x1}
                     y1={y1}
                     x2={x2}
                     y2={y2}
-                    stroke={isShore ? 'rgba(52, 211, 153, 0.6)' : 'rgba(251, 191, 36, 0.6)'}
-                    strokeWidth="1.2"
+                    stroke={heat}
+                    strokeOpacity={isActiveRaft ? 0.95 : 0.6}
+                    strokeWidth={isActiveRaft ? 2 : 1.2}
                     strokeDasharray={isShore ? 'none' : '3 2'}
                   />
                   {/* Anchor Point Circle */}
@@ -252,7 +305,7 @@ export const MooringLayoutMap: React.FC = () => {
             })}
           </g>
 
-          {/* Raft Label Tags */}
+          {/* Raft Label Tags — click to select that raft for calculation */}
           <g>
             {uniqueRafts.map((raftName, idx) => {
               const raftPoints = coordinates.filter(c => c.raft === raftName);
@@ -261,24 +314,31 @@ export const MooringLayoutMap: React.FC = () => {
               const avgY = raftPoints.reduce((sum, p) => sum + p.yRaft, 0) / raftPoints.length;
               const sx = toSvgX(avgX);
               const sy = toSvgY(avgY);
+              const raftId = raftKeyFromName(raftName);
+              const isActiveRaft = raftId !== null && raftId === activeRaftId;
 
               return (
-                <g key={idx} className="pointer-events-none">
+                <g
+                  key={idx}
+                  className="cursor-pointer"
+                  onClick={() => { if (raftId !== null) setActiveRaft(raftId); }}
+                >
+                  <title>{`Chọn ${raftName} để tính toán`}</title>
                   <rect
                     x={sx - 24}
                     y={sy - 10}
                     width="48"
                     height="20"
                     rx="4"
-                    fill="rgba(15, 23, 42, 0.85)"
-                    stroke="#0284c7"
-                    strokeWidth="1"
+                    fill={isActiveRaft ? 'rgba(2, 132, 199, 0.9)' : 'rgba(15, 23, 42, 0.85)'}
+                    stroke={isActiveRaft ? '#7dd3fc' : '#0284c7'}
+                    strokeWidth={isActiveRaft ? 1.5 : 1}
                   />
                   <text
                     x={sx}
                     y={sy + 4}
                     textAnchor="middle"
-                    fill="#38bdf8"
+                    fill={isActiveRaft ? '#ffffff' : '#38bdf8'}
                     fontSize="10"
                     fontWeight="bold"
                   >

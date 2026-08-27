@@ -19,10 +19,13 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGoToGuide, onLock }) => {
-  const { currentProject, results, recalculate, raftsSummary } = useProjectStore();
+  const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts } = useProjectStore();
 
   const handleExportExcel = () => {
-    exportProjectToExcel(currentProject, results, raftsSummary);
+    // The Master sheet and per-raft detailed checks need batch data — compute
+    // it on demand if the user exports before ever opening the overview tab.
+    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    exportProjectToExcel(currentProject, results, raftsSummary, batch);
   };
 
   return (

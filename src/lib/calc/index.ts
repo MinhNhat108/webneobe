@@ -1,8 +1,8 @@
-import { ProjectState, CalcResults } from './types';
+import { ProjectState, CalcResults, PileSectionInput } from './types';
 import { calculateLoads } from './loads';
 import { calculateCatenary } from './catenary';
 import { calculateAnchor } from './anchor';
-import { calculateBromsCohesivePile } from './broms';
+import { calculateBromsPile } from './broms';
 import { runChecks } from './checks';
 import { round, roundOrNull } from './constants';
 
@@ -65,16 +65,34 @@ export function calculateProject(state: ProjectState): CalcResults {
   let bedCableTv_kN;
 
   if (state.anchor.mode === 'pile' || isSolar) {
-    shorePile = calculateBromsCohesivePile(
-      state.anchor.cuShore_kPa ?? 40.0,
-      state.anchor.shoreArm_e_m ?? 0.5,
-      state.anchor.shoreD_m ?? 0.45,
-      state.anchor.shoreL_m ?? 6.5,
-      state.anchor.sfPile ?? 2.5,
-      loads.t_max_intact_kN,
-      0, // the shore line is essentially horizontal at the pile head
-      state.anchor.concreteRb_MPa ?? 14.5
-    );
+    const shoreSection: PileSectionInput = {
+      shape: state.anchor.shorePileShape ?? 'square',
+      D_m: state.anchor.shoreD_m ?? 0.45,
+      tWall_m: state.anchor.shorePileTWall_m,
+      rebarArea_mm2: state.anchor.shoreRebarArea_mm2,
+      rebarFy_MPa: state.anchor.shoreRebarFy_MPa
+    };
+    const bedSection: PileSectionInput = {
+      shape: state.anchor.bedPileShape ?? 'square',
+      D_m: state.anchor.bed1D_m ?? 0.35,
+      tWall_m: state.anchor.bedPileTWall_m,
+      rebarArea_mm2: state.anchor.bedRebarArea_mm2,
+      rebarFy_MPa: state.anchor.bedRebarFy_MPa
+    };
+
+    shorePile = calculateBromsPile(state.anchor.soilShore ?? 'clay', {
+      cu_kPa: state.anchor.cuShore_kPa ?? 40.0,
+      phi_deg: state.anchor.phiShore_deg,
+      gammaSub_kNm3: state.anchor.gammaSubShore_kNm3,
+      e: state.anchor.shoreArm_e_m ?? 0.5,
+      D: state.anchor.shoreD_m ?? 0.45,
+      L: state.anchor.shoreL_m ?? 6.5,
+      FS: state.anchor.sfPile ?? 2.5,
+      appliedH: loads.t_max_intact_kN,
+      appliedTv: 0, // the shore line is essentially horizontal at the pile head
+      concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
+      section: shoreSection
+    });
 
     // Cable inclination at the lake-bed pile head, from depth and plan offset.
     const waterDepth = state.env.waterDepth_m ?? 6.0;
@@ -85,28 +103,46 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedCableTh_kN = loads.t_max_intact_kN * Math.cos(angleRad);
     bedCableTv_kN = loads.t_max_intact_kN * Math.sin(angleRad);
 
-    bedPile1 = calculateBromsCohesivePile(
-      state.anchor.cuBed_kPa ?? 20.0,
-      state.anchor.bed1Arm_e_m ?? 0.0,
-      state.anchor.bed1D_m ?? 0.35,
-      state.anchor.bed1L_m ?? 8.0,
-      state.anchor.sfPile ?? 2.5,
-      bedCableTh_kN,
-      bedCableTv_kN,
-      state.anchor.concreteRb_MPa ?? 14.5
-    );
+    bedPile1 = calculateBromsPile(state.anchor.soilBed ?? 'mud', {
+      cu_kPa: state.anchor.cuBed_kPa ?? 20.0,
+      phi_deg: state.anchor.phiBed_deg,
+      gammaSub_kNm3: state.anchor.gammaSubBed_kNm3,
+      e: state.anchor.bed1Arm_e_m ?? 0.0,
+      D: state.anchor.bed1D_m ?? 0.35,
+      L: state.anchor.bed1L_m ?? 8.0,
+      FS: state.anchor.sfPile ?? 2.5,
+      appliedH: bedCableTh_kN,
+      appliedTv: bedCableTv_kN,
+      concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
+      section: bedSection
+    });
 
-    bedPile2 = calculateBromsCohesivePile(
-      state.anchor.cuBed_kPa ?? 20.0,
-      waterDepth + 0.8,
-      state.anchor.bed2D_m ?? 0.70,
-      state.anchor.bed2L_m ?? 9.0,
-      state.anchor.sfPile ?? 2.5,
-      loads.t_max_intact_kN, // roughly horizontal through the slider ring
-      0,
-      state.anchor.concreteRb_MPa ?? 14.5
-    );
+    bedPile2 = calculateBromsPile(state.anchor.soilBed ?? 'mud', {
+      cu_kPa: state.anchor.cuBed_kPa ?? 20.0,
+      phi_deg: state.anchor.phiBed_deg,
+      gammaSub_kNm3: state.anchor.gammaSubBed_kNm3,
+      e: waterDepth + 0.8,
+      D: state.anchor.bed2D_m ?? 0.70,
+      L: state.anchor.bed2L_m ?? 9.0,
+      FS: state.anchor.sfPile ?? 2.5,
+      appliedH: loads.t_max_intact_kN, // roughly horizontal through the slider ring
+      appliedTv: 0,
+      concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
+      section: { ...bedSection, D_m: state.anchor.bed2D_m ?? 0.70 }
+    });
   }
+
+  // ---- C8 / C9 geometry: bed clearance and average line spacing ---------
+  const perimeter_m = 2 * ((state.raft.length_m ?? 0) + (state.raft.width_m ?? 0));
+  const lineCount = state.line.count ?? 0;
+  const avgLineSpacing_m = lineCount > 0 && perimeter_m > 0 ? perimeter_m / lineCount : null;
+
+  // Always the physically-measured gap (water depth minus raft draft) — NOT
+  // env.minWaterDepthUnderRaft_m, which is the design REQUIREMENT ("Độ sâu
+  // tối thiểu cần dưới đáy bè"), i.e. the threshold C8 checks against, not
+  // the actual clearance itself.
+  const bedClearanceRaw = (state.env.waterDepth_m ?? 0) - (state.raft.draft_m ?? 0);
+  const bedClearance_m = Number.isFinite(bedClearanceRaw) ? bedClearanceRaw : null;
 
   // Unrounded intermediate state — this is what the checks are computed from.
   const raw: Omit<CalcResults, 'checks' | 'overallVerdict' | 'governingCheck'> = {
@@ -118,7 +154,9 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedPile2,
     bedCableAngle_deg,
     bedCableTh_kN,
-    bedCableTv_kN
+    bedCableTv_kN,
+    bedClearance_m,
+    avgLineSpacing_m
   };
 
   // 5. Checks run on the FULL-PRECISION values.
@@ -161,6 +199,8 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedCableAngle_deg: bedCableAngle_deg !== undefined ? round(bedCableAngle_deg, 1) : undefined,
     bedCableTh_kN: bedCableTh_kN !== undefined ? round(bedCableTh_kN) : undefined,
     bedCableTv_kN: bedCableTv_kN !== undefined ? round(bedCableTv_kN) : undefined,
+    bedClearance_m: roundOrNull(raw.bedClearance_m),
+    avgLineSpacing_m: roundOrNull(raw.avgLineSpacing_m, 1),
     ...checkResults
   };
 }

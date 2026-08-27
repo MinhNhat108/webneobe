@@ -10,8 +10,16 @@ import {
 import { calculateLoads } from '../loads';
 import { calculateCatenary } from '../catenary';
 import { calculateAnchor } from '../anchor';
-import { calculateBromsCohesivePile } from '../broms';
-import { ProjectState, CheckItem } from '../types';
+import {
+  calculateBromsCohesivePile,
+  calculateBromsSandPile,
+  calculateBromsPile,
+  pileEffectiveWidth_m,
+  pilePerimeter_m,
+  pileSectionModulus_m3,
+  pileMrd_kNm
+} from '../broms';
+import { ProjectState, CheckItem, PileSectionInput } from '../types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
 
 /** Deep clone so no test can leak state into another. */
@@ -456,5 +464,201 @@ describe('Full project', () => {
       }
       expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
     }
+  });
+});
+
+describe('Broms — pile shape / section helpers', () => {
+  it('gives the square section the same D^3/6 modulus as the original formula', () => {
+    const sq: PileSectionInput = { shape: 'square', D_m: 0.45 };
+    expect(pileSectionModulus_m3(sq)).toBeCloseTo(Math.pow(0.45, 3) / 6, 9);
+    expect(pilePerimeter_m(sq)).toBeCloseTo(4 * 0.45, 9);
+    expect(pileEffectiveWidth_m(sq)).toBeCloseTo(0.45, 9);
+  });
+
+  it('gives a circular section pi*D^3/32 and a pi*D perimeter', () => {
+    const circ: PileSectionInput = { shape: 'circular', D_m: 0.5 };
+    expect(pileSectionModulus_m3(circ)).toBeCloseTo((Math.PI * Math.pow(0.5, 3)) / 32, 9);
+    expect(pilePerimeter_m(circ)).toBeCloseTo(Math.PI * 0.5, 9);
+  });
+
+  it('gives a pipe section less modulus and less area than an equivalent solid circle', () => {
+    const solid: PileSectionInput = { shape: 'circular', D_m: 0.5 };
+    const pipe: PileSectionInput = { shape: 'pipe', D_m: 0.5, tWall_m: 0.05 };
+    expect(pileSectionModulus_m3(pipe)).toBeLessThan(pileSectionModulus_m3(solid));
+    // The outer perimeter (used for skin friction) is identical to the solid circle.
+    expect(pilePerimeter_m(pipe)).toBeCloseTo(pilePerimeter_m(solid), 9);
+  });
+
+  it('adds a positive steel moment contribution only when rebar area is given', () => {
+    const plain: PileSectionInput = { shape: 'square', D_m: 0.45 };
+    const reinforced: PileSectionInput = { shape: 'square', D_m: 0.45, rebarArea_mm2: 2000, rebarFy_MPa: 300 };
+    const mPlain = pileMrd_kNm(plain, 14.5);
+    const mReinforced = pileMrd_kNm(reinforced, 14.5);
+    expect(mPlain.MrdSteel_kNm).toBe(0);
+    expect(mReinforced.MrdSteel_kNm).toBeGreaterThan(0);
+    expect(mReinforced.Mrd_kNm).toBeGreaterThan(mPlain.Mrd_kNm);
+    expect(mReinforced.MrdConcrete_kNm).toBeCloseTo(mPlain.MrdConcrete_kNm, 6); // concrete term unaffected
+    // Doubling the steel area doubles its moment contribution (linear in As).
+    const doubleSteel: PileSectionInput = { ...reinforced, rebarArea_mm2: 4000 };
+    expect(pileMrd_kNm(doubleSteel, 14.5).MrdSteel_kNm).toBeCloseTo(2 * mReinforced.MrdSteel_kNm, 6);
+  });
+
+  it('calculateBromsCohesivePile with no section arg matches the original plain-square behaviour', () => {
+    const withoutSection = calculateBromsCohesivePile(40, 0.5, 0.45, 6.5, 2.5, 59.3);
+    const withSquareSection = calculateBromsCohesivePile(
+      40, 0.5, 0.45, 6.5, 2.5, 59.3, 0, 14.5, 0.7, { shape: 'square', D_m: 0.45 }
+    );
+    expect(withSquareSection.Hu).toBeCloseTo(withoutSection.Hu, 6);
+    expect(withSquareSection.Mrd).toBeCloseTo(withoutSection.Mrd, 6);
+    expect(withSquareSection.upliftCapacity_all).toBeCloseTo(withoutSection.upliftCapacity_all!, 6);
+  });
+});
+
+describe('Broms — cohesionless (sand) pile', () => {
+  it('computes a positive ultimate lateral capacity that grows with embedment length', () => {
+    const shallow = calculateBromsSandPile(30, 10, 0.5, 0.45, 5, 2.5, 40);
+    const deep = calculateBromsSandPile(30, 10, 0.5, 0.45, 10, 2.5, 40);
+    expect(shallow.Hu).toBeGreaterThan(0);
+    expect(deep.Hu).toBeGreaterThan(shallow.Hu);
+    expect(shallow.soilModel).toBe('sand');
+    expect(shallow.Kp).toBeCloseTo(Math.pow(Math.tan(Math.PI / 4 + (30 * Math.PI) / 180 / 2), 2), 3);
+  });
+
+  it('matches the closed-form Hu = 0.5*Kp*gamma_sub*D*L^3/(e+L)', () => {
+    const phi = 32, gamma = 9.5, e = 0.4, D = 0.5, L = 8;
+    const r = calculateBromsSandPile(phi, gamma, e, D, L, 2.5, 50);
+    const Kp = Math.pow(Math.tan(Math.PI / 4 + (phi * Math.PI) / 180 / 2), 2);
+    const expectedHu = (0.5 * Kp * gamma * D * Math.pow(L, 3)) / (e + L);
+    expect(r.Hu).toBeCloseTo(expectedHu, 1);
+    expect(r.H_allow).toBeCloseTo(r.Hu / 2.5, 1);
+  });
+
+  it('scales uplift shaft-friction capacity with L^2 (linear in the triangular pressure integral)', () => {
+    const a = calculateBromsSandPile(30, 10, 0, 0.4, 6, 2.5, 30, 10);
+    const b = calculateBromsSandPile(30, 10, 0, 0.4, 12, 2.5, 30, 10);
+    // (2L)^2 = 4x — compared with a loose tolerance since both sides are
+    // independently rounded to 2 decimals inside calculateBromsSandPile.
+    expect(b.upliftCapacity_all! / a.upliftCapacity_all!).toBeCloseTo(4, 2);
+  });
+
+  it('dispatches sand vs clay correctly via calculateBromsPile', () => {
+    const sand = calculateBromsPile('sand', {
+      phi_deg: 30, gammaSub_kNm3: 10, e: 0.5, D: 0.45, L: 6.5, FS: 2.5, appliedH: 40
+    });
+    const clay = calculateBromsPile('clay', {
+      cu_kPa: 40, e: 0.5, D: 0.45, L: 6.5, FS: 2.5, appliedH: 40
+    });
+    const mud = calculateBromsPile('mud', {
+      cu_kPa: 40, e: 0.5, D: 0.45, L: 6.5, FS: 2.5, appliedH: 40
+    });
+    expect(sand.soilModel).toBe('sand');
+    expect(clay.soilModel).toBe('clay');
+    expect(mud.soilModel).toBe('clay'); // mud/rock fall back to the cohesive branch
+    expect(clay.Hu).toBeCloseTo(mud.Hu, 6);
+  });
+
+  it('supports pile shape + reinforcement in the sand model too', () => {
+    const withRebar = calculateBromsSandPile(
+      30, 10, 0.5, 0.45, 8, 2.5, 40, 0, 14.5,
+      { shape: 'circular', D_m: 0.45, rebarArea_mm2: 1500, rebarFy_MPa: 300 }
+    );
+    const withoutRebar = calculateBromsSandPile(
+      30, 10, 0.5, 0.45, 8, 2.5, 40, 0, 14.5,
+      { shape: 'circular', D_m: 0.45 }
+    );
+    expect(withRebar.Mrd).toBeGreaterThan(withoutRebar.Mrd);
+    expect(withRebar.shape).toBe('circular');
+  });
+});
+
+describe('Wind/wave/current combination mode (FPV factor vs separate terms)', () => {
+  it('the separate mode adds an independently-computed current + wave term the combined mode folds away', () => {
+    const s = base();
+    s.raft.solarPanelCount = 800;
+    s.env.currentSpeed_ms = 1.2;
+    s.env.waveHs_m = 0.6;
+
+    const combined = calculateLoads(s.raft, { ...s.env, loadCombinationMode: 'fpv_combined' }, s.line, true, 3.0);
+    const separate = calculateLoads(s.raft, { ...s.env, loadCombinationMode: 'separate' }, s.line, true, 3.0);
+
+    // Combined mode never models current/wave as their own terms.
+    expect(combined.f_current_kN).toBe(0);
+    expect(combined.f_wave_kN).toBe(0);
+    // Separate mode does, and they are strictly positive given real current/wave input.
+    expect(separate.f_current_kN).toBeGreaterThan(0);
+    expect(separate.f_wave_kN).toBeGreaterThan(0);
+    // Wind itself is identical between the two modes — only the combination differs.
+    expect(separate.f_wind_total_kN).toBeCloseTo(combined.f_wind_total_kN, 6);
+  });
+
+  it('omitting loadCombinationMode defaults to the historical fpv_combined behaviour', () => {
+    const s = base();
+    s.raft.solarPanelCount = 800;
+    const withDefault = calculateLoads(s.raft, s.env, s.line, true, 3.0);
+    const explicit = calculateLoads(s.raft, { ...s.env, loadCombinationMode: 'fpv_combined' }, s.line, true, 3.0);
+    expect(withDefault.f_env_total_kN).toBeCloseTo(explicit.f_env_total_kN, 9);
+  });
+});
+
+describe('C8 — bed clearance and C9 — average line spacing', () => {
+  it('C8 fails when the raft draft leaves less than the minimum bed clearance', () => {
+    const s = catenaryProject();
+    s.env.waterDepth_m = 2.0;
+    s.env.tideRange_m = 0;
+    s.raft.draft_m = 1.5; // clearance = 0.5 m < default 1.0 m minimum
+    const r = calculateProject(s);
+    const c8 = check(r.checks, 'C8');
+    expect(c8.status).toBe('FAIL');
+    expect(r.bedClearance_m).toBeCloseTo(0.5, 6);
+  });
+
+  it('C8 passes with ample clearance and honours an explicit criteria override', () => {
+    const s = catenaryProject();
+    s.env.waterDepth_m = 10;
+    s.env.tideRange_m = 0;
+    s.raft.draft_m = 1.2;
+    const r = calculateProject(s);
+    expect(check(r.checks, 'C8').status).toBe('PASS');
+
+    const strict = catenaryProject();
+    strict.env.waterDepth_m = 10;
+    strict.env.tideRange_m = 0;
+    strict.raft.draft_m = 1.2;
+    strict.criteria.minBedClearance_m = 20; // an absurdly strict override must still be honoured
+    const rStrict = calculateProject(strict);
+    expect(check(rStrict.checks, 'C8').status).toBe('FAIL');
+  });
+
+  it('C9 is a non-mandatory warning: exceeding max spacing never flips the overall verdict', () => {
+    const s = catenaryProject();
+    s.raft.length_m = 100;
+    s.raft.width_m = 80;
+    s.line.count = 5; // perimeter 360 m / 5 lines = 72 m spacing, way over 15 m
+    const r = calculateProject(s);
+    const c9 = check(r.checks, 'C9');
+    expect(c9.status).toBe('FAIL');
+    expect(c9.isMandatory).toBe(false);
+    expect(r.avgLineSpacing_m).toBeCloseTo(72, 6);
+    // A lone non-mandatory failure must not be able to fail the whole project
+    // when every mandatory check passed.
+    const mandatoryFailed = r.checks.some((c) => c.isMandatory && c.status === 'FAIL');
+    if (!mandatoryFailed) expect(r.overallVerdict).not.toBe('FAIL');
+  });
+
+  it('C9 passes when lines are spaced within the default 15 m limit', () => {
+    const s = catenaryProject();
+    s.raft.length_m = 20;
+    s.raft.width_m = 10;
+    s.line.count = 6; // perimeter 60 m / 6 = 10 m spacing
+    const r = calculateProject(s);
+    expect(check(r.checks, 'C9').status).toBe('PASS');
+  });
+
+  it('both checks stay finite and never NA on a fully-populated project', () => {
+    const r = calculateProject(base());
+    expect(r.bedClearance_m).not.toBeNull();
+    expect(r.avgLineSpacing_m).not.toBeNull();
+    expect(check(r.checks, 'C8').status).not.toBe('NA');
+    expect(check(r.checks, 'C9').status).not.toBe('NA');
   });
 });

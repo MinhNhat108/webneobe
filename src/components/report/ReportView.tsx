@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Printer, CheckCircle2, XCircle } from 'lucide-react';
 
 export const ReportView: React.FC = () => {
-  const { currentProject, results } = useProjectStore();
+  const { currentProject, results, batchResults, calculateAllRafts, raftsSummary } = useProjectStore();
   const meta = currentProject.meta;
   const isSolar = currentProject.systemType === 'solar_fpv';
+
+  useEffect(() => {
+    if (raftsSummary.length > 0 && batchResults.length === 0) calculateAllRafts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePrint = () => {
     window.print();
@@ -237,6 +242,48 @@ export const ReportView: React.FC = () => {
                 <li key={a.id}>{a.name} ({(a.size / 1024).toFixed(1)} KB)</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* Section 4b: Master summary appendix across every raft cluster */}
+        {batchResults.length > 0 && (
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
+              Phụ Lục A — Bảng Tổng Hợp Toàn Bộ {batchResults.length} Cụm Bè
+            </h2>
+            <table className="w-full text-[10.5px] text-left border border-slate-200 font-mono">
+              <thead className="bg-slate-100 text-slate-700 uppercase">
+                <tr>
+                  <th className="p-1.5 border-r border-b border-slate-200 font-sans">Bè</th>
+                  <th className="p-1.5 border-r border-b border-slate-200 text-right">S (m²)</th>
+                  <th className="p-1.5 border-r border-b border-slate-200 text-right">F_env (kN)</th>
+                  <th className="p-1.5 border-r border-b border-slate-200 text-right">T_max (kN)</th>
+                  <th className="p-1.5 border-r border-b border-slate-200 text-right">η cáp</th>
+                  <th className="p-1.5 border-r border-b border-slate-200 font-sans">Hạng mục chi phối</th>
+                  <th className="p-1.5 border-b border-slate-200 text-center font-sans">Kết luận</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {batchResults.map((b) => {
+                  const v = b.results.overallVerdict;
+                  const label = v === 'PASS' ? 'ĐẠT' : v === 'FAIL' ? 'KHÔNG ĐẠT' : 'N/A';
+                  const cls = v === 'PASS' ? 'text-emerald-700' : v === 'FAIL' ? 'text-rose-700' : 'text-slate-500';
+                  return (
+                    <tr key={b.raft.id}>
+                      <td className="p-1.5 border-r border-slate-200 font-bold font-sans">{b.raft.name}</td>
+                      <td className="p-1.5 border-r border-slate-200 text-right">{b.raft.area_m2.toLocaleString()}</td>
+                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.f_env_total_kN}</td>
+                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.t_max_intact_kN}</td>
+                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.cableUtilization ?? '-'}</td>
+                      <td className="p-1.5 border-r border-slate-200 font-sans">
+                        {b.results.governingCheck ? `${b.results.governingCheck.id} — ${b.results.governingCheck.label}` : '-'}
+                      </td>
+                      <td className={`p-1.5 text-center font-bold font-sans ${cls}`}>{label}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
 

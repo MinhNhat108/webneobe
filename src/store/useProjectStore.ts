@@ -4,6 +4,66 @@ import { ProjectState, CalcResults, RaftInput, EnvInput, LineInput, AnchorInput,
 import { calculateProject } from '../lib/calc';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../data/huoiVanhProject';
 
+const CABLE_MBL_KN: Record<string, number> = {
+  'PES-48': 688,
+  'PES-36': 385,
+  'PES-32': 305,
+  'PES-28': 235
+};
+
+/**
+ * Builds the per-raft ProjectState override — the SAME logic `setActiveRaft`
+ * applies to switch the active raft, factored out so the batch calculator
+ * (`calculateAllRafts`) can run it for all 12 rafts without touching
+ * `activeRaftId` / `currentProject` in the store.
+ */
+function buildRaftProjectState(
+  base: ProjectState,
+  raftItem: RaftSummaryItem,
+  defaultAnchor: AnchorInput
+): ProjectState {
+  return {
+    ...base,
+    activeRaftId: raftItem.id,
+    meta: {
+      ...base.meta,
+      note: `Tính toán cho ${raftItem.name} — diện tích ${raftItem.area_m2.toLocaleString()} m², số dây ${raftItem.cableCount} (bờ: ${raftItem.shoreAnchors}, đáy: ${raftItem.bedAnchors})`
+    },
+    raft: {
+      ...base.raft,
+      length_m: raftItem.length_m,
+      width_m: raftItem.width_m,
+      solarPanelCount: raftItem.solarPanelCount || Math.round(raftItem.area_m2 * 0.22)
+    },
+    line: {
+      ...base.line,
+      count: raftItem.cableCount,
+      cableCode: raftItem.selectedCable,
+      focusFactor: raftItem.focusFactor,
+      shoreLineCount: raftItem.shoreAnchors,
+      bedLineCount: raftItem.bedAnchors,
+      mbl_kN: CABLE_MBL_KN[raftItem.selectedCable] ?? 172
+    },
+    env: {
+      ...base.env,
+      waterDepth_m: raftItem.waterDepth_m || 6.0
+    },
+    anchor: {
+      ...base.anchor,
+      shoreD_m: raftItem.shorePileD_m ?? defaultAnchor.shoreD_m,
+      shoreL_m: raftItem.shorePileL_m ?? defaultAnchor.shoreL_m,
+      bed1D_m: raftItem.bedPileD_m ?? defaultAnchor.bed1D_m,
+      bed1L_m: raftItem.bedPileL_m ?? defaultAnchor.bed1L_m
+    }
+  };
+}
+
+export interface RaftBatchResult {
+  raft: RaftSummaryItem;
+  state: ProjectState;
+  results: CalcResults;
+}
+
 export interface ProjectStore {
   // Current active project
   currentProject: ProjectState;
@@ -17,6 +77,11 @@ export interface ProjectStore {
 
   // Calculation results
   results: CalcResults;
+
+  // Batch calculation across all rafts in raftsSummary — populated by
+  // calculateAllRafts(), consumed by RaftsOverviewTable and the Master Excel export.
+  batchResults: RaftBatchResult[];
+  batchCalculatedAt: string | null;
 
   // Actions
   updateMeta: (meta: Partial<ProjectMeta>) => void;
@@ -42,6 +107,11 @@ export interface ProjectStore {
 
   // Force recompute
   recalculate: () => void;
+
+  // Batch: calculate every raft in raftsSummary against the current
+  // project's environment/criteria/cable-catalogue defaults, for the
+  // Master Report table and the Master Excel export.
+  calculateAllRafts: () => RaftBatchResult[];
 }
 
 export const useProjectStore = create<ProjectStore>()(
@@ -61,6 +131,8 @@ export const useProjectStore = create<ProjectStore>()(
       activeRaftId: 1,
       raftsSummary: HUOI_VANH_RAFTS,
       results: calculateProject(HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState),
+      batchResults: [],
+      batchCalculatedAt: null,
 
       updateMeta: (meta) => {
         const current = get().currentProject;
@@ -136,53 +208,12 @@ export const useProjectStore = create<ProjectStore>()(
         const raftItem = state.raftsSummary.find(r => r.id === raftId);
         if (!raftItem) return;
 
-        const current = state.currentProject;
         // Base (project-default) pile geometry — the fallback for every raft
         // that does NOT carry its own Broms override. Falling back to
         // `current.anchor` instead would leak the previously selected raft's
         // (possibly oversized) pile into a raft that never asked for it.
         const defaultAnchor = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
-        const updated: ProjectState = {
-          ...current,
-          activeRaftId: raftId,
-          meta: {
-            ...current.meta,
-            note: `Tính toán cho ${raftItem.name} — diện tích ${raftItem.area_m2.toLocaleString()} m², số dây ${raftItem.cableCount} (bờ: ${raftItem.shoreAnchors}, đáy: ${raftItem.bedAnchors})`
-          },
-          raft: {
-            ...current.raft,
-            length_m: raftItem.length_m,
-            width_m: raftItem.width_m,
-            solarPanelCount: raftItem.solarPanelCount || Math.round(raftItem.area_m2 * 0.22)
-          },
-          line: {
-            ...current.line,
-            count: raftItem.cableCount,
-            cableCode: raftItem.selectedCable,
-            focusFactor: raftItem.focusFactor,
-            shoreLineCount: raftItem.shoreAnchors,
-            bedLineCount: raftItem.bedAnchors,
-            mbl_kN: raftItem.selectedCable === 'PES-48' ? 688
-              : raftItem.selectedCable === 'PES-36' ? 385
-              : raftItem.selectedCable === 'PES-32' ? 305
-              : raftItem.selectedCable === 'PES-28' ? 235
-              : 172
-          },
-          env: {
-            ...current.env,
-            waterDepth_m: raftItem.waterDepth_m || 6.0
-          },
-          // Broms pile geometry: per-raft override when the cluster's line
-          // tension needs a bigger pile (BP-1..BP-5), otherwise the project
-          // default (shore D0.45/L6.5, bed D0.35/L8.0).
-          anchor: {
-            ...current.anchor,
-            shoreD_m: raftItem.shorePileD_m ?? defaultAnchor.shoreD_m,
-            shoreL_m: raftItem.shorePileL_m ?? defaultAnchor.shoreL_m,
-            bed1D_m: raftItem.bedPileD_m ?? defaultAnchor.bed1D_m,
-            bed1L_m: raftItem.bedPileL_m ?? defaultAnchor.bed1L_m
-          }
-        };
+        const updated = buildRaftProjectState(state.currentProject, raftItem, defaultAnchor);
 
         const results = calculateProject(updated);
         set({ activeRaftId: raftId, currentProject: updated, results });
@@ -353,6 +384,17 @@ export const useProjectStore = create<ProjectStore>()(
       recalculate: () => {
         const results = calculateProject(get().currentProject);
         set({ results });
+      },
+
+      calculateAllRafts: () => {
+        const state = get();
+        const defaultAnchor = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
+        const batchResults: RaftBatchResult[] = state.raftsSummary.map((raftItem) => {
+          const raftState = buildRaftProjectState(state.currentProject, raftItem, defaultAnchor);
+          return { raft: raftItem, state: raftState, results: calculateProject(raftState) };
+        });
+        set({ batchResults, batchCalculatedAt: new Date().toISOString() });
+        return batchResults;
       }
     }),
     {

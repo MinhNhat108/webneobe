@@ -187,6 +187,20 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
               <span className="font-bold text-slate-900">{results.f_current_kN} kN</span>
             </div>
 
+            <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-100">
+              <span className="text-slate-600 font-sans">Lực sóng trôi dạt (F_wave):</span>
+              <span className="font-bold text-slate-900">{results.f_wave_kN} kN</span>
+            </div>
+
+            {isSolar && (
+              <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-100">
+                <span className="text-slate-600 font-sans">Chế độ tổ hợp tải:</span>
+                <span className="font-bold text-slate-700 text-[11px]">
+                  {(env.loadCombinationMode ?? 'fpv_combined') === 'separate' ? 'Tính riêng biệt' : `Gộp hệ số ${env.waveCurrentFactor ?? 1.05}`}
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center justify-between p-2 bg-sky-50 rounded-lg border border-sky-200">
               <span className="text-sky-900 font-sans font-bold">Tổng lực môi trường F_env:</span>
               <span className="font-bold text-sky-900 text-sm">{results.f_env_total_kN} kN</span>
@@ -246,12 +260,21 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
             {/* Shore Pile Summary */}
             <div className="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2">
-              <div className="font-sans font-bold text-indigo-900 border-b border-slate-100 pb-1">
-                Cọc Neo BỜ (Tiết diện {state.anchor.shoreD_m}m, Ngàm {state.anchor.shoreL_m}m)
+              <div className="font-sans font-bold text-indigo-900 border-b border-slate-100 pb-1 flex items-center justify-between">
+                <span>Cọc Neo BỜ ({results.shorePile.shape === 'circular' ? 'Tròn' : results.shorePile.shape === 'pipe' ? 'Ống' : 'Vuông'} {state.anchor.shoreD_m}m, Ngàm {state.anchor.shoreL_m}m)</span>
+                <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700">
+                  {results.shorePile.soilModel === 'sand' ? 'Đất rời (Broms φ)' : 'Đất dính (Broms cu)'}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600 font-sans">Lực dính đất bờ (cu):</span>
-                <span>{state.anchor.cuShore_kPa} kPa</span>
+                <span className="text-slate-600 font-sans">
+                  {results.shorePile.soilModel === 'sand' ? 'Góc ma sát trong (φ):' : 'Lực dính đất bờ (cu):'}
+                </span>
+                <span>
+                  {results.shorePile.soilModel === 'sand'
+                    ? `${state.anchor.phiShore_deg ?? 30}° (Kp=${results.shorePile.Kp})`
+                    : `${state.anchor.cuShore_kPa} kPa`}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-600 font-sans">Sức chịu ngang cực hạn (Hu):</span>
@@ -266,8 +289,15 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
                 <span>{results.shorePile.Mmax} kNm</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600 font-sans">Mômen giới hạn tiết diện cọc (M_rd):</span>
-                <span>{results.shorePile.Mrd} kNm</span>
+                <span className="text-slate-600 font-sans">
+                  Mômen giới hạn tiết diện (M_rd{(results.shorePile.MrdSteel_kNm ?? 0) > 0 ? ' = bê tông + thép' : ''}):
+                </span>
+                <span>
+                  {results.shorePile.Mrd} kNm
+                  {(results.shorePile.MrdSteel_kNm ?? 0) > 0 && (
+                    <span className="text-slate-400"> ({results.shorePile.MrdConcrete_kNm} + {results.shorePile.MrdSteel_kNm})</span>
+                  )}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-600 font-sans">Chiều dài cọc đặt hàng:</span>
@@ -282,12 +312,21 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
             {/* Lake Bed Pile Summary */}
             {results.bedPile1 && (
               <div className="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2">
-                <div className="font-sans font-bold text-indigo-900 border-b border-slate-100 pb-1">
-                  Cọc Neo ĐÁY LÒNG HỒ ({state.anchor.bed1D_m}m, Ngàm {state.anchor.bed1L_m}m)
+                <div className="font-sans font-bold text-indigo-900 border-b border-slate-100 pb-1 flex items-center justify-between">
+                  <span>Cọc Neo ĐÁY LÒNG HỒ ({state.anchor.bed1D_m}m, Ngàm {state.anchor.bed1L_m}m)</span>
+                  <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700">
+                    {results.bedPile1.soilModel === 'sand' ? 'Đất rời (Broms φ)' : 'Đất dính (Broms cu)'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 font-sans">Lực dính bùn đáy (cu):</span>
-                  <span>{state.anchor.cuBed_kPa} kPa</span>
+                  <span className="text-slate-600 font-sans">
+                    {results.bedPile1.soilModel === 'sand' ? 'Góc ma sát trong (φ):' : 'Lực dính bùn đáy (cu):'}
+                  </span>
+                  <span>
+                    {results.bedPile1.soilModel === 'sand'
+                      ? `${state.anchor.phiBed_deg ?? 30}° (Kp=${results.bedPile1.Kp})`
+                      : `${state.anchor.cuBed_kPa} kPa`}
+                  </span>
                 </div>
                 <div className="flex justify-between text-amber-700 font-bold">
                   <span className="text-slate-600 font-sans">Góc nghiêng cáp tại đỉnh cọc:</span>
@@ -341,6 +380,27 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
           </div>
         </div>
       )}
+
+      {/* C8 / C9 geometry */}
+      <div className="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/50">
+        <div className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+          5. Kiểm tra hình học bố trí (C8 khoảng hở đáy hồ · C9 khoảng cách dây neo)
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+          <div className="p-2 bg-white rounded border border-slate-100 flex items-center justify-between">
+            <span className="text-slate-500 font-sans text-[11px]">Khoảng hở đáy bè – đáy hồ (C8):</span>
+            <span className="font-bold text-slate-900">
+              {results.bedClearance_m !== null ? `${results.bedClearance_m} m` : '—'}
+            </span>
+          </div>
+          <div className="p-2 bg-white rounded border border-slate-100 flex items-center justify-between">
+            <span className="text-slate-500 font-sans text-[11px]">Khoảng cách dây neo trung bình (C9):</span>
+            <span className="font-bold text-slate-900">
+              {results.avgLineSpacing_m !== null ? `${results.avgLineSpacing_m} m` : '—'}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

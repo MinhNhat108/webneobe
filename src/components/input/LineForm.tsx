@@ -4,11 +4,39 @@ import { NumberField } from './NumberField';
 import pesCablesData from '../../data/pesCables.json';
 import chainGradesData from '../../data/chainGrades.json';
 import { estimateChainMBL_kN, estimateChainWeightAir_kgpm } from '../../lib/calc/constants';
-import { GitCommit } from 'lucide-react';
+import { calculateLoads } from '../../lib/calc/loads';
+import { GitCommit, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const LineForm: React.FC = () => {
   const { currentProject, updateLine } = useProjectStore();
   const line = currentProject.line;
+  const isSolar = currentProject.systemType === 'solar_fpv';
+
+  const loads = calculateLoads(currentProject.raft, currentProject.env, line, isSolar, 3.0);
+  const mbl = line.mbl_kN || 227;
+  const tAllow = mbl / 3.0;
+  const pretension = line.pretension_kN || 0;
+  const angleRad = ((line.horizontalAngle_deg || 30) * Math.PI) / 180;
+  const cosAlpha = Math.cos(angleRad);
+  const fEnv = loads.f_env_total_kN;
+
+  // Minimum effective lines so tension <= T_allow
+  const netAllow = Math.max(1, tAllow - pretension);
+  const minNeff = Math.max(1, Math.ceil(fEnv / (cosAlpha * netAllow)));
+
+  // Spacing constraint (<= 15m perimeter spacing)
+  const perimeter = 2 * ((currentProject.raft.length_m || 0) + (currentProject.raft.width_m || 0));
+  const minLinesBySpacing = perimeter > 0 ? Math.max(4, Math.ceil(perimeter / 15)) : 4;
+  const recommendedTotal = Math.max(minLinesBySpacing, minNeff * 3);
+
+  const isCurrentOptimized = line.effectiveCount === minNeff && line.count === recommendedTotal;
+
+  const handleApplyRecommendation = () => {
+    updateLine({
+      effectiveCount: minNeff,
+      count: recommendedTotal
+    });
+  };
 
   const handleCableSelect = (code: string) => {
     const cable = pesCablesData.find(c => c.id === code);
@@ -192,6 +220,36 @@ export const LineForm: React.FC = () => {
         />
       </div>
 
+      {/* Smart Mooring Line Recommendation based on current Wind Load */}
+      <div className="bg-gradient-to-r from-sky-50 via-indigo-50/40 to-emerald-50/50 p-4 rounded-xl border border-sky-200/80 space-y-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2 text-sky-900 font-semibold text-xs">
+            <Sparkles className="w-4 h-4 text-sky-600" />
+            <span>GỢI Ý SỐ DÂY NEO THEO TẢI TRỌNG GIÓ HIỆN TẠI (V = {currentProject.env.windSpeed_ms} m/s, F_env = {fEnv.toFixed(1)} kN):</span>
+          </div>
+          {isCurrentOptimized ? (
+            <span className="inline-flex items-center gap-1 text-xs text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Đang tối ưu theo gợi ý
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={handleApplyRecommendation}
+              className="text-xs bg-sky-600 hover:bg-sky-700 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Áp Dụng Gợi Ý (N_eff = {minNeff}, Tổng = {recommendedTotal})
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-slate-600 leading-relaxed">
+          • Với tải trọng môi trường <strong>{fEnv.toFixed(1)} kN</strong> và độ bền cáp <strong>{line.cableCode || 'PES'} ({mbl} kN)</strong>: Cần tối thiểu <strong>{minNeff} dây chịu lực chính (N_eff)</strong> để đạt hệ số an toàn SF ≥ 3.0.
+          <br />
+          • Theo chu vi bè {perimeter > 0 ? `${perimeter} m` : ''} (khoảng cách ≤ 15m/dây): Đề xuất tổng bố trí khoảng <strong>{recommendedTotal} dây neo</strong> quanh bè.
+        </p>
+      </div>
+
       {/* Line Counts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
         <NumberField
@@ -228,7 +286,7 @@ export const LineForm: React.FC = () => {
           unit="dây"
           step={1}
           min={1}
-          helpText="Dùng cho tính toán Catenary (vd: 6 dây)"
+          helpText="Số dây chịu lực chính đón hướng gió (vd: 4-6 dây)"
         />
       </div>
     </div>

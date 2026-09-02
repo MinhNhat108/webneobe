@@ -127,15 +127,44 @@ export const EnvForm: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <NumberField
-            label="Vận tốc gió thiết kế (V_wind)"
-            value={env.windSpeed_ms}
-            onChange={(val) => updateEnv({ windSpeed_ms: val })}
-            unit="m/s"
-            step={0.5}
-            min={0}
-            helpText="Vận tốc gió cực đại tính toán (vd: 30 m/s = cấp 11)"
-          />
+          <div className="space-y-1.5">
+            <NumberField
+              label="Vận tốc gió thiết kế (V_wind)"
+              value={env.windSpeed_ms}
+              onChange={(val) => updateEnv({ windSpeed_ms: val })}
+              unit="m/s"
+              step={0.5}
+              min={0}
+              helpText={`Gió ${(env.windSpeed_ms * 3.6).toFixed(1)} km/h • q = ${(0.5 * (env.airDensity || 1.25) * env.windSpeed_ms * env.windSpeed_ms).toFixed(1)} Pa`}
+            />
+            {/* Quick preset wind speed selector */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[11px] font-medium text-slate-500">Chọn nhanh:</span>
+              {[
+                { label: '10 m/s (Cấp 5-6)', speed: 10.0, hint: 'Gió thường / Vận hành' },
+                { label: '15 m/s (Cấp 7)', speed: 15.0, hint: 'Gió mạnh' },
+                { label: '20 m/s (Cấp 8-9)', speed: 20.0, hint: 'Gió giông' },
+                { label: '30 m/s (Cấp 11)', speed: 30.0, hint: 'Bão thiết kế' }
+              ].map((item) => {
+                const isActive = Math.abs(env.windSpeed_ms - item.speed) < 0.1;
+                return (
+                  <button
+                    key={item.speed}
+                    type="button"
+                    onClick={() => updateEnv({ windSpeed_ms: item.speed })}
+                    title={item.hint}
+                    className={`text-[11px] px-2 py-0.5 rounded-full font-medium transition-all ${
+                      isActive
+                        ? 'bg-sky-600 text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border border-slate-200'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <NumberField
             label="Hệ số cản gió (Cd_wind)"

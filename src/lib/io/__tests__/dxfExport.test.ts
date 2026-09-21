@@ -166,8 +166,9 @@ describe('convexHull / raft outlines', () => {
     expect(new Set(labelled)).toEqual(rafts);
     expect(labelled).toHaveLength(rafts.size);
 
-    // BÈ 8 and BÈ 9 are one drawn cluster but two calculation rafts.
-    expect(outlines.some((o) => o.raft === 'BÈ 8 + BÈ 9')).toBe(true);
+    // Exactly BÈ 1..BÈ 12 — one polygon per raft, and no "BÈ 13" anywhere.
+    expect(new Set(labelled)).toEqual(new Set(Array.from({ length: 12 }, (_, i) => `BÈ ${i + 1}`)));
+    expect(labelled).not.toContain('BÈ 13');
   });
 
   it('falls back to the hull, flagged as such, for a raft with no polygon', () => {

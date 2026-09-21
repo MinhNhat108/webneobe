@@ -39,11 +39,11 @@ Web tính neo bè/
 │   │   ├── files/                # AttachmentPanel, DxfViewer (CAD), PdfViewer, ImageViewer
 │   │   ├── input/                # Biểu mẫu nhập liệu (ProjectForm, RaftForm, EnvForm, LineForm, AnchorForm, CriteriaForm)
 │   │   ├── layout/               # AppShell (Main Layout), Header, Sidebar
-│   │   ├── map/                  # MooringLayoutMap (Canvas 2D tương tác 13 bè & 299 điểm neo)
+│   │   ├── map/                  # MooringLayoutMap (Canvas 2D tương tác 12 bè & 299 điểm neo)
 │   │   ├── report/               # ReportView (Báo cáo in ấn A4 chuẩn duyệt)
 │   │   └── results/              # VerdictBadge, CheckTable, IntermediateTable, RaftsOverviewTable
 │   ├── data/                     # Dữ liệu tĩnh dự án Hồ Huổi Vanh & Catalogue tra cứu
-│   │   ├── huoiVanhProject.ts    # Dữ liệu mặc định 13 cụm bè và thông số thiết kế
+│   │   ├── huoiVanhProject.ts    # Dữ liệu mặc định 12 cụm bè và thông số thiết kế
 │   │   ├── huoiVanhCoordinates.json # 299 tọa độ điểm neo X, Y, Z và tim tuyến cáp
 │   │   ├── pesCables.json        # Catalogue cáp Polyester PES (PES-24 đến PES-48, MBL, trọng lượng)
 │   │   ├── chainGrades.json      # Cấp xích neo (U1, U2, U3)
@@ -90,7 +90,7 @@ interface ProjectStore {
   currentProject: ProjectState;     // Thông số dự án đang tính toán
   projectList: Array<...>;          // Danh sách các dự án
   activeRaftId: number;             // ID cụm bè đang chọn (1 -> 13)
-  raftsSummary: RaftSummaryItem[];  // Bảng tổng hợp 13 bè Huổi Vanh
+  raftsSummary: RaftSummaryItem[];  // Bảng tổng hợp 12 bè Huổi Vanh
   results: CalcResults;             // Kết quả tính toán cơ học (luôn đồng bộ)
   
   // Actions cập nhật từng phần

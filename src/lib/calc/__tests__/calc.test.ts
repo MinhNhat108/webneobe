@@ -434,7 +434,12 @@ describe('Full project', () => {
     expect(['PASS', 'FAIL', 'NA']).toContain(r.overallVerdict);
   });
 
-  it('verifies all 13 Huoi Vanh rafts calculate and pass', () => {
+  it('verifies all 12 Huoi Vanh rafts calculate and pass', () => {
+    expect(HUOI_VANH_RAFTS).toHaveLength(12);
+    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(
+      Array.from({ length: 12 }, (_, i) => `BÈ ${i + 1}`)
+    );
+
     for (const raft of HUOI_VANH_RAFTS) {
       const s = base();
       s.activeRaftId = raft.id;

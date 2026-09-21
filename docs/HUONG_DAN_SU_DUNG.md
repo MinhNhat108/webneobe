@@ -58,8 +58,8 @@ Giao diện phần mềm được tối ưu hóa cho màn hình kỹ sư với 3
 ### BƯỚC 1: QUẢN LÝ DỰ ÁN & CHỌN CỤM BÈ
 *(Nhấp vào mục "1. Dự Án & Cụm Bè" ở thanh menu trái)*
 
-1. **Chuyển đổi giữa 13 cụm bè (Dự án Hồ Huổi Vanh):**
-   - Trên thanh *“Chọn cụm bè cần tính toán chi tiết”*, nhấp vào bất kỳ cụm bè nào từ **BÈ 1** đến **BÈ 13**.
+1. **Chuyển đổi giữa 12 cụm bè (Dự án Hồ Huổi Vanh):**
+   - Trên thanh *“Chọn cụm bè cần tính toán chi tiết”*, nhấp vào bất kỳ cụm bè nào từ **BÈ 1** đến **BÈ 12**.
    - Phần mềm sẽ tự động nạp diện tích, kích thước, số lượng tấm pin, số dây neo và loại cáp tương ứng của bè đó vào toàn bộ mô hình.
 2. **Khôi phục dữ liệu gốc:**
    - Nếu bạn đã chỉnh sửa thông số thử nghiệm và muốn quay về dữ liệu thiết kế chuẩn ban đầu, nhấn nút **"Dữ liệu gốc Huổi Vanh"**.
@@ -127,14 +127,14 @@ Mục này gồm 5 bảng biểu mẫu kỹ thuật. Mỗi khi bạn thay đổi
 *(Nhấp vào mục "3. Mặt Bằng & Tọa Độ Neo" ở thanh menu trái)*
 
 1. **Tổng quan mặt bằng 299 điểm neo:**
-   - Bản đồ số hóa toàn bộ vị trí 13 cụm bè trên lòng hồ Huổi Vanh.
+   - Bản đồ số hóa toàn bộ vị trí 12 cụm bè trên lòng hồ Huổi Vanh.
    - **Điểm màu xanh lá:** Cọc neo bờ.
    - **Điểm màu cam:** Cọc neo đáy lòng hồ (dùng chung giữa 2 bè lân cận).
    - **Đường nét đứt màu xanh/cam:** Hướng và tim tuyến của từng sợi cáp neo nối từ mép bè tới cọc.
 2. **Thao tác tương tác bản đồ:**
    - **Kéo chuột (Pan):** Di chuyển góc nhìn khắp lòng hồ.
    - **Cuộn chuột (Zoom):** Phóng to chi tiết cụm bè hoặc thu nhỏ toàn cảnh.
-   - **Bộ lọc cụm bè:** Bấm chọn xem riêng từng bè hoặc xem đồng thời toàn bộ 13 bè.
+   - **Bộ lọc cụm bè:** Bấm chọn xem riêng từng bè hoặc xem đồng thời toàn bộ 12 bè.
 3. **Tra cứu tọa độ kỹ thuật:**
    - Nhấp chuột trực tiếp vào một điểm cọc hoặc điểm mép bè bất kỳ trên bản đồ: Cửa sổ pop-up sẽ hiển thị ngay **Mã điểm cọc, Tọa độ thực tế ($X, Y, Z$), Chiều dài nhịp cáp và Góc phương vị**.
 
@@ -161,7 +161,7 @@ Trang này tổng hợp toàn bộ kết luận kỹ thuật của phương án 
    - Tổng lực môi trường $F_{env}$ (kN).
    - Lực căng lớn nhất $T_{max}$ (kN).
    - Chi tiết lực chịu tải và mômen uốn của cọc bờ, cọc đáy hồ, thể tích bê tông cọc ($\text{m}^3$).
-4. **Bảng tổng hợp 13 cụm bè:** Bảng đối chiếu toàn diện kích thước, số lượng cáp và phương án chọn cáp của cả 13 cụm bè.
+4. **Bảng tổng hợp 12 cụm bè:** Bảng đối chiếu toàn diện kích thước, số lượng cáp và phương án chọn cáp của cả 12 cụm bè.
 
 ---
 
@@ -194,7 +194,7 @@ Phần mềm tích hợp sẵn bộ tài liệu kỹ thuật gốc của hồ Hu
   - `DuLieuDauVao`: Bảng thông số hình học, tải trọng gió, cáp, cọc.
   - `KetQuaTrungGian`: Toàn bộ các bước giải công thức lực và mômen.
   - `BangKiemTra`: Bảng tổng hợp kiểm tra ĐẠT / KHÔNG ĐẠT có công thức và ghi chú.
-  - `TongHop13Be`: Bảng số liệu tổng hợp của toàn bộ 13 cụm bè hồ Huổi Vanh.
+  - `TongHopCumBe`: Bảng số liệu tổng hợp của toàn bộ 12 cụm bè hồ Huổi Vanh.
   - `GhiChu`: Cam kết kỹ thuật và ngày giờ xuất báo cáo.
 
 #### 3. Xem trước & In báo cáo thuyết minh A4 (`In Báo Cáo`):
@@ -234,7 +234,7 @@ Phần mềm vận hành dựa trên các tiêu chuẩn kỹ thuật hàng hải
 > - **Nếu vi phạm cọc lòng hồ bị nhổ (C5):** Tăng chiều sâu cọc ngàm $L$ trong bùn hoặc kéo dài khoảng cách cọc ra xa để giảm góc nghiêng cáp $\theta$.
 
 ### Q2: Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của dự án?
-> **Trả lời:** Vào mục **"1. Dự Án & Cụm Bè"** -> Bấm nút **"Dữ liệu gốc Huổi Vanh"** trên góc phải. Toàn bộ thông số 13 cụm bè sẽ được nạp lại về trạng thái thiết kế chuẩn ban đầu.
+> **Trả lời:** Vào mục **"1. Dự Án & Cụm Bè"** -> Bấm nút **"Dữ liệu gốc Huổi Vanh"** trên góc phải. Toàn bộ thông số 12 cụm bè sẽ được nạp lại về trạng thái thiết kế chuẩn ban đầu.
 
 ### Q3: Dữ liệu tôi nhập có bị mất khi tắt trình duyệt hoặc mất điện không?
 > **Trả lời:** **Không bị mất.** Phần mềm có tính năng tự động lưu tức thì (Auto-save) vào bộ nhớ cục bộ (LocalStorage) của trình duyệt. Lần sau mở web lên, toàn bộ dữ liệu bạn đã nhập sẽ hiển thị lại nguyên vẹn.

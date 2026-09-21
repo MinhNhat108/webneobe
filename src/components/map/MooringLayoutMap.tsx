@@ -117,7 +117,7 @@ export const MooringLayoutMap: React.FC = () => {
           </div>
           <div>
             <h3 className="card-title">
-              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo 13 Bè (Huổi Vanh)
+              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo 12 Bè (Huổi Vanh)
             </h3>
             <p className="card-subtitle">
               Biểu diễn 299 tuyến cáp neo, cọc neo bờ (xanh lá) và cọc neo đáy hồ (cam)
@@ -141,7 +141,7 @@ export const MooringLayoutMap: React.FC = () => {
               }}
               className="bg-transparent font-medium text-slate-700 outline-none cursor-pointer"
             >
-              <option value="ALL">Toàn bộ 13 Bè</option>
+              <option value="ALL">Toàn bộ 12 Bè</option>
               {uniqueRafts.map(r => (
                 <option key={r} value={r}>{r}</option>
               ))}

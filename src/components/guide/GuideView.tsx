@@ -53,7 +53,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
     },
     {
       q: 'Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của Dự án Hồ Huổi Vanh?',
-      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 12 cụm bè (BÈ 1 đến BÈ 13, đã gộp BÈ 7+8 theo bản vẽ MB-B01) theo đúng hồ sơ thiết kế mới nhất.'
+      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 12 cụm bè (BÈ 1 đến BÈ 12 theo bản vẽ CAD của khách hàng) theo đúng hồ sơ thiết kế mới nhất.'
     },
     {
       q: 'Làm sao để xuất hoặc in báo cáo thuyết minh tính toán sang file PDF đẹp mắt?',
@@ -191,7 +191,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     1. Quản Lý Dự Án &amp; Chọn Cụm Bè
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Chọn nhanh từ <strong>BÈ 1 đến BÈ 13</strong> của Hồ Huổi Vanh hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
+                    Chọn nhanh từ <strong>BÈ 1 đến BÈ 12</strong> của Hồ Huổi Vanh hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -436,7 +436,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </h4>
                   <ul className="list-disc pl-5 space-y-2">
                     <li>
-                      <strong>Chọn cụm bè (BÈ 1 đến BÈ 13, không có BÈ 8 — đã gộp vào BÈ 7):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa 12 cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
+                      <strong>Chọn cụm bè (BÈ 1 đến BÈ 12):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa 12 cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
                     </li>
                     <li>
                       <strong>Nút "Dữ liệu gốc Huổi Vanh":</strong> Nhấn nút này khi muốn hủy bỏ các chỉnh sửa thử nghiệm để khôi phục cấu hình chuẩn ban đầu theo hồ sơ thiết kế.

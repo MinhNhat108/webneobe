@@ -71,7 +71,7 @@ export interface ProjectStore {
   // All projects list (for multi-project management)
   projectList: Array<{ id: string; name: string; code: string; location: string; date: string; systemType: SystemType }>;
 
-  // For multi-raft projects (like Huổi Vanh 12 bè, kí hiệu BÈ 1..13 trừ BÈ 8)
+  // For multi-raft projects (Huổi Vanh: 12 cụm bè, BÈ 1 đến BÈ 12)
   activeRaftId: number;
   raftsSummary: RaftSummaryItem[];
 
@@ -92,7 +92,7 @@ export interface ProjectStore {
   updateCriteria: (criteria: Partial<Criteria>) => void;
   setSystemType: (type: SystemType) => void;
   
-  // Raft switching (for 13 rafts)
+  // Raft switching (for the 12 rafts of the Huổi Vanh plan)
   setActiveRaft: (raftId: number) => void;
 
   // Project management
@@ -399,7 +399,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 4,
+      version: 5,
       migrate: (persistedState: any) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -427,6 +427,28 @@ export const useProjectStore = create<ProjectStore>()(
             if (persistedState.activeRaftId === 8) {
               persistedState.activeRaftId = 1;
             }
+          }
+
+          // 2026-09-22 renumbering to the client's CAD plan: the drawing has
+          // exactly 12 clusters, BÈ 1..12, and its cluster 8 merges the two
+          // old survey groups 8 and 9. A browser that cached the previous
+          // layout still holds names up to "BÈ 13" / an id above 12, which no
+          // longer exists — re-sync the raft layout in that case (again, only
+          // for the Huổi Vanh project, never a user's own custom one).
+          const hasStaleRaft13 = Array.isArray(persistedState.raftsSummary)
+            && persistedState.raftsSummary.some((r: any) => (r?.id ?? 0) > 12 || r?.name === 'BÈ 13');
+          if (hasStaleRaft13) {
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+            }
+          }
+          // Whatever the history, never leave the app pointing at a raft that
+          // is not in the list: the selector would render nothing selected.
+          if (Array.isArray(persistedState.raftsSummary)
+            && persistedState.raftsSummary.length > 0
+            && !persistedState.raftsSummary.some((r: any) => r?.id === persistedState.activeRaftId)) {
+            persistedState.activeRaftId = persistedState.raftsSummary[0].id;
           }
         }
         return persistedState;

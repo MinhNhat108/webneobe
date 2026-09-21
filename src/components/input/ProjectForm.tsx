@@ -79,7 +79,7 @@ export const ProjectForm: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-brand-600" />
-              Chọn cụm bè cần tính toán chi tiết (13 Bè):
+              Chọn cụm bè cần tính toán chi tiết (12 Bè):
             </span>
             <span className="card-subtitle">
               Đang chọn: <strong className="text-brand-600 font-bold">{raftsSummary.find(r => r.id === activeRaftId)?.name || `BÈ ${activeRaftId}`}</strong>

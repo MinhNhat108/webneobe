@@ -41,12 +41,23 @@ export interface MooringCoordinate {
   azimuth: number;
 }
 
+/**
+ * The 12 raft clusters of Hồ Huổi Vanh — BÈ 1 .. BÈ 12, matching the client's
+ * CAD plan one-for-one (there is NO "BÈ 13": the drawing has exactly 12
+ * clusters, and cluster 8 merges the two old survey groups 8 and 9).
+ *
+ * `area_m2` and `perimeter_m` are measured from the surveyed boundary
+ * polygons in `huoiVanhRaftPolygons.json` (layer A-DETL-THIN of the client
+ * DXF). `length_m`/`width_m` remain the design-table values — they feed the
+ * wind/current areas in loads.ts, so they are NOT re-derived from the polygon
+ * here; see the project memory note `features/mooring-calculation`.
+ */
 export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
     id: 1,
     name: "BÈ 1",
-    area_m2: 3800,
-    perimeter_m: 270.4,
+    area_m2: 3732,
+    perimeter_m: 266.6,
     length_m: 93.1,
     width_m: 42.1,
     angle_deg: 144,
@@ -63,8 +74,8 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
     id: 2,
     name: "BÈ 2",
-    area_m2: 4125,
-    perimeter_m: 288.9,
+    area_m2: 4235,
+    perimeter_m: 294.5,
     length_m: 88.7,
     width_m: 56,
     angle_deg: 140.7,
@@ -81,8 +92,8 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
     id: 3,
     name: "BÈ 3",
-    area_m2: 4998,
-    perimeter_m: 303.9,
+    area_m2: 5433,
+    perimeter_m: 309.2,
     length_m: 90.5,
     width_m: 61.5,
     angle_deg: 113,
@@ -95,14 +106,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    bedPileD_m: 0.40,
-    bedPileL_m: 9.0
+    bedPileD_m: 0.4,
+    bedPileL_m: 9
   },
   {
     id: 4,
     name: "BÈ 4",
-    area_m2: 5560,
-    perimeter_m: 353.2,
+    area_m2: 6417,
+    perimeter_m: 368.6,
     length_m: 107.1,
     width_m: 69.6,
     angle_deg: 90,
@@ -115,14 +126,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    bedPileD_m: 0.40,
-    bedPileL_m: 9.0
+    bedPileD_m: 0.4,
+    bedPileL_m: 9
   },
   {
     id: 5,
     name: "BÈ 5",
-    area_m2: 19200,
-    perimeter_m: 547.6,
+    area_m2: 18814,
+    perimeter_m: 555.4,
     length_m: 156.9,
     width_m: 117,
     angle_deg: 90,
@@ -135,16 +146,16 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    shorePileD_m: 0.60,
-    shorePileL_m: 8.0,
-    bedPileD_m: 0.60,
+    shorePileD_m: 0.6,
+    shorePileL_m: 8,
+    bedPileD_m: 0.6,
     bedPileL_m: 12.5
   },
   {
     id: 6,
     name: "BÈ 6",
-    area_m2: 8799,
-    perimeter_m: 404.2,
+    area_m2: 8652,
+    perimeter_m: 377.8,
     length_m: 107.2,
     width_m: 95.1,
     angle_deg: 0,
@@ -157,21 +168,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    bedPileD_m: 0.40,
-    bedPileL_m: 10.0
+    bedPileD_m: 0.4,
+    bedPileL_m: 10
   },
   {
-    // BÈ 7 sau gộp: hợp nhất BÈ 7 (2575 m²) + BÈ 8 (2118 m²) cũ theo bản vẽ
-    // MB-B01 rev. 2026 (Tổng hợp 3 bè-trang-3.pdf) — kí hiệu "8" không còn
-    // xuất hiện trong bảng BÈ PIN của bản vẽ mới, diện tích mới 6697 m² lớn
-    // hơn tổng 2 bè cũ do tối ưu lại dải pin 750W. Kích thước dài/rộng dưới
-    // đây là ước lượng hình học (tỉ lệ theo căn bậc hai diện tích, giữ tỉ lệ
-    // khung BÈ 7 cũ) vì bản vẽ chỉ cho diện tích, không có toạ độ đỉnh — cần
-    // file DXF cập nhật nếu cần kích thước chính xác.
     id: 7,
     name: "BÈ 7",
-    area_m2: 6697,
-    perimeter_m: 371.2,
+    area_m2: 7283,
+    perimeter_m: 396.5,
     length_m: 101.1,
     width_m: 84.8,
     angle_deg: 0,
@@ -188,30 +192,35 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     bedPileL_m: 10.5
   },
   {
-    id: 9,
-    name: "BÈ 9",
-    area_m2: 8213,
-    perimeter_m: 379.3,
+    // Cụm bè số 8 trên bản vẽ (polygon 8.486 m²) gộp hai cụm khảo sát cũ "BÈ 8"
+    // (13 dây) và "BÈ 9" (15 dây) thành MỘT bè — xác nhận bằng kiểm tra
+    // point-in-polygon: toàn bộ điểm neo của cả hai cụm cũ nằm trong cùng một
+    // polygon. Số dây 28 = 13 + 15 (bờ 16 = 7 + 9, đáy 12 = 6 + 6) lấy trực tiếp
+    // từ huoiVanhCoordinates.json.
+    id: 8,
+    name: "BÈ 8",
+    area_m2: 8486,
+    perimeter_m: 397,
     length_m: 110.5,
     width_m: 79.3,
     angle_deg: 16,
     solarPanelCount: 1800,
     focusFactor: 0.2,
-    cableCount: 26,
+    cableCount: 28,
     shoreAnchors: 16,
-    bedAnchors: 10,
+    bedAnchors: 12,
     selectedCable: "PES-32",
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    bedPileD_m: 0.40,
+    bedPileD_m: 0.4,
     bedPileL_m: 9.5
   },
   {
-    id: 10,
-    name: "BÈ 10",
-    area_m2: 11630,
-    perimeter_m: 469.2,
+    id: 9,
+    name: "BÈ 9",
+    area_m2: 11627,
+    perimeter_m: 470.1,
     length_m: 145.5,
     width_m: 89.3,
     angle_deg: 90,
@@ -230,10 +239,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     bedPileL_m: 10.5
   },
   {
-    id: 11,
-    name: "BÈ 11",
-    area_m2: 8830,
-    perimeter_m: 401.1,
+    id: 10,
+    name: "BÈ 10",
+    area_m2: 9110,
+    perimeter_m: 397.9,
     length_m: 106.7,
     width_m: 94.1,
     angle_deg: 90,
@@ -246,14 +255,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 15,
     shoreAnchorDist_m: 20,
-    bedPileD_m: 0.40,
-    bedPileL_m: 9.0
+    bedPileD_m: 0.4,
+    bedPileL_m: 9
   },
   {
-    id: 12,
-    name: "BÈ 12",
-    area_m2: 4200,
-    perimeter_m: 256.5,
+    id: 11,
+    name: "BÈ 11",
+    area_m2: 4316,
+    perimeter_m: 263.8,
     length_m: 70,
     width_m: 58.3,
     angle_deg: 0,
@@ -268,10 +277,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shoreAnchorDist_m: 20
   },
   {
-    id: 13,
-    name: "BÈ 13",
-    area_m2: 3500,
-    perimeter_m: 272.5,
+    id: 12,
+    name: "BÈ 12",
+    area_m2: 3926,
+    perimeter_m: 283.5,
     length_m: 100.1,
     width_m: 36.2,
     angle_deg: 64,
@@ -294,7 +303,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
   designer: 'Kỹ sư Kết cấu Thủy công & Năng lượng tái tạo',
   date: '2026-08-19',
-  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi (đã gộp BÈ 7+8 theo bản vẽ MB-B01 rev. mới, tổng 19.188 tấm pin, 89.553 m²), cáp neo Polyester PES-24/28/32/36/48 và hệ cọc neo BTCT (cọc bờ D0.45m ngàm 6.5m và cọc đáy D0.35m ngàm 8.0m theo Broms, một số bè lớn dùng cọc tăng cường).',
+  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi (BÈ 1 đến BÈ 12 theo bản vẽ CAD của khách hàng, tổng 19.188 tấm pin, 92.031 m²), cáp neo Polyester PES-24/28/32/36/48 và hệ cọc neo BTCT (cọc bờ D0.45m ngàm 6.5m và cọc đáy D0.35m ngàm 8.0m theo Broms, một số bè lớn dùng cọc tăng cường).',
   systemType: 'solar_fpv' as const,
   activeRaftId: 1,
   meta: {
@@ -303,7 +312,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
     designer: 'Kỹ sư Kết cấu Thủy công',
     date: '2026-08-19',
-    note: 'Hồ chứa nước Huổi Vanh — Hệ neo 12 bè pin mặt trời nổi (đã gộp BÈ 7+8)'
+    note: 'Hồ chứa nước Huổi Vanh — Hệ neo 12 bè pin mặt trời nổi (BÈ 1 đến BÈ 12)'
   },
   raft: {
     length_m: 90.0,

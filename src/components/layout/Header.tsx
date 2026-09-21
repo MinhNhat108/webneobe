@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
               </span>
             </div>
             <p className="text-xs text-slate-400 truncate">
-              ⚡ Điện mặt trời nổi (FPV) — Hồ Huổi Vanh (13 Bè)
+              ⚡ Điện mặt trời nổi (FPV) — Hồ Huổi Vanh (12 Bè)
             </p>
           </div>
         </div>

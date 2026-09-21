@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Attachment } from '../../lib/calc/types';
+import { HUOI_VANH_DEFAULT_PROJECT } from '../../data/huoiVanhProject';
+import { resolveAssetUrl } from '../../lib/utils/assetUrl';
 import { PdfViewer } from './PdfViewer';
 import { ImageViewer } from './ImageViewer';
 import { DxfViewer } from './DxfViewer';
@@ -13,7 +15,9 @@ import {
   FileSpreadsheet,
   Trash2,
   Eye,
-  FileCheck
+  FileCheck,
+  RotateCcw,
+  Download
 } from 'lucide-react';
 
 export const AttachmentPanel: React.FC = () => {
@@ -21,6 +25,20 @@ export const AttachmentPanel: React.FC = () => {
   const attachments = currentProject.attachments || [];
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // Restore default attachments for Huổi Vanh project
+  const handleRestoreHuoiVanhDocs = () => {
+    const defaultAtts = (HUOI_VANH_DEFAULT_PROJECT as any).attachments || [];
+    useProjectStore.setState((state) => ({
+      currentProject: {
+        ...state.currentProject,
+        attachments: defaultAtts
+      }
+    }));
+    if (defaultAtts.length > 0) {
+      setSelectedId(defaultAtts[0].id);
+    }
+  };
 
   // Handle local file upload
   const handleFileUpload = (files: FileList | null) => {
@@ -53,7 +71,7 @@ export const AttachmentPanel: React.FC = () => {
     });
   };
 
-  const currentAttachment = attachments.find(a => a.id === selectedId) || attachments[0];
+  const currentAttachment = attachments.find((a) => a.id === selectedId) || attachments[0];
 
   return (
     <div className="card p-6 space-y-6">
@@ -67,7 +85,7 @@ export const AttachmentPanel: React.FC = () => {
               Tài Liệu Đính Kèm & Bản Vẽ Kỹ Thuật
             </h3>
             <p className="card-subtitle">
-              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf), thuyết minh PDF và xem trước trực tiếp
+              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf) 12 bè, thuyết minh PDF và xem trước trực tiếp trên web
             </p>
           </div>
         </div>
@@ -95,42 +113,64 @@ export const AttachmentPanel: React.FC = () => {
           </label>
 
           {/* Preset Huổi Vanh project docs banner */}
-          <div className="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 text-xs space-y-1.5">
-            <div className="font-semibold text-indigo-900 flex items-center gap-1.5">
-              <FileCheck className="w-4 h-4 text-indigo-600" />
-              Tài liệu dự án Hồ Huổi Vanh:
+          <div className="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 text-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-indigo-900 flex items-center gap-1.5">
+                <FileCheck className="w-4 h-4 text-indigo-600" />
+                Hồ sơ kỹ thuật Hồ Huổi Vanh:
+              </div>
+              <button
+                type="button"
+                onClick={handleRestoreHuoiVanhDocs}
+                className="inline-flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-800 font-medium hover:underline"
+                title="Khôi phục danh mục tài liệu mặc định"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Đồng bộ lại
+              </button>
             </div>
             <p className="text-slate-600 text-[11px]">
-              Tài liệu gốc đã được tích hợp trong thư mục <code>/Tài liệu hồ Huổi Vanh</code>:
+              Tài liệu đã được tích hợp sẵn từ thư mục <code>/Tài liệu hồ Huổi Vanh</code>:
             </p>
-            <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-0.5 pl-1">
-              <li>Bản vẽ mặt bằng bố trí hệ neo (.pdf)</li>
-              <li>Bảng tính neo rút gọn 12 bè (.xlsx)</li>
-              <li>Ảnh phối cảnh hệ bè mặt trời (.jpg)</li>
+            <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
+              <li>
+                <strong>HỒ HUỔI VANH.dxf</strong>: Mặt bằng CAD 12 cụm bè (20.721 đối tượng)
+              </li>
+              <li>
+                <strong>HOHUOIVANH.Bố trí sơ bộ bè pin.pdf</strong>: Bản vẽ thuyết minh layout
+              </li>
+              <li>
+                <strong>BANG_TINH_NEO_RUT_GON_1_v2.xlsx</strong>: Bảng tính neo rút gọn
+              </li>
+              <li>
+                <strong>ANH1.jpg</strong>: Ảnh phối cảnh vệ tinh độ phân giải cao
+              </li>
             </ul>
           </div>
 
           {/* Files List */}
           <div className="space-y-2">
-            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">
-              Danh sách file ({attachments.length}):
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">
+                Danh sách tài liệu ({attachments.length}):
+              </span>
+            </div>
 
             {attachments.length === 0 ? (
               <div className="text-center py-6 text-xs text-slate-400 border border-slate-100 rounded-lg">
-                Chưa có file nào được tải lên
+                Chưa có tài liệu nào. Bấm "Đồng bộ lại" ở trên để nạp hồ sơ mẫu.
               </div>
             ) : (
-              <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+              <div className="space-y-1.5 max-h-80 overflow-y-auto pr-1">
                 {attachments.map((att) => {
-                  const isSelected = (currentAttachment?.id === att.id);
+                  const isSelected = currentAttachment?.id === att.id;
                   return (
                     <div
                       key={att.id}
                       onClick={() => setSelectedId(att.id)}
                       className={`flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
                         isSelected
-                          ? 'border-brand-500 bg-brand-50/70 text-brand-900 font-medium shadow-sm'
+                          ? 'border-brand-500 bg-brand-50/70 text-brand-900 font-medium shadow-sm ring-1 ring-brand-500/20'
                           : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -139,7 +179,7 @@ export const AttachmentPanel: React.FC = () => {
                         {att.kind === 'image' && <ImageIcon className="w-4 h-4 text-emerald-500 shrink-0" />}
                         {att.kind === 'dxf' && <FileCode className="w-4 h-4 text-sky-500 shrink-0" />}
                         {att.kind === 'other' && <FileSpreadsheet className="w-4 h-4 text-emerald-600 shrink-0" />}
-                        <span className="truncate">{att.name}</span>
+                        <span className="truncate" title={att.name}>{att.name}</span>
                       </div>
 
                       <div className="flex items-center gap-1 shrink-0 ml-2">
@@ -176,25 +216,44 @@ export const AttachmentPanel: React.FC = () => {
         </div>
 
         {/* Right column: Preview Canvas / Viewer */}
-        <div className="lg:col-span-2 min-h-[480px]">
+        <div className="lg:col-span-2 min-h-[580px]">
           {currentAttachment ? (
             <>
               {currentAttachment.kind === 'pdf' && (
-                <PdfViewer url={currentAttachment.blobUrl || currentAttachment.remoteUrl || ''} name={currentAttachment.name} />
+                <PdfViewer
+                  url={currentAttachment.blobUrl || currentAttachment.remoteUrl || ''}
+                  name={currentAttachment.name}
+                />
               )}
               {currentAttachment.kind === 'image' && (
-                <ImageViewer url={currentAttachment.blobUrl || currentAttachment.remoteUrl || ''} name={currentAttachment.name} />
+                <ImageViewer
+                  url={currentAttachment.blobUrl || currentAttachment.remoteUrl || ''}
+                  name={currentAttachment.name}
+                />
               )}
               {currentAttachment.kind === 'dxf' && (
-                <DxfViewer url={currentAttachment.blobUrl || currentAttachment.remoteUrl} name={currentAttachment.name} />
+                <DxfViewer
+                  url={currentAttachment.blobUrl || currentAttachment.remoteUrl}
+                  name={currentAttachment.name}
+                />
               )}
               {currentAttachment.kind === 'other' && (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 rounded-xl border border-slate-200 p-8 text-center">
-                  <FileSpreadsheet className="w-12 h-12 text-emerald-600 mb-3" />
-                  <div className="text-sm font-semibold text-slate-800">{currentAttachment.name}</div>
-                  <p className="text-xs text-slate-500 max-w-sm mt-1">
-                    File bảng tính Excel / CSV. Bạn có thể sử dụng nút <strong>Nhập Excel</strong> trên thanh công cụ để đưa dữ liệu vào mô hình tính toán.
+                <div className="w-full h-full min-h-[550px] flex flex-col items-center justify-center bg-slate-50 rounded-xl border border-slate-200 p-8 text-center">
+                  <FileSpreadsheet className="w-14 h-14 text-emerald-600 mb-3" />
+                  <div className="text-base font-semibold text-slate-800">{currentAttachment.name}</div>
+                  <p className="text-xs text-slate-500 max-w-md mt-2 leading-relaxed">
+                    File bảng tính Excel rút gọn 12 bè hồ Huổi Vanh. Bạn có thể tải file về máy hoặc dùng chức năng nhập bảng tính để đối chiếu.
                   </p>
+                  {(currentAttachment.remoteUrl || currentAttachment.blobUrl) && (
+                    <a
+                      href={resolveAssetUrl(currentAttachment.blobUrl || currentAttachment.remoteUrl)}
+                      download={currentAttachment.name}
+                      className="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      Tải xuống file Excel (.xlsx)
+                    </a>
+                  )}
                 </div>
               )}
             </>

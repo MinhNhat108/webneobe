@@ -414,12 +414,20 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   },
   attachments: [
     {
+      id: 'doc_huoi_vanh_dxf',
+      name: 'HỒ HUỔI VANH.dxf (Bản vẽ CAD mặt bằng 12 bè)',
+      mime: 'application/dxf',
+      size: 8190634,
+      kind: 'dxf' as const,
+      remoteUrl: 'docs_huoi_vanh/ho_huoi_vanh.dxf'
+    },
+    {
       id: 'doc_huoi_vanh_pdf',
-      name: 'bố trí bè pin hồ Huổi Vanh.pdf',
+      name: 'HOHUOIVANH.Bố trí sơ bộ bè pin.pdf',
       mime: 'application/pdf',
-      size: 1277013,
+      size: 1438797,
       kind: 'pdf' as const,
-      remoteUrl: '/docs_huoi_vanh/bố trí bè pin hồ Huổi Vanh.pdf'
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_Bo_tri_so_bo_be_pin.pdf'
     },
     {
       id: 'doc_huoi_vanh_xlsx',
@@ -427,15 +435,15 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       size: 618438,
       kind: 'other' as const,
-      remoteUrl: '/docs_huoi_vanh/BANG_TINH_NEO_RUT_GON_1_v2.xlsx'
+      remoteUrl: 'docs_huoi_vanh/BANG_TINH_NEO_RUT_GON_1_v2.xlsx'
     },
     {
       id: 'doc_huoi_vanh_img',
-      name: 'ANH1.jpg',
+      name: 'ANH1.jpg (Ảnh phối cảnh vệ tinh hồ Huổi Vanh)',
       mime: 'image/jpeg',
-      size: 132274401,
+      size: 1193488,
       kind: 'image' as const,
-      remoteUrl: '/docs_huoi_vanh/ANH1.jpg'
+      remoteUrl: 'docs_huoi_vanh/ANH1_web.jpg'
     }
   ],
   raftsSummary: HUOI_VANH_RAFTS

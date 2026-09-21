@@ -72,6 +72,16 @@ export function renderDxfToCanvas(
       maxX = Math.max(maxX, cx + r);
       minY = Math.min(minY, cy - r);
       maxY = Math.max(maxY, cy + r);
+    } else if (ent.type === 'TEXT' && ent.startPoint) {
+      minX = Math.min(minX, ent.startPoint.x);
+      maxX = Math.max(maxX, ent.startPoint.x);
+      minY = Math.min(minY, ent.startPoint.y);
+      maxY = Math.max(maxY, ent.startPoint.y);
+    } else if (ent.type === 'MTEXT' && ent.position) {
+      minX = Math.min(minX, ent.position.x);
+      maxX = Math.max(maxX, ent.position.x);
+      minY = Math.min(minY, ent.position.y);
+      maxY = Math.max(maxY, ent.position.y);
     }
   }
 
@@ -105,11 +115,24 @@ export function renderDxfToCanvas(
   }
   ctx.stroke();
 
-  // Draw Entities
-  ctx.strokeStyle = '#38bdf8'; // sky-400
-  ctx.lineWidth = 1.5;
+  // Layer color palette
+  const getLayerColor = (layerName?: string): string => {
+    if (!layerName) return '#38bdf8';
+    const l = layerName.toUpperCase();
+    if (l.includes('MINR')) return '#334155'; // faint topo contour
+    if (l.includes('MAJR')) return '#64748b'; // major topo contour
+    if (l.includes('TOPO')) return '#475569'; // topo lines
+    if (l.includes('ANNO') || l.includes('TEXT')) return '#facc15'; // annotation yellow
+    if (l.includes('THIN') || l.includes('DETL')) return '#38bdf8'; // rafts / solar panels
+    return '#38bdf8';
+  };
 
+  // Draw Entities
   for (const ent of entities) {
+    const layerColor = getLayerColor(ent.layer);
+    ctx.strokeStyle = layerColor;
+    ctx.lineWidth = ent.layer?.includes('MAJR') || ent.layer?.includes('DETL') ? 1.5 : 1;
+
     if (ent.type === 'LINE' && ent.vertices && ent.vertices.length >= 2) {
       ctx.beginPath();
       ctx.moveTo(toScreenX(ent.vertices[0].x), toScreenY(ent.vertices[0].y));
@@ -144,9 +167,37 @@ export function renderDxfToCanvas(
     } else if (ent.type === 'TEXT' && ent.startPoint) {
       const sx = toScreenX(ent.startPoint.x);
       const sy = toScreenY(ent.startPoint.y);
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '11px sans-serif';
+      ctx.fillStyle = '#facc15';
+      ctx.font = 'bold 12px sans-serif';
       ctx.fillText(ent.text || '', sx, sy);
+    } else if (ent.type === 'MTEXT' && ent.position) {
+      const sx = toScreenX(ent.position.x);
+      const sy = toScreenY(ent.position.y);
+      const rawText = (ent.text || '').replace(/\\[A-Za-z0-9]+;?/g, '').trim();
+      if (rawText) {
+        // Render raft badge
+        const badgeLabel = /^\d+$/.test(rawText) ? `BÈ ${rawText}` : rawText;
+        ctx.font = 'bold 13px sans-serif';
+        const tm = ctx.measureText(badgeLabel);
+        const padX = 6;
+        const bw = tm.width + padX * 2;
+        const bh = 20;
+
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(sx - bw / 2, sy - bh / 2, bw, bh, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeLabel, sx, sy);
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'alphabetic';
+      }
     }
   }
 

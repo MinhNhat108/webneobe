@@ -399,7 +399,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 5,
+      version: 6,
       migrate: (persistedState: any) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -443,6 +443,17 @@ export const useProjectStore = create<ProjectStore>()(
               persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
             }
           }
+
+          // 2026-09-22: Sync attachments to the updated documents list
+          // (including CAD DXF file and HOHUOIVANH.Bố trí sơ bộ bè pin.pdf)
+          if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            const hasDxf = persistedState.currentProject.attachments?.some((a: any) => a.kind === 'dxf');
+            const hasOldPdfName = persistedState.currentProject.attachments?.some((a: any) => a.name?.includes('bố trí bè pin'));
+            if (!hasDxf || hasOldPdfName) {
+              persistedState.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
+            }
+          }
+
           // Whatever the history, never leave the app pointing at a raft that
           // is not in the list: the selector would render nothing selected.
           if (Array.isArray(persistedState.raftsSummary)
@@ -456,6 +467,13 @@ export const useProjectStore = create<ProjectStore>()(
       onRehydrateStorage: () => (state) => {
         if (state && state.currentProject) {
           state.currentProject.systemType = 'solar_fpv';
+          if (state.currentProject.id === 'huoi-vanh-fpv') {
+            const hasDxf = state.currentProject.attachments?.some(a => a.kind === 'dxf');
+            const hasOldPdfName = state.currentProject.attachments?.some(a => a.name?.includes('bố trí bè pin'));
+            if (!hasDxf || hasOldPdfName) {
+              state.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
+            }
+          }
           state.results = calculateProject(state.currentProject);
         }
       },

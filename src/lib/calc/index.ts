@@ -3,6 +3,7 @@ import { calculateLoads } from './loads';
 import { calculateCatenary } from './catenary';
 import { calculateAnchor } from './anchor';
 import { calculateBromsPile } from './broms';
+import { optimizePileEmbedment } from './pileOptimizer';
 import { runChecks } from './checks';
 import { round, roundOrNull } from './constants';
 
@@ -12,6 +13,7 @@ export * from './loads';
 export * from './catenary';
 export * from './anchor';
 export * from './broms';
+export * from './pileOptimizer';
 export * from './checks';
 
 /**
@@ -63,6 +65,8 @@ export function calculateProject(state: ProjectState): CalcResults {
   let bedCableAngle_deg;
   let bedCableTh_kN;
   let bedCableTv_kN;
+  let shorePileOpt;
+  let bedPileOpt;
 
   if (state.anchor.mode === 'pile' || isSolar) {
     const shoreSection: PileSectionInput = {
@@ -130,6 +134,51 @@ export function calculateProject(state: ProjectState): CalcResults {
       concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
       section: { ...bedSection, D_m: state.anchor.bed2D_m ?? 0.70 }
     });
+
+    // ---- Broms INVERSE solve: shallowest constructible embedment ----------
+    // Advisory only — `shorePile`/`bedPile1` above keep the L the user typed,
+    // so no existing result or check changes because of this block. It also
+    // produces P_max (max allowable pile holding capacity) at that depth.
+    const optCommon = {
+      FS: state.anchor.sfPile ?? 2.5,
+      concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
+      step_m: state.anchor.pileDepthStep_m,
+      minL_m: state.anchor.pileMinL_m,
+      maxL_m: state.anchor.pileMaxL_m,
+      sfPileCapacity: state.anchor.sfPileCapacity
+    };
+
+    shorePileOpt = optimizePileEmbedment({
+      ...optCommon,
+      soilType: state.anchor.soilShore ?? 'clay',
+      cu_kPa: state.anchor.cuShore_kPa ?? 40.0,
+      phi_deg: state.anchor.phiShore_deg,
+      gammaSub_kNm3: state.anchor.gammaSubShore_kNm3,
+      e: state.anchor.shoreArm_e_m ?? 0.5,
+      D: state.anchor.shoreD_m ?? 0.45,
+      section: shoreSection,
+      appliedH: loads.t_max_intact_kN,
+      appliedTv: 0,
+      cableTension_kN: loads.t_max_intact_kN,
+      cableAngle_deg: 0, // the shore line is essentially horizontal at the pile head
+      ratedPmax_kN: state.anchor.pileRatedPmaxShore_kN
+    });
+
+    bedPileOpt = optimizePileEmbedment({
+      ...optCommon,
+      soilType: state.anchor.soilBed ?? 'mud',
+      cu_kPa: state.anchor.cuBed_kPa ?? 20.0,
+      phi_deg: state.anchor.phiBed_deg,
+      gammaSub_kNm3: state.anchor.gammaSubBed_kNm3,
+      e: state.anchor.bed1Arm_e_m ?? 0.0,
+      D: state.anchor.bed1D_m ?? 0.35,
+      section: bedSection,
+      appliedH: bedCableTh_kN,
+      appliedTv: bedCableTv_kN,
+      cableTension_kN: loads.t_max_intact_kN,
+      cableAngle_deg: bedCableAngle_deg,
+      ratedPmax_kN: state.anchor.pileRatedPmaxBed_kN
+    });
   }
 
   // ---- C8 / C9 geometry: bed clearance and average line spacing ---------
@@ -155,6 +204,8 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedCableAngle_deg,
     bedCableTh_kN,
     bedCableTv_kN,
+    shorePileOpt,
+    bedPileOpt,
     bedClearance_m,
     avgLineSpacing_m
   };

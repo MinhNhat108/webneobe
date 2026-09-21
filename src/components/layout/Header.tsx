@@ -1,10 +1,12 @@
 import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { exportProjectToExcel } from '../../lib/io/excelExport';
+import { exportMooringPileDxf } from '../../lib/io/dxfExport';
 import {
   Anchor,
   FileSpreadsheet,
   Download,
+  DraftingCompass,
   Printer,
   RefreshCw,
   Lock,
@@ -26,6 +28,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
     // it on demand if the user exports before ever opening the overview tab.
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
     exportProjectToExcel(currentProject, results, raftsSummary, batch);
+  };
+
+  const handleExportDxf = () => {
+    // Same on-demand batch as the Excel export: every pile in the schedule
+    // takes its L_opt / P_max from its own raft's calculation.
+    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    const built = exportMooringPileDxf(currentProject, results, batch);
+    // eslint-disable-next-line no-console
+    console.info(
+      `[DXF] Đã xuất ${built.pileCount} cọc neo / ${built.raftCount} cụm bè.`
+    );
   };
 
   return (
@@ -93,6 +106,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           >
             <Download className="w-4 h-4 text-sky-400" />
             <span className="hidden md:inline">Xuất Excel</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExportDxf}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            title="Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc (L_opt, P_max)"
+          >
+            <DraftingCompass className="w-4 h-4 text-amber-400" />
+            <span className="hidden md:inline">Xuất CAD</span>
           </button>
 
           <button

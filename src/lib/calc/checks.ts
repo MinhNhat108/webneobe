@@ -1,4 +1,12 @@
-import { CheckItem, CheckStatus, CalcResults, ProjectState } from './types';
+import { CheckItem, CheckStatus, CalcResults, ProjectState, PileGoverningCriterion } from './types';
+
+/** Vietnamese label of the criterion that limits a pile's P_max. */
+const GOVERNING_LABEL: Record<PileGoverningCriterion, string> = {
+  lateral: 'sức chịu tải ngang',
+  uplift: 'sức chịu nhổ',
+  moment: 'bền uốn tiết diện',
+  none: 'không xác định'
+};
 
 type Intermediate = Omit<CalcResults, 'checks' | 'overallVerdict' | 'governingCheck'>;
 
@@ -283,6 +291,62 @@ export function runChecks(
       spacing > maxSpacing
         ? `Khoảng cách dây neo trung bình ${spacing.toFixed(1)} m vượt khuyến nghị — cân nhắc bổ sung dây neo.`
         : undefined));
+  }
+
+  // ---- C10 — T_dây <= P_max (rated allowable pile holding capacity) -------
+  // Only EVALUATED when the user supplied a rated P_max for that pile
+  // (catalogue value or pull-out test). Without one there is no independent
+  // capacity to check against — the computed Broms capacity is already
+  // covered by BP-1..BP-5 — so the row is SKIPped rather than duplicating
+  // those checks under a new id.
+  const pushPmax = (
+    id: string,
+    label: string,
+    opt: typeof results.shorePileOpt
+  ) => {
+    const spec: CheckSpec = {
+      id,
+      label,
+      formula: 'P_req = T_dây × SF ≤ P_max',
+      unit: 'kN',
+      threshold: opt?.ratedPmax_kN !== undefined ? `≤ ${opt.ratedPmax_kN} kN` : '≤ P_max',
+      isMandatory: true
+    };
+    if (!opt) {
+      checks.push(skipped(spec, 'Không dùng cọc neo cho cấu hình này.'));
+      return;
+    }
+    if (opt.ratedPmax_kN === undefined) {
+      checks.push(
+        skipped(
+          spec,
+          `Chưa nhập P_max định mức của cọc. Sức chịu tải tính toán theo Broms tại L_opt = ` +
+            `${opt.L_opt_m ?? '—'} m là ${opt.capacity.Pmax_kN} kN ` +
+            `(chi phối: ${GOVERNING_LABEL[opt.capacity.governing]}).`
+        )
+      );
+      return;
+    }
+    if (!Number.isFinite(opt.utilization_Pmax)) {
+      checks.push(notEvaluable(spec, 'P_max không hợp lệ (≤ 0).'));
+      return;
+    }
+    checks.push(
+      evaluated(
+        spec,
+        opt.utilization_Pmax,
+        `${opt.Preq_kN} / ${opt.effectivePmax_kN}`,
+        opt.Preq_kN,
+        `T_dây = ${opt.cableTension_kN} kN, SF = ${opt.sfPileCapacity}, ` +
+          `P_max dùng để kiểm tra = ${opt.effectivePmax_kN} kN ` +
+          `(định mức ${opt.ratedPmax_kN} kN, tính toán Broms ${opt.capacity.Pmax_kN} kN).`
+      )
+    );
+  };
+
+  if (results.shorePileOpt || results.bedPileOpt) {
+    pushPmax('C10', 'Sức chịu tải cho phép của cọc BỜ (P_max)', results.shorePileOpt);
+    pushPmax('C11', 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', results.bedPileOpt);
   }
 
   // ---- Broms pile checks --------------------------------------------------

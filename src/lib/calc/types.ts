@@ -142,6 +142,22 @@ export interface AnchorInput {
   // Lake bed pile Method 2
   bed2D_m: number;
   bed2L_m: number;
+  /**
+   * P_max — rated allowable holding capacity of ONE pile, kN, from the
+   * precast-pile catalogue or a site pull-out test. When given, it caps the
+   * computed Broms capacity and enables check C10 (T_dây <= P_max).
+   * Omit to check against the computed capacity only.
+   */
+  pileRatedPmaxShore_kN?: number;
+  pileRatedPmaxBed_kN?: number;
+  /** Safety factor applied to T_max to obtain P_req = T_max * SF. Default 1.0. */
+  sfPileCapacity?: number;
+  /** Construction rounding step for the optimised embedment, m (0.25 / 0.5). */
+  pileDepthStep_m?: number;
+  /** Search bounds of the embedment optimiser, m. Defaults 2.0 / 20.0. */
+  pileMinL_m?: number;
+  pileMaxL_m?: number;
+
   // Drag / Deadweight
   anchorType: string;
   weight_t: number;
@@ -245,6 +261,82 @@ export interface BromsResult {
   Kp?: number; // Rankine passive coefficient (sand model only)
 }
 
+/** Which criterion limits a pile's allowable tension / governs its depth. */
+export type PileGoverningCriterion = 'lateral' | 'uplift' | 'moment' | 'none';
+
+/**
+ * P_max breakdown — the maximum cable tension the pile can hold, split by the
+ * three capacities that can limit it. All kN.
+ */
+export interface PileCapacityBreakdown {
+  /** P_max = min(lateral, moment, uplift) — the value to compare T_dây against. */
+  Pmax_kN: number;
+  Pmax_lateral_kN: number;
+  Pmax_moment_kN: number;
+  /** +Infinity for a horizontal cable (no uplift component to exhaust). */
+  Pmax_uplift_kN: number;
+  governing: PileGoverningCriterion;
+  /** Cable inclination above the horizontal at the pile head, degrees. */
+  cableAngle_deg: number;
+}
+
+export interface PileOptimizationInput {
+  soilType: 'clay' | 'mud' | 'sand' | 'rock' | undefined;
+  cu_kPa?: number;
+  phi_deg?: number;
+  gammaSub_kNm3?: number;
+  /** Load eccentricity / free-standing arm above the soil surface, m. */
+  e: number;
+  /** Pile side width (square) or outer diameter, m. */
+  D: number;
+  /** Safety factor on the Broms lateral capacity. */
+  FS: number;
+  concreteRb_MPa?: number;
+  section?: PileSectionInput;
+  /** Horizontal component of the cable load at the pile head, kN. */
+  appliedH: number;
+  /** Vertical (uplift) component of the cable load at the pile head, kN. */
+  appliedTv?: number;
+  /** Full cable tension used for the P_req / P_max check, kN. Defaults to appliedH. */
+  cableTension_kN?: number;
+  /** Cable inclination above the horizontal at the pile head, degrees. Default 0. */
+  cableAngle_deg?: number;
+  /** Search bounds and construction step for the embedment sweep, m. */
+  minL_m?: number;
+  maxL_m?: number;
+  step_m?: number;
+  /** Rated (catalogue / load-test) allowable holding capacity of the pile, kN. */
+  ratedPmax_kN?: number;
+  /** Safety factor applied to T_max to obtain P_req. Default 1.0. */
+  sfPileCapacity?: number;
+}
+
+export interface PileOptimizationResult {
+  /** Shallowest constructible embedment that satisfies every criterion, m. */
+  L_opt_m: number | null;
+  /** False when no depth in [minL_m, maxL_m] works — see `note`. */
+  converged: boolean;
+  governing: PileGoverningCriterion;
+  note?: string;
+  iterations: number;
+  step_m: number;
+  minL_m: number;
+  maxL_m: number;
+  /** Broms results at L_opt (or at the depth the sweep stopped on). */
+  broms: BromsResult;
+  capacity: PileCapacityBreakdown;
+  /** Rated P_max the user entered, kN (undefined when not supplied). */
+  ratedPmax_kN?: number;
+  /** min(computed P_max, rated P_max) — what the check actually uses, kN. */
+  effectivePmax_kN: number;
+  /** P_req = T_dây * SF, kN. */
+  Preq_kN: number;
+  sfPileCapacity: number;
+  cableTension_kN: number;
+  utilization_Pmax: number;
+  isPmaxOk: boolean;
+}
+
 export interface CalcResults {
   // Environmental loads
   q_wind_Pa: number;
@@ -304,6 +396,14 @@ export interface CalcResults {
   bedCableAngle_deg?: number;
   bedCableTh_kN?: number;
   bedCableTv_kN?: number;
+
+  /**
+   * Broms inverse solve — shallowest constructible embedment and the
+   * resulting P_max, for the shore and the lake-bed pile. Advisory: the
+   * `shorePile`/`bedPile1` results above still use the L the user entered.
+   */
+  shorePileOpt?: PileOptimizationResult;
+  bedPileOpt?: PileOptimizationResult;
 
   // C8 / C9 geometry
   /** Clearance between raft draft and the lake bed, m (C8). */

@@ -12,9 +12,12 @@ export const LineForm: React.FC = () => {
   const line = currentProject.line;
   const isSolar = currentProject.systemType === 'solar_fpv';
 
-  const loads = calculateLoads(currentProject.raft, currentProject.env, line, isSolar, 3.0);
+  // SF cáp lấy từ chính tiêu chuẩn dự án (tab "Tiêu Chuẩn"), không hard-code —
+  // đổi SF ở đó phải phản ánh ngay vào khối gợi ý này.
+  const sfLineIntact = currentProject.criteria.sfLineIntact > 0 ? currentProject.criteria.sfLineIntact : 3.0;
+  const loads = calculateLoads(currentProject.raft, currentProject.env, line, isSolar, sfLineIntact);
   const mbl = line.mbl_kN || 227;
-  const tAllow = mbl / 3.0;
+  const tAllow = mbl / sfLineIntact;
   const pretension = line.pretension_kN || 0;
   const angleRad = ((line.horizontalAngle_deg || 30) * Math.PI) / 180;
   const cosAlpha = Math.cos(angleRad);
@@ -29,12 +32,47 @@ export const LineForm: React.FC = () => {
   const minLinesBySpacing = perimeter > 0 ? Math.max(4, Math.ceil(perimeter / 15)) : 4;
   const recommendedTotal = Math.max(minLinesBySpacing, minNeff * 3);
 
-  const isCurrentOptimized = line.effectiveCount === minNeff && line.count === recommendedTotal;
+  const currentEff = line.effectiveCount ?? 0;
+  const currentTotal = line.count ?? 0;
+  // "Đạt yêu cầu" means the current setup is AT LEAST the minimum needed —
+  // being over-provisioned is safe, not "chưa tối ưu", so this must not
+  // require an exact match (a stricter reading used to nag users into
+  // trimming an already-safe configuration back down to the bare minimum).
+  const isSufficient = currentEff >= minNeff && currentTotal >= recommendedTotal;
+  // Only flag as "worth trimming" when comfortably over the recommendation —
+  // a little slack is normal and shouldn't trigger a nudge every render.
+  const isOverProvisioned = isSufficient && (currentEff > minNeff * 1.5 || currentTotal > recommendedTotal * 1.3);
+
+  // Keep the existing shore/bed split ratio when growing (or shrinking) the
+  // total line count, instead of leaving shoreLineCount+bedLineCount out of
+  // sync with the new `count`.
+  const distributeShoreAndBed = (total: number) => {
+    const curShore = line.shoreLineCount ?? 0;
+    const curBed = line.bedLineCount ?? 0;
+    const curSum = curShore + curBed;
+    if (curSum > 0) {
+      const newShore = Math.round((total * curShore) / curSum);
+      return { shoreLineCount: newShore, bedLineCount: total - newShore };
+    }
+    const newShore = Math.ceil(total / 2);
+    return { shoreLineCount: newShore, bedLineCount: total - newShore };
+  };
 
   const handleApplyRecommendation = () => {
+    const newTotal = Math.max(currentTotal, recommendedTotal);
+    const newEff = Math.max(currentEff, minNeff);
+    updateLine({
+      effectiveCount: newEff,
+      count: newTotal,
+      ...distributeShoreAndBed(newTotal)
+    });
+  };
+
+  const handleTrimToMinimum = () => {
     updateLine({
       effectiveCount: minNeff,
-      count: recommendedTotal
+      count: recommendedTotal,
+      ...distributeShoreAndBed(recommendedTotal)
     });
   };
 
@@ -227,10 +265,10 @@ export const LineForm: React.FC = () => {
             <Sparkles className="w-4 h-4 text-sky-600" />
             <span>GỢI Ý SỐ DÂY NEO THEO TẢI TRỌNG GIÓ HIỆN TẠI (V = {currentProject.env.windSpeed_ms} m/s, F_env = {fEnv.toFixed(1)} kN):</span>
           </div>
-          {isCurrentOptimized ? (
+          {isSufficient ? (
             <span className="inline-flex items-center gap-1 text-xs text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full font-medium">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              Đang tối ưu theo gợi ý
+              Đạt yêu cầu theo gió hiện tại
             </span>
           ) : (
             <button
@@ -239,15 +277,27 @@ export const LineForm: React.FC = () => {
               className="text-xs bg-sky-600 hover:bg-sky-700 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              Áp Dụng Gợi Ý (N_eff = {minNeff}, Tổng = {recommendedTotal})
+              Áp Dụng Gợi Ý (N_eff ≥ {minNeff}, Tổng ≥ {recommendedTotal})
             </button>
           )}
         </div>
         <p className="text-xs text-slate-600 leading-relaxed">
-          • Với tải trọng môi trường <strong>{fEnv.toFixed(1)} kN</strong> và độ bền cáp <strong>{line.cableCode || 'PES'} ({mbl} kN)</strong>: Cần tối thiểu <strong>{minNeff} dây chịu lực chính (N_eff)</strong> để đạt hệ số an toàn SF ≥ 3.0.
+          • Với tải trọng môi trường <strong>{fEnv.toFixed(1)} kN</strong> và độ bền cáp <strong>{line.cableCode || 'PES'} ({mbl} kN)</strong>: Cần tối thiểu <strong>{minNeff} dây chịu lực chính (N_eff)</strong> để đạt hệ số an toàn SF ≥ {sfLineIntact.toFixed(1)}.
           <br />
-          • Theo chu vi bè {perimeter > 0 ? `${perimeter} m` : ''} (khoảng cách ≤ 15m/dây): Đề xuất tổng bố trí khoảng <strong>{recommendedTotal} dây neo</strong> quanh bè.
+          • Theo chu vi bè {perimeter > 0 ? `${perimeter} m` : ''} (khoảng cách ≤ 15m/dây): Đề xuất tổng bố trí tối thiểu <strong>{recommendedTotal} dây neo</strong> quanh bè.
         </p>
+        {isOverProvisioned && (
+          <p className="text-[11px] text-slate-500 border-t border-sky-200/60 pt-2">
+            Cấu hình hiện tại (N_eff = {currentEff}, tổng {currentTotal} dây) đang dư khá nhiều so với mức cần thiết ở gió này.{' '}
+            <button
+              type="button"
+              onClick={handleTrimToMinimum}
+              className="text-sky-700 underline underline-offset-2 hover:text-sky-900 font-medium"
+            >
+              Tối giản về N_eff = {minNeff}, tổng {recommendedTotal} dây
+            </button>
+          </p>
+        )}
       </div>
 
       {/* Line Counts */}

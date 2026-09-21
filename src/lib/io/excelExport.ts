@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import { ProjectState, CalcResults } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
+import { buildPileSchedule } from './pileSchedule';
 
 export interface RaftBatchResultLike {
   raft: RaftSummaryItem;
@@ -9,7 +10,7 @@ export interface RaftBatchResultLike {
 }
 
 /**
- * Exports the full Master Report as one workbook, 6 sheets:
+ * Exports the full Master Report as one workbook, 7 sheets:
  *  1. ThongTinDuAn        — project meta
  *  2. TongHopCumBe        — Master sheet: all rafts, one calculated row each
  *  3. ToaDoDiemNeo        — all 299 anchor-point coordinates
@@ -17,7 +18,9 @@ export interface RaftBatchResultLike {
  *  5. KetQuaKiemTraChiTiet— intermediate results + the full C1..C9/BP check
  *                           table for EVERY raft in batchResults (falls back
  *                           to just the current raft when batch data is absent)
- *  6. GhiChu              — disclaimer & export metadata
+ *  6. ThongKeCoc          — Pile Schedule: one row per pile with L_opt, D,
+ *                           T_max, P_req and P_max (same data as the DXF table)
+ *  7. GhiChu              — disclaimer & export metadata
  */
 export function exportProjectToExcel(
   state: ProjectState,
@@ -245,7 +248,38 @@ export function exportProjectToExcel(
   const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
   XLSX.utils.book_append_sheet(wb, wsDetail, 'KetQuaKiemTraChiTiet');
 
-  // 6. Sheet: GhiChu ----------------------------------------------------------
+  // 6. Sheet: ThongKeCoc (Pile Schedule — the CAD table, spreadsheet form) ---
+  // Same builder as the DXF export, so the drawing and the workbook can never
+  // disagree on L_opt / P_max for a given pile.
+  const schedule = buildPileSchedule(state, results, batch);
+  const scheduleRows: any[][] = [
+    ['BẢNG THỐNG KÊ CỌC NEO (PILE SCHEDULE) — KÈM CHIỀU SÂU ĐÓNG CỌC TỐI ƯU VÀ SỨC CHỊU TẢI CHO PHÉP'],
+    [
+      'L_opt: chiều sâu ngàm tối thiểu thỏa mãn Broms (ngang + nhổ + uốn), đã làm tròn lên theo bước thi công. ' +
+        'P_max: sức chịu tải cho phép lớn nhất của cọc (lực căng dây lớn nhất cọc chịu được). P_req = T_max × SF.'
+    ],
+    [''],
+    [
+      'Mã cọc', 'Ký hiệu khảo sát', 'Bè', 'Loại cọc',
+      'X (m)', 'Y (m)', 'Z (m)',
+      'D (m)', 'L nhập (m)', 'L_opt (m)',
+      'T_max (kN)', 'P_req (kN)', 'P_max dùng KT (kN)', 'P_max định mức (kN)',
+      'T_dây ≤ P_max', 'Ghi chú'
+    ]
+  ];
+  for (const r of schedule) {
+    scheduleRows.push([
+      r.pileId, r.code, r.raft, r.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY',
+      r.x, r.y, r.z,
+      r.D_m, r.Linput_m, r.Lopt_m ?? 'KHÔNG ĐẠT',
+      r.Tmax_kN, r.Preq_kN, r.Pmax_kN, r.PmaxRated_kN ?? '-',
+      r.isPmaxOk ? 'ĐẠT' : 'CẦN KIỂM TRA', r.note ?? ''
+    ]);
+  }
+  const wsSchedule = XLSX.utils.aoa_to_sheet(scheduleRows);
+  XLSX.utils.book_append_sheet(wb, wsSchedule, 'ThongKeCoc');
+
+  // 7. Sheet: GhiChu ----------------------------------------------------------
   const wsNote = XLSX.utils.aoa_to_sheet([
     ['GHI CHÚ & CAM KẾT KỸ THUẬT'],
     [''],

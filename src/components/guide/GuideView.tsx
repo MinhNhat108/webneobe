@@ -8,6 +8,7 @@ import {
   Calculator,
   Paperclip,
   Printer,
+  DraftingCompass,
   FileSpreadsheet,
   AlertTriangle,
   Lightbulb,
@@ -806,11 +807,25 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                   <h4 className="font-bold text-slate-900 flex items-center gap-2">
                     <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                    Xuất Workbook Excel 6 Sheet
+                    Xuất Workbook Excel 7 Sheet
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Xuất Excel"</strong> trên Header để tạo file <code>.xlsx</code> với 6 sheet chi tiết:
-                    ThongTinDuAn, DuLieuDauVao, KetQuaTrungGian, BangKiemTra, TongHop13Be, GhiChu.
+                    Bấm nút <strong>"Xuất Excel"</strong> trên Header để tạo file <code>.xlsx</code> với 7 sheet chi tiết:
+                    ThongTinDuAn, TongHopCumBe, ToaDoDiemNeo, DuLieuDauVao, KetQuaKiemTraChiTiet,
+                    <strong> ThongKeCoc</strong> (bảng thống kê cọc kèm L_opt và P_max), GhiChu.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-2">
+                  <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                    <DraftingCompass className="w-4 h-4 text-amber-600" />
+                    Xuất Bản Vẽ Đóng Cọc CAD (.DXF)
+                  </h4>
+                  <p className="text-slate-600">
+                    Bấm nút <strong>"Xuất CAD"</strong> trên Header để tạo bản vẽ mặt bằng định vị cọc neo mở trực tiếp
+                    bằng AutoCAD: ranh giới các cụm bè, tim dây neo bờ/đáy, ký hiệu cọc tại đúng tọa độ thực (X, Y) và
+                    <strong> bảng thống kê cọc</strong> (mã cọc, tọa độ, D, chiều sâu đóng cọc tối ưu L_opt, T_max,
+                    P_req, P_max) — phân lớp theo 7 layer chuẩn để bật/tắt khi in.
                   </p>
                 </div>
 

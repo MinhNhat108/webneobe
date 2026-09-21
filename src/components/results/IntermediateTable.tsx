@@ -1,6 +1,70 @@
 import React from 'react';
-import { CalcResults, ProjectState } from '../../lib/calc/types';
-import { Calculator, Zap, ShieldAlert, Cpu, Ruler } from 'lucide-react';
+import { CalcResults, PileOptimizationResult, ProjectState } from '../../lib/calc/types';
+import { Calculator, Zap, ShieldAlert, Cpu, Ruler, Gauge } from 'lucide-react';
+
+const GOVERNING_LABEL: Record<string, string> = {
+  lateral: 'Sức chịu tải ngang',
+  uplift: 'Sức chịu nhổ',
+  moment: 'Bền uốn tiết diện',
+  none: '—'
+};
+
+const fmtCapacity = (v: number) => (Number.isFinite(v) ? `${v} kN` : 'Không chi phối');
+
+/** L_opt / P_max summary for one pile family (shore or lake bed). */
+const PileOptimizationCard: React.FC<{ title: string; opt?: PileOptimizationResult }> = ({ title, opt }) => {
+  if (!opt) return null;
+  return (
+    <div className="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2">
+      <div className="font-sans font-bold text-amber-900 border-b border-slate-100 pb-1 flex items-center justify-between gap-2">
+        <span>{title}</span>
+        <span
+          className={`text-[10px] font-normal px-1.5 py-0.5 rounded ${
+            opt.converged ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+          }`}
+        >
+          {opt.converged ? `Chi phối: ${GOVERNING_LABEL[opt.governing]}` : 'Không hội tụ'}
+        </span>
+      </div>
+
+      <div className="flex justify-between">
+        <span className="text-slate-600 font-sans">Chiều sâu ngàm tối ưu (L_opt):</span>
+        <span className="font-bold text-emerald-700">
+          {opt.L_opt_m !== null ? `${opt.L_opt_m} m` : '—'}
+        </span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600 font-sans">Khoảng tìm kiếm / bước làm tròn:</span>
+        <span>{opt.minL_m}–{opt.maxL_m} m / {opt.step_m} m</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600 font-sans">P_max theo sức chịu tải ngang:</span>
+        <span>{fmtCapacity(opt.capacity.Pmax_lateral_kN)}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600 font-sans">P_max theo bền uốn tiết diện:</span>
+        <span>{fmtCapacity(opt.capacity.Pmax_moment_kN)}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600 font-sans">P_max theo sức chịu nhổ:</span>
+        <span>{fmtCapacity(opt.capacity.Pmax_uplift_kN)}</span>
+      </div>
+      {opt.ratedPmax_kN !== undefined && (
+        <div className="flex justify-between">
+          <span className="text-slate-600 font-sans">P_max định mức (catalog/thí nghiệm):</span>
+          <span>{opt.ratedPmax_kN} kN</span>
+        </div>
+      )}
+      <div className="flex items-center justify-between p-2 bg-amber-50 rounded-lg border border-amber-200">
+        <span className="text-amber-900 font-sans font-bold">P_req / P_max:</span>
+        <span className={`font-bold text-sm ${opt.isPmaxOk ? 'text-emerald-700' : 'text-rose-700'}`}>
+          {opt.Preq_kN} / {opt.effectivePmax_kN} kN ({(opt.utilization_Pmax * 100).toFixed(1)}%)
+        </span>
+      </div>
+      {opt.note && <p className="text-[11px] text-rose-700 font-sans leading-relaxed">{opt.note}</p>}
+    </div>
+  );
+};
 
 interface IntermediateTableProps {
   state: ProjectState;
@@ -351,6 +415,26 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
               </div>
             )}
           </div>
+
+          {/* 3b. Broms inverse solve — L_opt & P_max ---------------------- */}
+          {(results.shorePileOpt || results.bedPileOpt) && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-800 uppercase tracking-wide pt-1">
+                <Gauge className="w-4 h-4 text-amber-600" />
+                Tối ưu chiều sâu đóng cọc (L_opt) & Sức chịu tải cho phép (P_max)
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                <PileOptimizationCard title="Cọc Neo BỜ" opt={results.shorePileOpt} />
+                <PileOptimizationCard title="Cọc Neo ĐÁY LÒNG HỒ" opt={results.bedPileOpt} />
+              </div>
+              <p className="text-[11px] text-slate-500 font-sans leading-relaxed">
+                L_opt là chiều sâu ngàm nhỏ nhất (đã làm tròn lên theo bước thi công) thỏa mãn đồng thời
+                H_allow ≥ H, Q_nhổ ≥ Tv và M_max ≤ M_rd. P_max là lực căng dây lớn nhất cọc chịu được tại
+                chiều sâu đó — kết quả tính toán chỉ mang tính tham khảo thiết kế, cần đối chiếu thí nghiệm
+                nén–kéo cọc tại hiện trường.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

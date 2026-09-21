@@ -3,7 +3,7 @@ import { useProjectStore } from '../../store/useProjectStore';
 import { NumberField } from './NumberField';
 import anchorTypesData from '../../data/anchorTypes.json';
 import soilsData from '../../data/soils.json';
-import { Anchor, Building2, Hammer } from 'lucide-react';
+import { Anchor, Building2, Hammer, Gauge } from 'lucide-react';
 import { PileShape } from '../../lib/calc/types';
 
 const SHAPE_LABEL: Record<PileShape, string> = {
@@ -406,6 +406,85 @@ export const AnchorForm: React.FC = () => {
                 min={5}
                 helpText="Bê tông B25: Rb = 14.5 MPa"
               />
+            </div>
+
+            {/* P_max & tối ưu hóa chiều sâu đóng cọc ---------------------- */}
+            <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <Gauge className="w-4 h-4 text-amber-600" />
+                <h4 className="text-sm font-bold text-slate-800">
+                  Sức chịu tải cho phép của cọc (P_max) & Tối ưu chiều sâu đóng cọc
+                </h4>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Chương trình giải ngược bài toán Broms để tìm chiều sâu ngàm tối thiểu <strong>L_opt</strong> thỏa
+                mãn đồng thời sức chịu tải ngang, sức chịu nhổ và bền uốn tiết diện, rồi làm tròn lên theo bước thi
+                công. <strong>P_max</strong> là lực căng dây lớn nhất cọc chịu được tại chiều sâu đó; nhập giá trị
+                định mức theo catalog hoặc thí nghiệm nén–kéo cọc để bật kiểm tra nhanh <strong>T_dây ≤ P_max</strong>{' '}
+                (tiêu chí C10/C11). Để trống = chỉ dùng giá trị tính toán theo Broms.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <NumberField
+                  label="P_max định mức — cọc BỜ"
+                  value={anchor.pileRatedPmaxShore_kN}
+                  onChange={(val) => updateAnchor({ pileRatedPmaxShore_kN: val })}
+                  unit="kN"
+                  step={10}
+                  min={0}
+                  placeholder="Để trống nếu chưa có"
+                  helpText="Theo catalog cọc đúc sẵn / thí nghiệm kéo cọc"
+                />
+                <NumberField
+                  label="P_max định mức — cọc LÒNG HỒ"
+                  value={anchor.pileRatedPmaxBed_kN}
+                  onChange={(val) => updateAnchor({ pileRatedPmaxBed_kN: val })}
+                  unit="kN"
+                  step={10}
+                  min={0}
+                  placeholder="Để trống nếu chưa có"
+                  helpText="Theo catalog cọc đúc sẵn / thí nghiệm kéo cọc"
+                />
+                <NumberField
+                  label="Hệ số an toàn tính P_req"
+                  value={anchor.sfPileCapacity ?? 1.0}
+                  onChange={(val) => updateAnchor({ sfPileCapacity: val })}
+                  unit="-"
+                  step={0.1}
+                  min={1}
+                  helpText="P_req = T_max × SF (mặc định 1.0)"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <NumberField
+                  label="Bước làm tròn chiều sâu thi công"
+                  value={anchor.pileDepthStep_m ?? 0.25}
+                  onChange={(val) => updateAnchor({ pileDepthStep_m: val })}
+                  unit="m"
+                  step={0.25}
+                  min={0.05}
+                  helpText="Thường 0.25 m hoặc 0.5 m"
+                />
+                <NumberField
+                  label="Chiều sâu ngàm tối thiểu tìm kiếm"
+                  value={anchor.pileMinL_m ?? 2.0}
+                  onChange={(val) => updateAnchor({ pileMinL_m: val })}
+                  unit="m"
+                  step={0.5}
+                  min={0.5}
+                  helpText="Cận dưới của thuật toán tối ưu"
+                />
+                <NumberField
+                  label="Chiều sâu ngàm tối đa tìm kiếm"
+                  value={anchor.pileMaxL_m ?? 20.0}
+                  onChange={(val) => updateAnchor({ pileMaxL_m: val })}
+                  unit="m"
+                  step={0.5}
+                  min={1}
+                  helpText="Cận trên (giới hạn chiều dài cọc thi công được)"
+                />
+              </div>
             </div>
           </div>
         </div>

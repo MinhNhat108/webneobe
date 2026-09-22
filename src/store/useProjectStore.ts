@@ -445,11 +445,12 @@ export const useProjectStore = create<ProjectStore>()(
           }
 
           // 2026-09-22: Sync attachments to the updated documents list
-          // (including CAD DXF file and HOHUOIVANH.Bố trí sơ bộ bè pin.pdf)
+          // (including CAD DXF file, HOHUOIVANH.Bố trí sơ bộ bè pin.pdf, and THUYET_MINH.docx)
           if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
             const hasDxf = persistedState.currentProject.attachments?.some((a: any) => a.kind === 'dxf');
             const hasOldPdfName = persistedState.currentProject.attachments?.some((a: any) => a.name?.includes('bố trí bè pin'));
-            if (!hasDxf || hasOldPdfName) {
+            const hasDocx = persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_docx');
+            if (!hasDxf || hasOldPdfName || !hasDocx) {
               persistedState.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
           }
@@ -470,7 +471,8 @@ export const useProjectStore = create<ProjectStore>()(
           if (state.currentProject.id === 'huoi-vanh-fpv') {
             const hasDxf = state.currentProject.attachments?.some(a => a.kind === 'dxf');
             const hasOldPdfName = state.currentProject.attachments?.some(a => a.name?.includes('bố trí bè pin'));
-            if (!hasDxf || hasOldPdfName) {
+            const hasDocx = state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_docx');
+            if (!hasDxf || hasOldPdfName || !hasDocx) {
               state.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
           }

@@ -444,6 +444,14 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       size: 1193488,
       kind: 'image' as const,
       remoteUrl: 'docs_huoi_vanh/ANH1_web.jpg'
+    },
+    {
+      id: 'doc_huoi_vanh_docx',
+      name: 'THUYET_MINH_TINH_TOAN_KET_QUA_VA_KIEM_TRA_NEO_BE.docx (Thuyết minh phương pháp tính & kiểm tra)',
+      mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      size: 15955,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/THUYET_MINH_TINH_TOAN_KET_QUA_VA_KIEM_TRA_NEO_BE.docx'
     }
   ],
   raftsSummary: HUOI_VANH_RAFTS

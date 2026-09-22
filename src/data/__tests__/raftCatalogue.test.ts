@@ -152,3 +152,80 @@ describe('Mooring layout is buildable', () => {
     }
   });
 });
+
+/**
+ * Restraint balance. The first re-layout used a fixed 17.5 m standoff and
+ * demanded 5 m clearance to every raft, which silently rejected every channel
+ * narrower than 22.5 m — and 8 raft pairs here are closer than that. Their
+ * facing sides lost all their bed piles, so the anchors bunched on the outer
+ * sides and left arcs of up to 128° unrestrained. Bed piles now stand on the
+ * channel mid-line, and these tests keep them there.
+ */
+describe('Rafts are restrained on every side', () => {
+  const ringOf = (name: string) =>
+    (polygons as Array<{ rafts: string[]; points: Array<{ x: number; y: number }> }>)
+      .find((p) => p.rafts.includes(name))!.points;
+  const distSeg = (p: any, a: any, b: any) => {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1)));
+    return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+  };
+  const toRing = (p: any, r: any[]) => Math.min(...r.map((q, i) => distSeg(p, q, r[(i + 1) % r.length])));
+  const names = (polygons as Array<{ rafts: string[] }>).map((p) => p.rafts[0]);
+
+  /** Widest arc around a raft with no mooring line at all, degrees. */
+  const widestUnanchoredArc = (name: string) => {
+    const ring = ringOf(name);
+    const cx = ring.reduce((s, q) => s + q.x, 0) / ring.length;
+    const cy = ring.reduce((s, q) => s + q.y, 0) / ring.length;
+    const ang = coords.filter((c) => c.raft === name)
+      .map((c) => (Math.atan2(c.yAnchor - cy, c.xAnchor - cx) * 180) / Math.PI)
+      .sort((a, b) => a - b);
+    let worst = 0;
+    for (let i = 0; i < ang.length; i++) {
+      const gap = i === ang.length - 1 ? 360 + ang[0] - ang[i] : ang[i + 1] - ang[i];
+      worst = Math.max(worst, gap);
+    }
+    return worst;
+  };
+
+  it('no raft has a mooring gap wider than 60°', () => {
+    const bad = names
+      .map((n) => ({ n, gap: widestUnanchoredArc(n) }))
+      .filter((x) => x.gap > 60);
+    expect(bad.map((x) => `${x.n}:${x.gap.toFixed(0)}°`)).toEqual([]);
+  });
+
+  it('every narrow channel between two rafts carries bed piles', () => {
+    const pairs: Array<[string, string, number]> = [];
+    for (let i = 0; i < names.length; i++)
+      for (let j = i + 1; j < names.length; j++) {
+        const ra = ringOf(names[i]), rb = ringOf(names[j]);
+        const d = Math.min(
+          ...ra.map((p) => toRing(p, rb)),
+          ...rb.map((p) => toRing(p, ra))
+        );
+        if (d < 22.5) pairs.push([names[i], names[j], d]);
+      }
+    // The channels that the fixed-standoff version emptied out.
+    expect(pairs.length).toBeGreaterThanOrEqual(8);
+
+    const starved = pairs.filter(([a, b]) => {
+      const ra = ringOf(a), rb = ringOf(b);
+      const inChannel = coords.filter((c) =>
+        (c.raft === a || c.raft === b) && c.type === 'BED' &&
+        toRing({ x: c.xAnchor, y: c.yAnchor }, ra) < 25 &&
+        toRing({ x: c.xAnchor, y: c.yAnchor }, rb) < 25);
+      return inChannel.length === 0;
+    });
+    expect(starved.map(([a, b, d]) => `${a}↔${b} (${d.toFixed(1)}m)`)).toEqual([]);
+  });
+
+  it('a mid-channel pile still keeps its clearance from both rafts', () => {
+    for (const c of coords.filter((x) => x.type === 'BED')) {
+      const clearances = (polygons as Array<{ points: any[] }>)
+        .map((p) => toRing({ x: c.xAnchor, y: c.yAnchor }, p.points));
+      expect(Math.min(...clearances), `${c.code} quá sát một bè`).toBeGreaterThanOrEqual(4.9);
+    }
+  });
+});

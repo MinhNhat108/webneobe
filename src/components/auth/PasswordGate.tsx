@@ -68,7 +68,7 @@ export const PasswordGate: React.FC<PasswordGateProps> = ({ onUnlock }) => {
               Phần Mềm Tính Hệ Neo Bè
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh (13 Cụm Bè Pin Nổi)
+              Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh (12 Cụm Bè Pin Nổi)
             </p>
           </div>
         </div>

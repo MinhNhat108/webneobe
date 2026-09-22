@@ -117,8 +117,30 @@ const report = { R0: [], R1: [], R2: [], R3: [], R4: [], R5: [], R6: [], unresol
 // properly here. The 129 shore piles (spans 11.5–49.7 m, real bank positions)
 // are NEVER touched by this phase.
 
+/** Bed piles placed on a channel mid-line: short on purpose, exempt from R6. */
+const gapPlaced = new Set();
+
 const BED_STANDOFF = 17.5;   // m, clear distance from the pontoon edge to a bed pile
 const MIN_CLEAT_GAP = 6.0;   // m, minimum spacing between attachment points on the edge
+
+/**
+ * Distance from `origin` along unit direction `dir` to the first crossing of
+ * `ring`, or Infinity if the ray misses it. This is what tells a raft edge how
+ * much open water it actually faces before the next raft.
+ */
+function rayHitDistance(origin, dir, ring) {
+  let best = Infinity;
+  for (let i = 0; i < ring.length; i++) {
+    const a = ring[i], b = ring[(i + 1) % ring.length];
+    const ex = b.x - a.x, ey = b.y - a.y;
+    const den = dir.x * ey - dir.y * ex;
+    if (Math.abs(den) < 1e-9) continue; // parallel
+    const t = ((a.x - origin.x) * ey - (a.y - origin.y) * ex) / den;   // along the ray
+    const u = ((a.x - origin.x) * dir.y - (a.y - origin.y) * dir.x) / den; // along the edge
+    if (t > 0.01 && u >= 0 && u <= 1 && t < best) best = t;
+  }
+  return best;
+}
 
 /** Ring geometry: cumulative perimeter, point/normal at an arc position. */
 function ringWalker(ring) {
@@ -170,22 +192,46 @@ function replanBedAnchors() {
     const shore = lines.filter((c) => c.type === 'SHORE');
     if (bed.length === 0) continue;
 
-    // Sample the perimeter and keep only the stretches that actually have open
-    // water in front of them. A bed pile cannot go on an edge that faces a
-    // neighbouring raft a few metres away (rafts 1..5 form a near-contiguous
-    // chain) — trying to force one there is what produced 77 m cable spans.
+    // Sample the perimeter and work out how far out a pile can stand at each
+    // point. The standoff ADAPTS to the water actually available: in open
+    // water it is the nominal 17.5 m, and in a channel between two rafts it
+    // is the channel's mid-line, so the pile has equal clearance either side.
+    //
+    // The first version used a fixed 17.5 m and demanded 5 m to every raft,
+    // which silently rejected every channel narrower than 22.5 m. Eight raft
+    // pairs here are closer than that (BÈ 2–3 is 11.9 m, BÈ 4–5 is 20.0 m),
+    // so their facing edges lost all their bed piles and the anchors piled up
+    // on the outer sides — an unbalanced restraint that lets a raft drift
+    // towards its neighbour under wind. Mid-channel piles are what hold those
+    // two facing sides apart.
     const SAMPLE = 2.0;
     const feasible = [];
     for (let t = 0; t < walker.total; t += SAMPLE) {
       const { point, normal } = walker.at(t);
-      // Try the nominal standoff first, then a little further out, but never
-      // so far that the span stops looking like a mooring line.
+
+      // How much open water is in front of this edge point, measured along
+      // the normal until another raft is hit?
+      const blocked = Math.min(
+        ...polygons
+          .filter((p) => p !== poly)
+          .map((p) => rayHitDistance(point, normal, p.points))
+      );
+      // Mid-channel when the far side is close, nominal otherwise.
+      const target = Number.isFinite(blocked)
+        ? Math.min(BED_STANDOFF, blocked / 2)
+        : BED_STANDOFF;
+      const gapConstrained = target < BED_STANDOFF - 0.01;
+
       let chosen = null;
-      for (let s = BED_STANDOFF; s <= BED_STANDOFF + 12; s += 1.5) {
+      // Try the target first; if a pile is in the way, step outward, but never
+      // past the mid-line of a channel (that would favour one raft over the
+      // other and eat the neighbour's clearance).
+      const ceiling = gapConstrained ? target : BED_STANDOFF + 12;
+      for (let s = target; s <= ceiling + 0.001; s += 1.5) {
         const cand = { x: point.x + normal.x * s, y: point.y + normal.y * s };
         const clearOfRafts = polygons.every((p) => !pointInRing(cand, p.points) && distToRing(cand, p.points) >= RAFT_STANDOFF);
         const clearOfShore = shorePiles.every((o) => dist(cand, o) >= MIN_PILE_GAP);
-        if (clearOfRafts && clearOfShore) { chosen = { cand, standoff: s }; break; }
+        if (clearOfRafts && clearOfShore) { chosen = { cand, standoff: s, gapConstrained }; break; }
       }
       if (chosen) feasible.push({ t, point, normal, ...chosen });
     }
@@ -225,12 +271,17 @@ function replanBedAnchors() {
       c.xAnchor = Math.round(slot.cand.x * 100) / 100;
       c.yAnchor = Math.round(slot.cand.y * 100) / 100;
       refresh(c);
+      // A mid-channel pile is deliberately short: R6 must not "normalise" it
+      // back outward, that would push it against the neighbouring raft.
+      if (slot.gapConstrained) gapPlaced.add(c.code); else gapPlaced.delete(c.code);
     });
 
     const spans = bed.map((c) => c.span);
+    const midChannel = bed.filter((c) => gapPlaced.has(c.code)).length;
     report.R0.push(
       `${raftName}: bố trí lại ${bed.length} cọc đáy quanh chu vi ${walker.total.toFixed(0)} m — ` +
-      `nhịp ${Math.min(...spans).toFixed(1)}–${Math.max(...spans).toFixed(1)} m`
+      `nhịp ${Math.min(...spans).toFixed(1)}–${Math.max(...spans).toFixed(1)} m` +
+      (midChannel ? ` (trong đó ${midChannel} cọc đặt ở tim khe giữa hai bè)` : '')
     );
     void MIN_CLEAT_GAP;
   }
@@ -491,6 +542,7 @@ function normaliseShortBedLines() {
   const MIN_BED_SPAN = 14.0;
   for (const c of coords) {
     if (c.type !== 'BED' || c.span >= MIN_BED_SPAN) continue;
+    if (gapPlaced.has(c.code)) continue; // mid-channel pile, short by design
     const dir = norm(sub(anchorOf(c), cleatOf(c)));
     let fixed = false;
     for (let s2 = MIN_BED_SPAN; s2 <= BED_STANDOFF + 12; s2 += 1.0) {

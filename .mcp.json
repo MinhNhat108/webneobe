@@ -3,7 +3,7 @@
     "AgentsRoom-MCP": {
       "command": "node",
       "args": [
-        "C:\\Program Files\\AgentsRoom\\resources\\app-mcp-server.cjs"
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\app-mcp-server.cjs"
       ],
       "env": {
         "AR_PROJECT_ID": "proj-1787149114320-i82f8x",
@@ -16,7 +16,7 @@
     "AgentsRoom-Test-Runner": {
       "command": "node",
       "args": [
-        "C:\\Program Files\\AgentsRoom\\resources\\test-runner-mcp-server.cjs"
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\test-runner-mcp-server.cjs"
       ],
       "env": {
         "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
@@ -27,7 +27,7 @@
     "AgentsRoom-QA-Tester": {
       "command": "node",
       "args": [
-        "C:\\Program Files\\AgentsRoom\\resources\\qa-tester-mcp-server.cjs"
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\qa-tester-mcp-server.cjs"
       ],
       "env": {
         "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
@@ -37,11 +37,22 @@
     "AgentsRoom-Browser": {
       "command": "node",
       "args": [
-        "C:\\Program Files\\AgentsRoom\\resources\\browser-mcp-server.cjs"
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\browser-mcp-server.cjs"
       ],
       "env": {
         "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
         "AR_BROWSER_PROJECT_ID": "proj-1787149114320-i82f8x"
+      }
+    },
+    "AgentsRoom-Chrome": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\nhatm\\AppData\\Local\\Programs\\AgentsRoom\\resources\\browser-mcp-server.cjs"
+      ],
+      "env": {
+        "AR_BROWSER_BRIDGE_FILE": "C:\\Users\\nhatm\\.agentsroom\\browser-bridge.json",
+        "AR_BROWSER_PROJECT_ID": "proj-1787149114320-i82f8x",
+        "AR_BROWSER_KIND": "chrome"
       }
     }
   }

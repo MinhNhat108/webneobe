@@ -112,10 +112,6 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
             </div>
           )}
 
-          {/* Mandatory Engineering Disclaimer per SPEC §2.3 */}
-          <div className="no-print p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs text-amber-900 leading-relaxed shadow-sm">
-            <span className="font-bold">Khuyến cáo kỹ thuật:</span> Kết quả mang tính tham khảo kỹ thuật. Các thông số vật liệu (MBL cáp, sức chịu cọc Broms, hệ số bám neo) phải được kiểm chứng theo catalogue nhà sản xuất và quy chuẩn áp dụng (TCVN, QCVN, DNV-ST-0119, API RP 2SK).
-          </div>
         </main>
       </div>
 

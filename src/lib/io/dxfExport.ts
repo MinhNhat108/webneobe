@@ -264,6 +264,7 @@ const SCHEDULE_COLUMNS: Array<{ title: string; width: number; value: (r: PileSch
   { title: 'Z (m)', width: 10, value: (r) => r.z.toFixed(2) },
   { title: 'D (m)', width: 8, value: (r) => r.D_m.toFixed(2) },
   { title: 'L_opt (m)', width: 11, value: (r) => (r.Lopt_m === null ? 'KHONG DAT' : r.Lopt_m.toFixed(2)) },
+  { title: 'L_tk (m)', width: 10, value: (r) => r.Linput_m.toFixed(2) },
   { title: 'T_max (kN)', width: 12, value: (r) => r.Tmax_kN.toFixed(1) },
   { title: 'P_req (kN)', width: 12, value: (r) => r.Preq_kN.toFixed(1) },
   { title: 'P_max (kN)', width: 12, value: (r) => r.Pmax_kN.toFixed(1) },

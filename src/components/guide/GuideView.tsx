@@ -813,7 +813,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <p className="text-slate-600">
                     Bấm nút <strong>"Xuất Excel"</strong> trên Header để tạo file <code>.xlsx</code> với 7 sheet chi tiết:
                     ThongTinDuAn, TongHopCumBe, ToaDoDiemNeo, DuLieuDauVao, KetQuaKiemTraChiTiet,
-                    <strong> ThongKeCoc</strong> (bảng thống kê cọc kèm L_opt và P_max), GhiChu.
+                    <strong> ThongKeCoc</strong> (bảng thống kê cọc kèm L_opt, L_tk và P_max tại chiều sâu thiết kế), GhiChu.
                   </p>
                 </div>
 
@@ -825,7 +825,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <p className="text-slate-600">
                     Bấm nút <strong>"Xuất CAD"</strong> trên Header để tạo bản vẽ mặt bằng định vị cọc neo mở trực tiếp
                     bằng AutoCAD: ranh giới các cụm bè, tim dây neo bờ/đáy, ký hiệu cọc tại đúng tọa độ thực (X, Y) và
-                    <strong> bảng thống kê cọc</strong> (mã cọc, tọa độ, D, chiều sâu đóng cọc tối ưu L_opt, T_max,
+                    <strong> bảng thống kê cọc</strong> (mã cọc, tọa độ, D, chiều sâu ngàm tối thiểu L_opt, chiều sâu đóng cọc thiết kế L_tk, T_max,
                     P_req, P_max) — phân lớp theo 7 layer chuẩn để bật/tắt khi in.
                   </p>
                 </div>
@@ -836,7 +836,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Xuất Bảng Thống Kê Cọc Neo (.xlsx)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Bảng Cọc Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Cọc"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 299 cọc neo chuẩn xác 100% như bản vẽ CAD (13 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, T_max, P_req, P_max, Kết luận ĐẠT) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
+                    Bấm nút <strong>"Bảng Cọc Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Cọc"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 299 cọc neo chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
                   </p>
                 </div>
 

@@ -35,16 +35,30 @@ export interface PileScheduleRow {
   azimuth_deg: number;
   /** Pile diameter / side width, m. */
   D_m: number;
-  /** Optimised embedment (Broms inverse solve), m — null if none converged. */
+  /**
+   * Minimum embedment the loads require (Broms inverse solve), m — advisory,
+   * null if the solver did not converge. NOT the depth that gets driven.
+   */
   Lopt_m: number | null;
-  /** Embedment currently specified in the project inputs, m. */
+  /** Design embedment — the depth this pile is actually built to, m. */
   Linput_m: number;
   /** Governing line tension of the raft this pile belongs to, kN. */
   Tmax_kN: number;
   /** P_req = T_max * SF, kN. */
   Preq_kN: number;
-  /** P_max used for the check (min of rated and computed), kN. */
+  /**
+   * P_max used for the check, kN: the allowable holding capacity at the DESIGN
+   * embedment `Linput_m` (capped by a rated catalogue value when one is given).
+   *
+   * Deliberately NOT the capacity at `Lopt_m`: that is the capacity at the
+   * shallowest depth that merely carries the load, so it sits within a few
+   * percent of `Preq_kN` for every pile and makes a schedule read as if
+   * everything were 95-100 % utilised, when the pile actually driven is
+   * deeper and roughly twice as strong.
+   */
   Pmax_kN: number;
+  /** P_max at the minimum depth `Lopt_m`, kN — for reference beside L_opt. */
+  PmaxAtLopt_kN: number;
   /** Rated catalogue / load-test P_max, kN (undefined when not supplied). */
   PmaxRated_kN?: number;
   /** T_dây <= P_max. */
@@ -88,7 +102,13 @@ export function buildPileSchedule(
 
     const Tmax_kN = res.t_max_intact_kN;
     const Preq_kN = opt ? opt.Preq_kN : Tmax_kN * (state.anchor.sfPileCapacity ?? 1.0);
-    const Pmax_kN = opt ? opt.effectivePmax_kN : 0;
+
+    // Capacity AT THE DESIGN DEPTH — what this pile will really hold once built.
+    const designCapacity = isShore ? res.shorePileCapacity : res.bedPileCapacity;
+    const rated = isShore ? state.anchor.pileRatedPmaxShore_kN : state.anchor.pileRatedPmaxBed_kN;
+    const computedPmax = designCapacity?.Pmax_kN ?? opt?.effectivePmax_kN ?? 0;
+    const Pmax_kN = rated && rated > 0 ? Math.min(computedPmax, rated) : computedPmax;
+    const PmaxAtLopt_kN = opt?.effectivePmax_kN ?? 0;
 
     return {
       pileId: `HV-P${String(i + 1).padStart(3, '0')}`,
@@ -108,8 +128,10 @@ export function buildPileSchedule(
       Tmax_kN: round(Tmax_kN),
       Preq_kN: round(Preq_kN),
       Pmax_kN: round(Pmax_kN),
+      PmaxAtLopt_kN: round(PmaxAtLopt_kN),
       PmaxRated_kN: opt?.ratedPmax_kN,
-      isPmaxOk: opt ? opt.isPmaxOk : false,
+      // Checked against the as-built capacity, so this column can actually fail.
+      isPmaxOk: Pmax_kN > 0 && Preq_kN <= Pmax_kN,
       note: opt?.converged === false ? opt.note : undefined
     };
   });

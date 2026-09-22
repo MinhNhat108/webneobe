@@ -3,7 +3,7 @@ import { calculateLoads } from './loads';
 import { calculateCatenary } from './catenary';
 import { calculateAnchor } from './anchor';
 import { calculateBromsPile } from './broms';
-import { optimizePileEmbedment } from './pileOptimizer';
+import { optimizePileEmbedment, pileAllowableTension } from './pileOptimizer';
 import { runChecks } from './checks';
 import { round, roundOrNull } from './constants';
 
@@ -67,6 +67,8 @@ export function calculateProject(state: ProjectState): CalcResults {
   let bedCableTv_kN;
   let shorePileOpt;
   let bedPileOpt;
+  let shorePileCapacity;
+  let bedPileCapacity;
 
   if (state.anchor.mode === 'pile' || isSolar) {
     const shoreSection: PileSectionInput = {
@@ -164,6 +166,26 @@ export function calculateProject(state: ProjectState): CalcResults {
       ratedPmax_kN: state.anchor.pileRatedPmaxShore_kN
     });
 
+    // P_max of the pile AS BUILT. `shorePile` / `bedPile1` above are computed
+    // at the DESIGN embedment, so the capacity derived from them is the one a
+    // pile schedule must quote. (`shorePileOpt.capacity` is the capacity at
+    // L_opt — the bare minimum depth — and only means anything next to L_opt
+    // itself: it is always within a few percent of the demand.)
+    shorePileCapacity = pileAllowableTension(
+      shorePile,
+      state.anchor.shoreArm_e_m ?? 0.5,
+      shoreSection,
+      state.anchor.concreteRb_MPa ?? 14.5,
+      0
+    );
+    bedPileCapacity = pileAllowableTension(
+      bedPile1,
+      state.anchor.bed1Arm_e_m ?? 0.0,
+      bedSection,
+      state.anchor.concreteRb_MPa ?? 14.5,
+      bedCableAngle_deg
+    );
+
     bedPileOpt = optimizePileEmbedment({
       ...optCommon,
       soilType: state.anchor.soilBed ?? 'mud',
@@ -206,6 +228,8 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedCableTv_kN,
     shorePileOpt,
     bedPileOpt,
+    shorePileCapacity,
+    bedPileCapacity,
     bedClearance_m,
     avgLineSpacing_m
   };

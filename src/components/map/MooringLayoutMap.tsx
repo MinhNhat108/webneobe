@@ -504,7 +504,8 @@ export const MooringLayoutMap: React.FC = () => {
                   <th className="px-3 py-2 text-right">Y (m)</th>
                   <th className="px-3 py-2 text-right">Z (m)</th>
                   <th className="px-3 py-2 text-right">D (m)</th>
-                  <th className="px-3 py-2 text-right">L_opt (m)</th>
+                  <th className="px-3 py-2 text-right" title="Chiều sâu ngàm tối thiểu theo Broms">L_opt (m)</th>
+                  <th className="px-3 py-2 text-right" title="Chiều sâu đóng cọc theo thiết kế — P_max tính theo chiều sâu này">L_tk (m)</th>
                   <th className="px-3 py-2 text-right">T_max (kN)</th>
                   <th className="px-3 py-2 text-right">P_req (kN)</th>
                   <th className="px-3 py-2 text-right">P_max (kN)</th>
@@ -544,6 +545,9 @@ export const MooringLayoutMap: React.FC = () => {
                       <td className="px-3 py-1.5 text-right">{r.D_m.toFixed(2)}</td>
                       <td className="px-3 py-1.5 text-right font-bold text-sky-700">
                         {r.Lopt_m !== null ? r.Lopt_m.toFixed(2) : 'KHÔNG ĐẠT'}
+                      </td>
+                      <td className="px-3 py-1.5 text-right font-bold text-indigo-700">
+                        {r.Linput_m.toFixed(2)}
                       </td>
                       <td className="px-3 py-1.5 text-right">{r.Tmax_kN.toFixed(1)}</td>
                       <td className="px-3 py-1.5 text-right">{r.Preq_kN.toFixed(1)}</td>

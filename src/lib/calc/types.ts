@@ -405,6 +405,18 @@ export interface CalcResults {
   shorePileOpt?: PileOptimizationResult;
   bedPileOpt?: PileOptimizationResult;
 
+  /**
+   * P_max of the pile AS IT WILL BE BUILT — the allowable cable tension at the
+   * DESIGN embedment (`anchor.shoreL_m` / `anchor.bed1L_m`), not at `L_opt`.
+   *
+   * These are what a pile schedule must quote. `shorePileOpt.capacity` is the
+   * capacity at the shallowest depth that merely satisfies the load, so it is
+   * always within a few percent of the demand and makes every pile look 95-100 %
+   * utilised; the pile actually driven is deeper and roughly twice as strong.
+   */
+  shorePileCapacity?: PileCapacityBreakdown;
+  bedPileCapacity?: PileCapacityBreakdown;
+
   // C8 / C9 geometry
   /** Clearance between raft draft and the lake bed, m (C8). */
   bedClearance_m: number | null;

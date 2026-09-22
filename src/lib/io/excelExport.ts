@@ -256,7 +256,7 @@ export function exportProjectToExcel(
     [`BẢNG THỐNG KÊ CỌC NEO — ${state.meta.code || state.code || 'HV-FPV-2026'}`],
     [`Dự án: ${state.meta.name || state.name || 'Điện Mặt Trời Nổi Hồ Huổi Vanh'}`],
     [
-      `Tổng số cọc: ${schedule.length} | L_opt: Chiều sâu đóng cọc tối ưu (Broms) | P_max: Sức chịu tải cho phép lớn nhất (kN)`
+      `Tổng số cọc: ${schedule.length} | L_opt: chiều sâu ngàm TỐI THIỂU theo Broms | L_tk: chiều sâu ĐÓNG CỌC THEO THIẾT KẾ | P_max: sức chịu tải cho phép của cọc TẠI L_tk (kN) | P_req = T_max × SF`
     ],
     [''],
     [
@@ -269,11 +269,11 @@ export function exportProjectToExcel(
       'Z (m)',
       'D (m)',
       'L_opt (m)',
+      'L_tk (m)',
       'T_max (kN)',
       'P_req (kN)',
       'P_max (kN)',
       'KL',
-      'L nhập (m)',
       'Ghi chú'
     ]
   ];
@@ -288,11 +288,11 @@ export function exportProjectToExcel(
       Number(r.z.toFixed(2)),
       Number(r.D_m.toFixed(2)),
       r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
+      Number(r.Linput_m.toFixed(2)),
       Number(r.Tmax_kN.toFixed(1)),
       Number(r.Preq_kN.toFixed(1)),
       Number(r.Pmax_kN.toFixed(1)),
       r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA',
-      Number(r.Linput_m.toFixed(2)),
       r.note ?? ''
     ]);
   }
@@ -300,8 +300,8 @@ export function exportProjectToExcel(
   wsSchedule['!cols'] = [
     { wch: 12 }, { wch: 14 }, { wch: 10 }, { wch: 12 },
     { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 },
-    { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
-    { wch: 12 }, { wch: 12 }, { wch: 24 }
+    { wch: 12 }, { wch: 11 }, { wch: 14 }, { wch: 14 },
+    { wch: 14 }, { wch: 12 }, { wch: 24 }
   ];
   XLSX.utils.book_append_sheet(wb, wsSchedule, 'ThongKeCoc');
 
@@ -355,7 +355,8 @@ export function buildPileScheduleWorkbook(
     [`BẢNG THỐNG KÊ CỌC NEO - ${code}`],
     [`Dự án: ${name}`],
     [
-      `Tổng số cọc: ${schedule.length} | L_opt: Chiều sâu đóng cọc tối ưu (Broms) | P_max: Sức chịu tải cho phép lớn nhất (kN)`
+      `Tổng số cọc: ${schedule.length}  |  L_opt: chiều sâu ngàm TỐI THIỂU theo Broms (tham khảo)  |  ` +
+        `L_tk: chiều sâu ĐÓNG CỌC theo thiết kế  |  P_max: sức chịu tải cho phép của cọc TẠI L_tk  |  P_req = T_max × SF`
     ],
     [''],
     [
@@ -368,6 +369,7 @@ export function buildPileScheduleWorkbook(
       'Z (m)',
       'D (m)',
       'L_opt (m)',
+      'L_tk (m)',
       'T_max (kN)',
       'P_req (kN)',
       'P_max (kN)',
@@ -386,6 +388,7 @@ export function buildPileScheduleWorkbook(
       Number(r.z.toFixed(2)),
       Number(r.D_m.toFixed(2)),
       r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
+      Number(r.Linput_m.toFixed(2)),
       Number(r.Tmax_kN.toFixed(1)),
       Number(r.Preq_kN.toFixed(1)),
       Number(r.Pmax_kN.toFixed(1)),
@@ -406,6 +409,18 @@ export function buildPileScheduleWorkbook(
     bedLopts.length > 0 ? Number((bedLopts.reduce((a, b) => a + b, 0) / bedLopts.length).toFixed(2)) : 0;
 
   rows.push(['']);
+  // The design depth varies per raft (BÈ 5 drives deeper piles), so quote the
+  // real range taken from the schedule rather than the active raft's value.
+  const depthLabel = (subset: typeof schedule) => {
+    const values = [...new Set(subset.map((r) => r.Linput_m))].sort((a, b) => a - b);
+    if (values.length === 0) return '-';
+    return values.length === 1
+      ? `${values[0]} m`
+      : `${values[0]}–${values[values.length - 1]} m (tùy cụm bè)`;
+  };
+  const shoreLtkLabel = depthLabel(shorePiles);
+  const bedLtkLabel = depthLabel(bedPiles);
+
   rows.push(['TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN']);
   rows.push(['Tổng số điểm cọc neo', schedule.length, 'cọc', '100%']);
   rows.push([
@@ -427,16 +442,22 @@ export function buildPileScheduleWorkbook(
     `${((passedPiles.length / schedule.length) * 100).toFixed(1)}%`
   ]);
   rows.push([
-    'Chiều sâu L_opt trung bình cọc bờ (Broms)',
+    'Chiều sâu ngàm TỐI THIỂU trung bình — cọc bờ (L_opt, Broms)',
     avgShoreLopt,
     'm',
-    `Thiết kế chọn: ${state.anchor.shoreL_m ?? 6.5} m`
+    `Chiều sâu ĐÓNG CỌC theo thiết kế (L_tk): ${shoreLtkLabel}`
   ]);
   rows.push([
-    'Chiều sâu L_opt trung bình cọc đáy (Broms)',
+    'Chiều sâu ngàm TỐI THIỂU trung bình — cọc đáy (L_opt, Broms)',
     avgBedLopt,
     'm',
-    `Thiết kế chọn: ${state.anchor.bed1L_m ?? 8.0} m`
+    `Chiều sâu ĐÓNG CỌC theo thiết kế (L_tk): ${bedLtkLabel}`
+  ]);
+  rows.push([
+    'Ghi chú cột P_max',
+    '',
+    '',
+    'P_max tính theo chiều sâu ĐÓNG CỌC THỰC TẾ (L_tk), không phải theo L_opt. L_opt chỉ là chiều sâu tối thiểu vừa đủ chịu tải.'
   ]);
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
@@ -452,6 +473,7 @@ export function buildPileScheduleWorkbook(
     { wch: 12 }, // Z (m)
     { wch: 10 }, // D (m)
     { wch: 12 }, // L_opt (m)
+    { wch: 11 }, // L_tk (m)
     { wch: 14 }, // T_max (kN)
     { wch: 14 }, // P_req (kN)
     { wch: 14 }, // P_max (kN)

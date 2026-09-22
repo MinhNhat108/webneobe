@@ -10,6 +10,7 @@
  */
 
 import { toAsciiCad } from './dxfExport';
+import { CalcResults, ProjectState } from '../calc/types';
 
 const ACI = {
   red: 1,
@@ -72,6 +73,15 @@ function text(layer: string, p: Pt, height: number, value: string, align: 'LEFT'
     out += pair(72, 2) + pair(11, n(p.x)) + pair(21, n(p.y)) + pair(31, '0.0');
   }
   return out;
+}
+
+/**
+ * Verdict stamped next to the capacity note. It must follow the numbers:
+ * a sheet that prints "DAT" unconditionally would certify a pile that does
+ * not actually carry its load.
+ */
+function verdict(pReq: number, pMax: number): string {
+  return pReq <= pMax ? 'DAT' : 'KHONG DAT - KIEM TRA LAI';
 }
 
 function rect(layer: string, p1: Pt, p2: Pt): string {
@@ -220,7 +230,7 @@ export function buildPileDetailDxf(opts: PileDetailOptions = {}): string {
   entities += line(PILE_DETAIL_LAYERS.padEye.name, cableEnd, { x: cableEnd.x - 120, y: cableEnd.y - 40 });
   entities += line(PILE_DETAIL_LAYERS.padEye.name, cableEnd, { x: cableEnd.x - 60, y: cableEnd.y - 120 });
   entities += text(PILE_DETAIL_LAYERS.text.name, { x: cableEnd.x + 80, y: cableEnd.y + 60 }, 150, `LUC KEO CAP Tmax (GOC 30 DO)`);
-  entities += text(PILE_DETAIL_LAYERS.text.name, { x: cableEnd.x + 80, y: cableEnd.y - 120 }, 140, `P_req = ${pReqS.toFixed(1)} kN | P_max = ${pMaxS.toFixed(1)} kN (DAT)`);
+  entities += text(PILE_DETAIL_LAYERS.text.name, { x: cableEnd.x + 80, y: cableEnd.y - 120 }, 140, `P_req = ${pReqS.toFixed(1)} kN | P_max = ${pMaxS.toFixed(1)} kN (${verdict(pReqS, pMaxS)})`);
 
   // Dimension Shore Pile
   entities += line(PILE_DETAIL_LAYERS.dims.name, { x: sLeft - 400, y: groundY }, { x: sLeft - 400, y: sBotY });
@@ -293,7 +303,7 @@ export function buildPileDetailDxf(opts: PileDetailOptions = {}): string {
     prevPt = chainPt;
   }
   entities += text(PILE_DETAIL_LAYERS.text.name, { x: prevPt.x + 100, y: prevPt.y + 60 }, 140, 'XICH NEO DAY HO (CHAIN GRADE U2)');
-  entities += text(PILE_DETAIL_LAYERS.text.name, { x: prevPt.x + 100, y: prevPt.y - 100 }, 140, `P_req = ${pReqB.toFixed(1)} kN | P_max = ${pMaxB.toFixed(1)} kN (DAT)`);
+  entities += text(PILE_DETAIL_LAYERS.text.name, { x: prevPt.x + 100, y: prevPt.y - 100 }, 140, `P_req = ${pReqB.toFixed(1)} kN | P_max = ${pMaxB.toFixed(1)} kN (${verdict(pReqB, pMaxB)})`);
 
   // Dimension Bed Pile
   entities += line(PILE_DETAIL_LAYERS.dims.name, { x: bLeft - 400, y: bedLevelY }, { x: bLeft - 400, y: bBotY });
@@ -359,5 +369,55 @@ export function buildPileDetailDxf(opts: PileDetailOptions = {}): string {
   dxf += pair(0, 'SECTION') + pair(2, 'ENTITIES') + entities + pair(0, 'ENDSEC');
   dxf += pair(0, 'EOF');
 
+  return dxf;
+}
+
+/**
+ * Fills the detail drawing from the CALCULATED project results rather than
+ * the generic defaults, so the sheet a contractor builds from always carries
+ * this project's own pile geometry and capacities.
+ *
+ * Diameters and embedments come from the active project's anchor inputs;
+ * P_req / P_max come from the Broms optimiser (`shorePileOpt` / `bedPileOpt`).
+ * The embedment quoted is the one the user specified — NOT `L_opt` — because
+ * this is a construction detail of the pile as designed; L_opt is advisory
+ * and lives in the pile schedule.
+ */
+export function pileDetailOptionsFromProject(
+  state: ProjectState,
+  results: CalcResults
+): PileDetailOptions {
+  return {
+    shorePileD_m: state.anchor.shoreD_m,
+    shorePileL_m: state.anchor.shoreL_m,
+    bedPileD_m: state.anchor.bed1D_m,
+    bedPileL_m: state.anchor.bed1L_m,
+    pReqShore_kN: results.shorePileOpt?.Preq_kN,
+    pMaxShore_kN: results.shorePileOpt?.effectivePmax_kN,
+    pReqBed_kN: results.bedPileOpt?.Preq_kN,
+    pMaxBed_kN: results.bedPileOpt?.effectivePmax_kN,
+    projectName: state.meta.name || state.name
+  };
+}
+
+/** `cau-tao-coc-neo_<code>_<YYYYMMDD>.dxf` */
+export function pileDetailFileName(state: ProjectState, now: Date = new Date()): string {
+  const code = (state.meta.code || state.code || 'du-an').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'du-an';
+  const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  return `cau-tao-coc-neo_${code}_${stamp}.dxf`;
+}
+
+/** Builds the detail sheet for this project and downloads it. Browser-only. */
+export function exportPileDetailDxf(state: ProjectState, results: CalcResults): string {
+  const dxf = buildPileDetailDxf(pileDetailOptionsFromProject(state, results));
+  const blob = new Blob([dxf], { type: 'application/dxf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = pileDetailFileName(state);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
   return dxf;
 }

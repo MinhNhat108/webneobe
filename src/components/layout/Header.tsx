@@ -2,11 +2,13 @@ import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { exportProjectToExcel } from '../../lib/io/excelExport';
 import { exportMooringPileDxf } from '../../lib/io/dxfExport';
+import { exportPileDetailDxf } from '../../lib/io/pileDetailDxf';
 import {
   Anchor,
   FileSpreadsheet,
   Download,
   DraftingCompass,
+  Ruler,
   Printer,
   RefreshCw,
   Lock,
@@ -39,6 +41,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
     console.info(
       `[DXF] Đã xuất ${built.pileCount} cọc neo / ${built.raftCount} cụm bè.`
     );
+  };
+
+  const handleExportPileDetail = () => {
+    // The detail sheet is filled from THIS project's calculated pile geometry
+    // and P_req / P_max — never the generic defaults baked into the generator.
+    exportPileDetailDxf(currentProject, results);
   };
 
   return (
@@ -116,6 +124,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           >
             <DraftingCompass className="w-4 h-4 text-amber-400" />
             <span className="hidden md:inline">Xuất CAD</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExportPileDetail}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            title="Xuất bản vẽ chi tiết cấu tạo cọc neo (.DXF) — mặt đứng, mặt cắt, cốt thép, tai neo, kèm P_req/P_max của dự án"
+          >
+            <Ruler className="w-4 h-4 text-violet-400" />
+            <span className="hidden lg:inline">Cấu Tạo Cọc</span>
           </button>
 
           <button

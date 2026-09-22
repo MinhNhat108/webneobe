@@ -253,30 +253,56 @@ export function exportProjectToExcel(
   // disagree on L_opt / P_max for a given pile.
   const schedule = buildPileSchedule(state, results, batch);
   const scheduleRows: any[][] = [
-    ['BẢNG THỐNG KÊ CỌC NEO (PILE SCHEDULE) — KÈM CHIỀU SÂU ĐÓNG CỌC TỐI ƯU VÀ SỨC CHỊU TẢI CHO PHÉP'],
+    [`BẢNG THỐNG KÊ CỌC NEO — ${state.meta.code || state.code || 'HV-FPV-2026'}`],
+    [`Dự án: ${state.meta.name || state.name || 'Điện Mặt Trời Nổi Hồ Huổi Vanh'}`],
     [
-      'L_opt: chiều sâu ngàm tối thiểu thỏa mãn Broms (ngang + nhổ + uốn), đã làm tròn lên theo bước thi công. ' +
-        'P_max: sức chịu tải cho phép lớn nhất của cọc (lực căng dây lớn nhất cọc chịu được). P_req = T_max × SF.'
+      `Tổng số cọc: ${schedule.length} | L_opt: Chiều sâu đóng cọc tối ưu (Broms) | P_max: Sức chịu tải cho phép lớn nhất (kN)`
     ],
     [''],
     [
-      'Mã cọc', 'Ký hiệu khảo sát', 'Bè', 'Loại cọc',
-      'X (m)', 'Y (m)', 'Z (m)',
-      'D (m)', 'L nhập (m)', 'L_opt (m)',
-      'T_max (kN)', 'P_req (kN)', 'P_max dùng KT (kN)', 'P_max định mức (kN)',
-      'T_dây ≤ P_max', 'Ghi chú'
+      'MÃ CỌC',
+      'KÝ HIỆU KS',
+      'CỤM BÈ',
+      'LOẠI',
+      'X (m)',
+      'Y (m)',
+      'Z (m)',
+      'D (m)',
+      'L_opt (m)',
+      'T_max (kN)',
+      'P_req (kN)',
+      'P_max (kN)',
+      'KL',
+      'L nhập (m)',
+      'Ghi chú'
     ]
   ];
   for (const r of schedule) {
     scheduleRows.push([
-      r.pileId, r.code, r.raft, r.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY',
-      r.x, r.y, r.z,
-      r.D_m, r.Linput_m, r.Lopt_m ?? 'KHÔNG ĐẠT',
-      r.Tmax_kN, r.Preq_kN, r.Pmax_kN, r.PmaxRated_kN ?? '-',
-      r.isPmaxOk ? 'ĐẠT' : 'CẦN KIỂM TRA', r.note ?? ''
+      r.pileId,
+      r.code,
+      r.raft,
+      r.type === 'SHORE' ? 'BỜ' : 'ĐÁY HỒ',
+      Number(r.x.toFixed(2)),
+      Number(r.y.toFixed(2)),
+      Number(r.z.toFixed(2)),
+      Number(r.D_m.toFixed(2)),
+      r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
+      Number(r.Tmax_kN.toFixed(1)),
+      Number(r.Preq_kN.toFixed(1)),
+      Number(r.Pmax_kN.toFixed(1)),
+      r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA',
+      Number(r.Linput_m.toFixed(2)),
+      r.note ?? ''
     ]);
   }
   const wsSchedule = XLSX.utils.aoa_to_sheet(scheduleRows);
+  wsSchedule['!cols'] = [
+    { wch: 12 }, { wch: 14 }, { wch: 10 }, { wch: 12 },
+    { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 },
+    { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
+    { wch: 12 }, { wch: 12 }, { wch: 24 }
+  ];
   XLSX.utils.book_append_sheet(wb, wsSchedule, 'ThongKeCoc');
 
   // 7. Sheet: GhiChu ----------------------------------------------------------
@@ -294,4 +320,160 @@ export function exportProjectToExcel(
   // Download
   const filename = `neo-be_${state.code || 'project'}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.xlsx`;
   XLSX.writeFile(wb, filename);
+}
+
+/** Filename generator for the standalone pile schedule workbook. */
+export function pileScheduleExcelFileName(state: ProjectState, now: Date = new Date()): string {
+  const code = (state.meta.code || state.code || 'HV-FPV-2026')
+    .replace(/[^A-Za-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'HV-FPV-2026';
+  const stamp =
+    `${now.getFullYear()}` +
+    `${String(now.getMonth() + 1).padStart(2, '0')}` +
+    `${String(now.getDate()).padStart(2, '0')}`;
+  return `bang-thong-ke-coc-neo_${code}_${stamp}.xlsx`;
+}
+
+/**
+ * Builds the standalone Pile Schedule workbook matching the AutoCAD drawing table
+ * (BANG THONG KE COC NEO - 13 columns: MA COC, KY HIEU KS, CUM BE, LOAI, X, Y, Z, D, L_opt, T_max, P_req, P_max, KL).
+ * Pure builder without browser DOM or file side-effects, ideal for unit testing.
+ */
+export function buildPileScheduleWorkbook(
+  state: ProjectState,
+  results: CalcResults,
+  batchResults?: RaftBatchResultLike[],
+  coordinates?: MooringCoordinate[]
+): XLSX.WorkBook {
+  const schedule = buildPileSchedule(state, results, batchResults, coordinates);
+  const wb = XLSX.utils.book_new();
+
+  const code = state.meta.code || state.code || 'HV-FPV-2026';
+  const name = state.meta.name || state.name || 'Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh';
+
+  const rows: any[][] = [
+    [`BẢNG THỐNG KÊ CỌC NEO - ${code}`],
+    [`Dự án: ${name}`],
+    [
+      `Tổng số cọc: ${schedule.length} | L_opt: Chiều sâu đóng cọc tối ưu (Broms) | P_max: Sức chịu tải cho phép lớn nhất (kN)`
+    ],
+    [''],
+    [
+      'MÃ CỌC',
+      'KÝ HIỆU KS',
+      'CỤM BÈ',
+      'LOẠI',
+      'X (m)',
+      'Y (m)',
+      'Z (m)',
+      'D (m)',
+      'L_opt (m)',
+      'T_max (kN)',
+      'P_req (kN)',
+      'P_max (kN)',
+      'KL'
+    ]
+  ];
+
+  for (const r of schedule) {
+    rows.push([
+      r.pileId,
+      r.code,
+      r.raft,
+      r.type === 'SHORE' ? 'BỜ' : 'ĐÁY HỒ',
+      Number(r.x.toFixed(2)),
+      Number(r.y.toFixed(2)),
+      Number(r.z.toFixed(2)),
+      Number(r.D_m.toFixed(2)),
+      r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
+      Number(r.Tmax_kN.toFixed(1)),
+      Number(r.Preq_kN.toFixed(1)),
+      Number(r.Pmax_kN.toFixed(1)),
+      r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA'
+    ]);
+  }
+
+  // Summary statistics section at the bottom
+  const shorePiles = schedule.filter((r) => r.type === 'SHORE');
+  const bedPiles = schedule.filter((r) => r.type === 'BED');
+  const passedPiles = schedule.filter((r) => r.isPmaxOk);
+
+  const shoreLopts = shorePiles.filter((r) => r.Lopt_m !== null).map((r) => r.Lopt_m!);
+  const bedLopts = bedPiles.filter((r) => r.Lopt_m !== null).map((r) => r.Lopt_m!);
+  const avgShoreLopt =
+    shoreLopts.length > 0 ? Number((shoreLopts.reduce((a, b) => a + b, 0) / shoreLopts.length).toFixed(2)) : 0;
+  const avgBedLopt =
+    bedLopts.length > 0 ? Number((bedLopts.reduce((a, b) => a + b, 0) / bedLopts.length).toFixed(2)) : 0;
+
+  rows.push(['']);
+  rows.push(['TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN']);
+  rows.push(['Tổng số điểm cọc neo', schedule.length, 'cọc', '100%']);
+  rows.push([
+    'Số lượng cọc neo bờ (BỜ)',
+    shorePiles.length,
+    'cọc',
+    `${((shorePiles.length / schedule.length) * 100).toFixed(1)}%`
+  ]);
+  rows.push([
+    'Số lượng cọc neo lòng hồ (ĐÁY HỒ)',
+    bedPiles.length,
+    'cọc',
+    `${((bedPiles.length / schedule.length) * 100).toFixed(1)}%`
+  ]);
+  rows.push([
+    'Số cọc ĐẠT sức chịu tải (P_req ≤ P_max)',
+    passedPiles.length,
+    'cọc',
+    `${((passedPiles.length / schedule.length) * 100).toFixed(1)}%`
+  ]);
+  rows.push([
+    'Chiều sâu L_opt trung bình cọc bờ (Broms)',
+    avgShoreLopt,
+    'm',
+    `Thiết kế chọn: ${state.anchor.shoreL_m ?? 6.5} m`
+  ]);
+  rows.push([
+    'Chiều sâu L_opt trung bình cọc đáy (Broms)',
+    avgBedLopt,
+    'm',
+    `Thiết kế chọn: ${state.anchor.bed1L_m ?? 8.0} m`
+  ]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Set column widths matching table layout
+  ws['!cols'] = [
+    { wch: 12 }, // MÃ CỌC
+    { wch: 14 }, // KÝ HIỆU KS
+    { wch: 10 }, // CỤM BÈ
+    { wch: 12 }, // LOẠI
+    { wch: 12 }, // X (m)
+    { wch: 12 }, // Y (m)
+    { wch: 12 }, // Z (m)
+    { wch: 10 }, // D (m)
+    { wch: 12 }, // L_opt (m)
+    { wch: 14 }, // T_max (kN)
+    { wch: 14 }, // P_req (kN)
+    { wch: 14 }, // P_max (kN)
+    { wch: 12 } // KL
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'BangThongKeCoc');
+  return wb;
+}
+
+/**
+ * Triggers the browser download of the standalone Pile Schedule Excel workbook.
+ */
+export function exportPileScheduleToExcel(
+  state: ProjectState,
+  results: CalcResults,
+  batchResults?: RaftBatchResultLike[],
+  coordinates?: MooringCoordinate[]
+): { filename: string; rowCount: number } {
+  const wb = buildPileScheduleWorkbook(state, results, batchResults, coordinates);
+  const filename = pileScheduleExcelFileName(state);
+  XLSX.writeFile(wb, filename);
+  const rowCount = (coordinates ?? (huoiVanhCoordinatesData as MooringCoordinate[])).length;
+  return { filename, rowCount };
 }

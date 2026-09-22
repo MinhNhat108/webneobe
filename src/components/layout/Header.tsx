@@ -1,12 +1,13 @@
 import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
-import { exportProjectToExcel } from '../../lib/io/excelExport';
+import { exportProjectToExcel, exportPileScheduleToExcel } from '../../lib/io/excelExport';
 import { exportMooringPileDxf } from '../../lib/io/dxfExport';
 import {
   Anchor,
   FileSpreadsheet,
   Download,
   DraftingCompass,
+  Table,
   Printer,
   RefreshCw,
   Lock,
@@ -28,6 +29,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
     // it on demand if the user exports before ever opening the overview tab.
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
     exportProjectToExcel(currentProject, results, raftsSummary, batch);
+  };
+
+  const handleExportPileSchedule = () => {
+    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    exportPileScheduleToExcel(currentProject, results, batch);
   };
 
   const handleExportDxf = () => {
@@ -102,10 +108,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             type="button"
             onClick={handleExportExcel}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Xuất bảng tính kết quả ra Excel (.xlsx)"
+            title="Xuất toàn bộ bảng tính dự án ra Excel (.xlsx, 7 sheet)"
           >
             <Download className="w-4 h-4 text-sky-400" />
             <span className="hidden md:inline">Xuất Excel</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExportPileSchedule}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            title="Xuất riêng Bảng Thống Kê Cọc Neo (299 cọc, L_opt, P_max) ra Excel (.xlsx)"
+          >
+            <Table className="w-4 h-4 text-emerald-400" />
+            <span className="hidden xl:inline">Bảng Cọc Excel</span>
+            <span className="hidden md:inline xl:hidden">Bảng Cọc</span>
           </button>
 
           <button

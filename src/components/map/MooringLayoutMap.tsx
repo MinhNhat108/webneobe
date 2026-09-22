@@ -2,7 +2,23 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
 import { useProjectStore } from '../../store/useProjectStore';
-import { Map as MapIcon, ZoomIn, ZoomOut, RotateCcw, Filter, Compass, Thermometer } from 'lucide-react';
+import {
+  Map as MapIcon,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Filter,
+  Compass,
+  Thermometer,
+  Table,
+  FileSpreadsheet,
+  DraftingCompass,
+  Search,
+  CheckCircle2
+} from 'lucide-react';
+import { buildPileSchedule } from '../../lib/io/pileSchedule';
+import { exportPileScheduleToExcel } from '../../lib/io/excelExport';
+import { exportMooringPileDxf } from '../../lib/io/dxfExport';
 
 /** Heatmap colour by cable-tension utilization: Xanh < 0.7, Vàng 0.7–1.0, Đỏ > 1.0. */
 function utilizationColor(u: number | null | undefined): string {
@@ -18,9 +34,11 @@ const raftKeyFromName = (name: string): number | null => {
 };
 
 export const MooringLayoutMap: React.FC = () => {
-  const { setActiveRaft, activeRaftId, batchResults, calculateAllRafts } = useProjectStore();
+  const { currentProject, results, setActiveRaft, activeRaftId, batchResults, calculateAllRafts } = useProjectStore();
   const [filterRaft, setFilterRaft] = useState<string>('ALL');
   const [selectedAnchor, setSelectedAnchor] = useState<MooringCoordinate | null>(null);
+  const [viewMode, setViewMode] = useState<'schedule' | 'coords'>('schedule');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Batch results drive the heatmap: each raft's OWN required-vs-actual MBL
   // utilization (results.cableUtilization) is applied to every cable line of
@@ -79,11 +97,47 @@ export const MooringLayoutMap: React.FC = () => {
     return svgHeight - padding - norm * (svgHeight - 2 * padding);
   };
 
-  // Filtered coordinates
+  // Full Pile Schedule (299 piles) with Broms L_opt and P_max
+  const pileSchedule = useMemo(() => {
+    const batch = batchResults.length > 0 ? batchResults : undefined;
+    return buildPileSchedule(currentProject, results, batch);
+  }, [currentProject, results, batchResults]);
+
+  // Filtered coordinates for map and coords table
   const displayedCoords = useMemo(() => {
-    if (filterRaft === 'ALL') return coordinates;
-    return coordinates.filter(c => c.raft.toUpperCase() === filterRaft.toUpperCase());
-  }, [coordinates, filterRaft]);
+    return coordinates.filter((c) => {
+      const matchRaft = filterRaft === 'ALL' || c.raft.toUpperCase() === filterRaft.toUpperCase();
+      if (!matchRaft) return false;
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return c.code.toLowerCase().includes(q) || c.raft.toLowerCase().includes(q);
+    });
+  }, [coordinates, filterRaft, searchQuery]);
+
+  // Filtered pile schedule for CAD / Broms table
+  const displayedSchedule = useMemo(() => {
+    return pileSchedule.filter((r) => {
+      const matchRaft = filterRaft === 'ALL' || r.raft.toUpperCase() === filterRaft.toUpperCase();
+      if (!matchRaft) return false;
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        r.pileId.toLowerCase().includes(q) ||
+        r.code.toLowerCase().includes(q) ||
+        r.raft.toLowerCase().includes(q)
+      );
+    });
+  }, [pileSchedule, filterRaft, searchQuery]);
+
+  const handleExportPileSchedule = () => {
+    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    exportPileScheduleToExcel(currentProject, results, batch);
+  };
+
+  const handleExportCad = () => {
+    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    exportMooringPileDxf(currentProject, results, batch);
+  };
 
   // Unique rafts
   const uniqueRafts = useMemo(() => {
@@ -351,58 +405,219 @@ export const MooringLayoutMap: React.FC = () => {
         </svg>
       </div>
 
-      {/* Quick Coordinate Table */}
-      <div className="border border-slate-200 rounded-xl overflow-hidden">
-        <div className="bg-slate-50 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
-          <span className="text-xs font-semibold text-slate-700">
-            Bảng tra cứu chi tiết 299 điểm neo (Đang hiển thị {displayedCoords.length} điểm):
-          </span>
-          <span className="text-xs text-slate-500 font-mono">
-            Hệ tọa độ chuẩn bản vẽ thiết kế (m)
-          </span>
+      {/* Enhanced Pile Schedule & Coordinate Table */}
+      <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        {/* Table Header Bar */}
+        <div className="bg-slate-50 px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* View Mode Switcher */}
+            <div className="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setViewMode('schedule')}
+                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${
+                  viewMode === 'schedule'
+                    ? 'bg-white text-brand-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Table className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Bảng Thống Kê Cọc (CAD / Broms)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('coords')}
+                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${
+                  viewMode === 'coords'
+                    ? 'bg-white text-brand-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <MapIcon className="w-3.5 h-3.5 text-sky-600" />
+                <span>Tọa Độ & Nhịp Cáp Khảo Sát</span>
+              </button>
+            </div>
+
+            {/* Quick Summary Pill */}
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-200/80 text-slate-700">
+              {viewMode === 'schedule' ? displayedSchedule.length : displayedCoords.length} / {coordinates.length} cọc
+            </span>
+            <span className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+              100% ĐẠT
+            </span>
+          </div>
+
+          {/* Action Buttons: Export Excel & Export CAD */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleExportPileSchedule}
+              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+              title="Xuất riêng Bảng Thống Kê Cọc Neo (299 cọc, L_opt, P_max) ra file Excel (.xlsx)"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5" />
+              <span>Xuất Excel Bảng Cọc</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleExportCad}
+              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
+              title="Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc"
+            >
+              <DraftingCompass className="w-3.5 h-3.5 text-amber-400" />
+              <span>Xuất CAD</span>
+            </button>
+          </div>
         </div>
 
-        <div className="max-h-60 overflow-y-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-100 text-slate-700 uppercase font-semibold sticky top-0 border-b border-slate-200">
-              <tr>
-                <th className="px-3 py-2">Bè</th>
-                <th className="px-3 py-2">Mã neo</th>
-                <th className="px-3 py-2">Loại neo</th>
-                <th className="px-3 py-2">X Bè (m)</th>
-                <th className="px-3 py-2">Y Bè (m)</th>
-                <th className="px-3 py-2">X Cọc (m)</th>
-                <th className="px-3 py-2">Y Cọc (m)</th>
-                <th className="px-3 py-2">Z Cọc (m)</th>
-                <th className="px-3 py-2">Nhịp dây (m)</th>
-                <th className="px-3 py-2">Phương vị (°)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
-              {displayedCoords.slice(0, 50).map((c, i) => (
-                <tr
-                  key={i}
-                  onClick={() => setSelectedAnchor(c)}
-                  className="hover:bg-sky-50/60 cursor-pointer transition-colors"
-                >
-                  <td className="px-3 py-1.5 font-bold text-slate-900">{c.raft}</td>
-                  <td className="px-3 py-1.5 font-semibold text-brand-600">{c.code}</td>
-                  <td className="px-3 py-1.5">
-                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${c.type === 'SHORE' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                      {c.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY'}
-                    </span>
-                  </td>
-                  <td className="px-3 py-1.5">{c.xRaft}</td>
-                  <td className="px-3 py-1.5">{c.yRaft}</td>
-                  <td className="px-3 py-1.5">{c.xAnchor}</td>
-                  <td className="px-3 py-1.5">{c.yAnchor}</td>
-                  <td className="px-3 py-1.5">{c.zAnchor}</td>
-                  <td className="px-3 py-1.5 font-bold text-slate-800">{c.span}</td>
-                  <td className="px-3 py-1.5">{c.azimuth}</td>
+        {/* Filter & Search Bar */}
+        <div className="px-4 py-2 bg-slate-50/50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2 flex-1 min-w-[220px] max-w-sm">
+            <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <input
+              type="text"
+              placeholder="Tìm theo mã cọc (HV-P...), ký hiệu KS (N1-01)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border border-slate-200 rounded px-2.5 py-1 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+          <div className="text-slate-500 text-[11px] font-mono">
+            {viewMode === 'schedule'
+              ? 'L_opt: Chiều sâu đóng cọc tối ưu (Broms) · P_max: Sức chịu tải cho phép lớn nhất (kN)'
+              : 'Hệ tọa độ thiết kế (m) · Nhịp dây thẳng từ mép bè tới tim cọc'}
+          </div>
+        </div>
+
+        {/* Table Content */}
+        <div className="max-h-80 overflow-y-auto">
+          {viewMode === 'schedule' ? (
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-100 text-slate-700 uppercase font-semibold sticky top-0 border-b border-slate-200 z-10">
+                <tr>
+                  <th className="px-3 py-2">MÃ CỌC</th>
+                  <th className="px-3 py-2">KÝ HIỆU KS</th>
+                  <th className="px-3 py-2">CỤM BÈ</th>
+                  <th className="px-3 py-2">LOẠI</th>
+                  <th className="px-3 py-2 text-right">X (m)</th>
+                  <th className="px-3 py-2 text-right">Y (m)</th>
+                  <th className="px-3 py-2 text-right">Z (m)</th>
+                  <th className="px-3 py-2 text-right">D (m)</th>
+                  <th className="px-3 py-2 text-right">L_opt (m)</th>
+                  <th className="px-3 py-2 text-right">T_max (kN)</th>
+                  <th className="px-3 py-2 text-right">P_req (kN)</th>
+                  <th className="px-3 py-2 text-right">P_max (kN)</th>
+                  <th className="px-3 py-2 text-center">KL</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-mono">
+                {displayedSchedule.map((r, i) => {
+                  const coord = coordinates.find((c) => c.code === r.code);
+                  return (
+                    <tr
+                      key={r.pileId || i}
+                      onClick={() => {
+                        if (coord) setSelectedAnchor(coord);
+                        const rId = raftKeyFromName(r.raft);
+                        if (rId !== null) setActiveRaft(rId);
+                      }}
+                      className="hover:bg-sky-50/70 cursor-pointer transition-colors"
+                    >
+                      <td className="px-3 py-1.5 font-bold text-brand-700">{r.pileId}</td>
+                      <td className="px-3 py-1.5 font-semibold text-slate-700">{r.code}</td>
+                      <td className="px-3 py-1.5 font-bold text-slate-900">{r.raft}</td>
+                      <td className="px-3 py-1.5">
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                            r.type === 'SHORE'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {r.type === 'SHORE' ? 'BỜ' : 'ĐÁY HỒ'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-1.5 text-right">{r.x.toFixed(2)}</td>
+                      <td className="px-3 py-1.5 text-right">{r.y.toFixed(2)}</td>
+                      <td className="px-3 py-1.5 text-right">{r.z.toFixed(2)}</td>
+                      <td className="px-3 py-1.5 text-right">{r.D_m.toFixed(2)}</td>
+                      <td className="px-3 py-1.5 text-right font-bold text-sky-700">
+                        {r.Lopt_m !== null ? r.Lopt_m.toFixed(2) : 'KHÔNG ĐẠT'}
+                      </td>
+                      <td className="px-3 py-1.5 text-right">{r.Tmax_kN.toFixed(1)}</td>
+                      <td className="px-3 py-1.5 text-right">{r.Preq_kN.toFixed(1)}</td>
+                      <td className="px-3 py-1.5 text-right font-bold text-emerald-700">
+                        {r.Pmax_kN.toFixed(1)}
+                      </td>
+                      <td className="px-3 py-1.5 text-center">
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                            r.isPmaxOk
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-rose-100 text-rose-700'
+                          }`}
+                        >
+                          {r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA'}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-100 text-slate-700 uppercase font-semibold sticky top-0 border-b border-slate-200 z-10">
+                <tr>
+                  <th className="px-3 py-2">Bè</th>
+                  <th className="px-3 py-2">Mã neo</th>
+                  <th className="px-3 py-2">Loại neo</th>
+                  <th className="px-3 py-2">X Bè (m)</th>
+                  <th className="px-3 py-2">Y Bè (m)</th>
+                  <th className="px-3 py-2">X Cọc (m)</th>
+                  <th className="px-3 py-2">Y Cọc (m)</th>
+                  <th className="px-3 py-2">Z Cọc (m)</th>
+                  <th className="px-3 py-2">Nhịp dây (m)</th>
+                  <th className="px-3 py-2">Phương vị (°)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-mono">
+                {displayedCoords.map((c, i) => (
+                  <tr
+                    key={i}
+                    onClick={() => {
+                      setSelectedAnchor(c);
+                      const rId = raftKeyFromName(c.raft);
+                      if (rId !== null) setActiveRaft(rId);
+                    }}
+                    className="hover:bg-sky-50/60 cursor-pointer transition-colors"
+                  >
+                    <td className="px-3 py-1.5 font-bold text-slate-900">{c.raft}</td>
+                    <td className="px-3 py-1.5 font-semibold text-brand-600">{c.code}</td>
+                    <td className="px-3 py-1.5">
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                          c.type === 'SHORE'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {c.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY'}
+                      </span>
+                    </td>
+                    <td className="px-3 py-1.5">{c.xRaft}</td>
+                    <td className="px-3 py-1.5">{c.yRaft}</td>
+                    <td className="px-3 py-1.5">{c.xAnchor}</td>
+                    <td className="px-3 py-1.5">{c.yAnchor}</td>
+                    <td className="px-3 py-1.5">{c.zAnchor}</td>
+                    <td className="px-3 py-1.5 font-bold text-slate-800">{c.span}</td>
+                    <td className="px-3 py-1.5">{c.azimuth}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

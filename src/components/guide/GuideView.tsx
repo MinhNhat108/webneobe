@@ -10,6 +10,7 @@ import {
   Printer,
   DraftingCompass,
   FileSpreadsheet,
+  Table,
   AlertTriangle,
   Lightbulb,
   Search,
@@ -826,6 +827,16 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     bằng AutoCAD: ranh giới các cụm bè, tim dây neo bờ/đáy, ký hiệu cọc tại đúng tọa độ thực (X, Y) và
                     <strong> bảng thống kê cọc</strong> (mã cọc, tọa độ, D, chiều sâu đóng cọc tối ưu L_opt, T_max,
                     P_req, P_max) — phân lớp theo 7 layer chuẩn để bật/tắt khi in.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+                  <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                    <Table className="w-4 h-4 text-emerald-600" />
+                    Xuất Bảng Thống Kê Cọc Neo (.xlsx)
+                  </h4>
+                  <p className="text-slate-600">
+                    Bấm nút <strong>"Bảng Cọc Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Cọc"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 299 cọc neo chuẩn xác 100% như bản vẽ CAD (13 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, T_max, P_req, P_max, Kết luận ĐẠT) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
                   </p>
                 </div>
 

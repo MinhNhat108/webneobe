@@ -8,7 +8,7 @@ import { calculateProject } from '../../calc';
 import { buildPileSchedule } from '../pileSchedule';
 import { ProjectState } from '../../calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT } from '../../../data/huoiVanhProject';
-import coordinates from '../../../data/huoiVanhCoordinates.json';
+import { MOORING_LINES_V2 as coordinates } from '../../../data/huoiVanhLayout';
 
 const base = (): ProjectState =>
   JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
@@ -24,14 +24,14 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(ws).toBeDefined();
 
     const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
-    expect(data.length).toBeGreaterThan(299);
+    expect(data.length).toBeGreaterThan(304);
 
     // Row 1: Title
     expect(data[0][0]).toContain('BẢNG THỐNG KÊ CỌC NEO');
     // Row 2: Project name
     expect(data[1][0]).toContain('Dự án:');
     // Row 3: Description
-    expect(data[2][0]).toContain('Tổng số cọc: 299');
+    expect(data[2][0]).toContain('Tổng số cọc: 304');
 
     // Row 5: Column headers (14 columns matching the AutoCAD table, with both depths)
     const headers = data[4];
@@ -43,7 +43,7 @@ describe('Standalone Pile Schedule Excel Export', () => {
       'X (m)',
       'Y (m)',
       'Z (m)',
-      'D (m)',
+      'a (m)',
       'L_opt (m)',
       'L_tk (m)',
       'T_max (kN)',
@@ -72,26 +72,26 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(firstRow[9]).toBeGreaterThan(firstRow[8] as number);
     expect(firstRow[12]).toBeGreaterThan((firstRow[11] as number) * 1.3);
 
-    // Check 299th pile row
-    const lastPileRow = data[5 + 299 - 1];
-    expect(lastPileRow[0]).toBe('HV-P299');
-    expect(lastPileRow[1]).toBe(coordinates[298].code);
+    // Check 304th pile row
+    const lastPileRow = data[5 + 304 - 1];
+    expect(lastPileRow[0]).toBe('HV-P304');
+    expect(lastPileRow[1]).toBe(coordinates[303].code);
 
     // Summary section exists below pile rows
     const summaryHeader = data.find((r) => r[0] === 'TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN');
     expect(summaryHeader).toBeDefined();
 
     const totalRow = data.find((r) => r[0] === 'Tổng số điểm cọc neo');
-    expect(totalRow?.[1]).toBe(299);
+    expect(totalRow?.[1]).toBe(304);
 
     const shoreRow = data.find((r) => r[0] === 'Số lượng cọc neo bờ (BỜ)');
     expect(shoreRow?.[1]).toBe(129);
 
     const bedRow = data.find((r) => r[0] === 'Số lượng cọc neo lòng hồ (ĐÁY HỒ)');
-    expect(bedRow?.[1]).toBe(170);
+    expect(bedRow?.[1]).toBe(175);
 
     const passedRow = data.find((r) => r[0] === 'Số cọc ĐẠT sức chịu tải (P_req ≤ P_max)');
-    expect(passedRow?.[1]).toBe(299);
+    expect(passedRow?.[1]).toBe(304);
   });
 
   it('generates proper filename pattern', () => {

@@ -78,7 +78,7 @@
     "yRaft": 65.44,
     "xAnchor": -118.52,
     "yAnchor": 84.3,
-    "zAnchor": 384,
+    "zAnchor": 378.5,
     "span": 23.32,
     "azimuth": 36,
     "code": "B1-D07"
@@ -90,7 +90,7 @@
     "yRaft": 36.67,
     "xAnchor": -140.76,
     "yAnchor": 29.85,
-    "zAnchor": 384,
+    "zAnchor": 378.5,
     "span": 11.61,
     "azimuth": 126,
     "code": "B1-D08"
@@ -102,7 +102,7 @@
     "yRaft": 48,
     "xAnchor": -132.21,
     "yAnchor": 40.94,
-    "zAnchor": 384,
+    "zAnchor": 378.5,
     "span": 12.01,
     "azimuth": 126,
     "code": "B1-D09"
@@ -114,7 +114,7 @@
     "yRaft": 59.5,
     "xAnchor": -123.52,
     "yAnchor": 52.2,
-    "zAnchor": 384,
+    "zAnchor": 378.5,
     "span": 12.42,
     "azimuth": 126,
     "code": "B1-D10"
@@ -222,7 +222,7 @@
     "yRaft": 101.27,
     "xAnchor": -232.52,
     "yAnchor": 112.51,
-    "zAnchor": 384,
+    "zAnchor": 378.5,
     "span": 19.12,
     "azimuth": 306,
     "code": "B1-D19"
@@ -306,7 +306,7 @@
     "yRaft": -4.52,
     "xAnchor": -25.31,
     "yAnchor": 9.02,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 39.3,
     "code": "B2-D07"
@@ -318,7 +318,7 @@
     "yRaft": -29.77,
     "xAnchor": -50.18,
     "yAnchor": -33.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 6.41,
     "azimuth": 129.3,
     "code": "B2-D08"
@@ -330,7 +330,7 @@
     "yRaft": -13.37,
     "xAnchor": -32.25,
     "yAnchor": -21.12,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 12.24,
     "azimuth": 129.3,
     "code": "B2-D09"
@@ -342,7 +342,7 @@
     "yRaft": -28.1,
     "xAnchor": -47.19,
     "yAnchor": -33.49,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.51,
     "azimuth": 129.3,
     "code": "B2-D10"
@@ -354,7 +354,7 @@
     "yRaft": -10.58,
     "xAnchor": -113.8,
     "yAnchor": -19.37,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.19,
     "azimuth": 197,
     "code": "B2-D11"
@@ -402,7 +402,7 @@
     "yRaft": -12.38,
     "xAnchor": -94.09,
     "yAnchor": -17.42,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 6.51,
     "azimuth": 219.3,
     "code": "B2-D15"
@@ -414,7 +414,7 @@
     "yRaft": -10.26,
     "xAnchor": -125.12,
     "yAnchor": -26.9,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.5,
     "azimuth": 219.3,
     "code": "B2-D16"
@@ -426,7 +426,7 @@
     "yRaft": 1.14,
     "xAnchor": -139.06,
     "yAnchor": -15.5,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.5,
     "azimuth": 219.3,
     "code": "B2-D17"
@@ -450,7 +450,7 @@
     "yRaft": 41.59,
     "xAnchor": -125.46,
     "yAnchor": 49.65,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 12.72,
     "azimuth": 309.3,
     "code": "B2-D19"
@@ -462,7 +462,7 @@
     "yRaft": 29.21,
     "xAnchor": -135.24,
     "yAnchor": 36.98,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 12.27,
     "azimuth": 309.3,
     "code": "B2-D20"
@@ -546,7 +546,7 @@
     "yRaft": -27.33,
     "xAnchor": 3.7,
     "yAnchor": -22.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13.5,
     "azimuth": 67,
     "code": "B3-D07"
@@ -558,7 +558,7 @@
     "yRaft": -126.74,
     "xAnchor": -5.81,
     "yAnchor": -142.16,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.76,
     "azimuth": 157,
     "code": "B3-D08"
@@ -570,7 +570,7 @@
     "yRaft": -117.85,
     "xAnchor": 10.79,
     "yAnchor": -123.06,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 5.66,
     "azimuth": 157,
     "code": "B3-D09"
@@ -582,7 +582,7 @@
     "yRaft": -113.11,
     "xAnchor": 22.87,
     "yAnchor": -120.51,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.03,
     "azimuth": 157,
     "code": "B3-D10"
@@ -594,7 +594,7 @@
     "yRaft": -108.38,
     "xAnchor": 34.96,
     "yAnchor": -117.97,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.42,
     "azimuth": 157,
     "code": "B3-D11"
@@ -606,7 +606,7 @@
     "yRaft": -112.04,
     "xAnchor": 26.03,
     "yAnchor": -120.94,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.66,
     "azimuth": 157,
     "code": "B3-D12"
@@ -618,7 +618,7 @@
     "yRaft": -116.73,
     "xAnchor": 13.98,
     "yAnchor": -123.28,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 7.11,
     "azimuth": 157,
     "code": "B3-D13"
@@ -690,7 +690,7 @@
     "yRaft": -126.01,
     "xAnchor": -35.09,
     "yAnchor": -132.85,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 247,
     "code": "B3-D19"
@@ -702,7 +702,7 @@
     "yRaft": -63.41,
     "xAnchor": -61.66,
     "yAnchor": -70.25,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 247,
     "code": "B3-D20"
@@ -714,7 +714,7 @@
     "yRaft": -34.05,
     "xAnchor": -33.8,
     "yAnchor": -23.77,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.16,
     "azimuth": 337,
     "code": "B3-D21"
@@ -750,7 +750,7 @@
     "yRaft": -130.45,
     "xAnchor": 75.98,
     "yAnchor": -112.95,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 0,
     "code": "B4-D03"
@@ -762,7 +762,7 @@
     "yRaft": -130.45,
     "xAnchor": 38.07,
     "yAnchor": -118.59,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.86,
     "azimuth": 0,
     "code": "B4-D04"
@@ -774,7 +774,7 @@
     "yRaft": -130.45,
     "xAnchor": 86.49,
     "yAnchor": -117.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13.23,
     "azimuth": 7.8,
     "code": "B4-D05"
@@ -786,7 +786,7 @@
     "yRaft": -130.45,
     "xAnchor": 86.49,
     "yAnchor": -125.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 5.41,
     "azimuth": 19.3,
     "code": "B4-D06"
@@ -798,7 +798,7 @@
     "yRaft": -233.34,
     "xAnchor": 93.98,
     "yAnchor": -233.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D07"
@@ -810,7 +810,7 @@
     "yRaft": -215.34,
     "xAnchor": 93.98,
     "yAnchor": -215.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D08"
@@ -822,7 +822,7 @@
     "yRaft": -205.34,
     "xAnchor": 93.98,
     "yAnchor": -205.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D09"
@@ -834,7 +834,7 @@
     "yRaft": -195.85,
     "xAnchor": 93.98,
     "yAnchor": -195.85,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D10"
@@ -846,7 +846,7 @@
     "yRaft": -187.34,
     "xAnchor": 93.98,
     "yAnchor": -187.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D11"
@@ -858,7 +858,7 @@
     "yRaft": -180.25,
     "xAnchor": 93.98,
     "yAnchor": -180.25,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D12"
@@ -870,7 +870,7 @@
     "yRaft": -169.34,
     "xAnchor": 93.98,
     "yAnchor": -169.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D13"
@@ -882,7 +882,7 @@
     "yRaft": -161.34,
     "xAnchor": 93.98,
     "yAnchor": -161.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D14"
@@ -894,7 +894,7 @@
     "yRaft": -221.05,
     "xAnchor": 93.98,
     "yAnchor": -221.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.27,
     "azimuth": 90,
     "code": "B4-D15"
@@ -906,7 +906,7 @@
     "yRaft": -242.46,
     "xAnchor": 63.39,
     "yAnchor": -259.96,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 180,
     "code": "B4-D16"
@@ -917,9 +917,9 @@
     "xRaft": 30.71,
     "yRaft": -216.46,
     "xAnchor": 30.71,
-    "yAnchor": -219.64,
-    "zAnchor": 384,
-    "span": 3.18,
+    "yAnchor": -233.96,
+    "zAnchor": 378.3,
+    "span": 17.5,
     "azimuth": 180,
     "code": "B4-D17"
   },
@@ -976,10 +976,10 @@
     "type": "BED",
     "xRaft": 29.27,
     "yRaft": -208.89,
-    "xAnchor": 26.96,
+    "xAnchor": 11.77,
     "yAnchor": -208.89,
-    "zAnchor": 384,
-    "span": 2.3,
+    "zAnchor": 378.3,
+    "span": 17.5,
     "azimuth": 270,
     "code": "B4-D22"
   },
@@ -990,7 +990,7 @@
     "yRaft": -166.16,
     "xAnchor": -5.81,
     "yAnchor": -166.16,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 270,
     "code": "B4-D23"
@@ -1002,7 +1002,7 @@
     "yRaft": -154.16,
     "xAnchor": -5.81,
     "yAnchor": -154.16,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 270,
     "code": "B4-D24"
@@ -1014,7 +1014,7 @@
     "yRaft": -140.82,
     "xAnchor": -2.47,
     "yAnchor": -140.82,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 14.16,
     "azimuth": 270,
     "code": "B4-D25"
@@ -1026,7 +1026,7 @@
     "yRaft": -93.04,
     "xAnchor": 130.8,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D01"
@@ -1038,7 +1038,7 @@
     "yRaft": -93.04,
     "xAnchor": 116.08,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D02"
@@ -1050,7 +1050,7 @@
     "yRaft": -93.04,
     "xAnchor": 109.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D03"
@@ -1062,7 +1062,7 @@
     "yRaft": -93.04,
     "xAnchor": 119.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D04"
@@ -1074,7 +1074,7 @@
     "yRaft": -93.04,
     "xAnchor": 127.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D05"
@@ -1086,7 +1086,7 @@
     "yRaft": -93.04,
     "xAnchor": 137.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D06"
@@ -1098,7 +1098,7 @@
     "yRaft": -93.04,
     "xAnchor": 145.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D07"
@@ -1110,7 +1110,7 @@
     "yRaft": -93.04,
     "xAnchor": 155.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D08"
@@ -1122,7 +1122,7 @@
     "yRaft": -93.04,
     "xAnchor": 163.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D09"
@@ -1134,7 +1134,7 @@
     "yRaft": -93.04,
     "xAnchor": 173.28,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.21,
     "azimuth": 0,
     "code": "B5-D10"
@@ -1146,7 +1146,7 @@
     "yRaft": -93.04,
     "xAnchor": 199.28,
     "yAnchor": -65.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 27.9,
     "azimuth": 0,
     "code": "B5-D11"
@@ -1158,7 +1158,7 @@
     "yRaft": -93.04,
     "xAnchor": 209.28,
     "yAnchor": -65.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 27.9,
     "azimuth": 0,
     "code": "B5-D12"
@@ -1170,7 +1170,7 @@
     "yRaft": -93.04,
     "xAnchor": 217.28,
     "yAnchor": -65.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 27.9,
     "azimuth": 0,
     "code": "B5-D13"
@@ -1182,7 +1182,7 @@
     "yRaft": -238.54,
     "xAnchor": 238.13,
     "yAnchor": -238.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 5.32,
     "azimuth": 90,
     "code": "B5-D14"
@@ -1194,7 +1194,7 @@
     "yRaft": -227.23,
     "xAnchor": 238.13,
     "yAnchor": -227.23,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 5.32,
     "azimuth": 90,
     "code": "B5-D15"
@@ -1326,7 +1326,7 @@
     "yRaft": -243.04,
     "xAnchor": 210.29,
     "yAnchor": -260.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 180,
     "code": "B5-D26"
@@ -1362,7 +1362,7 @@
     "yRaft": -151.34,
     "xAnchor": 93.98,
     "yAnchor": -151.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D29"
@@ -1374,7 +1374,7 @@
     "yRaft": -143.34,
     "xAnchor": 93.98,
     "yAnchor": -143.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D30"
@@ -1386,7 +1386,7 @@
     "yRaft": -136.25,
     "xAnchor": 93.98,
     "yAnchor": -136.25,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D31"
@@ -1398,7 +1398,7 @@
     "yRaft": -133.05,
     "xAnchor": 93.98,
     "yAnchor": -133.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D32"
@@ -1410,7 +1410,7 @@
     "yRaft": -155.05,
     "xAnchor": 93.98,
     "yAnchor": -155.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D33"
@@ -1422,7 +1422,7 @@
     "yRaft": -177.05,
     "xAnchor": 93.98,
     "yAnchor": -177.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D34"
@@ -1434,7 +1434,7 @@
     "yRaft": -199.05,
     "xAnchor": 93.98,
     "yAnchor": -199.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D35"
@@ -1446,7 +1446,7 @@
     "yRaft": -241.05,
     "xAnchor": 93.98,
     "yAnchor": -241.05,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.46,
     "azimuth": 270,
     "code": "B5-D36"
@@ -1458,7 +1458,7 @@
     "yRaft": -93.04,
     "xAnchor": 86.49,
     "yAnchor": -87.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.88,
     "azimuth": 288.6,
     "code": "B5-D37"
@@ -1470,10 +1470,22 @@
     "yRaft": -93.04,
     "xAnchor": 98.8,
     "yAnchor": -82.53,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.49,
     "azimuth": 336.2,
     "code": "B5-D38"
+  },
+  {
+    "raft": "BÈ 5",
+    "type": "BED",
+    "xRaft": 232.81,
+    "yRaft": -152.41,
+    "xAnchor": 250.31,
+    "yAnchor": -152.41,
+    "zAnchor": 378.3,
+    "span": 17.5,
+    "azimuth": 90,
+    "code": "B5-D39"
   },
   {
     "raft": "BÈ 6",
@@ -1482,7 +1494,7 @@
     "yRaft": -165.47,
     "xAnchor": 357.1,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.15,
     "azimuth": 0,
     "code": "B6-D01"
@@ -1494,7 +1506,7 @@
     "yRaft": -165.47,
     "xAnchor": 308.7,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.15,
     "azimuth": 0,
     "code": "B6-D02"
@@ -1506,7 +1518,7 @@
     "yRaft": -165.47,
     "xAnchor": 286.28,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.15,
     "azimuth": 0,
     "code": "B6-D03"
@@ -1518,7 +1530,7 @@
     "yRaft": -165.47,
     "xAnchor": 264.28,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.15,
     "azimuth": 0,
     "code": "B6-D04"
@@ -1530,7 +1542,7 @@
     "yRaft": -165.47,
     "xAnchor": 257.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.15,
     "azimuth": 0,
     "code": "B6-D05"
@@ -1554,7 +1566,7 @@
     "yRaft": -175.3,
     "xAnchor": 383.4,
     "yAnchor": -175.3,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 18.1,
     "azimuth": 90,
     "code": "B6-D07"
@@ -1566,7 +1578,7 @@
     "yRaft": -197.3,
     "xAnchor": 383.4,
     "yAnchor": -197.3,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 18.1,
     "azimuth": 90,
     "code": "B6-D08"
@@ -1614,7 +1626,7 @@
     "yRaft": -241.47,
     "xAnchor": 338.06,
     "yAnchor": -260.96,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 19.49,
     "azimuth": 180,
     "code": "B6-D12"
@@ -1626,7 +1638,7 @@
     "yRaft": -239.47,
     "xAnchor": 316.06,
     "yAnchor": -260.96,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.49,
     "azimuth": 180,
     "code": "B6-D13"
@@ -1638,7 +1650,7 @@
     "yRaft": -239.47,
     "xAnchor": 294.06,
     "yAnchor": -260.96,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.49,
     "azimuth": 180,
     "code": "B6-D14"
@@ -1650,7 +1662,7 @@
     "yRaft": -239.47,
     "xAnchor": 272.06,
     "yAnchor": -260.96,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.49,
     "azimuth": 180,
     "code": "B6-D15"
@@ -1662,7 +1674,7 @@
     "yRaft": -216.54,
     "xAnchor": 238.13,
     "yAnchor": -216.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D16"
@@ -1674,7 +1686,7 @@
     "yRaft": -202.83,
     "xAnchor": 238.13,
     "yAnchor": -202.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D17"
@@ -1686,7 +1698,7 @@
     "yRaft": -194.54,
     "xAnchor": 238.13,
     "yAnchor": -194.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D18"
@@ -1698,7 +1710,7 @@
     "yRaft": -184.54,
     "xAnchor": 238.13,
     "yAnchor": -184.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D19"
@@ -1710,7 +1722,7 @@
     "yRaft": -174.54,
     "xAnchor": 238.13,
     "yAnchor": -174.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D20"
@@ -1722,7 +1734,7 @@
     "yRaft": -170.03,
     "xAnchor": 238.13,
     "yAnchor": -170.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D21"
@@ -1734,7 +1746,7 @@
     "yRaft": -188.03,
     "xAnchor": 238.13,
     "yAnchor": -188.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D22"
@@ -1746,7 +1758,7 @@
     "yRaft": -206.03,
     "xAnchor": 238.13,
     "yAnchor": -206.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D23"
@@ -1758,7 +1770,7 @@
     "yRaft": -224.03,
     "xAnchor": 238.13,
     "yAnchor": -224.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D24"
@@ -1770,7 +1782,7 @@
     "yRaft": -234.03,
     "xAnchor": 238.13,
     "yAnchor": -234.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.6,
     "azimuth": 270,
     "code": "B6-D25"
@@ -1782,7 +1794,7 @@
     "yRaft": -96.91,
     "xAnchor": 263.67,
     "yAnchor": -75.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.51,
     "azimuth": 0,
     "code": "B7-D01"
@@ -1794,7 +1806,7 @@
     "yRaft": -96.91,
     "xAnchor": 285.67,
     "yAnchor": -75.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.51,
     "azimuth": 0,
     "code": "B7-D02"
@@ -1806,7 +1818,7 @@
     "yRaft": -96.91,
     "xAnchor": 309.67,
     "yAnchor": -75.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.51,
     "azimuth": 0,
     "code": "B7-D03"
@@ -1818,7 +1830,7 @@
     "yRaft": -96.91,
     "xAnchor": 331.67,
     "yAnchor": -75.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.51,
     "azimuth": 0,
     "code": "B7-D04"
@@ -1830,7 +1842,7 @@
     "yRaft": -96.91,
     "xAnchor": 368.32,
     "yAnchor": -85.23,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 12.06,
     "azimuth": 14.4,
     "code": "B7-D05"
@@ -1890,7 +1902,7 @@
     "yRaft": -144.91,
     "xAnchor": 267.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D10"
@@ -1902,7 +1914,7 @@
     "yRaft": -144.91,
     "xAnchor": 279.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D11"
@@ -1914,7 +1926,7 @@
     "yRaft": -144.91,
     "xAnchor": 289.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D12"
@@ -1926,7 +1938,7 @@
     "yRaft": -144.91,
     "xAnchor": 301.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D13"
@@ -1938,7 +1950,7 @@
     "yRaft": -144.91,
     "xAnchor": 311.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D14"
@@ -1950,7 +1962,7 @@
     "yRaft": -144.91,
     "xAnchor": 321.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D15"
@@ -1962,7 +1974,7 @@
     "yRaft": -144.91,
     "xAnchor": 331.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D16"
@@ -1974,7 +1986,7 @@
     "yRaft": -144.91,
     "xAnchor": 343.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D17"
@@ -1986,7 +1998,7 @@
     "yRaft": -144.91,
     "xAnchor": 353.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D18"
@@ -1998,7 +2010,7 @@
     "yRaft": -144.91,
     "xAnchor": 363.9,
     "yAnchor": -155.32,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.41,
     "azimuth": 180,
     "code": "B7-D19"
@@ -2010,7 +2022,7 @@
     "yRaft": -144.91,
     "xAnchor": 238.78,
     "yAnchor": -152.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 18.37,
     "azimuth": 247.2,
     "code": "B7-D20"
@@ -2022,7 +2034,7 @@
     "yRaft": -130.34,
     "xAnchor": 238.2,
     "yAnchor": -130.34,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.52,
     "azimuth": 270,
     "code": "B7-D21"
@@ -2034,7 +2046,7 @@
     "yRaft": -109.23,
     "xAnchor": 238.2,
     "yAnchor": -109.23,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.52,
     "azimuth": 270,
     "code": "B7-D22"
@@ -2046,7 +2058,7 @@
     "yRaft": -106.03,
     "xAnchor": 238.2,
     "yAnchor": -106.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.52,
     "azimuth": 270,
     "code": "B7-D23"
@@ -2058,7 +2070,7 @@
     "yRaft": -116.03,
     "xAnchor": 238.2,
     "yAnchor": -116.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.52,
     "azimuth": 270,
     "code": "B7-D24"
@@ -2070,7 +2082,7 @@
     "yRaft": -134.03,
     "xAnchor": 238.2,
     "yAnchor": -134.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.52,
     "azimuth": 270,
     "code": "B7-D25"
@@ -2082,7 +2094,7 @@
     "yRaft": -96.91,
     "xAnchor": 238.2,
     "yAnchor": -96.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.54,
     "azimuth": 272.9,
     "code": "B7-D26"
@@ -2154,7 +2166,7 @@
     "yRaft": 28.75,
     "xAnchor": 423.99,
     "yAnchor": 33.36,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.74,
     "azimuth": 74,
     "code": "B8-D06"
@@ -2166,7 +2178,7 @@
     "yRaft": 22.42,
     "xAnchor": 418.95,
     "yAnchor": 25.07,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.61,
     "azimuth": 74,
     "code": "B8-D07"
@@ -2214,7 +2226,7 @@
     "yRaft": -44.39,
     "xAnchor": 406.33,
     "yAnchor": -61.21,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 164,
     "code": "B8-D11"
@@ -2226,7 +2238,7 @@
     "yRaft": -48.8,
     "xAnchor": 390.95,
     "yAnchor": -65.62,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 164,
     "code": "B8-D12"
@@ -2238,7 +2250,7 @@
     "yRaft": -53.21,
     "xAnchor": 375.57,
     "yAnchor": -70.03,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.5,
     "azimuth": 164,
     "code": "B8-D13"
@@ -2250,7 +2262,7 @@
     "yRaft": -57.27,
     "xAnchor": 355.67,
     "yAnchor": -75.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 18.15,
     "azimuth": 182.8,
     "code": "B8-D14"
@@ -2298,7 +2310,7 @@
     "yRaft": -56.31,
     "xAnchor": 340.19,
     "yAnchor": -60.92,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.74,
     "azimuth": 254,
     "code": "B8-D18"
@@ -2310,7 +2322,7 @@
     "yRaft": -40.92,
     "xAnchor": 335.78,
     "yAnchor": -45.54,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.74,
     "azimuth": 254,
     "code": "B8-D19"
@@ -2322,7 +2334,7 @@
     "yRaft": -25.54,
     "xAnchor": 331.37,
     "yAnchor": -30.16,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.74,
     "azimuth": 254,
     "code": "B8-D20"
@@ -2334,7 +2346,7 @@
     "yRaft": -10.16,
     "xAnchor": 326.96,
     "yAnchor": -14.78,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.74,
     "azimuth": 254,
     "code": "B8-D21"
@@ -2394,7 +2406,7 @@
     "yRaft": 51.43,
     "xAnchor": 325.59,
     "yAnchor": 64.4,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13.5,
     "azimuth": 344,
     "code": "B8-D26"
@@ -2406,7 +2418,7 @@
     "yRaft": 70.17,
     "xAnchor": 390.95,
     "yAnchor": 83.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13.5,
     "azimuth": 344,
     "code": "B8-D27"
@@ -2416,10 +2428,10 @@
     "type": "BED",
     "xRaft": 429.65,
     "yRaft": 13.62,
-    "xAnchor": 428.4,
-    "yAnchor": 17.98,
-    "zAnchor": 384,
-    "span": 4.54,
+    "xAnchor": 424.83,
+    "yAnchor": 30.44,
+    "zAnchor": 378.3,
+    "span": 17.5,
     "azimuth": 344,
     "code": "B8-D28"
   },
@@ -2436,13 +2448,25 @@
     "code": "B8-D29"
   },
   {
+    "raft": "BÈ 8",
+    "type": "BED",
+    "xRaft": 414.86,
+    "yRaft": 9.38,
+    "xAnchor": 421.98,
+    "yAnchor": 25.36,
+    "zAnchor": 378.3,
+    "span": 17.49,
+    "azimuth": 24,
+    "code": "B8-D30"
+  },
+  {
     "raft": "BÈ 9",
     "type": "BED",
     "xRaft": 146.02,
     "yRaft": 79.19,
     "xAnchor": 146.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.91,
     "azimuth": 0,
     "code": "B9-D01"
@@ -2454,7 +2478,7 @@
     "yRaft": -40.81,
     "xAnchor": 194.98,
     "yAnchor": -23.71,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 23.9,
     "azimuth": 44.3,
     "code": "B9-D02"
@@ -2562,7 +2586,7 @@
     "yRaft": 21.77,
     "xAnchor": 182.47,
     "yAnchor": 21.77,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 23.16,
     "azimuth": 90,
     "code": "B9-D11"
@@ -2574,7 +2598,7 @@
     "yRaft": -10.94,
     "xAnchor": 185.36,
     "yAnchor": -10.94,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 26.05,
     "azimuth": 90,
     "code": "B9-D12"
@@ -2586,7 +2610,7 @@
     "yRaft": 0.87,
     "xAnchor": 172.57,
     "yAnchor": 0.87,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13.26,
     "azimuth": 90,
     "code": "B9-D13"
@@ -2598,7 +2622,7 @@
     "yRaft": -51.71,
     "xAnchor": 194.98,
     "yAnchor": -51.71,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.7,
     "azimuth": 90,
     "code": "B9-D14"
@@ -2610,7 +2634,7 @@
     "yRaft": -64.81,
     "xAnchor": 191.28,
     "yAnchor": -65.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 13,
     "azimuth": 91.4,
     "code": "B9-D15"
@@ -2622,7 +2646,7 @@
     "yRaft": -64.81,
     "xAnchor": 183.28,
     "yAnchor": -65.14,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 5.01,
     "azimuth": 93.8,
     "code": "B9-D16"
@@ -2634,7 +2658,7 @@
     "yRaft": -64.81,
     "xAnchor": 176.8,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.02,
     "azimuth": 180,
     "code": "B9-D17"
@@ -2646,7 +2670,7 @@
     "yRaft": -64.81,
     "xAnchor": 160.08,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.02,
     "azimuth": 180,
     "code": "B9-D18"
@@ -2658,7 +2682,7 @@
     "yRaft": -64.81,
     "xAnchor": 148.48,
     "yAnchor": -73.83,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 9.02,
     "azimuth": 180,
     "code": "B9-D19"
@@ -2790,10 +2814,34 @@
     "yRaft": 79.19,
     "xAnchor": 80.02,
     "yAnchor": 83.26,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 7.43,
     "azimuth": 303.2,
     "code": "B9-D30"
+  },
+  {
+    "raft": "BÈ 9",
+    "type": "BED",
+    "xRaft": 117.23,
+    "yRaft": -64.81,
+    "xAnchor": 117.23,
+    "yAnchor": -78.81,
+    "zAnchor": 378.3,
+    "span": 14,
+    "azimuth": 180,
+    "code": "B9-D31"
+  },
+  {
+    "raft": "BÈ 9",
+    "type": "BED",
+    "xRaft": 116.33,
+    "yRaft": 79.19,
+    "xAnchor": 115.39,
+    "yAnchor": 89.9,
+    "zAnchor": 378.3,
+    "span": 10.75,
+    "azimuth": 355,
+    "code": "B9-D32"
   },
   {
     "raft": "BÈ 10",
@@ -2802,7 +2850,7 @@
     "yRaft": 208.76,
     "xAnchor": 122.97,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.65,
     "azimuth": 0,
     "code": "B10-D01"
@@ -2814,7 +2862,7 @@
     "yRaft": 208.76,
     "xAnchor": 108.97,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.65,
     "azimuth": 0,
     "code": "B10-D02"
@@ -2826,7 +2874,7 @@
     "yRaft": 208.76,
     "xAnchor": 96.97,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.65,
     "azimuth": 0,
     "code": "B10-D03"
@@ -2838,7 +2886,7 @@
     "yRaft": 208.76,
     "xAnchor": 82.97,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.65,
     "azimuth": 0,
     "code": "B10-D04"
@@ -2850,7 +2898,7 @@
     "yRaft": 208.76,
     "xAnchor": 154.13,
     "yAnchor": 226.48,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 17.72,
     "azimuth": 0,
     "code": "B10-D05"
@@ -2860,10 +2908,10 @@
     "type": "BED",
     "xRaft": 173.12,
     "yRaft": 191.82,
-    "xAnchor": 176.47,
+    "xAnchor": 190.62,
     "yAnchor": 191.82,
-    "zAnchor": 384,
-    "span": 3.35,
+    "zAnchor": 378.3,
+    "span": 17.5,
     "azimuth": 90,
     "code": "B10-D06"
   },
@@ -2872,10 +2920,10 @@
     "type": "BED",
     "xRaft": 173.12,
     "yRaft": 169.82,
-    "xAnchor": 176.47,
+    "xAnchor": 190.62,
     "yAnchor": 169.82,
-    "zAnchor": 384,
-    "span": 3.35,
+    "zAnchor": 378.3,
+    "span": 17.5,
     "azimuth": 90,
     "code": "B10-D07"
   },
@@ -2884,11 +2932,11 @@
     "type": "BED",
     "xRaft": 173.12,
     "yRaft": 160.76,
-    "xAnchor": 176.47,
-    "yAnchor": 159.82,
-    "zAnchor": 384,
-    "span": 3.48,
-    "azimuth": 105.7,
+    "xAnchor": 173.12,
+    "yAnchor": 143.26,
+    "zAnchor": 378.3,
+    "span": 17.5,
+    "azimuth": 180,
     "code": "B10-D08"
   },
   {
@@ -2910,7 +2958,7 @@
     "yRaft": 100.76,
     "xAnchor": 140.55,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.97,
     "azimuth": 166.4,
     "code": "B10-D10"
@@ -2958,7 +3006,7 @@
     "yRaft": 160.76,
     "xAnchor": 163.82,
     "yAnchor": 138.47,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 22.29,
     "azimuth": 180,
     "code": "B10-D14"
@@ -2970,7 +3018,7 @@
     "yRaft": 100.76,
     "xAnchor": 134.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D15"
@@ -2982,7 +3030,7 @@
     "yRaft": 100.76,
     "xAnchor": 122.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D16"
@@ -2994,7 +3042,7 @@
     "yRaft": 100.76,
     "xAnchor": 112.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D17"
@@ -3006,7 +3054,7 @@
     "yRaft": 100.76,
     "xAnchor": 100.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D18"
@@ -3018,7 +3066,7 @@
     "yRaft": 100.76,
     "xAnchor": 90.02,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D19"
@@ -3030,7 +3078,7 @@
     "yRaft": 100.76,
     "xAnchor": 96.55,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D20"
@@ -3042,7 +3090,7 @@
     "yRaft": 100.76,
     "xAnchor": 118.55,
     "yAnchor": 90.1,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 10.66,
     "azimuth": 180,
     "code": "B10-D21"
@@ -3132,6 +3180,18 @@
     "code": "B10-D28"
   },
   {
+    "raft": "BÈ 10",
+    "type": "BED",
+    "xRaft": 137.98,
+    "yRaft": 143.19,
+    "xAnchor": 155.48,
+    "yAnchor": 143.19,
+    "zAnchor": 378.3,
+    "span": 17.5,
+    "azimuth": 90,
+    "code": "B10-D29"
+  },
+  {
     "raft": "BÈ 11",
     "type": "SHORE",
     "xRaft": 62.02,
@@ -3150,7 +3210,7 @@
     "yRaft": 282.03,
     "xAnchor": 123.75,
     "yAnchor": 294.28,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 12.25,
     "azimuth": 0,
     "code": "B11-D02"
@@ -3162,7 +3222,7 @@
     "yRaft": 282.03,
     "xAnchor": 112.84,
     "yAnchor": 296.35,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 14.32,
     "azimuth": 0,
     "code": "B11-D03"
@@ -3174,7 +3234,7 @@
     "yRaft": 282.03,
     "xAnchor": 92.57,
     "yAnchor": 303.53,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 21.5,
     "azimuth": 0,
     "code": "B11-D04"
@@ -3222,7 +3282,7 @@
     "yRaft": 226.03,
     "xAnchor": 73.33,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.62,
     "azimuth": 180,
     "code": "B11-D08"
@@ -3234,7 +3294,7 @@
     "yRaft": 226.03,
     "xAnchor": 70.13,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.62,
     "azimuth": 180,
     "code": "B11-D09"
@@ -3246,7 +3306,7 @@
     "yRaft": 226.03,
     "xAnchor": 90.13,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.62,
     "azimuth": 180,
     "code": "B11-D10"
@@ -3258,7 +3318,7 @@
     "yRaft": 226.03,
     "xAnchor": 112.13,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.62,
     "azimuth": 180,
     "code": "B11-D11"
@@ -3270,7 +3330,7 @@
     "yRaft": 226.03,
     "xAnchor": 132.13,
     "yAnchor": 217.41,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 8.62,
     "azimuth": 180,
     "code": "B11-D12"
@@ -3306,7 +3366,7 @@
     "yRaft": 227.73,
     "xAnchor": 43.37,
     "yAnchor": 227.73,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 16.86,
     "azimuth": 270,
     "code": "B11-D15"
@@ -3354,7 +3414,7 @@
     "yRaft": 405.11,
     "xAnchor": 173.39,
     "yAnchor": 415.45,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.5,
     "azimuth": 26,
     "code": "B12-D01"
@@ -3366,7 +3426,7 @@
     "yRaft": 398.1,
     "xAnchor": 187.77,
     "yAnchor": 408.44,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.5,
     "azimuth": 26,
     "code": "B12-D02"
@@ -3462,7 +3522,7 @@
     "yRaft": 308.53,
     "xAnchor": 110.57,
     "yAnchor": 298.47,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 11.19,
     "azimuth": 206,
     "code": "B12-D10"
@@ -3474,7 +3534,7 @@
     "yRaft": 300.59,
     "xAnchor": 128.57,
     "yAnchor": 294.08,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 7.24,
     "azimuth": 206,
     "code": "B12-D11"
@@ -3570,9 +3630,21 @@
     "yRaft": 406.13,
     "xAnchor": 135.73,
     "yAnchor": 414.07,
-    "zAnchor": 384,
+    "zAnchor": 378.3,
     "span": 18.12,
     "azimuth": 296,
     "code": "B12-D19"
+  },
+  {
+    "raft": "BÈ 12",
+    "type": "BED",
+    "xRaft": 129.56,
+    "yRaft": 360.08,
+    "xAnchor": 113.83,
+    "yAnchor": 367.75,
+    "zAnchor": 378.3,
+    "span": 17.5,
+    "azimuth": 296,
+    "code": "B12-D20"
   }
 ]

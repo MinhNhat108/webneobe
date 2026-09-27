@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             type="button"
             onClick={handleExportPileSchedule}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Xuất riêng Bảng Thống Kê Cọc Neo (299 cọc, L_opt, P_max) ra Excel (.xlsx)"
+            title="Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra Excel (.xlsx)"
           >
             <Table className="w-4 h-4 text-emerald-400" />
             <span className="hidden xl:inline">Bảng Cọc Excel</span>

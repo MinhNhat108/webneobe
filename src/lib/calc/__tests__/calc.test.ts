@@ -21,6 +21,7 @@ import {
 } from '../broms';
 import { ProjectState, CheckItem, PileSectionInput } from '../types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
+import { buildRaftProjectState } from '../raftState';
 
 /** Deep clone so no test can leak state into another. */
 const base = (): ProjectState =>
@@ -441,26 +442,7 @@ describe('Full project', () => {
     );
 
     for (const raft of HUOI_VANH_RAFTS) {
-      const s = base();
-      s.activeRaftId = raft.id;
-      s.raft.length_m = raft.length_m;
-      s.raft.width_m = raft.width_m;
-      s.raft.solarPanelCount = raft.solarPanelCount || Math.round(raft.area_m2 * 0.22);
-      s.line.count = raft.cableCount;
-      s.line.cableCode = raft.selectedCable;
-      s.line.focusFactor = raft.focusFactor;
-      s.line.shoreLineCount = raft.shoreAnchors;
-      s.line.bedLineCount = raft.bedAnchors;
-      s.line.mbl_kN = raft.selectedCable === 'PES-48' ? 688
-        : raft.selectedCable === 'PES-36' ? 385
-        : raft.selectedCable === 'PES-32' ? 305
-        : raft.selectedCable === 'PES-28' ? 235
-        : 172;
-      s.env.waterDepth_m = raft.waterDepth_m || 6.0;
-      if (raft.shorePileD_m) s.anchor.shoreD_m = raft.shorePileD_m;
-      if (raft.shorePileL_m) s.anchor.shoreL_m = raft.shorePileL_m;
-      if (raft.bedPileD_m) s.anchor.bed1D_m = raft.bedPileD_m;
-      if (raft.bedPileL_m) s.anchor.bed1L_m = raft.bedPileL_m;
+      const s = buildRaftProjectState(base(), raft, base().anchor);
 
       const r = calculateProject(s);
       const failed = r.checks.filter((c: any) => c.status === 'FAIL');
@@ -634,7 +616,7 @@ describe('C8 — bed clearance and C9 — average line spacing', () => {
     expect(check(rStrict.checks, 'C8').status).toBe('FAIL');
   });
 
-  it('C9 is a non-mandatory warning: exceeding max spacing never flips the overall verdict', () => {
+  it('C9 is mandatory: exceeding max spacing fails the overall verdict', () => {
     const s = catenaryProject();
     s.raft.length_m = 100;
     s.raft.width_m = 80;
@@ -642,12 +624,20 @@ describe('C8 — bed clearance and C9 — average line spacing', () => {
     const r = calculateProject(s);
     const c9 = check(r.checks, 'C9');
     expect(c9.status).toBe('FAIL');
-    expect(c9.isMandatory).toBe(false);
+    expect(c9.isMandatory).toBe(true);
     expect(r.avgLineSpacing_m).toBeCloseTo(72, 6);
-    // A lone non-mandatory failure must not be able to fail the whole project
-    // when every mandatory check passed.
-    const mandatoryFailed = r.checks.some((c) => c.isMandatory && c.status === 'FAIL');
-    if (!mandatoryFailed) expect(r.overallVerdict).not.toBe('FAIL');
+    expect(r.overallVerdict).toBe('FAIL');
+  });
+
+  it('C9 uses the measured outline perimeter P_bè when the raft supplies it', () => {
+    const s = catenaryProject();
+    s.raft.length_m = 100;
+    s.raft.width_m = 80; // bounding rectangle: 360 m
+    s.raft.perimeter_m = 300; // measured outline
+    s.line.count = 20;
+    const r = calculateProject(s);
+    expect(r.avgLineSpacing_m).toBeCloseTo(15, 6); // 300 / 20, not 360 / 20
+    expect(check(r.checks, 'C9').status).toBe('PASS');
   });
 
   it('C9 passes when lines are spaced within the default 15 m limit', () => {

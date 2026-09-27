@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
+import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
 import { useProjectStore } from '../../store/useProjectStore';
 import {
@@ -62,7 +62,7 @@ export const MooringLayoutMap: React.FC = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragStart = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const coordinates: MooringCoordinate[] = huoiVanhCoordinatesData as MooringCoordinate[];
+  const coordinates: MooringCoordinate[] = MOORING_LINES_V2;
 
   // Calculate extents from coordinates
   const bounds = useMemo(() => {
@@ -97,7 +97,7 @@ export const MooringLayoutMap: React.FC = () => {
     return svgHeight - padding - norm * (svgHeight - 2 * padding);
   };
 
-  // Full Pile Schedule (299 piles) with Broms L_opt and P_max
+  // Full Pile Schedule (one row per pile) with Broms L_opt and P_max
   const pileSchedule = useMemo(() => {
     const batch = batchResults.length > 0 ? batchResults : undefined;
     return buildPileSchedule(currentProject, results, batch);
@@ -174,7 +174,7 @@ export const MooringLayoutMap: React.FC = () => {
               Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo 12 Bè (Huổi Vanh)
             </h3>
             <p className="card-subtitle">
-              Biểu diễn 299 tuyến cáp neo, cọc neo bờ (xanh lá) và cọc neo đáy hồ (cam)
+              Biểu diễn {coordinates.length} tuyến cáp neo, cọc neo bờ (xanh lá) và cọc neo đáy hồ (cam)
             </p>
           </div>
         </div>
@@ -454,7 +454,7 @@ export const MooringLayoutMap: React.FC = () => {
               type="button"
               onClick={handleExportPileSchedule}
               className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
-              title="Xuất riêng Bảng Thống Kê Cọc Neo (299 cọc, L_opt, P_max) ra file Excel (.xlsx)"
+              title="Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra file Excel (.xlsx)"
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
               <span>Xuất Excel Bảng Cọc</span>
@@ -503,7 +503,7 @@ export const MooringLayoutMap: React.FC = () => {
                   <th className="px-3 py-2 text-right">X (m)</th>
                   <th className="px-3 py-2 text-right">Y (m)</th>
                   <th className="px-3 py-2 text-right">Z (m)</th>
-                  <th className="px-3 py-2 text-right">D (m)</th>
+                  <th className="px-3 py-2 text-right" title="Cạnh tiết diện cọc vuông BTCT">a (m)</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu ngàm tối thiểu theo Broms">L_opt (m)</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu đóng cọc theo thiết kế — P_max tính theo chiều sâu này">L_tk (m)</th>
                   <th className="px-3 py-2 text-right">T_max (kN)</th>

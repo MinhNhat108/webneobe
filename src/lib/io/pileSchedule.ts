@@ -1,7 +1,6 @@
 import { CalcResults, ProjectState } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
-import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
-import huoiVanhRaftPolygons from '../../data/huoiVanhRaftPolygons.json';
+import { MOORING_LINES_V2, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
 
 /** A surveyed raft-cluster boundary, site-local metres. */
 export interface RaftPolygon {
@@ -83,7 +82,7 @@ export function buildPileSchedule(
   batchResults?: PileScheduleBatchLike[],
   coordinates?: MooringCoordinate[]
 ): PileScheduleRow[] {
-  const coords = coordinates ?? (huoiVanhCoordinatesData as MooringCoordinate[]);
+  const coords = coordinates ?? MOORING_LINES_V2;
   const byRaft = new Map<string, PileScheduleBatchLike>();
   for (const b of batchResults ?? []) byRaft.set(b.raft.name, b);
 
@@ -173,12 +172,9 @@ export interface RaftOutline {
 /**
  * Raft outlines for the drawing.
  *
- * PREFERRED: the surveyed boundary polygons in `huoiVanhRaftPolygons.json`,
- * extracted from layer `A-DETL-THIN` of the client's floor-plan DXF (12
- * closed polygons, mm converted to m, same site-local frame as the anchor
- * coordinates). Polygon #8 encloses BOTH "BÈ 8" and "BÈ 9" — they are one
- * drawn cluster but two calculation rafts — so it is drawn once under a
- * combined label rather than duplicated.
+ * PREFERRED: the 12 V2 raft-cluster outlines (`huoiVanhRaftPolygons_v2.json`,
+ * via `huoiVanhLayout.ts`), same site-local frame as the anchor coordinates,
+ * one polygon per raft.
  *
  * FALLBACK: any raft with no surveyed polygon gets the convex hull of its
  * mooring-line attachment points (`xRaft`/`yRaft`). That is an anchor-layout
@@ -187,8 +183,13 @@ export interface RaftOutline {
  * tinguishable from a surveyed one on a setting-out sheet.
  */
 export function buildRaftOutlines(coordinates?: MooringCoordinate[]): RaftOutline[] {
-  const coords = coordinates ?? (huoiVanhCoordinatesData as MooringCoordinate[]);
-  const polygons = huoiVanhRaftPolygons as RaftPolygon[];
+  const coords = coordinates ?? MOORING_LINES_V2;
+  const polygons: RaftPolygon[] = RAFT_POLYGONS_V2.map((p) => ({
+    id: p.id,
+    rafts: [p.name],
+    area_m2: p.area_m2,
+    points: p.points
+  }));
 
   const outlines: RaftOutline[] = [];
   const covered = new Set<string>();

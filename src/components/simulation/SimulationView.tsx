@@ -230,7 +230,7 @@ export const SimulationView: React.FC = () => {
                 <code className="text-brand-700 bg-slate-100 px-2 py-0.5 rounded block my-1">
                   q_wind = 0.5 × ρ_air × (V_w × G)² × C_d
                 </code>
-                Trong đó ρ_air = 1.225 kg/m³, G là hệ số gió giật, và C_d là hệ số cản khí động học của giàn pin nghiêng 15°.
+                Trong đó ρ_air = 1.225 kg/m³, G là hệ số gió giật, và C_d là hệ số cản khí động học của giàn pin nghiêng 12°.
               </p>
 
               <p>

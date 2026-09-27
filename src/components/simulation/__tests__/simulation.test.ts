@@ -45,15 +45,16 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(be5).toBeDefined();
     expect(be5?.area_m2).toBe(19405);
 
-    // 298 Piles
-    expect(pilesV2).toHaveLength(298);
+    // 304 square RC piles, derived one-per-line from the mooring layout
+    expect(pilesV2).toHaveLength(304);
     const shorePiles = pilesV2.filter((p: any) => p.type === 'SHORE');
     const bedPiles = pilesV2.filter((p: any) => p.type === 'BED');
     expect(shorePiles).toHaveLength(129);
-    expect(bedPiles).toHaveLength(169);
+    expect(bedPiles).toHaveLength(175);
+    expect(pilesV2.every((p: any) => p.shape === 'square')).toBe(true);
 
-    // 298 Mooring Lines
-    expect(coordsV2).toHaveLength(298);
+    // 304 Mooring Lines
+    expect(coordsV2).toHaveLength(304);
 
     // 3D Terrain Mesh
     expect(terrain.gridSize).toBe(64);

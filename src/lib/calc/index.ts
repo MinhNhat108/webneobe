@@ -102,7 +102,8 @@ export function calculateProject(state: ProjectState): CalcResults {
 
     // Cable inclination at the lake-bed pile head, from depth and plan offset.
     const waterDepth = state.env.waterDepth_m ?? 6.0;
-    const bedDist = state.raft.westDist_m ? state.raft.westDist_m / 2.0 : 13.5;
+    const bedDist = state.raft.bedCableSpan_m
+      ?? (state.raft.westDist_m ? state.raft.westDist_m / 2.0 : 13.5);
     const angleRad = Math.atan(waterDepth / Math.max(1, bedDist));
     bedCableAngle_deg = (angleRad * 180) / Math.PI;
 
@@ -204,7 +205,10 @@ export function calculateProject(state: ProjectState): CalcResults {
   }
 
   // ---- C8 / C9 geometry: bed clearance and average line spacing ---------
-  const perimeter_m = 2 * ((state.raft.length_m ?? 0) + (state.raft.width_m ?? 0));
+  // P_bè: the measured outline perimeter when the raft catalogue supplies it
+  // (C9 as specified: s_avg = P_bè / N_dây), else the bounding rectangle.
+  const perimeter_m = state.raft.perimeter_m
+    ?? 2 * ((state.raft.length_m ?? 0) + (state.raft.width_m ?? 0));
   const lineCount = state.line.count ?? 0;
   const avgLineSpacing_m = lineCount > 0 && perimeter_m > 0 ? perimeter_m / lineCount : null;
 

@@ -5,8 +5,9 @@ import { buildPileSchedule, convexHull, buildRaftOutlines } from '../pileSchedul
 import { calculateProject } from '../../calc';
 import { ProjectState } from '../../calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT } from '../../../data/huoiVanhProject';
-import coordinates from '../../../data/huoiVanhCoordinates.json';
-import huoiVanhRaftPolygons from '../../../data/huoiVanhRaftPolygons.json';
+import { MOORING_LINES_V2 as coordinates, RAFT_POLYGONS_V2 } from '../../../data/huoiVanhLayout';
+
+const huoiVanhRaftPolygons = RAFT_POLYGONS_V2.map((p) => ({ ...p, rafts: [p.name] }));
 
 const base = (): ProjectState =>
   JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
@@ -51,7 +52,7 @@ describe('DXF document structure', () => {
     expect(/[^\x00-\x7F]/.test(dxf)).toBe(false);
   });
 
-  it('draws every one of the 299 anchor points at its surveyed coordinate', () => {
+  it('draws every one of the 304 anchor points at its design coordinate', () => {
     const { dxf, pileCount, raftCount } = built();
     expect(pileCount).toBe(coordinates.length);
     expect(raftCount).toBeGreaterThanOrEqual(12);
@@ -184,20 +185,21 @@ describe('convexHull / raft outlines', () => {
     expect(outlines.filter((o) => o.source === 'surveyed')).toHaveLength(12);
   });
 
-  it('keeps the surveyed polygons in the same frame as the anchor points', () => {
-    // A raft's attachment points must sit on/inside its own polygon — this is
-    // what proves the mm->m conversion and the frame match are right.
-    const poly = (huoiVanhRaftPolygons as any[]).find((p) => p.rafts.includes('BÈ 1'));
-    const pts = (coordinates as any[]).filter((c) => c.raft === 'BÈ 1');
-    const inside = (p: { x: number; y: number }, ring: any[]) => {
-      let c = false;
-      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-        const a = ring[i], b = ring[j];
-        if ((a.y > p.y) !== (b.y > p.y) && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) c = !c;
-      }
-      return c;
+  it('keeps the raft outlines in the same frame as the anchor points', () => {
+    // Every attachment point (cleat) sits ON its own raft's outline — this is
+    // what proves the outlines and the mooring lines share one frame.
+    const distSeg = (p: any, a: any, b: any) => {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1)));
+      return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
     };
-    const hits = pts.filter((c) => inside({ x: c.xRaft, y: c.yRaft }, poly.points)).length;
-    expect(hits / pts.length).toBeGreaterThan(0.5);
+    for (const poly of huoiVanhRaftPolygons) {
+      const ring = poly.points;
+      for (const c of (coordinates as any[]).filter((x) => x.raft === poly.name)) {
+        const d = Math.min(...ring.map((q: any, i: number) => distSeg({ x: c.xRaft, y: c.yRaft }, q, ring[(i + 1) % ring.length])));
+        expect(d, `${c.code} cleat off its raft edge`).toBeLessThan(0.05);
+      }
+    }
   });
+
 });

@@ -7,6 +7,7 @@ import huoiVanhRaftPolygonsV2 from '../../data/huoiVanhRaftPolygons_v2.json';
 import huoiVanhCoordinatesV2 from '../../data/huoiVanhCoordinates_v2.json';
 import huoiVanhTerrainMesh from '../../data/huoiVanhTerrainMesh.json';
 import { WindParams, LayerVisibility, SelectedElement, LoadedIfcMetadata } from './types';
+import { useProjectStore } from '../../store/useProjectStore';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -42,6 +43,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     },
     ref
   ) => {
+    const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 12.0);
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -483,7 +485,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         for (let r = 0; r < rowCount; r++) {
           for (let c = 0; c < colCount; c++) {
             const panelGeom = new THREE.BoxGeometry(5.2, 0.12, 3.8);
-            panelGeom.rotateX(-0.26); // 15-degree tilt facing South
+            const tiltRad = ((solarTilt_deg ?? 12.0) * Math.PI) / 180;
+            panelGeom.rotateX(-tiltRad); // dynamic solar tilt facing South
             const panel = new THREE.Mesh(panelGeom, solarPanelMat);
             const px = bbox.min.x + (c + 0.5) * (sizeX / colCount);
             const pz = bbox.min.z + (r + 0.5) * (sizeZ / rowCount);
@@ -604,7 +607,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           pilesGroup.add(shorePile);
         }
       });
-    }, [designVersion, waterLevel_m]);
+    }, [designVersion, waterLevel_m, solarTilt_deg]);
 
     // Update Line Tension Colors & Aerodynamic Drag forces when wind changes
     useEffect(() => {

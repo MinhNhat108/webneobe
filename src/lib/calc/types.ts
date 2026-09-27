@@ -30,6 +30,18 @@ export interface RaftInput {
   northDist_m?: number;
   eastDist_m?: number;
   westDist_m?: number;
+  /**
+   * Measured raft outline perimeter P_bè (m). When given, C9 uses it
+   * (s_avg = P_bè / N_dây); otherwise it falls back to 2 x (length + width).
+   */
+  perimeter_m?: number;
+  /**
+   * Plan distance from the pontoon cleat to the lake-bed pile (m) that sets
+   * the cable inclination at the bed pile head. The raft catalogue passes the
+   * SHORTEST bed line of the layout — the steepest cable, i.e. the largest
+   * uplift on the pile. Falls back to westDist_m / 2 (legacy) when omitted.
+   */
+  bedCableSpan_m?: number;
 }
 
 export interface EnvInput {

@@ -1,64 +1,96 @@
 import { describe, it, expect } from 'vitest';
 import { HUOI_VANH_RAFTS, MooringCoordinate } from '../huoiVanhProject';
-import coordinates from '../huoiVanhCoordinates.json';
-import polygons from '../huoiVanhRaftPolygons.json';
+import { MOORING_LINES_V2, RAFT_POLYGONS_V2 } from '../huoiVanhLayout';
+import piles from '../huoiVanhPiles_v2.json';
 
 /**
- * The raft catalogue lives in three files that must agree: the design table
- * (`HUOI_VANH_RAFTS`), the surveyed anchor points (`huoiVanhCoordinates`) and
- * the CAD boundary polygons (`huoiVanhRaftPolygons`). They have drifted apart
+ * The V2 raft catalogue lives in three places that must agree: the design
+ * table (`HUOI_VANH_RAFTS`), the mooring network (`huoiVanhCoordinates_v2`)
+ * and the raft outlines (`huoiVanhRaftPolygons_v2`). They have drifted apart
  * before — a raft renumbering touched one and not the others — so the
  * contract between them is pinned here rather than left to review.
  *
- * The client's plan has exactly 12 clusters, BÈ 1 .. BÈ 12. There is no
- * "BÈ 13": drawing cluster 8 merges the two old survey groups 8 and 9.
+ * The V2 plan has exactly 12 clusters, BÈ 1 .. BÈ 12, 93.693 m² in total.
  */
 const EXPECTED = Array.from({ length: 12 }, (_, i) => `BÈ ${i + 1}`);
-const coords = coordinates as MooringCoordinate[];
+const coords: MooringCoordinate[] = MOORING_LINES_V2;
+const polygons = RAFT_POLYGONS_V2.map((p) => ({ ...p, rafts: [p.name] }));
 
-describe('Huổi Vanh raft catalogue — 12 clusters, BÈ 1..12', () => {
+describe('Huổi Vanh raft catalogue V2 — 12 clusters, BÈ 1..12', () => {
   it('the design table is exactly BÈ 1..BÈ 12', () => {
     expect(HUOI_VANH_RAFTS).toHaveLength(12);
     expect(HUOI_VANH_RAFTS.map((r) => r.id)).toEqual(Array.from({ length: 12 }, (_, i) => i + 1));
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(EXPECTED);
   });
 
-  it('the 299 surveyed anchor points cover the same 12 rafts', () => {
-    expect(coords).toHaveLength(299);
+  it('the 304 mooring lines (129 shore + 175 bed) cover the same 12 rafts', () => {
+    expect(coords).toHaveLength(304);
+    expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(129);
+    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(175);
+    expect(new Set(coords.map((c) => c.code)).size).toBe(304);
     const names = [...new Set(coords.map((c) => c.raft))];
     expect(names.sort()).toEqual([...EXPECTED].sort());
   });
 
-  it('every CAD polygon belongs to exactly one raft, and every raft has one', () => {
+  it('every outline belongs to exactly one raft, and every raft has one', () => {
     expect(polygons).toHaveLength(12);
-    const owned = (polygons as Array<{ rafts: string[] }>).flatMap((p) => p.rafts);
-    expect(owned).toHaveLength(12);
-    expect([...owned].sort()).toEqual([...EXPECTED].sort());
+    expect(polygons.map((p) => p.name).sort()).toEqual([...EXPECTED].sort());
+    expect(polygons.reduce((s, p) => s + p.area_m2, 0)).toBe(93693);
   });
 
-  it('BÈ 8 carries both old survey groups: 28 lines = 16 shore + 12 bed', () => {
-    const raft8 = HUOI_VANH_RAFTS.find((r) => r.id === 8)!;
-    const pts = coords.filter((c) => c.raft === 'BÈ 8');
-    expect(pts).toHaveLength(28);
-    expect(pts.filter((c) => c.type === 'SHORE')).toHaveLength(16);
-    expect(pts.filter((c) => c.type === 'BED')).toHaveLength(12);
-    // The design table must quote the same counts as the survey for this raft.
-    expect(raft8.cableCount).toBe(28);
-    expect(raft8.shoreAnchors).toBe(16);
-    expect(raft8.bedAnchors).toBe(12);
-  });
-
-  it('no data source mentions a BÈ 13 any more', () => {
-    expect(HUOI_VANH_RAFTS.some((r) => r.name === 'BÈ 13')).toBe(false);
-    expect(coords.some((c) => c.raft === 'BÈ 13')).toBe(false);
-    expect((polygons as Array<{ rafts: string[] }>).some((p) => p.rafts.includes('BÈ 13'))).toBe(false);
-  });
-
-  it('each raft area matches its CAD polygon', () => {
-    for (const poly of polygons as Array<{ rafts: string[]; area_m2: number }>) {
-      const raft = HUOI_VANH_RAFTS.find((r) => r.name === poly.rafts[0])!;
-      expect(raft, `no raft for polygon of ${poly.rafts[0]}`).toBeDefined();
+  it('each raft area and perimeter match its V2 outline', () => {
+    for (const poly of polygons) {
+      const raft = HUOI_VANH_RAFTS.find((r) => r.name === poly.name)!;
+      expect(raft, `no raft for outline of ${poly.name}`).toBeDefined();
       expect(raft.area_m2).toBe(poly.area_m2);
+      expect(raft.perimeter_m).toBe(poly.perimeter_m);
+    }
+  });
+
+  it('the design table quotes exactly the line counts of the layout', () => {
+    for (const raft of HUOI_VANH_RAFTS) {
+      const pts = coords.filter((c) => c.raft === raft.name);
+      expect(raft.cableCount, raft.name).toBe(pts.length);
+      expect(raft.shoreAnchors, raft.name).toBe(pts.filter((c) => c.type === 'SHORE').length);
+      expect(raft.bedAnchors, raft.name).toBe(pts.filter((c) => c.type === 'BED').length);
+    }
+  });
+
+  it('C9 holds on all 12 rafts: s_avg = P / N <= 15 m', () => {
+    const over = HUOI_VANH_RAFTS
+      .map((r) => ({ n: r.name, s: r.perimeter_m / r.cableCount }))
+      .filter((x) => x.s > 15.0);
+    expect(over.map((x) => `${x.n}: ${x.s.toFixed(2)} m`)).toEqual([]);
+  });
+
+  it('the bed cable span fed to the engine is the shortest bed line of the raft', () => {
+    for (const raft of HUOI_VANH_RAFTS) {
+      const shortest = Math.min(...coords.filter((c) => c.raft === raft.name && c.type === 'BED').map((c) => c.span));
+      expect(raft.bedAnchorDist_m, raft.name).toBeLessThanOrEqual(shortest);
+      expect(shortest - raft.bedAnchorDist_m, raft.name).toBeLessThan(0.1);
+    }
+  });
+
+  it('the pile file is derived from the lines: one square RC pile per line, same position', () => {
+    const list = piles as Array<{ code: string; line: string; type: string; shape: string; x: number; y: number }>;
+    expect(list).toHaveLength(304);
+    expect(new Set(list.map((p) => p.code)).size).toBe(304);
+    for (const p of list) {
+      expect(p.shape, p.code).toBe('square');
+      const line = coords.find((c) => c.code === p.line)!;
+      expect(line, p.code).toBeDefined();
+      expect(p.type).toBe(line.type);
+      expect(p.x).toBe(line.xAnchor);
+      expect(p.y).toBe(line.yAnchor);
+    }
+  });
+
+  it('every raft of the design table uses square piles sized per raft', () => {
+    for (const raft of HUOI_VANH_RAFTS) {
+      expect(raft.shorePileD_m, raft.name).toBeGreaterThan(0);
+      expect(raft.bedPileD_m, raft.name).toBeGreaterThan(0);
+      expect(raft.shorePileL_m, raft.name).toBeGreaterThan(0);
+      expect(raft.bedPileL_m, raft.name).toBeGreaterThan(0);
     }
   });
 });
@@ -68,7 +100,7 @@ describe('Huổi Vanh raft catalogue — 12 clusters, BÈ 1..12', () => {
  * re-layout removed (26 bed piles sitting inside a raft footprint, 3 pairs of
  * exactly coincident piles, cables running through neighbouring rafts); the
  * invariants are pinned here so a future data edit cannot quietly bring them
- * back. Regenerate the data with `node scripts/repairMooringLayout.mjs`.
+ * back. Regenerate the data with `node scripts/planMooringLayoutV2.mjs`.
  */
 describe('Mooring layout is buildable', () => {
   const ring = (name: string) =>
@@ -127,8 +159,8 @@ describe('Mooring layout is buildable', () => {
   it('bed anchors stand off the pontoon instead of hugging a fixed radius', () => {
     const bed = coords.filter((c) => c.type === 'BED');
     const spans = bed.map((c) => c.span);
-    // The old data had every bed anchor at 17.53–17.55 m from its cleat.
-    expect(Math.max(...spans)).toBeGreaterThan(18);
+    // A formula-generated layout collapses to one span; a planned one varies.
+    expect(Math.max(...spans) - Math.min(...spans)).toBeGreaterThan(5);
     for (const c of bed) {
       const d = Math.min(...ring(c.raft).map((q, i) => {
         const b = ring(c.raft)[(i + 1) % ring(c.raft).length];
@@ -207,8 +239,8 @@ describe('Rafts are restrained on every side', () => {
         );
         if (d < 22.5) pairs.push([names[i], names[j], d]);
       }
-    // The channels that the fixed-standoff version emptied out.
-    expect(pairs.length).toBeGreaterThanOrEqual(8);
+    // The V2 outlines leave 7 channels narrower than 22.5 m between rafts.
+    expect(pairs.length).toBeGreaterThanOrEqual(7);
 
     const starved = pairs.filter(([a, b]) => {
       const ra = ringOf(a), rb = ringOf(b);

@@ -5,7 +5,8 @@ import { calculateProject } from '../index';
 import { buildPileSchedule } from '../../io/pileSchedule';
 import { buildPileScheduleWorkbook } from '../../io/excelExport';
 import { buildMooringPileDxf } from '../../io/dxfExport';
-import coordinates from '../../../data/huoiVanhCoordinates.json';
+import { MOORING_LINES_V2 as coordinates } from '../../../data/huoiVanhLayout';
+import { buildRaftProjectState } from '../raftState';
 
 describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
   it('all 12 rafts pass all mandatory checks C1-C11 and BP-1-BP-5', () => {
@@ -13,27 +14,8 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
     const batchResults: any[] = [];
 
     for (const raft of HUOI_VANH_RAFTS) {
-      const s = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
-      s.activeRaftId = raft.id;
-      s.raft.length_m = raft.length_m;
-      s.raft.width_m = raft.width_m;
-      s.raft.solarPanelCount = raft.solarPanelCount || Math.round(raft.area_m2 * 0.22);
-      s.line.count = raft.cableCount;
-      s.line.cableCode = raft.selectedCable;
-      s.line.focusFactor = raft.focusFactor;
-      s.line.shoreLineCount = raft.shoreAnchors;
-      s.line.bedLineCount = raft.bedAnchors;
-      s.line.mbl_kN =
-        raft.selectedCable === 'PES-48' ? 688
-        : raft.selectedCable === 'PES-36' ? 385
-        : raft.selectedCable === 'PES-32' ? 305
-        : raft.selectedCable === 'PES-28' ? 235
-        : 172;
-      s.env.waterDepth_m = raft.waterDepth_m || 6.0;
-      if (raft.shorePileD_m) s.anchor.shoreD_m = raft.shorePileD_m;
-      if (raft.shorePileL_m) s.anchor.shoreL_m = raft.shorePileL_m;
-      if (raft.bedPileD_m) s.anchor.bed1D_m = raft.bedPileD_m;
-      if (raft.bedPileL_m) s.anchor.bed1L_m = raft.bedPileL_m;
+      const base = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
+      const s = buildRaftProjectState(base, raft, base.anchor);
 
       const r = calculateProject(s);
       batchResults.push({ raft, state: s, results: r });
@@ -81,6 +63,17 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
       expect(c8?.status).toBe('PASS');
       expect(c8?.actual).toBeGreaterThanOrEqual(1.0);
 
+      // C9 (mandatory): s_avg = P_bè / N_dây <= 15 m on the MEASURED perimeter
+      const c9 = r.checks.find((c) => c.id === 'C9');
+      expect(c9?.isMandatory).toBe(true);
+      expect(c9?.status).toBe('PASS');
+      expect(raft.perimeter_m / raft.cableCount).toBeLessThanOrEqual(15.0);
+
+      // Every pile is a square RC pile, checked with the Broms FS >= 2.0
+      expect(s.anchor.shorePileShape).toBe('square');
+      expect(s.anchor.bedPileShape).toBe('square');
+      expect(s.anchor.sfPile).toBeGreaterThanOrEqual(2.0);
+
       summary.push({
         raft: raft.name,
         area: raft.area_m2,
@@ -100,12 +93,12 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
       });
     }
 
-    // Now verify pile schedule with batchResults across all 299 piles
+    // Now verify pile schedule with batchResults across all 304 piles
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildPileSchedule(baseState, baseResults, batchResults, coordinates as any);
 
-    expect(schedule).toHaveLength(299);
+    expect(schedule).toHaveLength(304);
     for (const p of schedule) {
       expect(p.Lopt_m).not.toBeNull();
       expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
@@ -121,6 +114,6 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
     // Verify CAD DXF creation
     const dxfResult = buildMooringPileDxf(baseState, baseResults, batchResults, coordinates as any);
     expect(dxfResult.dxf).toContain('SECTION');
-    expect(dxfResult.pileCount).toBe(299);
+    expect(dxfResult.pileCount).toBe(304);
   });
 });

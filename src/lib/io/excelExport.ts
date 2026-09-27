@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { ProjectState, CalcResults } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
-import huoiVanhCoordinatesData from '../../data/huoiVanhCoordinates.json';
+import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
 import { buildPileSchedule } from './pileSchedule';
 
 export interface RaftBatchResultLike {
@@ -13,7 +13,7 @@ export interface RaftBatchResultLike {
  * Exports the full Master Report as one workbook, 7 sheets:
  *  1. ThongTinDuAn        — project meta
  *  2. TongHopCumBe        — Master sheet: all rafts, one calculated row each
- *  3. ToaDoDiemNeo        — all 299 anchor-point coordinates
+ *  3. ToaDoDiemNeo        — all anchor-point coordinates (V2 layout)
  *  4. DuLieuDauVao        — full input parameters of the CURRENTLY selected raft
  *  5. KetQuaKiemTraChiTiet— intermediate results + the full C1..C9/BP check
  *                           table for EVERY raft in batchResults (falls back
@@ -44,7 +44,7 @@ export function exportProjectToExcel(
     ['Ghi chú', state.meta.note],
     ['Hệ thống', 'Điện mặt trời nổi (Floating Solar FPV)'],
     ['Số cụm bè', rafts ? rafts.length : 1],
-    ['Số điểm neo', (huoiVanhCoordinatesData as MooringCoordinate[]).length]
+    ['Số điểm neo', MOORING_LINES_V2.length]
   ];
   const wsMeta = XLSX.utils.aoa_to_sheet(metaRows);
   XLSX.utils.book_append_sheet(wb, wsMeta, 'ThongTinDuAn');
@@ -94,7 +94,7 @@ export function exportProjectToExcel(
   XLSX.utils.book_append_sheet(wb, wsMaster, 'TongHopCumBe');
 
   // 3. Sheet: ToaDoDiemNeo (all anchor-point coordinates) -------------------
-  const coords = huoiVanhCoordinatesData as MooringCoordinate[];
+  const coords = MOORING_LINES_V2;
   const coordRows: any[][] = [
     [`BẢNG TỌA ĐỘ ${coords.length} ĐIỂM NEO — HỆ TỌA ĐỘ THIẾT KẾ`],
     [''],
@@ -256,7 +256,7 @@ export function exportProjectToExcel(
     [`BẢNG THỐNG KÊ CỌC NEO — ${state.meta.code || state.code || 'HV-FPV-2026'}`],
     [`Dự án: ${state.meta.name || state.name || 'Điện Mặt Trời Nổi Hồ Huổi Vanh'}`],
     [
-      `Tổng số cọc: ${schedule.length} | L_opt: chiều sâu ngàm TỐI THIỂU theo Broms | L_tk: chiều sâu ĐÓNG CỌC THEO THIẾT KẾ | P_max: sức chịu tải cho phép của cọc TẠI L_tk (kN) | P_req = T_max × SF`
+      `Tổng số cọc: ${schedule.length} (cọc VUÔNG BTCT, a = cạnh tiết diện) | L_opt: chiều sâu ngàm TỐI THIỂU theo Broms | L_tk: chiều sâu ĐÓNG CỌC THEO THIẾT KẾ | P_max: sức chịu tải cho phép của cọc TẠI L_tk (kN) | P_req = T_max × SF`
     ],
     [''],
     [
@@ -267,7 +267,7 @@ export function exportProjectToExcel(
       'X (m)',
       'Y (m)',
       'Z (m)',
-      'D (m)',
+      'a (m)',
       'L_opt (m)',
       'L_tk (m)',
       'T_max (kN)',
@@ -355,7 +355,7 @@ export function buildPileScheduleWorkbook(
     [`BẢNG THỐNG KÊ CỌC NEO - ${code}`],
     [`Dự án: ${name}`],
     [
-      `Tổng số cọc: ${schedule.length}  |  L_opt: chiều sâu ngàm TỐI THIỂU theo Broms (tham khảo)  |  ` +
+      `Tổng số cọc: ${schedule.length} (cọc VUÔNG BTCT, a = cạnh tiết diện)  |  L_opt: chiều sâu ngàm TỐI THIỂU theo Broms (tham khảo)  |  ` +
         `L_tk: chiều sâu ĐÓNG CỌC theo thiết kế  |  P_max: sức chịu tải cho phép của cọc TẠI L_tk  |  P_req = T_max × SF`
     ],
     [''],
@@ -367,7 +367,7 @@ export function buildPileScheduleWorkbook(
       'X (m)',
       'Y (m)',
       'Z (m)',
-      'D (m)',
+      'a (m)',
       'L_opt (m)',
       'L_tk (m)',
       'T_max (kN)',
@@ -471,7 +471,7 @@ export function buildPileScheduleWorkbook(
     { wch: 12 }, // X (m)
     { wch: 12 }, // Y (m)
     { wch: 12 }, // Z (m)
-    { wch: 10 }, // D (m)
+    { wch: 10 }, // a (m) — side of the square pile
     { wch: 12 }, // L_opt (m)
     { wch: 11 }, // L_tk (m)
     { wch: 14 }, // T_max (kN)
@@ -496,6 +496,6 @@ export function exportPileScheduleToExcel(
   const wb = buildPileScheduleWorkbook(state, results, batchResults, coordinates);
   const filename = pileScheduleExcelFileName(state);
   XLSX.writeFile(wb, filename);
-  const rowCount = (coordinates ?? (huoiVanhCoordinatesData as MooringCoordinate[])).length;
+  const rowCount = (coordinates ?? MOORING_LINES_V2).length;
   return { filename, rowCount };
 }

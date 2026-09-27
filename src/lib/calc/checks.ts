@@ -272,7 +272,9 @@ export function runChecks(
         : undefined));
   }
 
-  // ---- C9 — average mooring-line spacing around the raft perimeter (warning) --
+  // ---- C9 — average mooring-line spacing around the raft perimeter ----------
+  // Mandatory since the V2 layout: every raft carries N >= ceil(P / 15) lines
+  // (304 in total), so a C9 failure is a real design defect, not a warning.
   const maxSpacing = criteria.maxLineSpacing_m ?? 15.0;
   const c9: CheckSpec = {
     id: 'C9',
@@ -280,7 +282,7 @@ export function runChecks(
     formula: 'P_bè / N_dây ≤ [maxSpacing]',
     unit: 'm',
     threshold: `≤ ${maxSpacing} m`,
-    isMandatory: false
+    isMandatory: true
   };
   if (results.avgLineSpacing_m === null) {
     checks.push(notEvaluable(c9, 'Thiếu chu vi bè hoặc số lượng dây neo.'));

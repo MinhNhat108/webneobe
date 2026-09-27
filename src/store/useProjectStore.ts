@@ -3,60 +3,8 @@ import { persist } from 'zustand/middleware';
 import { ProjectState, CalcResults, RaftInput, EnvInput, LineInput, AnchorInput, Criteria, ProjectMeta, Attachment, SystemType } from '../lib/calc/types';
 import { calculateProject } from '../lib/calc';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../data/huoiVanhProject';
+import { buildRaftProjectState } from '../lib/calc/raftState';
 
-const CABLE_MBL_KN: Record<string, number> = {
-  'PES-48': 688,
-  'PES-36': 385,
-  'PES-32': 305,
-  'PES-28': 235
-};
-
-/**
- * Builds the per-raft ProjectState override — the SAME logic `setActiveRaft`
- * applies to switch the active raft, factored out so the batch calculator
- * (`calculateAllRafts`) can run it for all 12 rafts without touching
- * `activeRaftId` / `currentProject` in the store.
- */
-function buildRaftProjectState(
-  base: ProjectState,
-  raftItem: RaftSummaryItem,
-  defaultAnchor: AnchorInput
-): ProjectState {
-  return {
-    ...base,
-    activeRaftId: raftItem.id,
-    meta: {
-      ...base.meta,
-      note: `Tính toán cho ${raftItem.name} — diện tích ${raftItem.area_m2.toLocaleString()} m², số dây ${raftItem.cableCount} (bờ: ${raftItem.shoreAnchors}, đáy: ${raftItem.bedAnchors})`
-    },
-    raft: {
-      ...base.raft,
-      length_m: raftItem.length_m,
-      width_m: raftItem.width_m,
-      solarPanelCount: raftItem.solarPanelCount || Math.round(raftItem.area_m2 * 0.22)
-    },
-    line: {
-      ...base.line,
-      count: raftItem.cableCount,
-      cableCode: raftItem.selectedCable,
-      focusFactor: raftItem.focusFactor,
-      shoreLineCount: raftItem.shoreAnchors,
-      bedLineCount: raftItem.bedAnchors,
-      mbl_kN: CABLE_MBL_KN[raftItem.selectedCable] ?? 172
-    },
-    env: {
-      ...base.env,
-      waterDepth_m: raftItem.waterDepth_m || 6.0
-    },
-    anchor: {
-      ...base.anchor,
-      shoreD_m: raftItem.shorePileD_m ?? defaultAnchor.shoreD_m,
-      shoreL_m: raftItem.shorePileL_m ?? defaultAnchor.shoreL_m,
-      bed1D_m: raftItem.bedPileD_m ?? defaultAnchor.bed1D_m,
-      bed1L_m: raftItem.bedPileL_m ?? defaultAnchor.bed1L_m
-    }
-  };
-}
 
 export interface RaftBatchResult {
   raft: RaftSummaryItem;
@@ -399,7 +347,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 6,
+      version: 7,
       migrate: (persistedState: any) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -438,6 +386,25 @@ export const useProjectStore = create<ProjectStore>()(
           const hasStaleRaft13 = Array.isArray(persistedState.raftsSummary)
             && persistedState.raftsSummary.some((r: any) => (r?.id ?? 0) > 12 || r?.name === 'BÈ 13');
           if (hasStaleRaft13) {
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+            }
+          }
+
+          // 2026-09-27 V2 layout (93.693 m², 304 lines, square RC piles,
+          // tilt 15° / C_d 1.15): a Huổi Vanh raft list cached before this
+          // change carries V1 areas, line counts and pile sizes — re-sync it,
+          // and the Huổi Vanh project inputs with it. A user's own project is
+          // recognised by its raft names and never touched.
+          const isHuoiVanhList = Array.isArray(persistedState.raftsSummary)
+            && persistedState.raftsSummary.length > 0
+            && persistedState.raftsSummary.every((r: any) => /^BÈ \d+$/.test(r?.name ?? ''));
+          const cachedArea = isHuoiVanhList
+            ? persistedState.raftsSummary.reduce((s: number, r: any) => s + (r?.area_m2 ?? 0), 0)
+            : 0;
+          const v2Area = HUOI_VANH_RAFTS.reduce((s, r) => s + r.area_m2, 0);
+          if (isHuoiVanhList && cachedArea !== v2Area) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
               persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;

@@ -7,13 +7,14 @@ import {
   Paperclip,
   Printer,
   BookOpen,
+  Box,
   CheckCircle2,
   XCircle,
   AlertCircle
 } from 'lucide-react';
 import { useProjectStore } from '../../store/useProjectStore';
 
-export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide';
+export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide' | 'simulation';
 
 interface SidebarProps {
   activeSection: ActiveSection;
@@ -92,6 +93,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
       badge: (
         <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-100 text-brand-800">
           HDSD
+        </span>
+      )
+    },
+    {
+      id: 'simulation',
+      label: '8. Mô Phỏng Dự Án',
+      description: 'Mô phỏng 3D & Khí động học gió',
+      icon: Box,
+      badge: (
+        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-cyan-100 text-cyan-800">
+          3D / IFC
         </span>
       )
     }

@@ -20,6 +20,8 @@ export default defineConfig({
           xlsx: ['xlsx'],
           dxf: ['dxf-parser'],
           react: ['react', 'react-dom'],
+          three: ['three'],
+          webifc: ['web-ifc'],
         },
       },
     },

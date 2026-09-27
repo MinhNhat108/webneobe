@@ -17,6 +17,7 @@ import { RaftsOverviewTable } from '../results/RaftsOverviewTable';
 import { AttachmentPanel } from '../files/AttachmentPanel';
 import { ReportView } from '../report/ReportView';
 import { GuideView } from '../guide/GuideView';
+import { SimulationView } from '../simulation/SimulationView';
 import { useProjectStore } from '../../store/useProjectStore';
 
 interface AppShellProps {
@@ -109,6 +110,13 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'guide' && (
             <div className="animate-in fade-in duration-200">
               <GuideView onSelectSection={(sec) => setActiveSection(sec)} />
+            </div>
+          )}
+
+          {/* Section 8: 3D & Wind Simulation */}
+          {activeSection === 'simulation' && (
+            <div className="animate-in fade-in duration-200">
+              <SimulationView />
             </div>
           )}
 

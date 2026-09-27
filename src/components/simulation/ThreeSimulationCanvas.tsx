@@ -389,7 +389,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       };
     }, []);
 
-    // Build Procedural 3D Model: 12 Raft Clusters & 299 Mooring Lines & Piles
+    // Build Procedural 3D Model: 12 Raft Clusters & 298 Mooring Lines & Piles
     useEffect(() => {
       const raftsGroup = raftsGroupRef.current;
       const linesGroup = linesGroupRef.current;

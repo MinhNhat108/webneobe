@@ -101,7 +101,7 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Trực quan hóa không gian 3D tương tác của 12 cụm bè điện mặt trời nổi, 299 tuyến cáp neo catenary, cọc bờ và cọc đáy hồ chứa Thủy điện Huổi Vanh. Tích hợp nạp mô hình BIM/IFC và mô phỏng luồng gió khí động học thời gian thực.
+              Trực quan hóa không gian 3D tương tác của 12 cụm bè điện mặt trời nổi, 298 tuyến cáp neo catenary, cọc bờ và cọc đáy hồ chứa Thủy điện Huổi Vanh. Tích hợp nạp mô hình BIM/IFC và mô phỏng luồng gió khí động học thời gian thực.
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export const SimulationView: React.FC = () => {
             <span>
               {designVersion === 'v2'
                 ? '298 Tuyến cáp (129 Cọc bờ + 169 Cọc đáy)'
-                : '299 Tuyến cáp neo Catenary 3D'}
+                : '298 Tuyến cáp neo Catenary 3D'}
             </span>
           </div>
           <div className="flex items-center gap-1.5">

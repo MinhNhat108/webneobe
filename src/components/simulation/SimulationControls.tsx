@@ -220,7 +220,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Bản vẽ V1 Gốc (56.214 m² - 299 cọc)
+            Bản vẽ V1 Gốc (56.214 m² - 298 cọc)
           </button>
         </div>
       </div>
@@ -553,7 +553,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, mooringLines: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">⚓ 299 Tuyến Cáp Neo Catenary</span>
+                <span className="font-medium text-slate-700">⚓ 298 Tuyến Cáp Neo Catenary</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">

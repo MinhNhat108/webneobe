@@ -37,6 +37,14 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(totalArea).toBeGreaterThan(90000);
     expect(totalArea).toBeLessThan(95000);
 
+    const be12 = raftsV2.find((r: any) => r.name === 'BÈ 12');
+    expect(be12).toBeDefined();
+    expect(be12.area_m2).toBe(4018);
+
+    const be5 = raftsV2.find((r: any) => r.name === 'BÈ 5');
+    expect(be5).toBeDefined();
+    expect(be5.area_m2).toBe(19405);
+
     // 298 Piles
     expect(pilesV2).toHaveLength(298);
     const shorePiles = pilesV2.filter((p: any) => p.type === 'SHORE');

@@ -201,8 +201,46 @@ function setAnchor(c, pile) {
   c.yAnchor = r2(pile.y);
   const dx = c.xAnchor - c.xRaft, dy = c.yAnchor - c.yRaft;
   c.span = r2(Math.hypot(dx, dy));
-  c.azimuth = Math.round(((Math.atan2(dx, dy) * 180) / Math.PI + 360) % 360);
+  c.azimuth = Math.round((((Math.atan2(dx, dy) * 180) / Math.PI + 360) % 360) * 10) / 10;
 }
+
+// ---- Step 0: a raft outline changed (new client DXF) ----------------------
+// A cleat must sit ON its raft's edge. When an outline moves (2026-09-27: the
+// BÈ 5 east edge moved 19.8 m west), a cleat left in open water is repaired:
+//  - SHORE line: the pile is a staked monument on the bank and never moves;
+//    its cleat is re-attached to the nearest point of the new edge.
+//  - BED line: the pile is design output; the line is removed here and
+//    re-placed by Step 2, which reuses its code, so the raft keeps at least
+//    the line count it had (never fewer lines because the raft shrank).
+//  A raft whose outline changed gets ALL its bed lines re-planned (they are
+//  not built yet), so they can be spread evenly over the new edge.
+const CLEAT_TOL = 0.05; // m
+const keepCount = {};   // raft -> line count before Step 0
+const freedCodes = {};  // raft -> codes released by removed bed lines
+for (const c of coords) keepCount[c.raft] = (keepCount[c.raft] ?? 0) + 1;
+const changedRafts = new Set(
+  coords.filter((c) => distToRing(cleatOf(c), ringOf[c.raft]) > CLEAT_TOL).map((c) => c.raft)
+);
+for (let i = coords.length - 1; i >= 0; i--) {
+  const c = coords[i];
+  const ring = ringOf[c.raft];
+  const off = distToRing(cleatOf(c), ring);
+  if (!changedRafts.has(c.raft)) continue;
+  if (c.type === 'SHORE') {
+    if (off <= CLEAT_TOL) continue;
+    const w = walker(ring);
+    const e = w.at(w.param(cleatOf(c)));
+    c.xRaft = r2(e.x);
+    c.yRaft = r2(e.y);
+    setAnchor(c, anchorOf(c));
+    report.moved.push(`${c.code}: cleat re-attached to the new edge (${off.toFixed(2)} m off), pile unchanged, span ${c.span} m`);
+  } else {
+    (freedCodes[c.raft] ??= []).push(c.code);
+    coords.splice(i, 1);
+    report.moved.push(`${c.code}: bed line re-planned (outline of ${c.raft} changed)`);
+  }
+}
+for (const k of Object.keys(freedCodes)) freedCodes[k].sort((a, b) => Number(a.split('-D')[1]) - Number(b.split('-D')[1]));
 
 // ---- Step 1: bed piles closer than MIN_STANDOFF to any raft (G1) ----------
 for (const c of coords) {
@@ -228,15 +266,80 @@ for (const c of coords) {
   report.moved.push(`${c.code}: standoff ${before.toFixed(2)} -> ${minClearanceAll(anchorOf(c)).toFixed(2)} m, span ${c.span} m`);
 }
 
+// ---- Step 2a: even spacing along the edge for GAP_LIMITED rafts -----------
+// C9 bounds only the AVERAGE spacing; a raft can pass it and still have a long
+// unrestrained edge (BÈ 5's east edge had 3 lines over 150 m). For the rafts
+// listed here, no two consecutive cleats along the perimeter may be more than
+// MAX_CLEAT_STEP apart. Applied to BÈ 5 on its 2026-09-27 re-plan.
+const MAX_CLEAT_STEP = 15.0; // m
+const GAP_LIMITED = new Set(['BÈ 5']);
+const codeNum = (code) => Number(code.split('-D')[1]);
+
+function addBedLine(raftName, cleat, pile, note) {
+  const own = coords.filter((c) => c.raft === raftName);
+  const prefix = own[0].code.split('-D')[0];
+  const next = Math.max(...own.map((c) => codeNum(c.code)), ...(freedCodes[raftName] ?? []).map(codeNum)) + 1;
+  const line = {
+    raft: raftName, type: 'BED',
+    xRaft: r2(cleat.x), yRaft: r2(cleat.y),
+    xAnchor: 0, yAnchor: 0, zAnchor: bedZ(raftName), span: 0, azimuth: 0,
+    code: freedCodes[raftName]?.length ? freedCodes[raftName].shift() : `${prefix}-D${String(next).padStart(2, '0')}`
+  };
+  setAnchor(line, pile);
+  const lastIdx = coords.map((c) => c.raft).lastIndexOf(raftName);
+  coords.splice(lastIdx + 1, 0, line);
+  report.added.push(`${line.code}: ${note}, span ${line.span} m, standoff ${minClearanceAll(pile).toFixed(2)} m`);
+  return line;
+}
+
+/** Cleat stations of a raft, sorted, and the gaps between consecutive ones. */
+function cleatGaps(raftName) {
+  const w = walker(ringOf[raftName]);
+  const ts = coords.filter((c) => c.raft === raftName).map((c) => w.param(cleatOf(c))).sort((a, b) => a - b);
+  const gaps = ts.map((t, i) => ({ from: t, len: i === ts.length - 1 ? w.total - t + ts[0] : ts[i + 1] - t }));
+  return { w, gaps };
+}
+
+// Each open gap is walked from its start: the next cleat goes at the even
+// step r / ceil(r / MAX_CLEAT_STEP) of the remaining length r when a pile can
+// be placed there, otherwise at the nearest feasible station within
+// [MIN_CLEAT_GAP, MAX_CLEAT_STEP]. That keeps the count close to the minimum
+// ceil(len / 15) - 1 per gap instead of bisecting gaps.
+for (const name of GAP_LIMITED) {
+  const { w, gaps } = cleatGaps(name);
+  for (const g of gaps.filter((x) => x.len > MAX_CLEAT_STEP + 1e-6)) {
+    const end = g.from + g.len;
+    let p = g.from;
+    while (end - p > MAX_CLEAT_STEP + 1e-6) {
+      const r = end - p;
+      const step = r / Math.ceil(r / MAX_CLEAT_STEP);
+      const stations = [];
+      for (let u = MIN_CLEAT_GAP; u <= Math.min(MAX_CLEAT_STEP, r - MIN_CLEAT_GAP) + 1e-9; u += 0.25) stations.push(u);
+      stations.sort((a, b) => Math.abs(a - step) - Math.abs(b - step));
+      let placedAt = null;
+      for (const u of stations) {
+        const e = w.at(p + u);
+        const res = placePile({ x: e.x, y: e.y }, e.n, name, null);
+        if (!res) continue;
+        addBedLine(name, { x: e.x, y: e.y }, res.pile, `even edge spacing, step ${u.toFixed(2)} m`);
+        placedAt = p + u;
+        break;
+      }
+      if (placedAt === null) {
+        report.unresolved.push(`${name}: no feasible cleat within ${MAX_CLEAT_STEP} m after station ${p.toFixed(1)} m`);
+        break;
+      }
+      p = placedAt;
+    }
+  }
+}
+
 // ---- Step 2: add bed lines until C9 holds (s_avg = P/N <= 15 m) -----------
 for (const poly of polygons) {
-  const need = Math.ceil(poly.perimeter_m / MAX_SPACING);
+  const need = Math.max(Math.ceil(poly.perimeter_m / MAX_SPACING), keepCount[poly.name] ?? 0);
   let own = coords.filter((c) => c.raft === poly.name);
   if (own.length >= need) continue;
   const w = walker(poly.points);
-  const num = (code) => Number(code.split('-D')[1]);
-  let next = Math.max(...own.map((c) => num(c.code))) + 1;
-  const prefix = own[0].code.split('-D')[0];
 
   while (own.length < need) {
     const ts = own.map((c) => w.param(cleatOf(c))).sort((a, b) => a - b);
@@ -257,24 +360,8 @@ for (const poly of polygons) {
       const cleat = { x: e.x, y: e.y };
       const res = placePile(cleat, e.n, poly.name, null);
       if (!res) continue;
-      const line = {
-        raft: poly.name,
-        type: 'BED',
-        xRaft: r2(cleat.x),
-        yRaft: r2(cleat.y),
-        xAnchor: 0,
-        yAnchor: 0,
-        zAnchor: bedZ(poly.name),
-        span: 0,
-        azimuth: 0,
-        code: `${prefix}-D${String(next++).padStart(2, '0')}`
-      };
-      setAnchor(line, res.pile);
-      // Keep the file grouped by raft: insert after the raft's last line.
-      const lastIdx = coords.map((c) => c.raft).lastIndexOf(poly.name);
-      coords.splice(lastIdx + 1, 0, line);
+      addBedLine(poly.name, cleat, res.pile, `free edge ${cand.gap.toFixed(1)} m`);
       own = coords.filter((c) => c.raft === poly.name);
-      report.added.push(`${line.code}: free edge ${cand.gap.toFixed(1)} m, span ${line.span} m, standoff ${minClearanceAll(res.pile).toFixed(2)} m`);
       done = true;
       break;
     }
@@ -322,18 +409,7 @@ for (const poly of polygons) {
       if (!best || score < best.score) best = { score, cleat: { x: e.x, y: e.y }, pile: res.pile };
     }
     if (!best) { report.unresolved.push(`${poly.name}: open arc ${arc.gap.toFixed(0)}° cannot be closed`); break; }
-    const num = (code) => Number(code.split('-D')[1]);
-    const prefix = own[0].code.split('-D')[0];
-    const line = {
-      raft: poly.name, type: 'BED',
-      xRaft: r2(best.cleat.x), yRaft: r2(best.cleat.y),
-      xAnchor: 0, yAnchor: 0, zAnchor: bedZ(poly.name), span: 0, azimuth: 0,
-      code: `${prefix}-D${String(Math.max(...own.map((c) => num(c.code))) + 1).padStart(2, '0')}`
-    };
-    setAnchor(line, best.pile);
-    const lastIdx = coords.map((c) => c.raft).lastIndexOf(poly.name);
-    coords.splice(lastIdx + 1, 0, line);
-    report.added.push(`${line.code}: closes a ${arc.gap.toFixed(0)}° open arc, span ${line.span} m, standoff ${minClearanceAll(best.pile).toFixed(2)} m`);
+    addBedLine(poly.name, best.cleat, best.pile, `closes a ${arc.gap.toFixed(0)}° open arc`);
   }
 }
 
@@ -362,6 +438,13 @@ if (new Set(coords.map((c) => c.code)).size !== coords.length) errors.push('dupl
 for (const poly of polygons) {
   const arc = widestArc(poly.name);
   if (arc.gap > MAX_ARC) errors.push(`arc ${poly.name}: ${arc.gap.toFixed(0)}°`);
+}
+for (const name of GAP_LIMITED) {
+  const worst = Math.max(...cleatGaps(name).gaps.map((g) => g.len));
+  if (worst > MAX_CLEAT_STEP + 1e-6) errors.push(`edge step ${name}: ${worst.toFixed(1)} m`);
+}
+for (const c of coords) {
+  if (distToRing(cleatOf(c), ringOf[c.raft]) > CLEAT_TOL) errors.push(`cleat off edge ${c.code}`);
 }
 
 // ---- Pile schedule, derived from the lines (square RC piles only) --------

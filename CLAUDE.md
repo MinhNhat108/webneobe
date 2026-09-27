@@ -6,8 +6,8 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 
 ## 1. TỔNG QUAN HỆ THỐNG V2 (CẬP NHẬT THEO CAD & IFC MỚI)
 - **Quy mô:** 12 Cụm bè pin mặt trời nổi (BÈ 1 đến BÈ 12).
-- **Tổng diện tích mặt bằng:** $93.693\,\text{m}^2$ (Tăng 66.7% so với thiết kế sơ bộ $56.214\,\text{m}^2$).
-  - **BÈ 5 (Đại cụm phía Nam):** $19.405\,\text{m}^2$ (Chu vi $P = 558.7\,\text{m}$).
+- **Tổng diện tích mặt bằng:** $90.724\,\text{m}^2$ (Tăng 61.4% so với thiết kế sơ bộ $56.214\,\text{m}^2$; DXF Revit cập nhật 27/09/2026 23:12 cắt lại BÈ 5).
+  - **BÈ 5 (Đại cụm phía Nam):** $16.436\,\text{m}^2$, hình chữ nhật $150 \times 109.57\,\text{m}$ (Chu vi $P = 519.1\,\text{m}$; mép Đông lùi từ X = 232.81 về 213.01 m, trước đây 19.405 m²).
   - **BÈ 9 (Đại cụm trung tâm hồ):** $10.979\,\text{m}^2$ (Chu vi $P = 472.1\,\text{m}$).
   - **BÈ 8 (Cụm phía Đông Bắc):** $9.869\,\text{m}^2$ (Chu vi $P = 440.4\,\text{m}$).
   - **BÈ 10 (Cụm trung tâm - Bắc):** $9.580\,\text{m}^2$ (Chu vi $P = 432.5\,\text{m}$).
@@ -23,7 +23,8 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - **129 Cọc bờ (`SHORE`)** bố trí trên sườn đồi ven hồ (script không bao giờ dời cọc bờ).
   - **175 Cọc đáy hồ (`BED`)**, cách mọi bè $\ge 5.0\,\text{m}$, đặt trên tim khe khi khe giữa hai bè hẹp hơn 35 m.
   - **100% CỌC VUÔNG BTCT** (`shape: 'square'`, yêu cầu của Chủ đầu tư) — không dùng cọc tròn, không dùng công thức cọc tròn. Cạnh $a = 0.35 \div 0.60\,\text{m}$ và chiều sâu $L_{tk}$ định cỡ riêng từng bè trong `HUOI_VANH_RAFTS`.
-  - Cần tối thiểu 303 dây để cả 12 bè đạt C9 ($\sum \lceil P/15 \rceil = 303$); dây thứ 304 (`B5-D39`) đóng cung hở 93° của BÈ 5 (giới hạn 60°).
+  - Mức tối thiểu để cả 12 bè đạt C9 là $\sum \lceil P/15 \rceil = 300$ dây (BÈ 5 cần 35). Thiết kế giữ 304 dây: BÈ 5 có 39 dây với bước móc dọc mép $\le 15\,\text{m}$ trên toàn chu vi (mép Đông 150 m có 11 dây); không bè nào có cung hở > 60°.
+  - Khi một đa giác bè thay đổi, script tự gắn lại móc của cọc bờ lên mép mới (cọc bờ không dời) và bố trí lại toàn bộ dây đáy của bè đó.
 - **Cao trình thủy văn hồ Huổi Vanh:**
   - Mực nước chết (MNC): $380.0\,\text{m}$.
   - Mực nước dâng bình thường (MNDB): $384.5\,\text{m}$.
@@ -42,7 +43,7 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - Hệ số an toàn kéo đứt: $SF = T_{\text{brk}} / T_{\max} \ge 1.67$.
 - **Địa kỹ thuật cọc neo Broms:**
   - Đất sườn đồi: Đất sét dẻo cứng, $\phi = 28^\circ, c = 12\,\text{kPa}, \gamma = 18\,\text{kN/m}^3$.
-  - Cọc vuông BTCT: Kiểm tra Broms BP-1..BP-5 (ngang, uốn, nhổ) tại chiều sâu thiết kế $L_{tk}$, FS Broms = 2.5; thiết kế chọn hệ số sử dụng $\le 0.95$ (riêng cáp BÈ 5 = 0.975 vì PES-48 là cáp lớn nhất trong danh mục).
+  - Cọc vuông BTCT: Kiểm tra Broms BP-1..BP-5 (ngang, uốn, nhổ) tại chiều sâu thiết kế $L_{tk}$, FS Broms = 2.5; thiết kế chọn hệ số sử dụng $\le 0.95$ cho cả 12 bè (cáp BÈ 5 PES-48 = 0.945).
   - Góc cáp tại cọc đáy lấy theo tuyến cáp đáy NGẮN NHẤT của mỗi bè (`bedAnchorDist_m`), tức cáp dốc nhất và lực nhổ lớn nhất.
 - **Tải gió trong engine:** nghiêng 15°, $C_d = 1.15$, $V = 30\,\text{m/s}$ ($q = 0.56 \ge 0.54\,\text{kN/m}^2$).
 - **Tiêu chuẩn khoảng cách cáp (C9, BẮT BUỘC):** $s_{\text{avg}} = P_{\text{bè}} / N_{\text{dây}} \le 15.0\,\text{m}$ cho tất cả 12 bè, với $P_{\text{bè}}$ là chu vi đa giác đo được (`raft.perimeter_m`).
@@ -69,6 +70,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ 110 tests phải luôn luôn PASS).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ 111 tests phải luôn luôn PASS).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

@@ -142,7 +142,7 @@ export const SimulationView: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>
               {designVersion === 'v2'
-                ? 'Mô hình V2 mới: 12 cụm bè (93.693 m²)'
+                ? 'Mô hình V2 mới: 12 cụm bè (90.724 m²)'
                 : 'Mô hình V1 gốc: 12 cụm bè (56.214 m²)'}
             </span>
           </div>

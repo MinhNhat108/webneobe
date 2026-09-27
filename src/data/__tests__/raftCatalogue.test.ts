@@ -10,7 +10,7 @@ import piles from '../huoiVanhPiles_v2.json';
  * before — a raft renumbering touched one and not the others — so the
  * contract between them is pinned here rather than left to review.
  *
- * The V2 plan has exactly 12 clusters, BÈ 1 .. BÈ 12, 93.693 m² in total.
+ * The V2 plan has exactly 12 clusters, BÈ 1 .. BÈ 12, 90.724 m² in total (BÈ 5 re-cut on 2026-09-27).
  */
 const EXPECTED = Array.from({ length: 12 }, (_, i) => `BÈ ${i + 1}`);
 const coords: MooringCoordinate[] = MOORING_LINES_V2;
@@ -35,7 +35,7 @@ describe('Huổi Vanh raft catalogue V2 — 12 clusters, BÈ 1..12', () => {
   it('every outline belongs to exactly one raft, and every raft has one', () => {
     expect(polygons).toHaveLength(12);
     expect(polygons.map((p) => p.name).sort()).toEqual([...EXPECTED].sort());
-    expect(polygons.reduce((s, p) => s + p.area_m2, 0)).toBe(93693);
+    expect(polygons.reduce((s, p) => s + p.area_m2, 0)).toBe(90724);
   });
 
   it('each raft area and perimeter match its V2 outline', () => {
@@ -251,6 +251,32 @@ describe('Rafts are restrained on every side', () => {
       return inChannel.length === 0;
     });
     expect(starved.map(([a, b, d]) => `${a}↔${b} (${d.toFixed(1)}m)`)).toEqual([]);
+  });
+
+  it('BÈ 5 has no stretch of edge longer than 15 m without a cleat', () => {
+    // C9 only bounds the AVERAGE spacing. Before the 2026-09-27 re-plan the
+    // 150 m east edge of BÈ 5 carried 3 lines and a 75 m open stretch.
+    const ring = ringOf('BÈ 5');
+    const station = (p: { x: number; y: number }) => {
+      let s = 0;
+      let best = { d: Infinity, t: 0 };
+      for (let i = 0; i < ring.length; i++) {
+        const a = ring[i], b = ring[(i + 1) % ring.length];
+        const L = Math.hypot(b.x - a.x, b.y - a.y);
+        const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L;
+        const u = Math.max(0, Math.min(L, (p.x - a.x) * ux + (p.y - a.y) * uy));
+        const d = Math.hypot(p.x - a.x - ux * u, p.y - a.y - uy * u);
+        if (d < best.d) best = { d, t: s + u };
+        s += L;
+      }
+      return { ...best, total: s };
+    };
+    const pts = coords.filter((c) => c.raft === 'BÈ 5').map((c) => station({ x: c.xRaft, y: c.yRaft }));
+    for (const p of pts) expect(p.d).toBeLessThan(0.05); // every cleat on the edge
+    const ts = pts.map((p) => p.t).sort((a, b) => a - b);
+    const total = pts[0].total;
+    const gaps = ts.map((t, i) => (i === ts.length - 1 ? total - t + ts[0] : ts[i + 1] - t));
+    expect(Math.max(...gaps)).toBeLessThanOrEqual(15.0 + 1e-6);
   });
 
   it('a mid-channel pile still keeps its clearance from both rafts', () => {

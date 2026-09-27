@@ -43,7 +43,7 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
 
     const be5 = raftsV2.find((r: any) => r.name === 'BÈ 5');
     expect(be5).toBeDefined();
-    expect(be5?.area_m2).toBe(19405);
+    expect(be5?.area_m2).toBe(16436); // re-cut to 150 x 109.57 m (client DXF 2026-09-27 23:12)
 
     // 304 square RC piles, derived one-per-line from the mooring layout
     expect(pilesV2).toHaveLength(304);

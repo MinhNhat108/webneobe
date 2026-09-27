@@ -347,7 +347,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 7,
+      version: 8,
       migrate: (persistedState: any) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -392,7 +392,7 @@ export const useProjectStore = create<ProjectStore>()(
             }
           }
 
-          // 2026-09-27 V2 layout (93.693 m², 304 lines, square RC piles,
+          // 2026-09-27 V2 layout (90.724 m² after the BÈ 5 re-cut, 304 lines, square RC piles,
           // tilt 15° / C_d 1.15): a Huổi Vanh raft list cached before this
           // change carries V1 areas, line counts and pile sizes — re-sync it,
           // and the Huổi Vanh project inputs with it. A user's own project is

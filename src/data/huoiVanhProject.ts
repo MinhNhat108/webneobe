@@ -42,7 +42,8 @@ export interface MooringCoordinate {
 }
 
 /**
- * The 12 raft clusters of Hồ Huổi Vanh — V2 layout (BÈ 1 .. BÈ 12, 93.693 m²).
+ * The 12 raft clusters of Hồ Huổi Vanh — V2 layout (BÈ 1 .. BÈ 12, 90.724 m²;
+ * BÈ 5 re-cut to 150 x 109.57 m by the client DXF of 2026-09-27 23:12).
  * Generated from the V2 geometry and the calculation engine; every value is
  * reproducible, none is hand-tuned:
  *
@@ -57,16 +58,15 @@ export interface MooringCoordinate {
  *    scaled by N_V1 / N_V2 (BÈ 1, BÈ 5, BÈ 6); it is never scaled down.
  *  - cableCount / shoreAnchors / bedAnchors : counted from
  *    huoiVanhCoordinates_v2.json (304 lines = 129 shore + 175 bed). Every raft
- *    has N >= ceil(P / 15 m), so C9 holds on all 12.
+ *    has N >= ceil(P / 15 m), so C9 holds on all 12; BÈ 5 additionally has
+ *    <= 15 m between consecutive cleats along its whole edge.
  *  - bedAnchorDist_m       : the SHORTEST bed line of the raft (floored to
  *    0.1 m). It sets the bed cable inclination atan(depth / span): the
  *    steepest cable, i.e. the largest uplift on the bed pile.
  *  - selectedCable / pile D, L : smallest PES cable and square RC pile
  *    (cọc vuông BTCT) for which every check passes with utilisation <= 0.95
  *    (cable MBL, Broms BP-1..BP-5 at the design depth L_tk, Broms FS = 2.5).
- *    Single exception: the BÈ 5 cable at 0.975, because PES-48 is the largest
- *    cable in the catalogue (SF = 3.08 >= 3.0 still holds). L_tk is never
- *    shallower than the V1 design depth.
+ *    L_tk is never shallower than the V1 design depth.
  */
 export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
@@ -160,19 +160,19 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
     id: 5,
     name: "BÈ 5",
-    area_m2: 19405,
-    perimeter_m: 558.7,
+    area_m2: 16436,
+    perimeter_m: 519.1,
     length_m: 150,
-    width_m: 129.4,
+    width_m: 109.6,
     angle_deg: 90,
-    solarPanelCount: 4229,
+    solarPanelCount: 4100,
     focusFactor: 0.131,
     cableCount: 39,
     shoreAnchors: 12,
     bedAnchors: 27,
     selectedCable: "PES-48",
     waterDepth_m: 6.2,
-    bedAnchorDist_m: 5.3,
+    bedAnchorDist_m: 9.2,
     shoreAnchorDist_m: 21.2,
     shorePileD_m: 0.6,
     shorePileL_m: 8.5,
@@ -342,7 +342,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
   designer: 'Kỹ sư Kết cấu Thủy công & Năng lượng tái tạo',
   date: '2026-08-19',
-  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi V2 (BÈ 1 đến BÈ 12, tổng 93.693 m²), 304 tuyến cáp neo Polyester PES-28/32/36/40/48 và 304 cọc neo VUÔNG BTCT (129 cọc bờ + 175 cọc đáy hồ, cạnh 0.35–0.60 m, chiều sâu thiết kế L_tk theo Broms), 12/12 bè đạt C9 (P/N ≤ 15 m).',
+  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi V2 (BÈ 1 đến BÈ 12, tổng 90.724 m²), 304 tuyến cáp neo Polyester PES-28/32/36/40/48 và 304 cọc neo VUÔNG BTCT (129 cọc bờ + 175 cọc đáy hồ, cạnh 0.35–0.60 m, chiều sâu thiết kế L_tk theo Broms), 12/12 bè đạt C9 (P/N ≤ 15 m).',
   systemType: 'solar_fpv' as const,
   activeRaftId: 1,
   meta: {

@@ -2,7 +2,7 @@
  * The Huổi Vanh V2 mooring layout — the SINGLE entry point every consumer
  * (calculation catalogue, layout map, pile schedule, Excel, CAD export) reads.
  *
- *  - `RAFT_POLYGONS_V2`: the 12 raft-cluster outlines (93.693 m²). This is the
+ *  - `RAFT_POLYGONS_V2`: the 12 raft-cluster outlines (90.724 m²). This is the
  *    only information taken from the client's CAD/Revit export.
  *  - `MOORING_LINES_V2`: the mooring network, a DESIGN OUTPUT of
  *    `scripts/planMooringLayoutV2.mjs` (the pile objects in the Revit DXF are

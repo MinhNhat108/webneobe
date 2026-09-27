@@ -82,7 +82,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   ];
 
   // Estimated drag force on 12 rafts based on design layout version
-  const totalRaftArea = designVersion === 'v2' ? 93693 : 56214; // m2
+  const totalRaftArea = designVersion === 'v2' ? 90724 : 56214; // m2 (V2: BÈ 5 re-cut on 2026-09-27)
   const dynamicPressure = 0.5 * windParams.airDensity * Math.pow(windParams.speed * windParams.gustFactor, 2);
   const estimatedDragTotalKn = ((dynamicPressure * windParams.dragCoefficient * (totalRaftArea * 0.08)) / 1000).toFixed(1);
   const maxLineTensionEstimate = (22 + Math.pow(windParams.speed / 29.7, 2) * (designVersion === 'v2' ? 98 : 88)).toFixed(1);
@@ -209,7 +209,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Bản vẽ V2 Mới (93.693 m² - 298 cọc)
+            Bản vẽ V2 Mới (90.724 m² - 304 cọc)
           </button>
           <button
             type="button"

@@ -35,6 +35,8 @@ interface SimulationControlsProps {
   onSetCameraPreset: (preset: 'overview' | 'topDown' | 'waterLevel' | 'raftFocus', raftId?: number) => void;
   onResetCamera: () => void;
   onCaptureSnapshot: () => void;
+  designVersion: 'v1' | 'v2';
+  onDesignVersionChange: (v: 'v1' | 'v2') => void;
 }
 
 export const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -50,7 +52,9 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   onIfcDataLoaded,
   onSetCameraPreset,
   onResetCamera,
-  onCaptureSnapshot
+  onCaptureSnapshot,
+  designVersion,
+  onDesignVersionChange
 }) => {
   const [activeTab, setActiveTab] = useState<'wind' | 'layers' | 'inspector'>('wind');
   const [isParsingIfc, setIsParsingIfc] = useState(false);
@@ -77,11 +81,11 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
     { label: 'TB (315°)', deg: 315 }
   ];
 
-  // Estimated drag force on 12 rafts
-  const totalRaftArea = 56214; // m2
+  // Estimated drag force on 12 rafts based on design layout version
+  const totalRaftArea = designVersion === 'v2' ? 93693 : 56214; // m2
   const dynamicPressure = 0.5 * windParams.airDensity * Math.pow(windParams.speed * windParams.gustFactor, 2);
   const estimatedDragTotalKn = ((dynamicPressure * windParams.dragCoefficient * (totalRaftArea * 0.08)) / 1000).toFixed(1);
-  const maxLineTensionEstimate = (22 + Math.pow(windParams.speed / 29.7, 2) * 88).toFixed(1);
+  const maxLineTensionEstimate = (22 + Math.pow(windParams.speed / 29.7, 2) * (designVersion === 'v2' ? 98 : 88)).toFixed(1);
   const safetyFactorEstimate = (140 / parseFloat(maxLineTensionEstimate)).toFixed(2);
 
   // Handle IFC File Upload
@@ -188,6 +192,35 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           >
             <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
             <span className="hidden sm:inline">Reset Góc</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Design Version Switcher Strip */}
+      <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Phiên bản mặt bằng:</span>
+        <div className="flex items-center gap-1.5 p-0.5 bg-slate-200/80 rounded-xl">
+          <button
+            type="button"
+            onClick={() => onDesignVersionChange('v2')}
+            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+              designVersion === 'v2'
+                ? 'bg-brand-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Bản vẽ V2 Mới (93.693 m² - 298 cọc)
+          </button>
+          <button
+            type="button"
+            onClick={() => onDesignVersionChange('v1')}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+              designVersion === 'v1'
+                ? 'bg-slate-700 text-white shadow-sm font-bold'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Bản vẽ V1 Gốc (56.214 m² - 299 cọc)
           </button>
         </div>
       </div>
@@ -387,6 +420,26 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               <span>Mực nước chết: 380.0 m</span>
               <span className="font-bold text-cyan-600">MNDB: 384.5 m</span>
               <span>Mực nước lũ: 386.0 m</span>
+            </div>
+
+            {/* Dynamic Water Physics Feedback */}
+            <div className={`p-2.5 rounded-xl text-xs flex items-center justify-between border ${
+              waterLevel_m > 385.0
+                ? 'bg-rose-50 border-rose-200 text-rose-800'
+                : waterLevel_m < 382.0
+                ? 'bg-amber-50 border-amber-200 text-amber-800'
+                : 'bg-cyan-50 border-cyan-200 text-cyan-800'
+            }`}>
+              <span className="font-medium">
+                {waterLevel_m > 385.0
+                  ? '⚠️ Mực nước lũ cao: Bè dâng cao, cáp neo kéo căng, góc dốc cáp tăng.'
+                  : waterLevel_m < 382.0
+                  ? 'ℹ️ Mực nước cạn: Bè hạ thấp, cáp neo chùng xuống, chiều dài tiếp đáy tăng.'
+                  : '✅ Mực nước bình thường (MNDB): Hệ neo làm việc ở điều kiện thiết kế chuẩn.'}
+              </span>
+              <span className="font-mono font-bold shrink-0 ml-2">
+                ΔZ = {(waterLevel_m - 384.5) >= 0 ? '+' : ''}{(waterLevel_m - 384.5).toFixed(2)} m
+              </span>
             </div>
           </div>
         </div>

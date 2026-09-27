@@ -51,6 +51,7 @@ export const SimulationView: React.FC = () => {
   const [waterLevel_m, setWaterLevel_m] = useState<number>(384.5);
   const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
   const [ifcData, setIfcData] = useState<LoadedIfcMetadata | null>(null);
+  const [designVersion, setDesignVersion] = useState<'v1' | 'v2'>('v2');
 
   // Toggle Fullscreen
   const handleToggleFullscreen = () => {
@@ -139,19 +140,27 @@ export const SimulationView: React.FC = () => {
         <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-wrap items-center gap-4 text-xs text-slate-300">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            <span>Mô hình 12 cụm bè (56.214 m²)</span>
+            <span>
+              {designVersion === 'v2'
+                ? 'Mô hình V2 mới: 12 cụm bè (93.693 m²)'
+                : 'Mô hình V1 gốc: 12 cụm bè (56.214 m²)'}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400" />
-            <span>299 Tuyến cáp neo Catenary 3D</span>
+            <span>
+              {designVersion === 'v2'
+                ? '298 Tuyến cáp (129 Cọc bờ + 169 Cọc đáy)'
+                : '299 Tuyến cáp neo Catenary 3D'}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Cao trình MNDB: 384.5 m</span>
+            <span>Cao trình MNDB: 384.5 m (Biến thiên 380 - 386m)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-            <span>Hỗ trợ nạp file .IFC khách hàng cung cấp</span>
+            <span>Địa hình lòng hồ thực tế từ file dia hinh ho.ifc</span>
           </div>
         </div>
       </div>
@@ -168,6 +177,7 @@ export const SimulationView: React.FC = () => {
             ifcData={ifcData}
             selectedElement={selectedElement}
             onSelectElement={(elem) => setSelectedElement(elem)}
+            designVersion={designVersion}
           />
         </div>
 
@@ -189,6 +199,8 @@ export const SimulationView: React.FC = () => {
             }
             onResetCamera={() => canvasRef.current?.resetCamera()}
             onCaptureSnapshot={handleCaptureSnapshot}
+            designVersion={designVersion}
+            onDesignVersionChange={setDesignVersion}
           />
         </div>
       </div>

@@ -24,4 +24,32 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(ifcContent).toContain('IFCLOCALPLACEMENT');
     expect(ifcContent).toContain('IFCSIUNIT');
   });
+
+  it('validates V2 datasets extracted from dia hinh ho.ifc and HỒ HUỔI VANH.dxf', async () => {
+    const raftsV2 = (await import('../../../data/huoiVanhRaftPolygons_v2.json')).default;
+    const pilesV2 = (await import('../../../data/huoiVanhPiles_v2.json')).default;
+    const coordsV2 = (await import('../../../data/huoiVanhCoordinates_v2.json')).default;
+    const terrain = (await import('../../../data/huoiVanhTerrainMesh.json')).default;
+
+    // 12 Raft clusters
+    expect(raftsV2).toHaveLength(12);
+    const totalArea = raftsV2.reduce((acc: number, r: any) => acc + r.area_m2, 0);
+    expect(totalArea).toBeGreaterThan(90000);
+    expect(totalArea).toBeLessThan(95000);
+
+    // 298 Piles
+    expect(pilesV2).toHaveLength(298);
+    const shorePiles = pilesV2.filter((p: any) => p.type === 'SHORE');
+    const bedPiles = pilesV2.filter((p: any) => p.type === 'BED');
+    expect(shorePiles).toHaveLength(129);
+    expect(bedPiles).toHaveLength(169);
+
+    // 298 Mooring Lines
+    expect(coordsV2).toHaveLength(298);
+
+    // 3D Terrain Mesh
+    expect(terrain.gridSize).toBe(64);
+    expect(terrain.elevations).toHaveLength(64);
+    expect(terrain.elevations[0]).toHaveLength(64);
+  });
 });

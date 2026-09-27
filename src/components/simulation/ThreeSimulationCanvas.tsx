@@ -3,6 +3,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import huoiVanhRaftPolygons from '../../data/huoiVanhRaftPolygons.json';
 import huoiVanhCoordinates from '../../data/huoiVanhCoordinates.json';
+import huoiVanhRaftPolygonsV2 from '../../data/huoiVanhRaftPolygons_v2.json';
+import huoiVanhCoordinatesV2 from '../../data/huoiVanhCoordinates_v2.json';
+import huoiVanhTerrainMesh from '../../data/huoiVanhTerrainMesh.json';
 import { WindParams, LayerVisibility, SelectedElement, LoadedIfcMetadata } from './types';
 
 export interface ThreeCanvasRef {
@@ -18,6 +21,7 @@ interface ThreeSimulationCanvasProps {
   ifcData: LoadedIfcMetadata | null;
   selectedElement: SelectedElement | null;
   onSelectElement: (elem: SelectedElement | null) => void;
+  designVersion?: 'v1' | 'v2';
 }
 
 // Coordinate origin centering constants for Huổi Vanh
@@ -33,7 +37,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       waterLevel_m,
       ifcData,
       selectedElement,
-      onSelectElement
+      onSelectElement,
+      designVersion = 'v2'
     },
     ref
   ) => {
@@ -194,36 +199,51 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       scene.add(terrainGroup);
       terrainGroupRef.current = terrainGroup;
 
-      const basinGeom = new THREE.PlaneGeometry(1200, 1200, 60, 60);
+      const { bounds, gridSize, elevations } = huoiVanhTerrainMesh;
+      const tWidth = bounds.maxX - bounds.minX;
+      const tHeight = bounds.maxY - bounds.minY;
+      const basinGeom = new THREE.PlaneGeometry(tWidth, tHeight, gridSize - 1, gridSize - 1);
       basinGeom.rotateX(-Math.PI / 2);
-      const posAttr = basinGeom.attributes.position;
-      for (let i = 0; i < posAttr.count; i++) {
-        const x = posAttr.getX(i);
-        const z = posAttr.getZ(i);
-        const distFromCenter = Math.sqrt(x * x + z * z);
+      const midX = (bounds.minX + bounds.maxX) / 2 - ORIGIN_X;
+      const midZ = -((bounds.minY + bounds.maxY) / 2 - ORIGIN_Y);
+      basinGeom.translate(midX, 0, midZ);
 
-        // Procedural bowl representing Huổi Vanh bathymetry
-        let elevation = 0;
-        if (distFromCenter < 280) {
-          // Lake bed: -8m to -18m deep
-          elevation = -12 + Math.sin(x * 0.015) * 3 + Math.cos(z * 0.015) * 3;
-        } else if (distFromCenter < 380) {
-          // Shore slope transitioning up to water level
-          const t = (distFromCenter - 280) / 100;
-          elevation = -12 * (1 - t) + 4 * t;
+      const posAttr = basinGeom.attributes.position;
+      const colors = new Float32Array(posAttr.count * 3);
+
+      for (let i = 0; i < posAttr.count; i++) {
+        const r = Math.floor(i / gridSize);
+        const c = i % gridSize;
+        const elev = elevations[r] && elevations[r][c] !== undefined ? elevations[r][c] : 384.5;
+        const y = elev - WATER_DATUM_Z;
+        posAttr.setY(i, y);
+
+        // Elevation-based coloring:
+        if (elev < 384.2) {
+          // Submerged lakebed silt
+          colors[i * 3 + 0] = 0.15;
+          colors[i * 3 + 1] = 0.22;
+          colors[i * 3 + 2] = 0.28;
+        } else if (elev < 387.0) {
+          // Shoreline banks (sand/clay/rock)
+          colors[i * 3 + 0] = 0.46;
+          colors[i * 3 + 1] = 0.42;
+          colors[i * 3 + 2] = 0.32;
         } else {
-          // Surrounding hills rising from 4m up to 35m
-          const hillNoise = Math.sin(x * 0.02) * Math.cos(z * 0.02) * 8;
-          elevation = 4 + (distFromCenter - 380) * 0.12 + hillNoise;
+          // Surrounding forested hills
+          const green = Math.min(0.48, 0.26 + (elev - 387) * 0.005);
+          colors[i * 3 + 0] = 0.18;
+          colors[i * 3 + 1] = green;
+          colors[i * 3 + 2] = 0.16;
         }
-        posAttr.setY(i, elevation);
       }
+      basinGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       basinGeom.computeVertexNormals();
 
       const terrainMat = new THREE.MeshStandardMaterial({
-        color: 0x334e28, // lush green reservoir slopes
-        roughness: 0.9,
-        metalness: 0.05,
+        vertexColors: true,
+        roughness: 0.85,
+        metalness: 0.1,
         flatShading: true
       });
       const terrainMesh = new THREE.Mesh(basinGeom, terrainMat);
@@ -401,7 +421,11 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         metalness: 0.8
       });
 
-      huoiVanhRaftPolygons.forEach((raft) => {
+      const activeRaftPolygons = designVersion === 'v1' ? huoiVanhRaftPolygons : huoiVanhRaftPolygonsV2;
+      const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
+      const waterOffset = waterLevel_m - WATER_DATUM_Z;
+
+      activeRaftPolygons.forEach((raft) => {
         const raftGroup = new THREE.Group();
         raftGroup.name = `Raft_${raft.id}`;
 
@@ -477,8 +501,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         );
         raftGroup.add(edgesLine);
 
-        // Position raft cluster group in world
-        const basePos = new THREE.Vector3(threeCenterX, 0.2, threeCenterZ);
+        // Position raft cluster group in world at current water level
+        const basePos = new THREE.Vector3(threeCenterX, 0.2 + waterOffset, threeCenterZ);
         raftGroup.position.copy(basePos);
         raftGroup.userData = {
           type: 'raft',
@@ -491,7 +515,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         raftMeshesRef.current.set(raft.id, { group: raftGroup, basePosition: basePos });
       });
 
-      // 2. Build 299 Mooring Lines (Catenary Curves) and Piles
+      // 2. Build Mooring Lines (Catenary Curves) and Piles
       const pileShoreGeom = new THREE.CylinderGeometry(0.45, 0.45, 2.5, 16);
       const pileShoreMat = new THREE.MeshStandardMaterial({
         color: 0x475569, // concrete shore pile
@@ -506,9 +530,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         metalness: 0.1
       });
 
-      huoiVanhCoordinates.forEach((coord) => {
-        // Start: Raft connection bollard
-        const pRaft = new THREE.Vector3(coord.xRaft - ORIGIN_X, 0.2, -(coord.yRaft - ORIGIN_Y));
+      activeCoordinates.forEach((coord) => {
+        // Start: Raft connection bollard tracks water level
+        const pRaft = new THREE.Vector3(coord.xRaft - ORIGIN_X, 0.2 + waterOffset, -(coord.yRaft - ORIGIN_Y));
 
         // End: Anchor location
         const anchorElev = (coord.zAnchor - WATER_DATUM_Z);
@@ -523,29 +547,29 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         const segments = 16;
         const isBed = coord.type === 'BED';
 
+        // Catenary sag factor tightens as water rises, sags as water drops
+        const tensionSagFactor = Math.max(0.4, 1.0 - (waterOffset / 12));
+
         for (let i = 0; i <= segments; i++) {
           const t = i / segments;
-          // Linear interpolation between raft bollard and anchor
           const x = THREE.MathUtils.lerp(pRaft.x, pAnchor.x, t);
           const z = THREE.MathUtils.lerp(pRaft.z, pAnchor.z, t);
           let y = THREE.MathUtils.lerp(pRaft.y, pAnchor.y, t);
 
-          // Catenary sag curve
           if (isBed) {
             // Bed anchor: cable sags downward towards lakebed
             const sagFactor = 4 * t * (1 - t);
-            const sagDepth = Math.min(8.0, coord.span * 0.12);
+            const sagDepth = Math.min(8.0, coord.span * 0.12) * tensionSagFactor;
             y -= sagFactor * sagDepth;
           } else {
             // Shore anchor: slight natural sag
             const sagFactor = 4 * t * (1 - t);
-            y -= sagFactor * Math.min(2.5, coord.span * 0.05);
+            y -= sagFactor * Math.min(2.5, coord.span * 0.05) * tensionSagFactor;
           }
           points.push(new THREE.Vector3(x, y, z));
         }
 
         const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
-        // Default color based on type
         const lineMat = new THREE.LineBasicMaterial({
           color: isBed ? 0x0284c7 : 0x10b981,
           linewidth: 2
@@ -580,15 +604,16 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           pilesGroup.add(shorePile);
         }
       });
-    }, []);
+    }, [designVersion, waterLevel_m]);
 
     // Update Line Tension Colors & Aerodynamic Drag forces when wind changes
     useEffect(() => {
       const windRad = (windParams.direction * Math.PI) / 180;
       const windVel = windParams.speed * windParams.gustFactor;
+      const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
 
       lineMeshesRef.current.forEach((item, code) => {
-        const coord = huoiVanhCoordinates.find((c) => c.code === code);
+        const coord = activeCoordinates.find((c) => c.code === code);
         if (!coord) return;
 
         // Angle between wind vector and anchor line azimuth
@@ -619,7 +644,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           item.material.color.setHex(0xfacc15); // bright gold highlight
         }
       });
-    }, [windParams, selectedElement]);
+    }, [windParams, selectedElement, designVersion]);
 
     // Handle Layer Visibility Toggles
     useEffect(() => {
@@ -687,7 +712,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         }
         if (current && current.userData.type === 'raft') {
           const raftId = current.userData.id;
-          const raft = huoiVanhRaftPolygons.find((r) => r.id === raftId);
+          const activeRaftPolygons = designVersion === 'v1' ? huoiVanhRaftPolygons : huoiVanhRaftPolygonsV2;
+          const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
+          const raft = activeRaftPolygons.find((r) => r.id === raftId);
           onSelectElement({
             type: 'raft',
             id: `BÈ ${raftId}`,
@@ -695,7 +722,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
             data: {
               'Tên cụm': `BÈ ${raftId}`,
               'Diện tích đo CAD': `${raft?.area_m2 || 0} m²`,
-              'Số lượng cáp neo': huoiVanhCoordinates.filter((c) => c.raft === `BÈ ${raftId}`).length,
+              'Số lượng cáp neo': activeCoordinates.filter((c) => c.raft === `BÈ ${raftId}`).length,
               'Tọa độ tâm': `X=${(current.position.x + ORIGIN_X).toFixed(1)}m, Y=${(-current.position.z + ORIGIN_Y).toFixed(1)}m`,
               'Trạng thái': 'Đang vận hành bình thường'
             }

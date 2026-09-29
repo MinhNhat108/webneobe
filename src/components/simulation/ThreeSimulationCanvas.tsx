@@ -1,13 +1,29 @@
-import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import huoiVanhRaftPolygons from '../../data/huoiVanhRaftPolygons.json';
-import huoiVanhCoordinates from '../../data/huoiVanhCoordinates.json';
-import huoiVanhRaftPolygonsV2 from '../../data/huoiVanhRaftPolygons_v2.json';
-import huoiVanhCoordinatesV2 from '../../data/huoiVanhCoordinates_v2.json';
-import huoiVanhTerrainMesh from '../../data/huoiVanhTerrainMesh.json';
 import { WindParams, LayerVisibility, SelectedElement, LoadedIfcMetadata } from './types';
 import { useProjectStore } from '../../store/useProjectStore';
+import {
+  MNDB_M,
+  TERRAIN_NX,
+  TERRAIN_NY,
+  nodeGround,
+  nodeX,
+  nodeY,
+  toScene,
+  terrainTriangleIndices,
+  wetNodes,
+  depthAt,
+  RAFT_MODELS,
+  RaftModel,
+  raftWaterline,
+  buildPileModels,
+  buildCableModels,
+  PileModel,
+  CLEAT_ABOVE_WATERLINE_M,
+  RaftMooringState,
+  utilisationColour
+} from './sceneModel';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -18,62 +34,81 @@ export interface ThreeCanvasRef {
 interface ThreeSimulationCanvasProps {
   windParams: WindParams;
   layers: LayerVisibility;
-  waterLevel_m: number; // default 384.5
+  /** Reservoir level, PROJECT datum (MNDB = 384.5 m). */
+  waterLevel_m: number;
   ifcData: LoadedIfcMetadata | null;
   selectedElement: SelectedElement | null;
   onSelectElement: (elem: SelectedElement | null) => void;
-  designVersion?: 'v1' | 'v2';
+  /** Engine results per raft at the current wind speed (governing tension, utilisations). */
+  mooringStates: Map<string, RaftMooringState>;
 }
 
-// Coordinate origin centering constants for Huổi Vanh
-const ORIGIN_X = 110.33;
-const ORIGIN_Y = 61.66;
-const WATER_DATUM_Z = 384.5;
+/** Terrain colour by elevation relative to the normal water level. */
+function groundColour(z: number): [number, number, number] {
+  const d = z - MNDB_M;
+  if (d < -3) return [0.2, 0.26, 0.3];      // reservoir bed
+  if (d < 0) return [0.34, 0.36, 0.33];     // shallow margin
+  if (d < 1.6) return [0.55, 0.49, 0.37];   // bank (up to MNLKT)
+  const g = Math.min(0.5, 0.28 + d * 0.006);
+  return [0.2, g, 0.17];                     // hillside
+}
+
+const fmt = (v: number, d = 2) => v.toFixed(d);
 
 export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationCanvasProps>(
-  (
-    {
-      windParams,
-      layers,
-      waterLevel_m,
-      ifcData,
-      selectedElement,
-      onSelectElement,
-      designVersion = 'v2'
-    },
-    ref
-  ) => {
-    const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 12.0);
+  ({ windParams, layers, waterLevel_m, ifcData, selectedElement, onSelectElement, mooringStates }, ref) => {
+    const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 15);
+    const shoreArm_e_m = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
+    const bed1Stickup_m = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const controlsRef = useRef<OrbitControls | null>(null);
 
-    // Dynamic layer groups
-    const raftsGroupRef = useRef<THREE.Group>(new THREE.Group());
-    const linesGroupRef = useRef<THREE.Group>(new THREE.Group());
-    const pilesGroupRef = useRef<THREE.Group>(new THREE.Group());
+    const terrainMeshRef = useRef<THREE.Mesh | null>(null);
     const waterMeshRef = useRef<THREE.Mesh | null>(null);
-    const terrainGroupRef = useRef<THREE.Group>(new THREE.Group());
+    const raftsGroupRef = useRef<THREE.Group>(new THREE.Group());
+    const pilesGroupRef = useRef<THREE.Group>(new THREE.Group());
+    const cablesRef = useRef<THREE.LineSegments | null>(null);
     const windParticlesRef = useRef<THREE.Points | null>(null);
     const particlePositionsRef = useRef<Float32Array | null>(null);
     const ifcGroupRef = useRef<THREE.Group | null>(null);
     const axesGridGroupRef = useRef<THREE.Group>(new THREE.Group());
+    const raftGroupsRef = useRef<Map<number, THREE.Group>>(new Map());
+    const panelMeshesRef = useRef<THREE.InstancedMesh[]>([]);
+    const pileMeshesRef = useRef<{
+      shoreAbove: THREE.InstancedMesh | null;
+      shoreEmbed: THREE.InstancedMesh | null;
+      bedAbove: THREE.InstancedMesh | null;
+      bedEmbed: THREE.InstancedMesh | null;
+    }>({ shoreAbove: null, shoreEmbed: null, bedAbove: null, bedEmbed: null });
 
-    // Interactive raycaster
+    const windRef = useRef(windParams);
+    windRef.current = windParams;
+
     const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
     const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
-
-    // Dynamic line meshes for tension coloring & picking
-    const lineMeshesRef = useRef<Map<string, { line: THREE.Line; material: THREE.LineBasicMaterial; tension: number }>>(
-      new Map()
-    );
-    const raftMeshesRef = useRef<Map<number, { group: THREE.Group; basePosition: THREE.Vector3 }>>(new Map());
-
     const [hoveredInfo, setHoveredInfo] = useState<string | null>(null);
 
-    // Expose imperative methods to parent
+    // The 304 piles and their cables, as designed. Rebuilt only when a
+    // stick-up input of the calculation changes.
+    const piles = useMemo(
+      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m }),
+      [shoreArm_e_m, bed1Stickup_m]
+    );
+    const cables = useMemo(() => buildCableModels(piles), [piles]);
+    const shorePiles = useMemo(() => piles.filter((p) => p.type === 'SHORE'), [piles]);
+    const bedPiles = useMemo(() => piles.filter((p) => p.type === 'BED'), [piles]);
+
+    /** Waterline of every raft at the current level (floating or aground). */
+    const raftLines = useMemo(() => {
+      const m = new Map<string, { waterline_m: number; aground: boolean }>();
+      for (const r of RAFT_MODELS) m.set(r.name, raftWaterline(r, waterLevel_m));
+      return m;
+    }, [waterLevel_m]);
+
     useImperativeHandle(ref, () => ({
       resetCamera: () => {
         if (!cameraRef.current || !controlsRef.current) return;
@@ -89,7 +124,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'topDown':
-            cameraRef.current.position.set(0, 750, 0);
+            cameraRef.current.position.set(0, 750, 0.1);
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'waterLevel':
@@ -97,11 +132,10 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'raftFocus': {
-            const targetRaft = raftMeshesRef.current.get(raftId || 1);
-            if (targetRaft) {
-              const pos = targetRaft.basePosition;
-              cameraRef.current.position.set(pos.x + 80, 60, pos.z + 80);
-              controlsRef.current.target.copy(pos);
+            const g = raftGroupsRef.current.get(raftId || 1);
+            if (g) {
+              cameraRef.current.position.set(g.position.x + 80, g.position.y + 60, g.position.z + 80);
+              controlsRef.current.target.copy(g.position);
             }
             break;
           }
@@ -115,31 +149,23 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       }
     }));
 
-    // Initialize Three.js Scene
+    // ------------------------------------------------------------ scene init
     useEffect(() => {
       const container = containerRef.current;
       if (!container) return;
-
       const width = container.clientWidth || 800;
       const height = container.clientHeight || 600;
 
-      // 1. Scene
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf1f5f9); // slate-100 atmospheric background
-      scene.fog = new THREE.FogExp2(0xe2e8f0, 0.0006);
+      scene.background = new THREE.Color(0xf1f5f9);
+      scene.fog = new THREE.FogExp2(0xe2e8f0, 0.00045);
       sceneRef.current = scene;
 
-      // 2. Camera
-      const camera = new THREE.PerspectiveCamera(45, width / height, 1, 3000);
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.5, 4000);
       camera.position.set(0, 320, 420);
       cameraRef.current = camera;
 
-      // 3. Renderer
-      const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        preserveDrawingBuffer: true,
-        powerPreference: 'high-performance'
-      });
+      const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
@@ -147,654 +173,475 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
 
-      // 4. OrbitControls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
-      controls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent going below horizon
-      controls.minDistance = 15;
-      controls.maxDistance = 1800;
-      controls.target.set(0, 0, 0);
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+      controls.minDistance = 8;
+      controls.maxDistance = 2200;
       controlsRef.current = controls;
 
-      // 5. Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-      scene.add(ambientLight);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+      const hemi = new THREE.HemisphereLight(0xdbeafe, 0x334155, 0.6);
+      hemi.position.set(0, 200, 0);
+      scene.add(hemi);
+      const sun = new THREE.DirectionalLight(0xfffbeb, 1.2);
+      sun.position.set(250, 400, 200);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      sun.shadow.camera.near = 50;
+      sun.shadow.camera.far = 1200;
+      Object.assign(sun.shadow.camera, { left: -450, right: 450, top: 450, bottom: -450 });
+      scene.add(sun);
 
-      const hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x334155, 0.6);
-      hemiLight.position.set(0, 200, 0);
-      scene.add(hemiLight);
-
-      const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.2);
-      sunLight.position.set(250, 400, 200);
-      sunLight.castShadow = true;
-      sunLight.shadow.mapSize.width = 2048;
-      sunLight.shadow.mapSize.height = 2048;
-      sunLight.shadow.camera.near = 50;
-      sunLight.shadow.camera.far = 1000;
-      const d = 400;
-      sunLight.shadow.camera.left = -d;
-      sunLight.shadow.camera.right = d;
-      sunLight.shadow.camera.top = d;
-      sunLight.shadow.camera.bottom = -d;
-      scene.add(sunLight);
-
-      // 6. Lake Water Surface Plane
-      const waterGeom = new THREE.PlaneGeometry(1200, 1200, 64, 64);
-      waterGeom.rotateX(-Math.PI / 2);
-      const waterMat = new THREE.MeshStandardMaterial({
-        color: 0x0284c7,
-        roughness: 0.1,
-        metalness: 0.2,
-        transparent: true,
-        opacity: 0.62,
-        depthWrite: false
-      });
-      const waterMesh = new THREE.Mesh(waterGeom, waterMat);
-      waterMesh.position.y = 0; // Datum water level
-      waterMesh.receiveShadow = true;
-      scene.add(waterMesh);
-      waterMeshRef.current = waterMesh;
-
-      // 7. Lake Basin & Surrounding Terrain
-      const terrainGroup = new THREE.Group();
-      scene.add(terrainGroup);
-      terrainGroupRef.current = terrainGroup;
-
-      const { bounds, gridSize, elevations } = huoiVanhTerrainMesh;
-      const tWidth = bounds.maxX - bounds.minX;
-      const tHeight = bounds.maxY - bounds.minY;
-      const basinGeom = new THREE.PlaneGeometry(tWidth, tHeight, gridSize - 1, gridSize - 1);
-      basinGeom.rotateX(-Math.PI / 2);
-      const midX = (bounds.minX + bounds.maxX) / 2 - ORIGIN_X;
-      const midZ = -((bounds.minY + bounds.maxY) / 2 - ORIGIN_Y);
-      basinGeom.translate(midX, 0, midZ);
-
-      const posAttr = basinGeom.attributes.position;
-      const colors = new Float32Array(posAttr.count * 3);
-
-      for (let i = 0; i < posAttr.count; i++) {
-        const r = Math.floor(i / gridSize);
-        const c = i % gridSize;
-        const elev = elevations[r] && elevations[r][c] !== undefined ? elevations[r][c] : 384.5;
-        const y = elev - WATER_DATUM_Z;
-        posAttr.setY(i, y);
-
-        // Elevation-based coloring:
-        if (elev < 384.2) {
-          // Submerged lakebed silt
-          colors[i * 3 + 0] = 0.15;
-          colors[i * 3 + 1] = 0.22;
-          colors[i * 3 + 2] = 0.28;
-        } else if (elev < 387.0) {
-          // Shoreline banks (sand/clay/rock)
-          colors[i * 3 + 0] = 0.46;
-          colors[i * 3 + 1] = 0.42;
-          colors[i * 3 + 2] = 0.32;
-        } else {
-          // Surrounding forested hills
-          const green = Math.min(0.48, 0.26 + (elev - 387) * 0.005);
-          colors[i * 3 + 0] = 0.18;
-          colors[i * 3 + 1] = green;
-          colors[i * 3 + 2] = 0.16;
+      // Terrain: the IFC Toposolid in the PROJECT datum, row 0 = south.
+      const n = TERRAIN_NX * TERRAIN_NY;
+      const tPos = new Float32Array(n * 3);
+      const tCol = new Float32Array(n * 3);
+      for (let r = 0; r < TERRAIN_NY; r++) {
+        for (let c = 0; c < TERRAIN_NX; c++) {
+          const k = r * TERRAIN_NX + c;
+          const g = nodeGround(r, c);
+          const s = toScene(nodeX(c), nodeY(r), g ?? MNDB_M);
+          tPos.set([s.x, s.y, s.z], k * 3);
+          tCol.set(groundColour(g ?? MNDB_M), k * 3);
         }
       }
-      basinGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      basinGeom.computeVertexNormals();
+      const tGeom = new THREE.BufferGeometry();
+      tGeom.setAttribute('position', new THREE.BufferAttribute(tPos, 3));
+      tGeom.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
+      tGeom.setIndex(terrainTriangleIndices());
+      tGeom.computeVertexNormals();
+      const tMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0.05, flatShading: true, side: THREE.DoubleSide });
+      const terrain = new THREE.Mesh(tGeom, tMat);
+      terrain.receiveShadow = true;
+      scene.add(terrain);
+      terrainMeshRef.current = terrain;
 
-      const terrainMat = new THREE.MeshStandardMaterial({
-        vertexColors: true,
-        roughness: 0.85,
-        metalness: 0.1,
-        flatShading: true
+      // Water: same grid nodes, drawn only over the flooded part of the valley
+      // (index rebuilt when the level changes).
+      const wGeom = new THREE.BufferGeometry();
+      wGeom.setAttribute('position', new THREE.BufferAttribute(tPos.slice(), 3));
+      const wMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7, roughness: 0.12, metalness: 0.2, transparent: true, opacity: 0.6, depthWrite: false, side: THREE.DoubleSide
       });
-      const terrainMesh = new THREE.Mesh(basinGeom, terrainMat);
-      terrainMesh.receiveShadow = true;
-      terrainGroup.add(terrainMesh);
+      const water = new THREE.Mesh(wGeom, wMat);
+      water.renderOrder = 2;
+      scene.add(water);
+      waterMeshRef.current = water;
 
-      // 8. Add Groups to Scene
       scene.add(raftsGroupRef.current);
-      scene.add(linesGroupRef.current);
       scene.add(pilesGroupRef.current);
       scene.add(axesGridGroupRef.current);
 
-      // 9. Coordinate Axes & Grid
-      const grid = new THREE.GridHelper(1000, 50, 0x0284c7, 0xcbd5e1);
-      grid.position.y = -18;
+      const grid = new THREE.GridHelper(1200, 60, 0x0284c7, 0xcbd5e1);
+      grid.position.y = 376.8 - 17.5 - MNDB_M - 2; // just under the lowest modelled ground
       axesGridGroupRef.current.add(grid);
+      const compass = new THREE.Group();
+      compass.position.set(380, 25, -380);
+      const ring = new THREE.RingGeometry(18, 20, 32);
+      ring.rotateX(-Math.PI / 2);
+      compass.add(new THREE.Mesh(ring, new THREE.MeshBasicMaterial({ color: 0x0284c7, side: THREE.DoubleSide })));
+      const arrow = new THREE.ConeGeometry(4, 14, 16);
+      arrow.rotateX(-Math.PI / 2); // points to −Z = north
+      arrow.translate(0, 0, -10);
+      compass.add(new THREE.Mesh(arrow, new THREE.MeshBasicMaterial({ color: 0xef4444 })));
+      axesGridGroupRef.current.add(compass);
 
-      // Compass Rose on ground
-      const compassGroup = new THREE.Group();
-      compassGroup.position.set(380, 2, -380);
-      const ringGeom = new THREE.RingGeometry(18, 20, 32);
-      ringGeom.rotateX(-Math.PI / 2);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0x0284c7, side: THREE.DoubleSide });
-      compassGroup.add(new THREE.Mesh(ringGeom, ringMat));
-
-      // North Arrow
-      const arrowGeom = new THREE.ConeGeometry(4, 14, 16);
-      arrowGeom.rotateX(Math.PI / 2);
-      arrowGeom.translate(0, 0, -10);
-      const arrowMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
-      compassGroup.add(new THREE.Mesh(arrowGeom, arrowMat));
-      axesGridGroupRef.current.add(compassGroup);
-
-      // 10. Wind Particle Flow System
-      const particleCount = 1200;
-      const particleGeom = new THREE.BufferGeometry();
-      const pPositions = new Float32Array(particleCount * 3);
+      // Wind particles (visual only).
+      const particleCount = 1400;
+      const pPos = new Float32Array(particleCount * 3);
       for (let i = 0; i < particleCount; i++) {
-        pPositions[i * 3 + 0] = (Math.random() - 0.5) * 900;
-        pPositions[i * 3 + 1] = 2 + Math.random() * 25; // 2m to 27m above water
-        pPositions[i * 3 + 2] = (Math.random() - 0.5) * 900;
+        pPos[i * 3] = (Math.random() - 0.5) * 900;
+        pPos[i * 3 + 1] = 2 + Math.random() * 25;
+        pPos[i * 3 + 2] = (Math.random() - 0.5) * 900;
       }
-      particleGeom.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
-      particlePositionsRef.current = pPositions;
-
-      const pMat = new THREE.PointsMaterial({
-        color: 0x38bdf8,
-        size: 3.5,
-        transparent: true,
-        opacity: 0.65,
-        blending: THREE.AdditiveBlending
-      });
-      const particles = new THREE.Points(particleGeom, pMat);
+      const pGeom = new THREE.BufferGeometry();
+      pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      particlePositionsRef.current = pPos;
+      const particles = new THREE.Points(pGeom, new THREE.PointsMaterial({ color: 0x38bdf8, size: 3.2, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false }));
       scene.add(particles);
       windParticlesRef.current = particles;
 
-      // 11. Animation Loop
-      let animationFrameId: number;
+      let frame = 0;
       const clock = new THREE.Clock();
-
       const animate = () => {
-        animationFrameId = requestAnimationFrame(animate);
-
-        const delta = clock.getDelta();
-        const time = clock.getElapsedTime();
-
-        // Animate water subtle wave
-        if (waterMeshRef.current) {
-          const waterPos = waterMeshRef.current.geometry.attributes.position;
-          for (let i = 0; i < waterPos.count; i += 3) {
-            const u = waterPos.getX(i);
-            const v = waterPos.getZ(i);
-            const waveY = Math.sin(u * 0.05 + time * 1.5) * 0.08 + Math.cos(v * 0.05 + time * 1.2) * 0.08;
-            waterPos.setY(i, waveY);
-          }
-          waterPos.needsUpdate = true;
-        }
-
-        // Animate Wind Particle Streamlines
+        frame = requestAnimationFrame(animate);
+        const dt = clock.getDelta();
+        const w = windRef.current;
         if (windParticlesRef.current && particlePositionsRef.current) {
           const pos = particlePositionsRef.current;
-          const rad = (windParams.direction * Math.PI) / 180;
-          const speed = (windParams.speed * delta * 12) / 10; // scaled visual velocity
-          const dx = Math.sin(rad) * speed;
-          const dz = -Math.cos(rad) * speed;
-
+          const rad = (w.direction * Math.PI) / 180;
+          // Wind blowing FROM `direction` travels towards direction + 180°.
+          const step = (w.speed * dt * 12) / 10;
+          const dx = -Math.sin(rad) * step;
+          const dz = Math.cos(rad) * step;
           for (let i = 0; i < particleCount; i++) {
-            pos[i * 3 + 0] += dx;
+            pos[i * 3] += dx;
             pos[i * 3 + 2] += dz;
-
-            // Lift over rafts when passing near center
-            const x = pos[i * 3 + 0];
-            const z = pos[i * 3 + 2];
-            if (Math.abs(x) < 250 && Math.abs(z) < 250) {
-              pos[i * 3 + 1] = 5 + Math.sin(time * 3 + i) * 1.5;
-            }
-
-            // Boundary wrapping
-            if (pos[i * 3 + 0] > 450) pos[i * 3 + 0] = -450;
-            if (pos[i * 3 + 0] < -450) pos[i * 3 + 0] = 450;
-            if (pos[i * 3 + 2] > 450) pos[i * 3 + 2] = -450;
-            if (pos[i * 3 + 2] < -450) pos[i * 3 + 2] = 450;
+            if (pos[i * 3] > 450) pos[i * 3] = -450; else if (pos[i * 3] < -450) pos[i * 3] = 450;
+            if (pos[i * 3 + 2] > 450) pos[i * 3 + 2] = -450; else if (pos[i * 3 + 2] < -450) pos[i * 3 + 2] = 450;
           }
           windParticlesRef.current.geometry.attributes.position.needsUpdate = true;
         }
-
-        // Floating dynamic motion of rafts
-        raftMeshesRef.current.forEach(({ group, basePosition }) => {
-          const rad = (windParams.direction * Math.PI) / 180;
-          // Dynamic surge offset proportional to wind speed squared
-          const windDynamicFactor = Math.pow(windParams.speed / 30, 2) * 2.5;
-          const driftX = Math.sin(rad) * windDynamicFactor;
-          const driftZ = -Math.cos(rad) * windDynamicFactor;
-          const bobbing = Math.sin(time * 2 + basePosition.x) * 0.05;
-
-          group.position.set(basePosition.x + driftX, basePosition.y + bobbing, basePosition.z + driftZ);
-        });
-
         controls.update();
         renderer.render(scene, camera);
       };
-
       animate();
 
-      // Resize listener
-      const handleResize = () => {
-        if (!container || !renderer || !camera) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
+      const onResize = () => {
+        const w = container.clientWidth, h = container.clientHeight;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
       };
-      window.addEventListener('resize', handleResize);
-
+      window.addEventListener('resize', onResize);
       return () => {
-        cancelAnimationFrame(animationFrameId);
-        window.removeEventListener('resize', handleResize);
-        if (container.contains(renderer.domElement)) {
-          container.removeChild(renderer.domElement);
-        }
+        cancelAnimationFrame(frame);
+        window.removeEventListener('resize', onResize);
+        if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
         renderer.dispose();
       };
     }, []);
 
-    // Build Procedural 3D Model: 12 Raft Clusters & 298 Mooring Lines & Piles
+    // ------------------------------------------------------------ rafts (per tilt)
     useEffect(() => {
-      const raftsGroup = raftsGroupRef.current;
-      const linesGroup = linesGroupRef.current;
-      const pilesGroup = pilesGroupRef.current;
+      const group = raftsGroupRef.current;
+      group.clear();
+      raftGroupsRef.current.clear();
+      panelMeshesRef.current = [];
+      const platformMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.3 });
+      const panelMat = new THREE.MeshStandardMaterial({ color: 0x0f2744, roughness: 0.2, metalness: 0.8 });
+      const tilt = (solarTilt_deg * Math.PI) / 180;
+      const panelGeom = new THREE.BoxGeometry(5.2, 0.12, 3.8);
+      panelGeom.rotateX(-tilt);
 
-      // Clear existing children
-      while (raftsGroup.children.length > 0) {
-        raftsGroup.remove(raftsGroup.children[0]);
-      }
-      while (linesGroup.children.length > 0) {
-        linesGroup.remove(linesGroup.children[0]);
-      }
-      while (pilesGroup.children.length > 0) {
-        pilesGroup.remove(pilesGroup.children[0]);
-      }
-      raftMeshesRef.current.clear();
-      lineMeshesRef.current.clear();
-
-      // 1. Build 12 Solar FPV Raft Clusters
-      const raftPlatformMat = new THREE.MeshStandardMaterial({
-        color: 0x334155, // dark pontoon base
-        roughness: 0.4,
-        metalness: 0.3
-      });
-
-      const solarPanelMat = new THREE.MeshStandardMaterial({
-        color: 0x0f2744, // deep navy solar cell
-        roughness: 0.2,
-        metalness: 0.8
-      });
-
-      const activeRaftPolygons = designVersion === 'v1' ? huoiVanhRaftPolygons : huoiVanhRaftPolygonsV2;
-      const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
-      const waterOffset = waterLevel_m - WATER_DATUM_Z;
-
-      activeRaftPolygons.forEach((raft) => {
-        const raftGroup = new THREE.Group();
-        raftGroup.name = `Raft_${raft.id}`;
-
-        // Compute centroid
-        let sumX = 0;
-        let sumY = 0;
-        raft.points.forEach((p) => {
-          sumX += p.x;
-          sumY += p.y;
-        });
-        const cx = sumX / raft.points.length;
-        const cy = sumY / raft.points.length;
-
-        const threeCenterX = cx - ORIGIN_X;
-        const threeCenterZ = -(cy - ORIGIN_Y);
-
-        // Raft Polygon Shape
+      RAFT_MODELS.forEach((raft: RaftModel) => {
+        const { centroid, points } = raft.polygon;
         const shape = new THREE.Shape();
-        raft.points.forEach((p, idx) => {
-          const relX = p.x - cx;
-          const relZ = -(p.y - cy);
-          if (idx === 0) {
-            shape.moveTo(relX, relZ);
-          } else {
-            shape.lineTo(relX, relZ);
-          }
+        points.forEach((p, i) => {
+          const x = p.x - centroid.x, z = -(p.y - centroid.y);
+          if (i === 0) shape.moveTo(x, z); else shape.lineTo(x, z);
         });
         shape.closePath();
+        const geom = new THREE.ExtrudeGeometry(shape, { depth: 0.7, bevelEnabled: false });
+        geom.rotateX(Math.PI / 2); // flat, extruded downward from y = 0
+        const rg = new THREE.Group();
+        rg.name = `Raft_${raft.id}`;
+        const platform = new THREE.Mesh(geom, platformMat);
+        platform.castShadow = true;
+        platform.receiveShadow = true;
+        rg.add(platform);
+        rg.add(new THREE.LineSegments(new THREE.EdgesGeometry(geom), new THREE.LineBasicMaterial({ color: 0x64748b })));
 
-        // Extrude floating pontoon body
-        const extrudeSettings = {
-          depth: 0.7,
-          bevelEnabled: true,
-          bevelSegments: 2,
-          steps: 1,
-          bevelSize: 0.1,
-          bevelThickness: 0.1
-        };
-        const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        geom.rotateX(Math.PI / 2); // align flat with water plane
-
-        const platformMesh = new THREE.Mesh(geom, raftPlatformMat);
-        platformMesh.castShadow = true;
-        platformMesh.receiveShadow = true;
-        raftGroup.add(platformMesh);
-
-        // Add solar panel arrays on top
-        const bbox = new THREE.Box3().setFromObject(platformMesh);
-        const sizeX = bbox.max.x - bbox.min.x;
-        const sizeZ = bbox.max.z - bbox.min.z;
-
-        const rowCount = Math.max(3, Math.floor(sizeZ / 8));
-        const colCount = Math.max(3, Math.floor(sizeX / 6));
-
-        for (let r = 0; r < rowCount; r++) {
-          for (let c = 0; c < colCount; c++) {
-            const panelGeom = new THREE.BoxGeometry(5.2, 0.12, 3.8);
-            const tiltRad = ((solarTilt_deg ?? 12.0) * Math.PI) / 180;
-            panelGeom.rotateX(-tiltRad); // dynamic solar tilt facing South
-            const panel = new THREE.Mesh(panelGeom, solarPanelMat);
-            const px = bbox.min.x + (c + 0.5) * (sizeX / colCount);
-            const pz = bbox.min.z + (r + 0.5) * (sizeZ / rowCount);
-            panel.position.set(px, 0.45, pz);
-            panel.castShadow = true;
-            raftGroup.add(panel);
+        // Solar panels, instanced (one draw call per raft).
+        const bbox = new THREE.Box3().setFromObject(platform);
+        const sx = bbox.max.x - bbox.min.x, sz = bbox.max.z - bbox.min.z;
+        const rows = Math.max(3, Math.floor(sz / 8)), cols = Math.max(3, Math.floor(sx / 6));
+        const slots: Array<[number, number]> = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const px = bbox.min.x + (c + 0.5) * (sx / cols), pz = bbox.min.z + (r + 0.5) * (sz / rows);
+            // keep panels on the pontoon: the outline is not always a rectangle
+            const shapePt = new THREE.Vector2(px, pz);
+            if (shape.getPoints().length && isInsideShape(shapePt, shape)) slots.push([px, pz]);
           }
         }
+        const panels = new THREE.InstancedMesh(panelGeom, panelMat, slots.length);
+        const m = new THREE.Matrix4();
+        slots.forEach(([px, pz], i) => { m.makeTranslation(px, 0.45, pz); panels.setMatrixAt(i, m); });
+        panels.castShadow = true;
+        panels.visible = layers.solarPanels;
+        rg.add(panels);
+        panelMeshesRef.current.push(panels);
 
-        // Perimeter walkway outline
-        const edgesGeom = new THREE.EdgesGeometry(geom);
-        const edgesLine = new THREE.LineSegments(
-          edgesGeom,
-          new THREE.LineBasicMaterial({ color: 0x64748b, linewidth: 2 })
-        );
-        raftGroup.add(edgesLine);
-
-        // Position raft cluster group in world at current water level
-        const basePos = new THREE.Vector3(threeCenterX, 0.2 + waterOffset, threeCenterZ);
-        raftGroup.position.copy(basePos);
-        raftGroup.userData = {
-          type: 'raft',
-          id: raft.id,
-          title: `BÈ ${raft.id}`,
-          area: raft.area_m2
-        };
-
-        raftsGroup.add(raftGroup);
-        raftMeshesRef.current.set(raft.id, { group: raftGroup, basePosition: basePos });
+        rg.userData = { type: 'raft', id: raft.id, name: raft.name };
+        group.add(rg);
+        raftGroupsRef.current.set(raft.id, rg);
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [solarTilt_deg]);
 
-      // 2. Build Mooring Lines (Catenary Curves) and Piles
-      const pileShoreGeom = new THREE.CylinderGeometry(0.45, 0.45, 2.5, 16);
-      const pileShoreMat = new THREE.MeshStandardMaterial({
-        color: 0x475569, // concrete shore pile
-        roughness: 0.7,
-        metalness: 0.2
-      });
-
-      const pileBedGeom = new THREE.BoxGeometry(1.6, 1.2, 1.6);
-      const pileBedMat = new THREE.MeshStandardMaterial({
-        color: 0x1e293b, // submerged concrete sinker block
-        roughness: 0.9,
-        metalness: 0.1
-      });
-
-      activeCoordinates.forEach((coord) => {
-        // Start: Raft connection bollard tracks water level
-        const pRaft = new THREE.Vector3(coord.xRaft - ORIGIN_X, 0.2 + waterOffset, -(coord.yRaft - ORIGIN_Y));
-
-        // End: Anchor location
-        const anchorElev = (coord.zAnchor - WATER_DATUM_Z);
-        const pAnchor = new THREE.Vector3(
-          coord.xAnchor - ORIGIN_X,
-          anchorElev,
-          -(coord.yAnchor - ORIGIN_Y)
-        );
-
-        // Generate 3D Catenary Spline Curve
-        const points: THREE.Vector3[] = [];
-        const segments = 16;
-        const isBed = coord.type === 'BED';
-
-        // Catenary sag factor tightens as water rises, sags as water drops
-        const tensionSagFactor = Math.max(0.4, 1.0 - (waterOffset / 12));
-
-        for (let i = 0; i <= segments; i++) {
-          const t = i / segments;
-          const x = THREE.MathUtils.lerp(pRaft.x, pAnchor.x, t);
-          const z = THREE.MathUtils.lerp(pRaft.z, pAnchor.z, t);
-          let y = THREE.MathUtils.lerp(pRaft.y, pAnchor.y, t);
-
-          if (isBed) {
-            // Bed anchor: cable sags downward towards lakebed
-            const sagFactor = 4 * t * (1 - t);
-            const sagDepth = Math.min(8.0, coord.span * 0.12) * tensionSagFactor;
-            y -= sagFactor * sagDepth;
-          } else {
-            // Shore anchor: slight natural sag
-            const sagFactor = 4 * t * (1 - t);
-            y -= sagFactor * Math.min(2.5, coord.span * 0.05) * tensionSagFactor;
-          }
-          points.push(new THREE.Vector3(x, y, z));
-        }
-
-        const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
-        const lineMat = new THREE.LineBasicMaterial({
-          color: isBed ? 0x0284c7 : 0x10b981,
-          linewidth: 2
-        });
-        const lineMesh = new THREE.Line(lineGeom, lineMat);
-        lineMesh.userData = {
-          type: 'line',
-          code: coord.code,
-          raft: coord.raft,
-          anchorType: coord.type,
-          span: coord.span,
-          azimuth: coord.azimuth,
-          zAnchor: coord.zAnchor
-        };
-        linesGroup.add(lineMesh);
-        lineMeshesRef.current.set(coord.code, { line: lineMesh, material: lineMat, tension: 0 });
-
-        // Add 3D Anchor Pile
-        if (isBed) {
-          const bedPile = new THREE.Mesh(pileBedGeom, pileBedMat);
-          bedPile.position.set(pAnchor.x, pAnchor.y - 0.4, pAnchor.z);
-          bedPile.castShadow = true;
-          bedPile.receiveShadow = true;
-          bedPile.userData = { type: 'pile', code: coord.code, pileType: 'BED_ANCHOR' };
-          pilesGroup.add(bedPile);
-        } else {
-          const shorePile = new THREE.Mesh(pileShoreGeom, pileShoreMat);
-          shorePile.position.set(pAnchor.x, pAnchor.y + 0.8, pAnchor.z);
-          shorePile.castShadow = true;
-          shorePile.receiveShadow = true;
-          shorePile.userData = { type: 'pile', code: coord.code, pileType: 'SHORE_PILE' };
-          pilesGroup.add(shorePile);
-        }
-      });
-    }, [designVersion, waterLevel_m, solarTilt_deg]);
-
-    // Update Line Tension Colors & Aerodynamic Drag forces when wind changes
+    // Raft heights follow the water (or rest on the ground when it is too low).
     useEffect(() => {
-      const windRad = (windParams.direction * Math.PI) / 180;
-      const windVel = windParams.speed * windParams.gustFactor;
-      const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
-
-      lineMeshesRef.current.forEach((item, code) => {
-        const coord = activeCoordinates.find((c) => c.code === code);
-        if (!coord) return;
-
-        // Angle between wind vector and anchor line azimuth
-        const lineRad = (coord.azimuth * Math.PI) / 180;
-        const angleDiff = Math.abs(windRad - lineRad);
-        const cosFactor = Math.cos(angleDiff);
-
-        // Lines opposing the wind take heavy tension
-        // Base pre-tension ~20 kN + dynamic aerodynamic tension up to ~110 kN
-        const dynamicTension = Math.max(0, cosFactor) * Math.pow(windVel / 29.7, 2) * 95;
-        const totalTension = 22 + dynamicTension;
-        const allowableTension = 140; // kN for PES cable
-        const ratio = totalTension / allowableTension;
-
-        item.tension = totalTension;
-
-        // Dynamic Color: Emerald (< 50%) -> Amber (50-80%) -> Red (> 80%)
-        if (ratio < 0.5) {
-          item.material.color.setHex(0x10b981); // Emerald safe
-        } else if (ratio < 0.8) {
-          item.material.color.setHex(0xf59e0b); // Amber warning
-        } else {
-          item.material.color.setHex(0xef4444); // Red critical
-        }
-
-        // Highlight if this is the currently selected element
-        if (selectedElement && selectedElement.id === code) {
-          item.material.color.setHex(0xfacc15); // bright gold highlight
-        }
+      RAFT_MODELS.forEach((raft) => {
+        const rg = raftGroupsRef.current.get(raft.id);
+        if (!rg) return;
+        const wl = raftLines.get(raft.name)!;
+        const s = toScene(raft.polygon.centroid.x, raft.polygon.centroid.y, wl.waterline_m);
+        rg.position.set(s.x, s.y + 0.2, s.z);
       });
-    }, [windParams, selectedElement, designVersion]);
+    }, [raftLines, solarTilt_deg]);
 
-    // Handle Layer Visibility Toggles
+    // ------------------------------------------------------------ water
     useEffect(() => {
-      raftsGroupRef.current.visible = layers.rafts;
-      linesGroupRef.current.visible = layers.mooringLines;
-      pilesGroupRef.current.visible = layers.shorePiles || layers.bedPiles;
-      if (waterMeshRef.current) waterMeshRef.current.visible = layers.waterSurface;
-      terrainGroupRef.current.visible = layers.lakeTerrain;
-      if (windParticlesRef.current) windParticlesRef.current.visible = layers.windStreamlines;
-      axesGridGroupRef.current.visible = layers.axesAndGrid;
-
-      // Solar panel children inside rafts
-      raftMeshesRef.current.forEach(({ group }) => {
-        group.children.forEach((child) => {
-          if (child instanceof THREE.Mesh && child.geometry instanceof THREE.BoxGeometry) {
-            child.visible = layers.solarPanels;
-          }
-        });
-      });
-    }, [layers]);
-
-    // Handle Water Level elevation change
-    useEffect(() => {
-      if (waterMeshRef.current) {
-        waterMeshRef.current.position.y = waterLevel_m - WATER_DATUM_Z;
+      const water = waterMeshRef.current;
+      if (!water) return;
+      const pos = water.geometry.attributes.position as THREE.BufferAttribute;
+      const y = waterLevel_m - MNDB_M;
+      for (let k = 0; k < pos.count; k++) pos.setY(k, y);
+      pos.needsUpdate = true;
+      const wet = wetNodes(waterLevel_m);
+      const idx: number[] = [];
+      const id = (r: number, c: number) => r * TERRAIN_NX + c;
+      for (let r = 0; r < TERRAIN_NY - 1; r++) {
+        for (let c = 0; c < TERRAIN_NX - 1; c++) {
+          // Any wet corner: the terrain hides the part of the quad above ground,
+          // which draws the shoreline where the ground crosses the level.
+          if (!(wet[id(r, c)] || wet[id(r, c + 1)] || wet[id(r + 1, c)] || wet[id(r + 1, c + 1)])) continue;
+          idx.push(id(r, c), id(r + 1, c + 1), id(r, c + 1), id(r, c), id(r + 1, c), id(r + 1, c + 1));
+        }
       }
+      water.geometry.setIndex(idx);
+      water.geometry.computeVertexNormals();
     }, [waterLevel_m]);
 
-    // Handle Uploaded IFC Model insertion
+    // ------------------------------------------------------------ piles
+    useEffect(() => {
+      const group = pilesGroupRef.current;
+      group.clear();
+      const unit = new THREE.BoxGeometry(1, 1, 1);
+      const aboveMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6, metalness: 0.15 });
+      const embedMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.8, metalness: 0.05, transparent: true, opacity: 0.85 });
+      const build = (list: PileModel[], part: 'above' | 'embed', mat: THREE.Material) => {
+        const mesh = new THREE.InstancedMesh(unit, mat, list.length);
+        const m = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), pv = new THREE.Vector3();
+        list.forEach((p, i) => {
+          const top = part === 'above' ? p.head_m : p.ground_m;
+          const bottom = part === 'above' ? p.ground_m : p.toe_m;
+          const c = toScene(p.x, p.y, (top + bottom) / 2);
+          pv.set(c.x, c.y, c.z);
+          sc.set(p.side_m, Math.max(0.01, top - bottom), p.side_m);
+          m.compose(pv, q, sc);
+          mesh.setMatrixAt(i, m);
+        });
+        mesh.castShadow = part === 'above';
+        mesh.userData = { type: 'pile', part, list };
+        group.add(mesh);
+        return mesh;
+      };
+      pileMeshesRef.current = {
+        shoreAbove: build(shorePiles, 'above', aboveMat),
+        shoreEmbed: build(shorePiles, 'embed', embedMat),
+        bedAbove: build(bedPiles, 'above', aboveMat.clone()),
+        bedEmbed: build(bedPiles, 'embed', embedMat.clone())
+      };
+    }, [shorePiles, bedPiles]);
+
+    // Pile colours: the raft's governing Broms utilisation (engine), gold when selected.
+    useEffect(() => {
+      const { shoreAbove, bedAbove } = pileMeshesRef.current;
+      const paint = (mesh: THREE.InstancedMesh | null, list: PileModel[], kind: 'shore' | 'bed') => {
+        if (!mesh) return;
+        const col = new THREE.Color();
+        list.forEach((p, i) => {
+          const st = mooringStates.get(p.raft);
+          const u = st ? (kind === 'shore' ? st.shorePileUtil : st.bedPileUtil) : NaN;
+          col.setHex(selectedElement?.id === p.code ? 0xfacc15 : utilisationColour(u));
+          mesh.setColorAt(i, col);
+        });
+        if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      };
+      paint(shoreAbove, shorePiles, 'shore');
+      paint(bedAbove, bedPiles, 'bed');
+    }, [mooringStates, selectedElement, shorePiles, bedPiles]);
+
+    // ------------------------------------------------------------ cables
     useEffect(() => {
       const scene = sceneRef.current;
       if (!scene) return;
+      if (cablesRef.current) {
+        scene.remove(cablesRef.current);
+        cablesRef.current.geometry.dispose();
+      }
+      const pos = new Float32Array(cables.length * 6);
+      const col = new Float32Array(cables.length * 6);
+      const c3 = new THREE.Color();
+      cables.forEach((cb, i) => {
+        const wl = raftLines.get(cb.raft)!;
+        const a = toScene(cb.cleat.x, cb.cleat.y, wl.waterline_m + CLEAT_ABOVE_WATERLINE_M);
+        const b = toScene(cb.pile.x, cb.pile.y, cb.pile.head_m);
+        pos.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6);
+        const st = mooringStates.get(cb.raft);
+        c3.setHex(selectedElement?.id === cb.code ? 0xfacc15 : utilisationColour(st ? st.cableUtil : NaN));
+        col.set([c3.r, c3.g, c3.b, c3.r, c3.g, c3.b], i * 6);
+      });
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      const lines = new THREE.LineSegments(geom, new THREE.LineBasicMaterial({ vertexColors: true }));
+      lines.userData = { type: 'cables' };
+      lines.visible = layers.mooringLines;
+      scene.add(lines);
+      cablesRef.current = lines;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cables, raftLines, mooringStates, selectedElement]);
 
+    // ------------------------------------------------------------ layers
+    useEffect(() => {
+      raftsGroupRef.current.visible = layers.rafts;
+      panelMeshesRef.current.forEach((p) => { p.visible = layers.solarPanels; });
+      if (cablesRef.current) cablesRef.current.visible = layers.mooringLines;
+      const pm = pileMeshesRef.current;
+      if (pm.shoreAbove) pm.shoreAbove.visible = layers.shorePiles;
+      if (pm.shoreEmbed) pm.shoreEmbed.visible = layers.shorePiles;
+      if (pm.bedAbove) pm.bedAbove.visible = layers.bedPiles;
+      if (pm.bedEmbed) pm.bedEmbed.visible = layers.bedPiles;
+      if (waterMeshRef.current) waterMeshRef.current.visible = layers.waterSurface;
+      const terrain = terrainMeshRef.current;
+      if (terrain) {
+        terrain.visible = layers.lakeTerrain;
+        const mat = terrain.material as THREE.MeshStandardMaterial;
+        // X-ray: see-through ground so the embedded pile lengths show.
+        mat.transparent = layers.terrainXray;
+        mat.opacity = layers.terrainXray ? 0.28 : 1;
+        mat.depthWrite = !layers.terrainXray;
+        mat.needsUpdate = true;
+      }
+      if (windParticlesRef.current) windParticlesRef.current.visible = layers.windStreamlines;
+      axesGridGroupRef.current.visible = layers.axesAndGrid;
+    }, [layers, piles]);
+
+    // ------------------------------------------------------------ uploaded IFC
+    useEffect(() => {
+      const scene = sceneRef.current;
+      if (!scene) return;
       if (ifcGroupRef.current) {
         scene.remove(ifcGroupRef.current);
         ifcGroupRef.current = null;
       }
-
-      if (ifcData && ifcData.rootGroup) {
+      if (ifcData?.rootGroup) {
         scene.add(ifcData.rootGroup);
         ifcGroupRef.current = ifcData.rootGroup;
         ifcData.rootGroup.visible = layers.ifcModel;
       }
     }, [ifcData, layers.ifcModel]);
 
-    // Pointer Click & Hover Raycaster for Object Inspection
-    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-      const container = containerRef.current;
-      const camera = cameraRef.current;
-      const scene = sceneRef.current;
-      if (!container || !camera || !scene) return;
-
+    // ------------------------------------------------------------ picking
+    const pick = (e: React.PointerEvent<HTMLDivElement>) => {
+      const container = containerRef.current, camera = cameraRef.current;
+      if (!container || !camera) return null;
       const rect = container.getBoundingClientRect();
-      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      mouseRef.current.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+      const rc = raycasterRef.current;
+      rc.setFromCamera(mouseRef.current, camera);
+      rc.params.Line = { threshold: 1.2 };
+      const targets: THREE.Object3D[] = [];
+      const pm = pileMeshesRef.current;
+      if (layers.shorePiles && pm.shoreAbove) targets.push(pm.shoreAbove, pm.shoreEmbed!);
+      if (layers.bedPiles && pm.bedAbove) targets.push(pm.bedAbove, pm.bedEmbed!);
+      if (layers.mooringLines && cablesRef.current) targets.push(cablesRef.current);
+      if (layers.rafts) targets.push(...raftsGroupRef.current.children);
+      return rc.intersectObjects(targets, true)[0] ?? null;
+    };
 
-      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+    const describePile = (p: PileModel): SelectedElement => {
+      const st = mooringStates.get(p.raft);
+      const u = st ? (p.type === 'SHORE' ? st.shorePileUtil : st.bedPileUtil) : NaN;
+      const depth = depthAt(p.x, p.y, waterLevel_m);
+      return {
+        type: 'pile',
+        id: p.code,
+        title: `Cọc ${p.type === 'SHORE' ? 'neo bờ' : 'đáy hồ'} ${p.code}`,
+        data: {
+          'Tuyến cáp': p.line,
+          'Thuộc cụm bè': p.raft,
+          'Tiết diện': `Vuông BTCT ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} mm`,
+          'Chiều sâu ngàm L_tk': `${fmt(p.embed_m)} m`,
+          'Đoạn nhô khỏi nền': `${fmt(p.stickup_m)} m`,
+          'Cao độ mặt đất': `${fmt(p.ground_m)} m`,
+          'Cao độ đỉnh cọc': `${fmt(p.head_m)} m`,
+          'Cao độ mũi cọc': `${fmt(p.toe_m)} m`,
+          'Mực nước tại cọc': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
+          'Hệ số sử dụng Broms (bè)': Number.isFinite(u) ? fmt(u, 2) : '—'
+        }
+      };
+    };
 
-      // Check intersections with rafts
-      const raftIntersects = raycasterRef.current.intersectObjects(raftsGroupRef.current.children, true);
-      if (raftIntersects.length > 0) {
-        let current: THREE.Object3D | null = raftIntersects[0].object;
-        while (current && !current.userData.id && current.parent) {
-          current = current.parent;
-        }
-        if (current && current.userData.type === 'raft') {
-          const raftId = current.userData.id;
-          const activeRaftPolygons = designVersion === 'v1' ? huoiVanhRaftPolygons : huoiVanhRaftPolygonsV2;
-          const activeCoordinates = designVersion === 'v1' ? huoiVanhCoordinates : huoiVanhCoordinatesV2;
-          const raft = activeRaftPolygons.find((r) => r.id === raftId);
-          onSelectElement({
-            type: 'raft',
-            id: `BÈ ${raftId}`,
-            title: `Cụm Bè Pin Mặt Trời BÈ ${raftId}`,
-            data: {
-              'Tên cụm': `BÈ ${raftId}`,
-              'Diện tích đo CAD': `${raft?.area_m2 || 0} m²`,
-              'Số lượng cáp neo': activeCoordinates.filter((c) => c.raft === `BÈ ${raftId}`).length,
-              'Tọa độ tâm': `X=${(current.position.x + ORIGIN_X).toFixed(1)}m, Y=${(-current.position.z + ORIGIN_Y).toFixed(1)}m`,
-              'Trạng thái': 'Đang vận hành bình thường'
-            }
-          });
-          return;
-        }
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+      const hit = pick(e);
+      if (!hit) { onSelectElement(null); return; }
+      const obj = hit.object;
+      if (obj instanceof THREE.InstancedMesh && obj.userData.type === 'pile' && hit.instanceId !== undefined) {
+        onSelectElement(describePile((obj.userData.list as PileModel[])[hit.instanceId]));
+        return;
       }
-
-      // Check intersections with mooring lines
-      const lineIntersects = raycasterRef.current.intersectObjects(linesGroupRef.current.children, false);
-      if (lineIntersects.length > 0) {
-        const lineMesh = lineIntersects[0].object;
-        const u = lineMesh.userData;
-        if (u && u.type === 'line') {
-          const item = lineMeshesRef.current.get(u.code);
-          onSelectElement({
-            type: 'line',
-            id: u.code,
-            title: `Tuyến Cáp Neo ${u.code}`,
-            data: {
-              'Mã tuyến cáp': u.code,
-              'Thuộc cụm bè': u.raft,
-              'Loại neo': u.anchorType === 'SHORE' ? 'Cọc neo bờ (SHORE)' : 'Cọc đáy hồ (BED)',
-              'Chiều dài nhịp (Span)': `${u.span} m`,
-              'Góc phương vị (Azimuth)': `${u.azimuth}°`,
-              'Cao trình neo (Z)': `${u.zAnchor} m`,
-              'Lực căng tính toán': `${item ? item.tension.toFixed(1) : '24.5'} kN`,
-              'Hệ số an toàn SF': `${(140 / (item ? item.tension : 24.5)).toFixed(2)} (> 1.67 ĐẠT)`
-            }
-          });
-          return;
-        }
+      if (obj === cablesRef.current && hit.index !== undefined) {
+        const cb = cables[Math.floor(hit.index / 2)];
+        const st = mooringStates.get(cb.raft);
+        const wl = raftLines.get(cb.raft)!;
+        const cleatZ = wl.waterline_m + CLEAT_ABOVE_WATERLINE_M;
+        const length3d = Math.hypot(cb.pile.x - cb.cleat.x, cb.pile.y - cb.cleat.y, cb.pile.head_m - cleatZ);
+        const slope = (Math.atan2(cleatZ - cb.pile.head_m, cb.span_m) * 180) / Math.PI;
+        onSelectElement({
+          type: 'line',
+          id: cb.code,
+          title: `Tuyến cáp neo ${cb.code}`,
+          data: {
+            'Thuộc cụm bè': cb.raft,
+            'Loại neo': cb.type === 'SHORE' ? 'Cọc bờ' : 'Cọc đáy hồ',
+            'Cọc': cb.pile.code,
+            'Loại cáp': st?.cable ?? '—',
+            'Nhịp mặt bằng': `${fmt(cb.span_m)} m`,
+            'Chiều dài 3D (căng thẳng)': `${fmt(length3d)} m`,
+            'Góc cáp so với phương ngang': `${fmt(slope, 1)}°`,
+            'Lực căng thiết kế (bè)': st ? `${fmt(st.tension_kN, 1)} kN` : '—',
+            'MBL cáp': st ? `${fmt(st.mbl_kN, 0)} kN` : '—',
+            'Hệ số an toàn SF = MBL/T': st ? fmt(st.safetyFactor, 2) : '—',
+            'Hệ số sử dụng cáp': st ? fmt(st.cableUtil, 3) : '—'
+          }
+        });
+        return;
       }
-
-      // Deselect if clicking empty water/sky
+      let cur: THREE.Object3D | null = obj;
+      while (cur && cur.userData.type !== 'raft') cur = cur.parent;
+      if (cur) {
+        const raft = RAFT_MODELS.find((r) => r.id === cur!.userData.id)!;
+        const st = mooringStates.get(raft.name);
+        const wl = raftLines.get(raft.name)!;
+        const lines = cables.filter((c) => c.raft === raft.name);
+        onSelectElement({
+          type: 'raft',
+          id: raft.name,
+          title: `Cụm bè pin mặt trời ${raft.name}`,
+          data: {
+            'Diện tích (đa giác CAD)': `${raft.polygon.area_m2.toLocaleString('vi-VN')} m²`,
+            'Chu vi': `${fmt(raft.polygon.perimeter_m, 1)} m`,
+            'Số tuyến cáp': `${lines.length} (bờ ${lines.filter((l) => l.type === 'SHORE').length} / đáy ${lines.filter((l) => l.type === 'BED').length})`,
+            'Loại cáp': st?.cable ?? '—',
+            'Lực căng thiết kế T_max': st ? `${fmt(st.tension_kN, 1)} kN` : '—',
+            'Hệ số an toàn cáp SF': st ? fmt(st.safetyFactor, 2) : '—',
+            'Kết luận tính toán': st?.verdict === 'PASS' ? 'ĐẠT' : st?.verdict ?? '—',
+            'Mực nước bè': wl.aground ? `MẮC CẠN (đáy bè tựa nền ${fmt(raft.shallowestGround_m)} m)` : `${fmt(wl.waterline_m)} m`,
+            'Nước sâu nhỏ nhất dưới bè': `${fmt(Math.max(0, waterLevel_m - raft.shallowestGround_m))} m`
+          }
+        });
+        return;
+      }
       onSelectElement(null);
     };
 
     const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-      const container = containerRef.current;
-      const camera = cameraRef.current;
-      if (!container || !camera) return;
-
-      const rect = container.getBoundingClientRect();
-      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-      raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      const intersects = raycasterRef.current.intersectObjects([
-        ...raftsGroupRef.current.children,
-        ...linesGroupRef.current.children
-      ]);
-
-      if (intersects.length > 0) {
-        const obj = intersects[0].object;
-        if (obj.userData.type === 'line') {
-          setHoveredInfo(`Tuyến cáp: ${obj.userData.code} (${obj.userData.anchorType})`);
-        } else if (obj.userData.type === 'raft' || obj.parent?.userData.type === 'raft') {
-          const id = obj.userData.id || obj.parent?.userData.id;
-          setHoveredInfo(`Cụm Bè ${id}`);
-        }
+      const hit = pick(e);
+      if (!hit) { setHoveredInfo(null); return; }
+      const obj = hit.object;
+      if (obj instanceof THREE.InstancedMesh && obj.userData.type === 'pile' && hit.instanceId !== undefined) {
+        const p = (obj.userData.list as PileModel[])[hit.instanceId];
+        setHoveredInfo(`Cọc ${p.code} · ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} · L_tk ${fmt(p.embed_m)} m`);
+      } else if (obj === cablesRef.current && hit.index !== undefined) {
+        const cb = cables[Math.floor(hit.index / 2)];
+        setHoveredInfo(`Tuyến cáp ${cb.code} (${cb.type === 'SHORE' ? 'bờ' : 'đáy'}) · ${cb.raft}`);
       } else {
-        setHoveredInfo(null);
+        let cur: THREE.Object3D | null = obj;
+        while (cur && cur.userData.type !== 'raft') cur = cur.parent;
+        setHoveredInfo(cur ? `Cụm ${cur.userData.name}` : null);
       }
     };
 
+    const aground = RAFT_MODELS.filter((r) => raftLines.get(r.name)?.aground).map((r) => r.name);
+
     return (
       <div className="relative w-full h-full min-h-[580px] bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-700/60 select-none">
-        {/* Three.js Canvas Container */}
         <div
           ref={containerRef}
           onPointerDown={handlePointerDown}
@@ -802,30 +649,47 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           className="w-full h-full cursor-grab active:cursor-grabbing"
         />
 
-        {/* Hover Tooltip Overlay */}
         {hoveredInfo && (
-          <div className="absolute top-4 left-4 pointer-events-none bg-slate-900/90 backdrop-blur-md text-white text-xs font-mono px-3 py-1.5 rounded-lg border border-brand-500/40 shadow-lg animate-fade-in flex items-center gap-2">
+          <div className="absolute top-4 left-4 pointer-events-none bg-slate-900/90 backdrop-blur-md text-white text-xs font-mono px-3 py-1.5 rounded-lg border border-brand-500/40 shadow-lg flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
             {hoveredInfo}
           </div>
         )}
 
-        {/* Wind Compass HUD overlay in corner */}
+        {aground.length > 0 && (
+          <div className="absolute top-4 right-4 pointer-events-none max-w-xs bg-amber-500/95 text-amber-950 text-xs font-semibold px-3 py-2 rounded-lg shadow-lg">
+            ⚠ Mực nước {fmt(waterLevel_m)} m: {aground.join(', ')} mắc cạn theo địa hình IFC
+          </div>
+        )}
+
         <div className="absolute bottom-4 left-4 pointer-events-none bg-slate-900/85 backdrop-blur-md p-3 rounded-xl border border-slate-700/70 text-white shadow-xl text-xs space-y-1">
           <div className="flex items-center gap-2 text-brand-300 font-semibold uppercase tracking-wider text-[10px]">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            Trường gió động lực 3D
+            Gió & mực nước
           </div>
           <div className="font-mono text-sm font-bold text-slate-100">
-            {windParams.speed.toFixed(1)} m/s ({((windParams.speed * 3.6)).toFixed(0)} km/h)
+            {windParams.speed.toFixed(1)} m/s · hướng {windParams.direction}°
           </div>
-          <div className="text-[11px] text-slate-400 flex items-center gap-2">
-            <span>Hướng gió:</span>
-            <span className="text-amber-300 font-mono font-bold">{windParams.direction}°</span>
-            <span>(Hệ tọa độ Bắc 0°)</span>
+          <div className="text-[11px] text-slate-300 font-mono">Mực nước hồ {fmt(waterLevel_m)} m</div>
+          <div className="flex items-center gap-2 text-[10px] text-slate-400 pt-1">
+            <span className="w-2 h-2 rounded-sm bg-emerald-500" />&lt;0.7
+            <span className="w-2 h-2 rounded-sm bg-amber-500" />0.7–1.0
+            <span className="w-2 h-2 rounded-sm bg-red-500" />&gt;1.0
+            <span>(hệ số sử dụng)</span>
           </div>
         </div>
       </div>
     );
   }
 );
+
+/** Point-in-shape test in the raft's local plane (panels stay on the pontoon). */
+function isInsideShape(p: THREE.Vector2, shape: THREE.Shape): boolean {
+  const pts = shape.getPoints();
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const a = pts[i], b = pts[j];
+    if ((a.y > p.y) !== (b.y > p.y) && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) inside = !inside;
+  }
+  return inside;
+}

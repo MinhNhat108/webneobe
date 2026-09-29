@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   Box,
   HelpCircle,
@@ -18,6 +18,9 @@ import {
   SelectedElement,
   LoadedIfcMetadata
 } from './types';
+import { computeRaftMooringStates, MNDB_M, MNC_M, MNLKT_M } from './sceneModel';
+import { WATER_LEVEL_MIN_M, WATER_LEVEL_MAX_M } from './SimulationControls';
+import { useProjectStore } from '../../store/useProjectStore';
 
 export const SimulationView: React.FC = () => {
   const canvasRef = useRef<ThreeCanvasRef>(null);
@@ -42,16 +45,25 @@ export const SimulationView: React.FC = () => {
     bedPiles: true,
     waterSurface: true,
     lakeTerrain: true,
+    terrainXray: false,
     windStreamlines: true,
     labels: true,
     axesAndGrid: true,
     ifcModel: true
   });
 
-  const [waterLevel_m, setWaterLevel_m] = useState<number>(384.5);
+  const [waterLevel_m, setWaterLevel_m] = useState<number>(MNDB_M);
   const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
   const [ifcData, setIfcData] = useState<LoadedIfcMetadata | null>(null);
-  const [designVersion, setDesignVersion] = useState<'v1' | 'v2'>('v2');
+  const currentProject = useProjectStore((s) => s.currentProject);
+  const solarTilt_deg = currentProject.raft.solarTilt_deg ?? 15;
+
+  // The calculation engine, run for the 12 rafts at the chosen wind: one
+  // source for the 3D colours, the KPI cards and the inspector panel.
+  const mooringStates = useMemo(
+    () => computeRaftMooringStates(currentProject, windParams.speed * windParams.gustFactor),
+    [currentProject, windParams.speed, windParams.gustFactor]
+  );
 
   // Toggle Fullscreen
   const handleToggleFullscreen = () => {
@@ -101,7 +113,7 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Trực quan hóa không gian 3D tương tác của 12 cụm bè điện mặt trời nổi, 298 tuyến cáp neo catenary, cọc bờ và cọc đáy hồ chứa Thủy điện Huổi Vanh. Tích hợp nạp mô hình BIM/IFC và mô phỏng luồng gió khí động học thời gian thực.
+              Mô hình 3D của 12 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 304 cọc vuông BTCT đóng vào nền đúng chiều sâu thiết kế, 304 tuyến cáp neo nối từ bích bè tới đỉnh cọc, lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
             </p>
           </div>
 
@@ -141,26 +153,22 @@ export const SimulationView: React.FC = () => {
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>
-              {designVersion === 'v2'
-                ? 'Mô hình V2 mới: 12 cụm bè (90.724 m²)'
-                : 'Mô hình V1 gốc: 12 cụm bè (56.214 m²)'}
+              12 cụm bè (90.724 m²) theo bản vẽ DXF
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400" />
             <span>
-              {designVersion === 'v2'
-                ? '298 Tuyến cáp (129 Cọc bờ + 169 Cọc đáy)'
-                : '298 Tuyến cáp neo Catenary 3D'}
+              304 tuyến cáp · 304 cọc (129 bờ + 175 đáy)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Cao trình MNDB: 384.5 m (Biến thiên 380 - 386m)</span>
+            <span>MNDB {MNDB_M} m · MNC {MNC_M} · MNLKT {MNLKT_M} (mô phỏng {WATER_LEVEL_MIN_M}–{WATER_LEVEL_MAX_M} m)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-            <span>Địa hình lòng hồ thực tế từ file dia hinh ho.ifc</span>
+            <span>Địa hình: Toposolid của dia hinh ho.ifc (quy đổi cao độ −17,5 m)</span>
           </div>
         </div>
       </div>
@@ -177,7 +185,7 @@ export const SimulationView: React.FC = () => {
             ifcData={ifcData}
             selectedElement={selectedElement}
             onSelectElement={(elem) => setSelectedElement(elem)}
-            designVersion={designVersion}
+            mooringStates={mooringStates}
           />
         </div>
 
@@ -199,8 +207,7 @@ export const SimulationView: React.FC = () => {
             }
             onResetCamera={() => canvasRef.current?.resetCamera()}
             onCaptureSnapshot={handleCaptureSnapshot}
-            designVersion={designVersion}
-            onDesignVersionChange={setDesignVersion}
+            mooringStates={mooringStates}
           />
         </div>
       </div>
@@ -230,15 +237,19 @@ export const SimulationView: React.FC = () => {
                 <code className="text-brand-700 bg-slate-100 px-2 py-0.5 rounded block my-1">
                   q_wind = 0.5 × ρ_air × (V_w × G)² × C_d
                 </code>
-                Trong đó ρ_air = 1.225 kg/m³, G là hệ số gió giật, và C_d là hệ số cản khí động học của giàn pin nghiêng 12°.
+                Trong đó ρ_air = 1.225 kg/m³, G là hệ số gió giật, và C_d là hệ số cản khí động học của giàn pin nghiêng {solarTilt_deg}°.
               </p>
 
               <p>
-                <strong>2. Đường Cong Catenary Của Cáp Neo:</strong> Tuyến cáp neo nối từ bích neo biên của bè đến cọc neo dưới đáy hồ hoặc bờ đồi được mô hình hóa dưới dạng đường cong dây võng (Catenary). Khi vận tốc gió tăng, các tuyến cáp ở mạn đón gió (windward) chịu lực kéo căng lớn hơn và tự động chuyển sang màu hổ phách/đỏ; các tuyến cáp ở mạn khuất gió (leeward) chùng xuống.
+                <strong>2. Cáp Neo & Cọc Neo:</strong> Mỗi tuyến cáp nối từ bích neo ở mép bè tới đỉnh cọc theo đường thẳng, vì bộ tính toán mô hình hệ neo cọc là cáp căng thẳng (không võng catenary). 304 cọc là cọc vuông BTCT, tiết diện a và chiều sâu ngàm L_tk định cỡ riêng cho từng bè; đỉnh cọc nhô khỏi nền đúng đoạn dùng trong kiểm tra Broms. Màu cáp và cọc là hệ số sử dụng của bè đó do bộ tính toán đưa ra (xanh &lt; 0,7 · vàng 0,7–1,0 · đỏ &gt; 1,0). Bộ tính toán cho lực căng thiết kế bất lợi nhất của cả bè, không có mô hình từng dây theo hướng gió, nên mọi dây của một bè cùng một màu.
               </p>
 
               <p>
-                <strong>3. Chuẩn Mô Hình Mở IFC (OpenBIM):</strong> Web-IFC sử dụng bộ biên dịch WebAssembly (WASM) thực thi trực tiếp trên trình duyệt của máy khách (client-side), cho phép nạp và hiển thị trực quan các file mô hình IFC2X3 và IFC4 từ Revit, Civil 3D, Tekla... mà không cần gửi dữ liệu lên máy chủ bên ngoài, đảm bảo tuyệt đối tính bảo mật của dự án.
+                <strong>3. Địa hình & mực nước:</strong> Địa hình là Toposolid trích từ file dia hinh ho.ifc (scripts/extractTerrainFromIfc.mjs). Mặt nước trong file IFC đặt ở cao độ 402,0 m, tương ứng MNDB 384,5 m của dự án, nên toàn bộ địa hình được quy đổi −17,5 m. Mực nước dâng từ các cụm bè ra trong lòng hồ; bè nào có đáy chạm nền khi nước hạ sẽ được báo mắc cạn.
+              </p>
+
+              <p>
+                <strong>4. Chuẩn Mô Hình Mở IFC (OpenBIM):</strong> Web-IFC sử dụng bộ biên dịch WebAssembly (WASM) thực thi trực tiếp trên trình duyệt của máy khách (client-side), cho phép nạp và hiển thị trực quan các file mô hình IFC2X3 và IFC4 từ Revit, Civil 3D, Tekla... mà không cần gửi dữ liệu lên máy chủ bên ngoài, đảm bảo tuyệt đối tính bảo mật của dự án.
               </p>
             </div>
 

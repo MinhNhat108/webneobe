@@ -9,8 +9,11 @@
  *    placeholders and are never read). 304 lines = 129 shore + 175 lake-bed
  *    square RC piles, sized so every raft meets C9 (P / N <= 15 m).
  *
- * The V1 files (`huoiVanhCoordinates.json`, `huoiVanhRaftPolygons.json`) are
- * kept only for the V1/V2 comparison toggle of the 3D simulation.
+ * The V1 files (`huoiVanhCoordinates.json`, `huoiVanhRaftPolygons.json`, 298
+ * lines) are no longer read by any code: the 3D simulation's V1/V2 toggle was
+ * retired on 2026-09-30 once the 304-pile layout was final. They remain only
+ * as history for the V1 scripts (`extractRaftPolygons.mjs`,
+ * `repairMooringLayout.mjs`).
  */
 import polygonsV2 from './huoiVanhRaftPolygons_v2.json';
 import linesV2 from './huoiVanhCoordinates_v2.json';

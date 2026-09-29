@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Wind,
   Layers,
@@ -20,6 +20,21 @@ import {
 } from './types';
 import { generateHuoiVanhSampleIfc } from './sampleIfcGenerator';
 import { parseIfcFile } from './ifcLoader';
+import {
+  MNC_M,
+  MNDB_M,
+  MNLKT_M,
+  SPILL_LEVEL_M,
+  RAFT_MODELS,
+  raftWaterline,
+  buildPileModels,
+  RaftMooringState
+} from './sceneModel';
+import { useProjectStore } from '../../store/useProjectStore';
+
+/** Slider range of the reservoir level, project datum. */
+export const WATER_LEVEL_MIN_M = 378.5;
+export const WATER_LEVEL_MAX_M = 390.0;
 
 interface SimulationControlsProps {
   windParams: WindParams;
@@ -35,8 +50,8 @@ interface SimulationControlsProps {
   onSetCameraPreset: (preset: 'overview' | 'topDown' | 'waterLevel' | 'raftFocus', raftId?: number) => void;
   onResetCamera: () => void;
   onCaptureSnapshot: () => void;
-  designVersion: 'v1' | 'v2';
-  onDesignVersionChange: (v: 'v1' | 'v2') => void;
+  /** Engine results per raft at the current wind speed. */
+  mooringStates: Map<string, RaftMooringState>;
 }
 
 export const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -53,8 +68,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   onSetCameraPreset,
   onResetCamera,
   onCaptureSnapshot,
-  designVersion,
-  onDesignVersionChange
+  mooringStates
 }) => {
   const [activeTab, setActiveTab] = useState<'wind' | 'layers' | 'inspector'>('wind');
   const [isParsingIfc, setIsParsingIfc] = useState(false);
@@ -81,12 +95,24 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
     { label: 'TB (315°)', deg: 315 }
   ];
 
-  // Estimated drag force on 12 rafts based on design layout version
-  const totalRaftArea = designVersion === 'v2' ? 90724 : 56214; // m2 (V2: BÈ 5 re-cut on 2026-09-27)
-  const dynamicPressure = 0.5 * windParams.airDensity * Math.pow(windParams.speed * windParams.gustFactor, 2);
-  const estimatedDragTotalKn = ((dynamicPressure * windParams.dragCoefficient * (totalRaftArea * 0.08)) / 1000).toFixed(1);
-  const maxLineTensionEstimate = (22 + Math.pow(windParams.speed / 29.7, 2) * (designVersion === 'v2' ? 98 : 88)).toFixed(1);
-  const safetyFactorEstimate = (140 / parseFloat(maxLineTensionEstimate)).toFixed(2);
+  // Engine results for the 12 rafts at the current wind (replaces the old
+  // made-up estimates: "T = 22 + (V/29.7)² × 98 kN, SF = 140 / T", which
+  // showed SF 1.17 at the design wind while the engine gives 3.2–4.0).
+  const sfCriterion = useProjectStore((s) => s.currentProject.criteria.sfLineIntact) ?? 3.0;
+  const states = [...mooringStates.values()];
+  const envTotal_kN = states.reduce((sum, st) => sum + st.envForce_kN, 0);
+  const worstTension = states.reduce<RaftMooringState | null>((w, st) => (!w || st.tension_kN > w.tension_kN ? st : w), null);
+  const worstSf = states.reduce<RaftMooringState | null>((w, st) => (!w || st.safetyFactor < w.safetyFactor ? st : w), null);
+  const worstUtil = states.reduce<RaftMooringState | null>((w, st) => (!w || st.cableUtil > w.cableUtil ? st : w), null);
+  const passCount = states.filter((st) => st.verdict === 'PASS').length;
+
+  // What the chosen reservoir level does to the mooring system.
+  const shoreArm = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
+  const bedStickup = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
+  const piles = useMemo(() => buildPileModels({ shoreArm_e_m: shoreArm, bed1Stickup_m: bedStickup }), [shoreArm, bedStickup]);
+  const floodedShoreHeads = piles.filter((p) => p.type === 'SHORE' && p.head_m < waterLevel_m).length;
+  const dryBedPiles = piles.filter((p) => p.type === 'BED' && p.ground_m >= waterLevel_m).map((p) => p.code);
+  const agroundRafts = RAFT_MODELS.filter((r) => raftWaterline(r, waterLevel_m).aground).map((r) => r.name);
 
   // Handle IFC File Upload
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,33 +222,12 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
         </div>
       </div>
 
-      {/* Design Version Switcher Strip */}
+      {/* Design basis strip (single, final layout — the V1 comparison was retired) */}
       <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Phiên bản mặt bằng:</span>
-        <div className="flex items-center gap-1.5 p-0.5 bg-slate-200/80 rounded-xl">
-          <button
-            type="button"
-            onClick={() => onDesignVersionChange('v2')}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-              designVersion === 'v2'
-                ? 'bg-brand-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Bản vẽ V2 Mới (90.724 m² - 304 cọc)
-          </button>
-          <button
-            type="button"
-            onClick={() => onDesignVersionChange('v1')}
-            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-              designVersion === 'v1'
-                ? 'bg-slate-700 text-white shadow-sm font-bold'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Bản vẽ V1 Gốc (56.214 m² - 298 cọc)
-          </button>
-        </div>
+        <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Mặt bằng thiết kế:</span>
+        <span className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-600 text-white shadow-sm">
+          12 cụm bè · 90.724 m² · 304 cọc (129 bờ + 175 đáy)
+        </span>
       </div>
 
       {/* Camera View Switcher Strip */}
@@ -287,31 +292,40 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
             </div>
 
             <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3">
-              <div className="text-slate-500">Lực cản khí động Fw</div>
+              <div className="text-slate-500">Tổng lực môi trường</div>
               <div className="font-mono text-base font-bold text-emerald-900 mt-0.5">
-                {estimatedDragTotalKn} kN
+                {envTotal_kN.toFixed(0)} kN
               </div>
-              <div className="text-[11px] text-emerald-700">12 cụm bè FPV</div>
+              <div className="text-[11px] text-emerald-700">12 cụm bè (gió + dòng + sóng)</div>
             </div>
 
             <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3">
               <div className="text-slate-500">Lực căng cáp lớn nhất</div>
               <div className="font-mono text-base font-bold text-amber-900 mt-0.5">
-                {maxLineTensionEstimate} kN
+                {worstTension ? `${worstTension.tension_kN.toFixed(1)} kN` : '—'}
               </div>
-              <div className="text-[11px] text-amber-700">Tmax / Tcho_phép</div>
+              <div className="text-[11px] text-amber-700">
+                {worstTension ? `${worstTension.name} · ${worstTension.cable} · η ${worstUtil?.cableUtil.toFixed(2)}` : ''}
+              </div>
             </div>
 
             <div className="bg-cyan-50/70 border border-cyan-200 rounded-xl p-3">
-              <div className="text-slate-500">Hệ số an toàn (SF)</div>
+              <div className="text-slate-500">SF cáp nhỏ nhất</div>
               <div className="font-mono text-base font-bold text-cyan-900 mt-0.5">
-                {safetyFactorEstimate}
+                {worstSf ? worstSf.safetyFactor.toFixed(2) : '—'}
               </div>
               <div className="text-[11px] text-cyan-700 font-medium">
-                {parseFloat(safetyFactorEstimate) >= 1.67 ? '✅ ĐẠT (≥ 1.67)' : '⚠️ CẢNH BÁO'}
+                {worstSf
+                  ? `${worstSf.name} · ${worstSf.safetyFactor >= sfCriterion ? '✅' : '⚠️'} tiêu chí ≥ ${sfCriterion} · ${passCount}/12 bè ĐẠT`
+                  : ''}
               </div>
             </div>
           </div>
+          <p className="text-[11px] text-slate-500 leading-relaxed -mt-2">
+            Số liệu tính trực tiếp bằng bộ tính toán của dự án cho cả 12 cụm bè tại vận tốc gió đang chọn. Lực căng là giá
+            trị thiết kế bất lợi nhất của mỗi bè (không phụ thuộc hướng gió); màu cáp và cọc trên mô hình 3D theo hệ số sử
+            dụng của chính bè đó.
+          </p>
 
           {/* Wind Speed Slider & Presets */}
           <div className="space-y-2">
@@ -401,7 +415,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           {/* Water Level Elevation Slider */}
           <div className="space-y-2 pt-2 border-t border-slate-100">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-              <span>Mực nước hồ (Cao trình MNDB = 384.5 m)</span>
+              <span>Mực nước hồ (cao độ dự án)</span>
               <span className="font-mono text-sm text-cyan-700 font-bold bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">
                 {waterLevel_m.toFixed(2)} m
               </span>
@@ -409,38 +423,69 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
 
             <input
               type="range"
-              min={380.0}
-              max={386.0}
+              min={WATER_LEVEL_MIN_M}
+              max={WATER_LEVEL_MAX_M}
               step={0.1}
               value={waterLevel_m}
               onChange={(e) => onWaterLevelChange(parseFloat(e.target.value))}
               className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-cyan-600"
             />
-            <div className="flex justify-between text-[11px] text-slate-400">
-              <span>Mực nước chết: 380.0 m</span>
-              <span className="font-bold text-cyan-600">MNDB: 384.5 m</span>
-              <span>Mực nước lũ: 386.0 m</span>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: `MNC ${MNC_M}`, v: MNC_M },
+                { label: `MNDB ${MNDB_M}`, v: MNDB_M },
+                { label: `MNLKT ${MNLKT_M}`, v: MNLKT_M },
+                { label: `Kịch bản ${WATER_LEVEL_MAX_M}`, v: WATER_LEVEL_MAX_M }
+              ].map((b) => (
+                <button
+                  key={b.label}
+                  type="button"
+                  onClick={() => onWaterLevelChange(b.v)}
+                  className={`px-2 py-1 rounded text-[11px] font-medium border transition ${
+                    Math.abs(waterLevel_m - b.v) < 0.05
+                      ? 'bg-cyan-600 text-white border-cyan-600'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {b.label} m
+                </button>
+              ))}
             </div>
 
-            {/* Dynamic Water Physics Feedback */}
-            <div className={`p-2.5 rounded-xl text-xs flex items-center justify-between border ${
-              waterLevel_m > 385.0
+            {/* What this level does to the moorings */}
+            <div className={`p-2.5 rounded-xl text-xs space-y-1 border ${
+              waterLevel_m > SPILL_LEVEL_M || agroundRafts.length > 0
                 ? 'bg-rose-50 border-rose-200 text-rose-800'
-                : waterLevel_m < 382.0
+                : waterLevel_m > MNDB_M + 0.05
                 ? 'bg-amber-50 border-amber-200 text-amber-800'
                 : 'bg-cyan-50 border-cyan-200 text-cyan-800'
             }`}>
-              <span className="font-medium">
-                {waterLevel_m > 385.0
-                  ? '⚠️ Mực nước lũ cao: Bè dâng cao, cáp neo kéo căng, góc dốc cáp tăng.'
-                  : waterLevel_m < 382.0
-                  ? 'ℹ️ Mực nước cạn: Bè hạ thấp, cáp neo chùng xuống, chiều dài tiếp đáy tăng.'
-                  : '✅ Mực nước bình thường (MNDB): Hệ neo làm việc ở điều kiện thiết kế chuẩn.'}
-              </span>
-              <span className="font-mono font-bold shrink-0 ml-2">
-                ΔZ = {(waterLevel_m - 384.5) >= 0 ? '+' : ''}{(waterLevel_m - 384.5).toFixed(2)} m
-              </span>
+              <div className="flex items-center justify-between font-medium">
+                <span>
+                  {waterLevel_m > SPILL_LEVEL_M
+                    ? `Trên cao độ tràn theo địa hình IFC (~${SPILL_LEVEL_M.toFixed(1)} m): kịch bản giả định.`
+                    : waterLevel_m > MNLKT_M
+                    ? 'Trên mực nước lũ kiểm tra.'
+                    : waterLevel_m > MNDB_M + 0.05
+                    ? 'Mực nước lũ: bè dâng cao, góc cáp thay đổi.'
+                    : waterLevel_m < MNDB_M - 0.05
+                    ? 'Mực nước hạ thấp hơn MNDB.'
+                    : 'Mực nước dâng bình thường (MNDB).'}
+                </span>
+                <span className="font-mono font-bold shrink-0 ml-2">
+                  ΔZ = {waterLevel_m - MNDB_M >= 0 ? '+' : ''}{(waterLevel_m - MNDB_M).toFixed(2)} m
+                </span>
+              </div>
+              <div className="text-[11px] leading-relaxed">
+                Bè mắc cạn: <strong>{agroundRafts.length ? agroundRafts.join(', ') : 'không'}</strong>
+                {' · '}Đỉnh cọc bờ bị ngập: <strong>{floodedShoreHeads}/129</strong>
+                {' · '}Cọc đáy nằm trên mặt nước: <strong>{dryBedPiles.length}/175</strong>
+              </div>
             </div>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Địa hình là Toposolid của file IFC, quy đổi về cao độ dự án: mặt nước mô hình IFC 402,0 m ≡ MNDB 384,5 m
+              (lệch 17,5 m). Nước chỉ dâng trong lòng hồ, tính từ các cụm bè ra.
+            </p>
           </div>
         </div>
       )}
@@ -553,7 +598,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, mooringLines: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">⚓ 298 Tuyến Cáp Neo Catenary</span>
+                <span className="font-medium text-slate-700">⚓ 304 tuyến cáp neo (cáp căng thẳng)</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -563,7 +608,17 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, shorePiles: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">📍 Cọc Neo Bờ & Cọc Đáy Hồ</span>
+                <span className="font-medium text-slate-700">📍 129 cọc neo bờ (vuông BTCT)</span>
+              </label>
+
+              <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={layers.bedPiles}
+                  onChange={(e) => onLayersChange({ ...layers, bedPiles: e.target.checked })}
+                  className="rounded text-brand-600 focus:ring-brand-500"
+                />
+                <span className="font-medium text-slate-700">📍 175 cọc đáy hồ (vuông BTCT)</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -584,6 +639,16 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span className="font-medium text-slate-700">⛰️ Địa Hình Lòng Hồ & Sườn Đồi</span>
+              </label>
+
+              <label className="flex items-center gap-2.5 p-2 rounded-lg bg-amber-50 hover:bg-amber-100 cursor-pointer border border-amber-200">
+                <input
+                  type="checkbox"
+                  checked={layers.terrainXray}
+                  onChange={(e) => onLayersChange({ ...layers, terrainXray: e.target.checked })}
+                  className="rounded text-amber-600 focus:ring-amber-500"
+                />
+                <span className="font-medium text-slate-700">🔍 Xem xuyên nền đất (hiện chiều sâu cọc L_tk)</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -642,10 +707,10 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 text-xs space-y-1">
                   <div className="font-bold flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    Kiểm tra độ võng & sức bền cáp
+                    Kiểm tra sức bền cáp (bộ tính toán)
                   </div>
                   <div className="text-[11px] text-emerald-800">
-                    Cáp sợi tổng hợp Polyester chịu lực kéo đứt 280 kN. Hệ số an toàn thiết kế hiện hành thoả mãn TCVN & DNV-ST-0119.
+                    Lực căng là giá trị thiết kế bất lợi nhất của cả cụm bè do bộ tính toán đưa ra; MBL theo loại cáp PES đã chọn cho bè. Cáp neo cọc được mô hình căng thẳng (không võng), đúng mô hình tính toán.
                   </div>
                 </div>
               )}

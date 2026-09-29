@@ -56,9 +56,20 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     // 304 Mooring Lines
     expect(coordsV2).toHaveLength(304);
 
-    // 3D Terrain Mesh
-    expect(terrain.gridSize).toBe(64);
-    expect(terrain.elevations).toHaveLength(64);
-    expect(terrain.elevations[0]).toHaveLength(64);
+    // 3D terrain height-field, extracted by scripts/extractTerrainFromIfc.mjs
+    expect(terrain.rowOrder).toBe('south-to-north');
+    expect(terrain.ifcWaterSurface_m).toBe(402);
+    expect(terrain.elevations).toHaveLength(terrain.ny);
+    expect(terrain.elevations[0]).toHaveLength(terrain.nx);
+  });
+
+  it('the sample IFC carries the final 304 square piles, not the retired 298-line V1 layout', () => {
+    const ifc = generateHuoiVanhSampleIfc();
+    expect((ifc.match(/=IFCPILE\(/g) || []).length).toBe(304);
+    expect((ifc.match(/=IFCMEMBER\(/g) || []).length).toBe(304);
+    expect(ifc).toContain('square RC pile');
+    expect(ifc).not.toMatch(/Pile D0\.\d+m/); // the old round-pile wording
+    // every GlobalId is exactly 22 characters
+    for (const m of ifc.matchAll(/=IFC(?:PILE|MEMBER|ELEMENTASSEMBLY)\('([^']*)'/g)) expect(m[1]).toHaveLength(22);
   });
 });

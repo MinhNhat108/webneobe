@@ -16,6 +16,8 @@ export interface LayerVisibility {
   bedPiles: boolean;
   waterSurface: boolean;
   lakeTerrain: boolean;
+  /** See-through ground, so the embedded length of every pile is visible. */
+  terrainXray: boolean;
   windStreamlines: boolean;
   labels: boolean;
   axesAndGrid: boolean;
@@ -26,7 +28,7 @@ export type CameraPreset = 'overview' | 'topDown' | 'waterLevel' | 'raftFocus';
 
 export interface SelectedElement {
   type: 'raft' | 'line' | 'pile';
-  id: string; // e.g. 'BÈ 1' or 'N1-01'
+  id: string; // e.g. 'BÈ 1', a line code 'B1-D01' or a pile code 'CS-001'
   title: string;
   data: Record<string, string | number | boolean>;
 }

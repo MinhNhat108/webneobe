@@ -1,5 +1,8 @@
-import huoiVanhRaftPolygons from '../../data/huoiVanhRaftPolygons.json';
-import huoiVanhCoordinates from '../../data/huoiVanhCoordinates.json';
+import { RAFT_POLYGONS_V2, MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
+import { buildPileModels } from './sceneModel';
+
+/** 22-character IFC GlobalId: a 19-character prefix plus a 3-digit counter. */
+const guid = (prefix19: string, n: number) => `${prefix19}${n.toString().padStart(3, '0')}`;
 
 /**
  * Generates a valid STEP-format IFC2X3 file for the Huổi Vanh Floating Solar PV project.
@@ -70,10 +73,10 @@ export function generateHuoiVanhSampleIfc(): string {
 
   // Rafts as Element Assemblies (sample 12 rafts)
   idCounter = 18;
-  huoiVanhRaftPolygons.slice(0, 12).forEach((raft, idx) => {
+  RAFT_POLYGONS_V2.forEach((raft, idx) => {
     const raftName = `BE_${raft.id}`;
-    const cx = (raft.points.reduce((acc, p) => acc + p.x, 0) / raft.points.length).toFixed(3);
-    const cy = (raft.points.reduce((acc, p) => acc + p.y, 0) / raft.points.length).toFixed(3);
+    const cx = raft.centroid.x.toFixed(3);
+    const cy = raft.centroid.y.toFixed(3);
 
     const ptId = nextId();
     const plcId = nextId();
@@ -81,20 +84,24 @@ export function generateHuoiVanhSampleIfc(): string {
 
     lines.push(`${ptId}=IFCCARTESIANPOINT((${cx},${cy},384.5));`);
     lines.push(`${plcId}=IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptId},${idAxisZ},${idAxisX}));`);
-    lines.push(`${assyId}=IFCELEMENTASSEMBLY('3O6m1I2sZ1Sx8Z4R6r2C${idx.toString().padStart(2, '0')}',${idOwnerHistory},'${raftName}','FPV Solar Raft Cluster - Area: ${raft.area_m2}m2',$,${plcId},$,$,.NOTDEFINED.);`);
+    lines.push(`${assyId}=IFCELEMENTASSEMBLY('${guid('3O6m1I2sZ1Sx8Z4R6r2', idx)}',${idOwnerHistory},'${raftName}','FPV Solar Raft Cluster - Area: ${raft.area_m2}m2',$,${plcId},$,$,.NOTDEFINED.);`);
   });
 
-  // Piles & Anchor lines sample (first 30 lines)
-  huoiVanhCoordinates.slice(0, 30).forEach((line, idx) => {
+  // The 304 square RC piles and their mooring lines. Elevations are in the
+  // project datum: the pile stands on the IFC terrain (converted), its head at
+  // the design stick-up above the ground.
+  const pileByLine = new Map(buildPileModels().map((p) => [p.line, p]));
+  MOORING_LINES_V2.forEach((line, idx) => {
+    const pile = pileByLine.get(line.code)!;
     const ptRaft = nextId();
     const ptAnchor = nextId();
     const pileId = nextId();
     const lineId = nextId();
 
     lines.push(`${ptRaft}=IFCCARTESIANPOINT((${line.xRaft.toFixed(3)},${line.yRaft.toFixed(3)},384.5));`);
-    lines.push(`${ptAnchor}=IFCCARTESIANPOINT((${line.xAnchor.toFixed(3)},${line.yAnchor.toFixed(3)},${line.zAnchor.toFixed(3)}));`);
-    lines.push(`${pileId}=IFCPILE('4P7n2J3tA2Ty9A5S7s3D${idx.toString().padStart(2, '0')}',${idOwnerHistory},'COC_${line.code}','${line.type === 'SHORE' ? 'Shore Pile D0.45m' : 'Bed Anchor Pile D0.35m'}',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptAnchor},${idAxisZ},${idAxisX})),$,$,.USERDEFINED.);`);
-    lines.push(`${lineId}=IFCMEMBER('5Q8o3K4uB3Uz0B6T8t4E${idx.toString().padStart(2, '0')}',${idOwnerHistory},'CAP_${line.code}','Mooring Line Span: ${line.span}m Azimuth: ${line.azimuth}deg',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptRaft},${idAxisZ},${idAxisX})),$,$);`);
+    lines.push(`${ptAnchor}=IFCCARTESIANPOINT((${pile.x.toFixed(3)},${pile.y.toFixed(3)},${pile.head_m.toFixed(3)}));`);
+    lines.push(`${pileId}=IFCPILE('${guid('4P7n2J3tA2Ty9A5S7s3', idx)}',${idOwnerHistory},'COC_${pile.code}','${line.type === 'SHORE' ? 'Shore' : 'Bed'} square RC pile ${Math.round(pile.side_m * 1000)}x${Math.round(pile.side_m * 1000)}mm, L_tk ${pile.embed_m}m',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptAnchor},${idAxisZ},${idAxisX})),$,$,.USERDEFINED.);`);
+    lines.push(`${lineId}=IFCMEMBER('${guid('5Q8o3K4uB3Uz0B6T8t4', idx)}',${idOwnerHistory},'CAP_${line.code}','Mooring Line Span: ${line.span}m Azimuth: ${line.azimuth}deg',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptRaft},${idAxisZ},${idAxisX})),$,$);`);
   });
 
   lines.push('ENDSEC;');

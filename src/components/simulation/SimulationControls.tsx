@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Wind,
   Layers,
@@ -105,6 +105,19 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   const worstSf = states.reduce<RaftMooringState | null>((w, st) => (!w || st.safetyFactor < w.safetyFactor ? st : w), null);
   const worstUtil = states.reduce<RaftMooringState | null>((w, st) => (!w || st.cableUtil > w.cableUtil ? st : w), null);
   const passCount = states.filter((st) => st.verdict === 'PASS').length;
+  // The cards describe the raft picked in the "Cụm" selector; the 12-raft
+  // extremes stay as a secondary line so the governing raft is not lost.
+  const focusName = `BÈ ${selectedFocusRaft}`;
+  const focusState = mooringStates.get(focusName) ?? null;
+
+  // Clicking a raft, cable or pile in the 3D view selects its raft here too
+  // (without moving the camera, which would fight the user's own navigation).
+  useEffect(() => {
+    if (!selectedElement) return;
+    const raftName = selectedElement.type === 'raft' ? selectedElement.id : selectedElement.data['Thuộc cụm bè'];
+    const m = typeof raftName === 'string' ? /^BÈ (\d+)$/.exec(raftName) : null;
+    if (m) setSelectedFocusRaft(Number(m[1]));
+  }, [selectedElement]);
 
   // What the chosen reservoir level does to the mooring system.
   const shoreArm = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
@@ -294,37 +307,43 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
             <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3">
               <div className="text-slate-500">Tổng lực môi trường</div>
               <div className="font-mono text-base font-bold text-emerald-900 mt-0.5">
-                {envTotal_kN.toFixed(0)} kN
+                {focusState ? `${focusState.envForce_kN.toFixed(1)} kN` : '—'}
               </div>
-              <div className="text-[11px] text-emerald-700">12 cụm bè (gió + dòng + sóng)</div>
+              <div className="text-[11px] text-emerald-700">{focusName} (gió + dòng + sóng)</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Cả 12 cụm: {envTotal_kN.toFixed(0)} kN</div>
             </div>
 
             <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3">
-              <div className="text-slate-500">Lực căng cáp lớn nhất</div>
+              <div className="text-slate-500">Lực căng cáp thiết kế</div>
               <div className="font-mono text-base font-bold text-amber-900 mt-0.5">
-                {worstTension ? `${worstTension.tension_kN.toFixed(1)} kN` : '—'}
+                {focusState ? `${focusState.tension_kN.toFixed(1)} kN` : '—'}
               </div>
               <div className="text-[11px] text-amber-700">
-                {worstTension ? `${worstTension.name} · ${worstTension.cable} · η ${worstUtil?.cableUtil.toFixed(2)}` : ''}
+                {focusState ? `${focusName} · ${focusState.cable} · η ${focusState.cableUtil.toFixed(2)}` : ''}
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">
+                {worstTension ? `Lớn nhất: ${worstTension.tension_kN.toFixed(1)} kN (${worstTension.name}) · η max ${worstUtil?.cableUtil.toFixed(2)} (${worstUtil?.name})` : ''}
               </div>
             </div>
 
             <div className="bg-cyan-50/70 border border-cyan-200 rounded-xl p-3">
-              <div className="text-slate-500">SF cáp nhỏ nhất</div>
+              <div className="text-slate-500">SF cáp</div>
               <div className="font-mono text-base font-bold text-cyan-900 mt-0.5">
-                {worstSf ? worstSf.safetyFactor.toFixed(2) : '—'}
+                {focusState ? focusState.safetyFactor.toFixed(2) : '—'}
               </div>
               <div className="text-[11px] text-cyan-700 font-medium">
-                {worstSf
-                  ? `${worstSf.name} · ${worstSf.safetyFactor >= sfCriterion ? '✅' : '⚠️'} tiêu chí ≥ ${sfCriterion} · ${passCount}/12 bè ĐẠT`
-                  : ''}
+                {focusState ? `${focusName} · ${focusState.safetyFactor >= sfCriterion ? '✅' : '⚠️'} tiêu chí ≥ ${sfCriterion}` : ''}
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">
+                {worstSf ? `Nhỏ nhất: ${worstSf.safetyFactor.toFixed(2)} (${worstSf.name}) · ${passCount}/12 bè ĐẠT` : ''}
               </div>
             </div>
           </div>
           <p className="text-[11px] text-slate-500 leading-relaxed -mt-2">
-            Số liệu tính trực tiếp bằng bộ tính toán của dự án cho cả 12 cụm bè tại vận tốc gió đang chọn. Lực căng là giá
-            trị thiết kế bất lợi nhất của mỗi bè (không phụ thuộc hướng gió); màu cáp và cọc trên mô hình 3D theo hệ số sử
-            dụng của chính bè đó.
+            Số liệu của cụm bè đang chọn (ô "Cụm" phía trên, hoặc bấm vào bè / cáp / cọc trên mô hình 3D), tính trực tiếp
+            bằng bộ tính toán của dự án tại vận tốc gió đang chọn; dòng nhỏ bên dưới là giá trị tổng / bất lợi nhất của cả
+            12 cụm. Lực căng là giá trị thiết kế bất lợi nhất của bè (không phụ thuộc hướng gió); màu cáp và cọc trên mô
+            hình 3D theo hệ số sử dụng của chính bè đó.
           </p>
 
           {/* Wind Speed Slider & Presets */}

@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Printer, CheckCircle2, XCircle } from 'lucide-react';
 
 export const ReportView: React.FC = () => {
-  const { currentProject, results, batchResults, calculateAllRafts, raftsSummary } = useProjectStore();
+  const { currentProject, results, raftsSummary, setActiveRaft } = useProjectStore();
   const meta = currentProject.meta;
   const isSolar = currentProject.systemType === 'solar_fpv';
-
-  useEffect(() => {
-    if (raftsSummary.length > 0 && batchResults.length === 0) calculateAllRafts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const activeRaft = raftsSummary.find(r => r.id === currentProject.activeRaftId) || raftsSummary[0];
+  const raftName = activeRaft ? activeRaft.name : (currentProject.activeRaftId ? `BÈ ${currentProject.activeRaftId}` : 'BÈ 1');
 
   const handlePrint = () => {
     window.print();
@@ -19,24 +16,48 @@ export const ReportView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Print action toolbar (hidden on print) */}
-      <div className="no-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div className="no-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">
-            Xem Trước & In Báo Cáo Kỹ Thuật (Khổ A4)
-          </h3>
-          <p className="text-xs text-slate-500">
-            Báo cáo được định dạng chuẩn in ấn tài liệu thuyết minh thiết kế
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-slate-900">
+              Xem Trước & In Báo Cáo Kỹ Thuật (Khổ A4)
+            </h3>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200">
+              Đang xem: {raftName}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Báo cáo thuyết minh tính toán chi tiết cho riêng cụm bè đang chọn
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handlePrint}
-          className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
-        >
-          <Printer className="w-4 h-4" />
-          In Báo Cáo / Xuất PDF
-        </button>
+        <div className="flex items-center gap-3">
+          {raftsSummary.length > 0 && (
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="text-slate-500 font-medium">Chọn cụm bè:</span>
+              <select
+                value={currentProject.activeRaftId || 1}
+                onChange={(e) => setActiveRaft(Number(e.target.value))}
+                className="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-bold text-slate-800 text-xs shadow-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"
+              >
+                {raftsSummary.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name} ({r.area_m2.toLocaleString()} m²)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={handlePrint}
+            className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+          >
+            <Printer className="w-4 h-4" />
+            In Báo Cáo ({raftName}) / Xuất PDF
+          </button>
+        </div>
       </div>
 
       {/* Printable Report Document */}
@@ -44,19 +65,23 @@ export const ReportView: React.FC = () => {
         {/* Report Header */}
         <div className="border-b-2 border-slate-900 pb-4 flex items-start justify-between">
           <div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              BÁO CÁO THUYẾT MINH TÍNH TOÁN KỸ THUẬT
+            <div className="text-xs font-bold text-brand-600 uppercase tracking-widest flex items-center gap-2">
+              <span>BÁO CÁO THUYẾT MINH TÍNH TOÁN KỸ THUẬT HỆ NEO</span>
+              <span className="px-2 py-0.5 rounded bg-brand-100 text-brand-800 font-black text-[11px]">
+                {raftName}
+              </span>
             </div>
             <h1 className="text-xl md:text-2xl font-black text-slate-900 mt-1">
-              {meta.name || currentProject.name}
+              {meta.name || currentProject.name} — {raftName}
             </h1>
             <div className="text-xs text-slate-600 mt-1">
-              Hệ thống: Hệ Bè Pin Mặt Trời Nổi (FPV)
+              Hệ thống: Hệ Bè Pin Mặt Trời Nổi (FPV) · Cụm tính toán: <strong>{raftName}</strong> (Diện tích: {activeRaft?.area_m2 ? `${activeRaft.area_m2.toLocaleString()} m²` : `${(currentProject.raft.length_m * currentProject.raft.width_m).toLocaleString()} m²`})
             </div>
           </div>
 
           <div className="text-right text-xs font-mono space-y-0.5 shrink-0">
-            <div>Mã số: <strong>{meta.code || currentProject.code}</strong></div>
+            <div>Ký hiệu bè: <strong className="text-brand-700 text-sm">{raftName}</strong></div>
+            <div>Mã số: <strong>{meta.code || currentProject.code}-{raftName.replace(/\s+/g, '')}</strong></div>
             <div>Ngày lập: <strong>{meta.date}</strong></div>
             <div>Địa điểm: <strong>{meta.location}</strong></div>
           </div>
@@ -89,12 +114,12 @@ export const ReportView: React.FC = () => {
         {/* Section 1: Parameters */}
         <div className="space-y-2">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
-            1. Bảng Thông Số Thiết Kế Đầu Vào
+            1. Bảng Thông Số Thiết Kế Đầu Vào — {raftName}
           </h2>
 
           <div className="grid grid-cols-2 gap-4 text-xs font-mono">
             <div className="space-y-1 bg-slate-50 p-3 rounded border border-slate-200">
-              <div className="font-bold text-slate-800 font-sans mb-1">Hình học Bè & Tải Trọng:</div>
+              <div className="font-bold text-slate-800 font-sans mb-1">Hình học Bè & Tải Trọng ({raftName}):</div>
               <div>- Kích thước: {currentProject.raft.length_m}m x {currentProject.raft.width_m}m (S = {(currentProject.raft.length_m * currentProject.raft.width_m).toLocaleString()} m²)</div>
               <div>- Mớn nước: {currentProject.raft.draft_m}m | Chiều cao nổi: {currentProject.raft.freeboardHeight_m}m</div>
               {isSolar && (
@@ -105,7 +130,7 @@ export const ReportView: React.FC = () => {
             </div>
 
             <div className="space-y-1 bg-slate-50 p-3 rounded border border-slate-200">
-              <div className="font-bold text-slate-800 font-sans mb-1">Quy cách Dây Neo & Cọc/Mỏ Neo:</div>
+              <div className="font-bold text-slate-800 font-sans mb-1">Quy cách Dây Neo & Cọc/Mỏ Neo ({raftName}):</div>
               <div>- Số lượng dây neo: {currentProject.line.count} dây (Cùng chịu tải: {currentProject.line.effectiveCount} dây)</div>
               <div>- Loại cáp: {currentProject.line.cableCode || 'Polyester'} | MBL = {currentProject.line.mbl_kN} kN</div>
               <div>- Lực căng trước: {currentProject.line.pretension_kN} kN | k_tập trung: {currentProject.line.focusFactor}</div>
@@ -242,48 +267,6 @@ export const ReportView: React.FC = () => {
                 <li key={a.id}>{a.name} ({(a.size / 1024).toFixed(1)} KB)</li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {/* Section 4b: Master summary appendix across every raft cluster */}
-        {batchResults.length > 0 && (
-          <div className="space-y-2">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
-              Phụ Lục A — Bảng Tổng Hợp Toàn Bộ {batchResults.length} Cụm Bè
-            </h2>
-            <table className="w-full text-[10.5px] text-left border border-slate-200 font-mono">
-              <thead className="bg-slate-100 text-slate-700 uppercase">
-                <tr>
-                  <th className="p-1.5 border-r border-b border-slate-200 font-sans">Bè</th>
-                  <th className="p-1.5 border-r border-b border-slate-200 text-right">S (m²)</th>
-                  <th className="p-1.5 border-r border-b border-slate-200 text-right">F_env (kN)</th>
-                  <th className="p-1.5 border-r border-b border-slate-200 text-right">T_max (kN)</th>
-                  <th className="p-1.5 border-r border-b border-slate-200 text-right">η cáp</th>
-                  <th className="p-1.5 border-r border-b border-slate-200 font-sans">Hạng mục chi phối</th>
-                  <th className="p-1.5 border-b border-slate-200 text-center font-sans">Kết luận</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {batchResults.map((b) => {
-                  const v = b.results.overallVerdict;
-                  const label = v === 'PASS' ? 'ĐẠT' : v === 'FAIL' ? 'KHÔNG ĐẠT' : 'N/A';
-                  const cls = v === 'PASS' ? 'text-emerald-700' : v === 'FAIL' ? 'text-rose-700' : 'text-slate-500';
-                  return (
-                    <tr key={b.raft.id}>
-                      <td className="p-1.5 border-r border-slate-200 font-bold font-sans">{b.raft.name}</td>
-                      <td className="p-1.5 border-r border-slate-200 text-right">{b.raft.area_m2.toLocaleString()}</td>
-                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.f_env_total_kN}</td>
-                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.t_max_intact_kN}</td>
-                      <td className="p-1.5 border-r border-slate-200 text-right">{b.results.cableUtilization ?? '-'}</td>
-                      <td className="p-1.5 border-r border-slate-200 font-sans">
-                        {b.results.governingCheck ? `${b.results.governingCheck.id} — ${b.results.governingCheck.label}` : '-'}
-                      </td>
-                      <td className={`p-1.5 text-center font-bold font-sans ${cls}`}>{label}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
           </div>
         )}
 

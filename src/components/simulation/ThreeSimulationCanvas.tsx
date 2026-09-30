@@ -60,6 +60,12 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 15);
     const shoreArm_e_m = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
     const bed1Stickup_m = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
+    // Pile sizes of the raft being edited in Tab 2 (the other 11 keep the design catalogue).
+    const activeRaftId = useProjectStore((s) => s.activeRaftId);
+    const shoreD_m = useProjectStore((s) => s.currentProject.anchor.shoreD_m);
+    const shoreL_m = useProjectStore((s) => s.currentProject.anchor.shoreL_m);
+    const bed1D_m = useProjectStore((s) => s.currentProject.anchor.bed1D_m);
+    const bed1L_m = useProjectStore((s) => s.currentProject.anchor.bed1L_m);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -92,11 +98,11 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
     const [hoveredInfo, setHoveredInfo] = useState<string | null>(null);
 
-    // The 304 piles and their cables, as designed. Rebuilt only when a
-    // stick-up input of the calculation changes.
+    // The 304 piles and their cables at their CAD positions; sizes as designed,
+    // except the active raft, which shows the side / L_tk entered in Tab 2.
     const piles = useMemo(
-      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m }),
-      [shoreArm_e_m, bed1Stickup_m]
+      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m }, `BÈ ${activeRaftId}`),
+      [shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m, activeRaftId]
     );
     const cables = useMemo(() => buildCableModels(piles), [piles]);
     const shorePiles = useMemo(() => piles.filter((p) => p.type === 'SHORE'), [piles]);
@@ -535,6 +541,12 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       return rc.intersectObjects(targets, true)[0] ?? null;
     };
 
+    /** Flags values that come from a Tab 2 trial rather than the frozen design. */
+    const trialNote = (st: RaftMooringState | undefined): Record<string, string> =>
+      st?.isActive && st.deviations.length > 0
+        ? { 'Trạng thái': `⚠️ Đang thử nghiệm – khác thiết kế chốt (${st.deviations.map((d) => `${d.label} ${d.design} → ${d.current}`).join('; ')})` }
+        : {};
+
     const describePile = (p: PileModel): SelectedElement => {
       const st = mooringStates.get(p.raft);
       const u = st ? (p.type === 'SHORE' ? st.shorePileUtil : st.bedPileUtil) : NaN;
@@ -553,7 +565,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           'Cao độ đỉnh cọc': `${fmt(p.head_m)} m`,
           'Cao độ mũi cọc': `${fmt(p.toe_m)} m`,
           'Mực nước tại cọc': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
-          'Hệ số sử dụng Broms (bè)': Number.isFinite(u) ? fmt(u, 2) : '—'
+          'Hệ số sử dụng Broms (bè)': Number.isFinite(u) ? fmt(u, 2) : '—',
+          ...trialNote(st)
         }
       };
     };
@@ -588,7 +601,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
             'Lực căng thiết kế (bè)': st ? `${fmt(st.tension_kN, 1)} kN` : '—',
             'MBL cáp': st ? `${fmt(st.mbl_kN, 0)} kN` : '—',
             'Hệ số an toàn SF = MBL/T': st ? fmt(st.safetyFactor, 2) : '—',
-            'Hệ số sử dụng cáp': st ? fmt(st.cableUtil, 3) : '—'
+            'Hệ số sử dụng cáp': st ? fmt(st.cableUtil, 3) : '—',
+            ...trialNote(st)
           }
         });
         return;
@@ -613,7 +627,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
             'Hệ số an toàn cáp SF': st ? fmt(st.safetyFactor, 2) : '—',
             'Kết luận tính toán': st?.verdict === 'PASS' ? 'ĐẠT' : st?.verdict ?? '—',
             'Mực nước bè': wl.aground ? `MẮC CẠN (đáy bè tựa nền ${fmt(raft.shallowestGround_m)} m)` : `${fmt(wl.waterline_m)} m`,
-            'Nước sâu nhỏ nhất dưới bè': `${fmt(Math.max(0, waterLevel_m - raft.shallowestGround_m))} m`
+            'Nước sâu nhỏ nhất dưới bè': `${fmt(Math.max(0, waterLevel_m - raft.shallowestGround_m))} m`,
+            ...trialNote(st)
           }
         });
         return;

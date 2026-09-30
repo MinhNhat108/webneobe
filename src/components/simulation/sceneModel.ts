@@ -35,7 +35,7 @@ import pilesV2 from '../../data/huoiVanhPiles_v2.json';
 import { HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT, RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2, RaftPolygonV2 } from '../../data/huoiVanhLayout';
 import { calculateProject } from '../../lib/calc';
-import { buildRaftProjectState } from '../../lib/calc/raftState';
+import { resolveRaftState, type RaftDeviation } from '../../lib/calc/raftState';
 import type { ProjectState } from '../../lib/calc/types';
 
 // ------------------------------------------------------------------ levels
@@ -296,20 +296,25 @@ const raftItem = (name: string): RaftSummaryItem => {
 };
 
 /**
- * The 304 piles as built. Side and embedment are the per-raft design values;
- * the stick-ups are the calculation's own: `anchor.shoreArm_e_m` for a shore
- * pile (the free arm the Broms check loads) and `anchor.bed1Stickup_m` for a
- * lake-bed pile.
+ * The 304 piles as built. Side and embedment are the per-raft design values —
+ * except for `activeRaft`, the raft being edited in Tab 2, whose piles take
+ * the side / L_tk entered there (`anchor.shoreD_m`, `shoreL_m`, `bed1D_m`,
+ * `bed1L_m`). The stick-ups are the calculation's own: `anchor.shoreArm_e_m`
+ * for a shore pile (the free arm the Broms check loads) and
+ * `anchor.bed1Stickup_m` for a lake-bed pile. Plan positions never change.
  */
-export function buildPileModels(anchor: Partial<ProjectState['anchor']> = {}): PileModel[] {
+export function buildPileModels(anchor: Partial<ProjectState['anchor']> = {}, activeRaft?: string): PileModel[] {
   const base = HUOI_VANH_DEFAULT_PROJECT.anchor;
   const shoreStickup = anchor.shoreArm_e_m ?? base.shoreArm_e_m ?? 0.5;
   const bedStickup = anchor.bed1Stickup_m ?? base.bed1Stickup_m ?? 1.0;
   return PILE_ROWS.map((p) => {
     const r = raftItem(p.raft);
     const isShore = p.type === 'SHORE';
-    const side = (isShore ? r.shorePileD_m : r.bedPileD_m) ?? (isShore ? base.shoreD_m : base.bed1D_m);
-    const embed = (isShore ? r.shorePileL_m : r.bedPileL_m) ?? (isShore ? base.shoreL_m : base.bed1L_m);
+    const edited = p.raft === activeRaft;
+    const side = (edited ? (isShore ? anchor.shoreD_m : anchor.bed1D_m) : undefined)
+      ?? (isShore ? r.shorePileD_m : r.bedPileD_m) ?? (isShore ? base.shoreD_m : base.bed1D_m);
+    const embed = (edited ? (isShore ? anchor.shoreL_m : anchor.bed1L_m) : undefined)
+      ?? (isShore ? r.shorePileL_m : r.bedPileL_m) ?? (isShore ? base.shoreL_m : base.bed1L_m);
     const stickup = isShore ? shoreStickup : bedStickup;
     const ground = groundAt(p.x, p.y);
     if (ground === null) throw new Error(`Pile ${p.code} lies outside the terrain model`);
@@ -371,6 +376,10 @@ export interface RaftMooringState {
   shorePileUtil: number;
   bedPileUtil: number;
   verdict: 'PASS' | 'FAIL' | 'NA' | 'SKIP';
+  /** The raft being edited in Tab 2: its values are the Tab 2 inputs. */
+  isActive: boolean;
+  /** Tab 2 inputs of the active raft that differ from the frozen design (empty = as designed). */
+  deviations: RaftDeviation[];
 }
 
 /**
@@ -379,17 +388,21 @@ export interface RaftMooringState {
  * no per-line or per-direction model, so every cable of a raft shows that
  * raft's value — showing a per-line spread would be invented precision.
  */
-export function computeRaftMooringStates(base: ProjectState, windSpeed_ms: number): Map<string, RaftMooringState> {
+export function computeRaftMooringStates(
+  base: ProjectState,
+  windSpeed_ms: number,
+  activeRaftId: number = base.activeRaftId ?? 0
+): Map<string, RaftMooringState> {
   const defaultAnchor = HUOI_VANH_DEFAULT_PROJECT.anchor as ProjectState['anchor'];
   const out = new Map<string, RaftMooringState>();
   for (const item of HUOI_VANH_RAFTS) {
-    const s = buildRaftProjectState(base, item, defaultAnchor);
-    s.env = { ...s.env, windSpeed_ms };
+    const resolved = resolveRaftState(base, activeRaftId, item, defaultAnchor);
+    const s = { ...resolved.state, env: { ...resolved.state.env, windSpeed_ms } };
     const r = calculateProject(s);
     const sp = r.shorePile, bp = r.bedPile1;
     out.set(item.name, {
       name: item.name,
-      cable: item.selectedCable,
+      cable: s.line.cableCode ?? item.selectedCable,
       envForce_kN: r.f_env_total_kN,
       tension_kN: r.t_max_intact_kN,
       mbl_kN: s.line.mbl_kN,
@@ -397,7 +410,9 @@ export function computeRaftMooringStates(base: ProjectState, windSpeed_ms: numbe
       safetyFactor: s.line.mbl_kN / r.t_max_intact_kN,
       shorePileUtil: sp ? Math.max(sp.utilization_H, sp.utilization_M) : 0,
       bedPileUtil: bp ? Math.max(bp.utilization_H, bp.utilization_M, bp.utilization_Uplift ?? 0) : 0,
-      verdict: r.overallVerdict
+      verdict: r.overallVerdict,
+      isActive: resolved.isActive,
+      deviations: resolved.deviations
     });
   }
   return out;

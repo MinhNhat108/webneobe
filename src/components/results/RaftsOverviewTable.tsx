@@ -115,16 +115,27 @@ export const RaftsOverviewTable: React.FC = () => {
                     isActive ? 'bg-brand-50/60 font-semibold' : ''
                   }`}
                 >
-                  <td className="px-3 py-2 font-bold text-slate-900 font-sans">{r.name}</td>
+                  <td className="px-3 py-2 font-bold text-slate-900 font-sans">
+                    {r.name}
+                    {b?.deviations && b.deviations.length > 0 && (
+                      <span
+                        title={b.deviations.map((d) => `${d.label}: ${d.design} → ${d.current}`).join('\n')}
+                        className="ml-1.5 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold whitespace-nowrap"
+                      >
+                        ⚠️ thử nghiệm
+                      </span>
+                    )}
+                  </td>
                   <td className="px-3 py-2 text-right">{r.area_m2.toLocaleString()}</td>
                   <td className="px-3 py-2 text-right text-slate-600">{r.length_m} x {r.width_m}</td>
                   <td className="px-3 py-2 text-right">{r.solarPanelCount || Math.round(r.area_m2 * 0.22)}</td>
                   <td className="px-3 py-2 text-center font-bold">
-                    {r.cableCount} <span className="font-normal text-slate-500">({r.shoreAnchors}/{r.bedAnchors})</span>
+                    {b?.state.line.count ?? r.cableCount}{' '}
+                    <span className="font-normal text-slate-500">({b?.state.line.shoreLineCount ?? r.shoreAnchors}/{b?.state.line.bedLineCount ?? r.bedAnchors})</span>
                   </td>
                   <td className="px-3 py-2 text-center">
                     <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[11px]">
-                      {r.selectedCable}
+                      {b?.state.line.cableCode ?? r.selectedCable}
                     </span>
                   </td>
                   <td className="px-3 py-2 text-right">{res ? res.f_env_total_kN.toFixed(1) : '…'}</td>

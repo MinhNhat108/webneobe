@@ -9,7 +9,9 @@ const guid = (prefix19: string, n: number) => `${prefix19}${n.toString().padStar
  * Contains Project, Site, Water surface, Raft assemblies, Mooring members, and Piles.
  */
 export function generateHuoiVanhSampleIfc(): string {
-  const timestamp = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15);
+  // Digits and 'T' only (the ISO '-', ':' and '.' removed). Not written as a
+  // bracketed class like '[-:.]': Tailwind scans src/ and emits a broken CSS rule for it.
+  const timestamp = new Date().toISOString().replace(/[^0-9T]/g, '').slice(0, 15);
 
   let idCounter = 1;
   const nextId = () => `#${idCounter++}`;

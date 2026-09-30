@@ -7,6 +7,9 @@ import { buildPileSchedule } from './pileSchedule';
 export interface RaftBatchResultLike {
   raft: RaftSummaryItem;
   results: CalcResults;
+  /** The inputs the raft was calculated with (the active raft carries its Tab 2 values). */
+  state?: ProjectState;
+  deviations?: Array<{ label: string }>;
 }
 
 /**
@@ -67,11 +70,16 @@ export function exportProjectToExcel(
     for (const b of batch) {
       const r = b.raft;
       const c = b.results;
+      // Values the raft was actually calculated with: for the raft being
+      // edited in Tab 2 these may differ from the design catalogue.
+      const st = b.state;
+      const trial = (b.deviations?.length ?? 0) > 0;
       masterRows.push([
-        r.name, r.area_m2, r.perimeter_m, r.length_m, r.width_m,
-        r.solarPanelCount || Math.round(r.area_m2 * 0.22),
-        `${r.shoreAnchors}/${r.bedAnchors}`, r.selectedCable,
-        c.mbl_required_kN, r.waterDepth_m,
+        trial ? `${r.name} (thử nghiệm – khác thiết kế chốt)` : r.name,
+        r.area_m2, st?.raft.perimeter_m ?? r.perimeter_m, st?.raft.length_m ?? r.length_m, st?.raft.width_m ?? r.width_m,
+        st?.raft.solarPanelCount ?? (r.solarPanelCount || Math.round(r.area_m2 * 0.22)),
+        `${st?.line.shoreLineCount ?? r.shoreAnchors}/${st?.line.bedLineCount ?? r.bedAnchors}`, st?.line.cableCode ?? r.selectedCable,
+        c.mbl_required_kN, st?.env.waterDepth_m ?? r.waterDepth_m,
         c.f_env_total_kN, c.t_max_intact_kN, c.t_max_damaged_kN,
         c.cableUtilization ?? '-',
         c.shorePile?.utilization_H ?? '-', c.shorePile?.utilization_M ?? '-',

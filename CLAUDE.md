@@ -56,7 +56,7 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 - `src/data/huoiVanhCoordinates_v2.json`: 304 tuyến cáp neo (sinh bởi `node scripts/planMooringLayoutV2.mjs`, không sửa tay).
 - `src/data/huoiVanhPiles_v2.json`: 304 cọc vuông BTCT (129 SHORE + 175 BED), suy ra từ file tuyến cáp.
 - `src/data/huoiVanhLayout.ts`: Điểm truy cập DUY NHẤT tới layout V2 cho engine, bản đồ, bảng cọc, Excel và CAD.
-- `src/lib/calc/raftState.ts`: `buildRaftProjectState()` ánh xạ một dòng `HUOI_VANH_RAFTS` thành `ProjectState` (dùng chung cho store và test).
+- `src/lib/calc/raftState.ts`: `buildRaftProjectState()` ánh xạ một dòng `HUOI_VANH_RAFTS` thành `ProjectState` (dùng chung cho store và test). `resolveRaftState()` là quy tắc DUY NHẤT cho mọi màn hình nhiều bè (3D, bản đồ, bảng 12 bè, Excel/CAD): bè đang chọn = đúng `currentProject` đã sửa ở Tab 2 (kèm danh sách sai khác so với thiết kế chốt), 11 bè còn lại = catalogue. `HUOI_VANH_DEFAULT_PROJECT` KHÔNG phải BÈ 1 — trạng thái mở đầu là `buildRaftProjectState(default, BÈ 1)`.
 - `src/data/huoiVanhTerrainMesh.json`: Lưới độ cao 128 × 113 (ô ~9 m) của Toposolid trong `dia hinh ho.ifc`, sinh bởi `node scripts/extractTerrainFromIfc.mjs` (không sửa tay). Hàng 0 = phía NAM (`rowOrder: south-to-north`). Cao độ lưu theo hệ IFC.
 - **Hai hệ cao độ:** mặt nước trong IFC (slab "mat nuoc") ở 402,0 m ≡ MNDB 384,5 m của dự án → **IFC = cao độ dự án + 17,5 m**. Mô phỏng 3D (`src/components/simulation/sceneModel.ts`) quy đổi mọi thứ về cao độ dự án.
 - `src/lib/calc/`: Bộ máy tính toán thủy lực, khí động và địa kỹ thuật:
@@ -71,6 +71,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 129 tests tại 2026-09-30).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 136 tests tại 2026-09-30).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

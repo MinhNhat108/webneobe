@@ -26,7 +26,11 @@ import { calculateProject } from '../../../lib/calc';
 import { buildRaftProjectState } from '../../../lib/calc/raftState';
 import type { ProjectState } from '../../../lib/calc/types';
 
-const base = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
+// The project as the app opens it: BÈ 1 active, exactly as designed.
+const base = () => {
+  const d = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
+  return buildRaftProjectState(d, HUOI_VANH_RAFTS[0], d.anchor);
+};
 
 describe('Vertical datum — IFC terrain vs project hydrology', () => {
   it('ties the IFC water slab (402.0 m) to MNDB (384.5 m): offset 17.5 m', () => {
@@ -179,5 +183,61 @@ describe('Cable and pile colours come from the calculation engine', () => {
     const t = (v: number) => computeRaftMooringStates(b, v).get('BÈ 5')!.tension_kN;
     expect(t(35)).toBeGreaterThan(t(30));
     expect(t(30)).toBeGreaterThan(t(15));
+  });
+});
+
+describe('The raft being edited in Tab 2 is simulated with its Tab 2 inputs', () => {
+  // BÈ 1 active, cable changed to PES-20 (MBL 120 kN) in Tab 2.
+  const trial = (): ProjectState => {
+    const b = base();
+    return { ...b, line: { ...b.line, cableCode: 'PES-20', mbl_kN: 120 } };
+  };
+
+  it('shows no trial flag while every raft is as designed', () => {
+    const states = computeRaftMooringStates(base(), 30, 1);
+    for (const st of states.values()) expect(st.deviations, st.name).toEqual([]);
+    expect(states.get('BÈ 1')!.isActive).toBe(true);
+    expect(states.get('BÈ 1')!.cable).toBe(HUOI_VANH_RAFTS[0].selectedCable);
+  });
+
+  it('uses the cable chosen in Tab 2 for the active raft, with the real MBL, SF and verdict', () => {
+    const p = trial();
+    const st = computeRaftMooringStates(p, p.env.windSpeed_ms, 1).get('BÈ 1')!;
+    const tab2 = calculateProject(p); // what Tab 2 shows
+    expect(st.cable).toBe('PES-20');
+    expect(st.mbl_kN).toBe(120);
+    expect(st.tension_kN).toBe(tab2.t_max_intact_kN);
+    expect(st.safetyFactor).toBeCloseTo(120 / tab2.t_max_intact_kN, 9);
+    expect(st.verdict).toBe(tab2.overallVerdict);
+    expect(st.verdict).toBe('FAIL');
+    expect(st.cableUtil).toBeGreaterThan(1); // drawn red
+    expect(st.deviations.map((d) => d.label)).toEqual(expect.arrayContaining(['Loại cáp', 'MBL cáp (kN)']));
+  });
+
+  it('keeps the other 11 rafts on the frozen design', () => {
+    const p = trial();
+    const trialStates = computeRaftMooringStates(p, 30, 1);
+    const designStates = computeRaftMooringStates(base(), 30, 1);
+    for (const item of HUOI_VANH_RAFTS.slice(1)) {
+      const t = trialStates.get(item.name)!, d = designStates.get(item.name)!;
+      expect(t.cable, item.name).toBe(item.selectedCable);
+      expect(t.tension_kN, item.name).toBe(d.tension_kN);
+      expect(t.isActive || t.deviations.length > 0, item.name).toBe(false);
+    }
+  });
+
+  it('draws the piles of the active raft with the side and L_tk entered in Tab 2, at the same CAD positions', () => {
+    const design = buildPileModels();
+    const edited = buildPileModels({ shoreD_m: 0.5, shoreL_m: 9.0, bed1D_m: 0.55, bed1L_m: 13.0 }, 'BÈ 1');
+    expect(edited).toHaveLength(304);
+    edited.forEach((p, i) => {
+      expect([p.x, p.y], p.code).toEqual([design[i].x, design[i].y]);
+      if (p.raft === 'BÈ 1') {
+        expect(p.side_m, p.code).toBe(p.type === 'SHORE' ? 0.5 : 0.55);
+        expect(p.embed_m, p.code).toBe(p.type === 'SHORE' ? 9.0 : 13.0);
+      } else {
+        expect([p.side_m, p.embed_m], p.code).toEqual([design[i].side_m, design[i].embed_m]);
+      }
+    });
   });
 });

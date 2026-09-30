@@ -56,13 +56,15 @@ export const SimulationView: React.FC = () => {
   const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
   const [ifcData, setIfcData] = useState<LoadedIfcMetadata | null>(null);
   const currentProject = useProjectStore((s) => s.currentProject);
+  const activeRaftId = useProjectStore((s) => s.activeRaftId);
   const solarTilt_deg = currentProject.raft.solarTilt_deg ?? 15;
 
   // The calculation engine, run for the 12 rafts at the chosen wind: one
-  // source for the 3D colours, the KPI cards and the inspector panel.
+  // source for the 3D colours, the KPI cards and the inspector panel. The
+  // raft being edited in Tab 2 uses exactly those inputs (cable, piles…).
   const mooringStates = useMemo(
-    () => computeRaftMooringStates(currentProject, windParams.speed * windParams.gustFactor),
-    [currentProject, windParams.speed, windParams.gustFactor]
+    () => computeRaftMooringStates(currentProject, windParams.speed * windParams.gustFactor, activeRaftId),
+    [currentProject, activeRaftId, windParams.speed, windParams.gustFactor]
   );
 
   // Toggle Fullscreen

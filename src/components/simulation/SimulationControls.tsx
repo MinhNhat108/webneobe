@@ -109,6 +109,8 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   // extremes stay as a secondary line so the governing raft is not lost.
   const focusName = `BÈ ${selectedFocusRaft}`;
   const focusState = mooringStates.get(focusName) ?? null;
+  // The raft being edited in Tab 2, when its inputs depart from the frozen design.
+  const trialState = states.find((st) => st.isActive && st.deviations.length > 0) ?? null;
 
   // Clicking a raft, cable or pile in the 3D view selects its raft here too
   // (without moving the camera, which would fight the user's own navigation).
@@ -292,6 +294,28 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
       {/* Tab 1 Content: Wind Aerodynamics */}
       {activeTab === 'wind' && (
         <div className="p-4 space-y-5 animate-fade-in">
+          {trialState && (
+            <div className="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              <div className="font-bold">
+                ⚠️ {trialState.name} đang thử nghiệm – khác thiết kế chốt (theo thông số nhập ở Tab 2)
+              </div>
+              <ul className="mt-1 space-y-0.5 text-[11px]">
+                {trialState.deviations.map((d) => (
+                  <li key={d.label}>
+                    {d.label}: <span className="line-through text-amber-700">{String(d.design)}</span> →{' '}
+                    <strong>{String(d.current)}</strong>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-1 text-[11px] text-amber-800">
+                11 bè còn lại theo thiết kế chốt. Vị trí 304 cọc / tuyến cáp giữ nguyên theo mặt bằng CAD
+                {trialState.deviations.some((d) => d.label.startsWith('Số dây'))
+                  ? ': số dây mới chỉ đưa vào tính toán, hình vẽ không thêm / bớt dây'
+                  : ''}.
+              </div>
+            </div>
+          )}
+
           {/* Live Telemetry Summary Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="bg-brand-50/70 border border-brand-200 rounded-xl p-3">
@@ -309,7 +333,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               <div className="font-mono text-base font-bold text-emerald-900 mt-0.5">
                 {focusState ? `${focusState.envForce_kN.toFixed(1)} kN` : '—'}
               </div>
-              <div className="text-[11px] text-emerald-700">{focusName} (gió + dòng + sóng)</div>
+              <div className="text-[11px] text-emerald-700">{focusName}{focusState?.isActive && focusState.deviations.length > 0 ? ' ⚠️ thử nghiệm' : ''} (gió + dòng + sóng)</div>
               <div className="text-[10px] text-slate-500 mt-0.5">Cả 12 cụm: {envTotal_kN.toFixed(0)} kN</div>
             </div>
 

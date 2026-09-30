@@ -14,6 +14,8 @@ export interface RaftPolygon {
 export interface PileScheduleBatchLike {
   raft: RaftSummaryItem;
   results: CalcResults;
+  /** The inputs the raft was calculated with (the active raft carries its Tab 2 values). */
+  state?: ProjectState;
 }
 
 /** One row of the Pile Schedule — what goes into the CAD table and Excel. */
@@ -93,11 +95,11 @@ export function buildPileSchedule(
 
     const opt = isShore ? res.shorePileOpt : res.bedPileOpt;
     const D_m = isShore
-      ? batch?.raft.shorePileD_m ?? state.anchor.shoreD_m ?? 0.45
-      : batch?.raft.bedPileD_m ?? state.anchor.bed1D_m ?? 0.35;
+      ? batch?.state?.anchor.shoreD_m ?? batch?.raft.shorePileD_m ?? state.anchor.shoreD_m ?? 0.45
+      : batch?.state?.anchor.bed1D_m ?? batch?.raft.bedPileD_m ?? state.anchor.bed1D_m ?? 0.35;
     const Linput_m = isShore
-      ? batch?.raft.shorePileL_m ?? state.anchor.shoreL_m ?? 6.5
-      : batch?.raft.bedPileL_m ?? state.anchor.bed1L_m ?? 8.0;
+      ? batch?.state?.anchor.shoreL_m ?? batch?.raft.shorePileL_m ?? state.anchor.shoreL_m ?? 6.5
+      : batch?.state?.anchor.bed1L_m ?? batch?.raft.bedPileL_m ?? state.anchor.bed1L_m ?? 8.0;
 
     const Tmax_kN = res.t_max_intact_kN;
     const Preq_kN = opt ? opt.Preq_kN : Tmax_kN * (state.anchor.sfPileCapacity ?? 1.0);

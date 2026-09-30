@@ -3,13 +3,27 @@ import { persist } from 'zustand/middleware';
 import { ProjectState, CalcResults, RaftInput, EnvInput, LineInput, AnchorInput, Criteria, ProjectMeta, Attachment, SystemType } from '../lib/calc/types';
 import { calculateProject } from '../lib/calc';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../data/huoiVanhProject';
-import { buildRaftProjectState } from '../lib/calc/raftState';
+import { buildRaftProjectState, resolveRaftState, RaftDeviation } from '../lib/calc/raftState';
+
+const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
+/**
+ * The project as it opens: BÈ 1 exactly as designed. HUOI_VANH_DEFAULT_PROJECT
+ * alone is NOT BÈ 1 (it carries older line/pile defaults, e.g. PES-28, 20
+ * lines), so it must never be shown as "BÈ 1" without this mapping.
+ */
+const HUOI_VANH_START = buildRaftProjectState(
+  HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState, HUOI_VANH_RAFTS[0], DEFAULT_ANCHOR
+);
 
 
 export interface RaftBatchResult {
   raft: RaftSummaryItem;
   state: ProjectState;
   results: CalcResults;
+  /** The raft being edited in Tab 2 (its state IS currentProject). */
+  isActive?: boolean;
+  /** Per-raft inputs of the active raft that differ from the frozen design. */
+  deviations?: RaftDeviation[];
 }
 
 export interface ProjectStore {
@@ -65,7 +79,7 @@ export interface ProjectStore {
 export const useProjectStore = create<ProjectStore>()(
   persist(
     (set, get) => ({
-      currentProject: HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState,
+      currentProject: HUOI_VANH_START,
       projectList: [
         {
           id: 'huoi-vanh-fpv',
@@ -78,7 +92,7 @@ export const useProjectStore = create<ProjectStore>()(
       ],
       activeRaftId: 1,
       raftsSummary: HUOI_VANH_RAFTS,
-      results: calculateProject(HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState),
+      results: calculateProject(HUOI_VANH_START),
       batchResults: [],
       batchCalculatedAt: null,
 
@@ -288,7 +302,7 @@ export const useProjectStore = create<ProjectStore>()(
       },
 
       resetToHuoiVanh: () => {
-        const huoiVanhState = HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState;
+        const huoiVanhState = HUOI_VANH_START;
         const results = calculateProject(huoiVanhState);
         set({
           currentProject: huoiVanhState,
@@ -338,8 +352,8 @@ export const useProjectStore = create<ProjectStore>()(
         const state = get();
         const defaultAnchor = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
         const batchResults: RaftBatchResult[] = state.raftsSummary.map((raftItem) => {
-          const raftState = buildRaftProjectState(state.currentProject, raftItem, defaultAnchor);
-          return { raft: raftItem, state: raftState, results: calculateProject(raftState) };
+          const r = resolveRaftState(state.currentProject, state.activeRaftId, raftItem, defaultAnchor);
+          return { raft: raftItem, state: r.state, results: calculateProject(r.state), isActive: r.isActive, deviations: r.deviations };
         });
         set({ batchResults, batchCalculatedAt: new Date().toISOString() });
         return batchResults;
@@ -347,8 +361,8 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 8,
-      migrate: (persistedState: any) => {
+      version: 9,
+      migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
             persistedState.currentProject.systemType = 'solar_fpv';
@@ -370,7 +384,8 @@ export const useProjectStore = create<ProjectStore>()(
           if (hasStaleRaft8) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
-              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+              persistedState.currentProject = HUOI_VANH_START;
+              persistedState.activeRaftId = 1;
             }
             if (persistedState.activeRaftId === 8) {
               persistedState.activeRaftId = 1;
@@ -388,7 +403,8 @@ export const useProjectStore = create<ProjectStore>()(
           if (hasStaleRaft13) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
-              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+              persistedState.currentProject = HUOI_VANH_START;
+              persistedState.activeRaftId = 1;
             }
           }
 
@@ -407,7 +423,8 @@ export const useProjectStore = create<ProjectStore>()(
           if (isHuoiVanhList && cachedArea !== v2Area) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
-              persistedState.currentProject = HUOI_VANH_DEFAULT_PROJECT;
+              persistedState.currentProject = HUOI_VANH_START;
+              persistedState.activeRaftId = 1;
             }
           }
 
@@ -420,6 +437,17 @@ export const useProjectStore = create<ProjectStore>()(
             if (!hasDxf || hasOldPdfName || !hasDocx) {
               persistedState.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
+          }
+
+          // v9 (2026-09-30): the multi-raft views now show the ACTIVE raft
+          // from currentProject. Earlier versions could hold the bare default
+          // project under "BÈ 1" (PES-28, 20 lines), which would read as a
+          // trial edit — re-apply the active raft's design values once,
+          // keeping the project-wide inputs the user set.
+          if (version < 9 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId) ?? HUOI_VANH_RAFTS[0];
+            persistedState.activeRaftId = item.id;
+            persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
           }
 
           // Whatever the history, never leave the app pointing at a raft that
@@ -455,3 +483,11 @@ export const useProjectStore = create<ProjectStore>()(
     }
   )
 );
+
+// Every edit in Tab 2 (or a change of the active raft) must reach the
+// multi-raft views: once a batch exists, keep it in step with currentProject.
+useProjectStore.subscribe((s, prev) => {
+  if (s.batchResults.length > 0 && (s.currentProject !== prev.currentProject || s.activeRaftId !== prev.activeRaftId)) {
+    s.calculateAllRafts();
+  }
+});

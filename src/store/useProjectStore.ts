@@ -372,7 +372,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 10,
+      version: 11,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -465,6 +465,11 @@ export const useProjectStore = create<ProjectStore>()(
           // first PA2 draft's stand-alone keys are gone.
           delete persistedState.mooringOption;
           delete persistedState.costInputs;
+
+          // v11 (2026-10-03): default panel tilt adjusted to 12.0°
+          if (version < 11 && persistedState.currentProject?.raft) {
+            persistedState.currentProject.raft.solarTilt_deg = 12.0;
+          }
 
           // Whatever the history, never leave the app pointing at a raft that
           // is not in the list: the selector would render nothing selected.

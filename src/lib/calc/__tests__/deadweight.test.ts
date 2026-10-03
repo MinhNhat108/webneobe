@@ -154,15 +154,16 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.shoreConcrete_m3).toBeCloseTo(shore, 6);
   });
 
-  it('pins the computed quantities: blocks 51–156 t against piles of 2.6–11.7 t, ~6 500 m³ against ~396 m³', () => {
+  it('pins the computed quantities at the 12° tilt: blocks 42–129 t against piles of 2.6–11.7 t, ~5 380 m³ against ~396 m³', () => {
     const c = compare();
-    expect(c.blockMass_t[0]).toBeGreaterThan(50);
-    expect(c.blockMass_t[1]).toBeGreaterThan(150);
-    expect(c.blockMass_t[1]).toBeLessThan(165);
+    expect(c.blockMass_t[0]).toBeGreaterThan(40);
+    expect(c.blockMass_t[0]).toBeLessThan(45);
+    expect(c.blockMass_t[1]).toBeGreaterThan(125);
+    expect(c.blockMass_t[1]).toBeLessThan(135);
     expect(c.bedPileMass_t[1]).toBeLessThan(12);
     expect(c.pa1BedConcrete_m3).toBeCloseTo(396.5, 0);
-    expect(c.pa2BedConcrete_m3).toBeGreaterThan(6000);
-    expect(c.pa2BedConcrete_m3).toBeLessThan(7000);
+    expect(c.pa2BedConcrete_m3).toBeGreaterThan(5000);
+    expect(c.pa2BedConcrete_m3).toBeLessThan(5800);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
     expect(c.pa2BedFootprint_m2).toBeGreaterThan(50 * c.pa1BedFootprint_m2);
     expect(c.allBlocksOk).toBe(true);

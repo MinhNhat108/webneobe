@@ -361,8 +361,8 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     displacement_t: 120.0,
     solarPanelCount: 790,
     solarPanelArea_m2: 2.701,
-    // TCVN 2737:2023 design basis of this project: panel tilt 15°, C_d = 1.15.
-    solarTilt_deg: 15.0,
+    // TCVN 2737:2023 design basis: panel tilt 12.0°, C_d = 1.15.
+    solarTilt_deg: 12.0,
     solarShieldFactor: 0.55,
     cdPanel: 1.15,
     cdFloat: 1.1,

@@ -188,11 +188,11 @@ describe('Blocks that do not fit at the pile layout points', () => {
     expect(hit[0].required_m).toBe(3.5);
   });
 
-  it('reports the overlaps of the Huổi Vanh layout instead of hiding them: 34 pairs, 63 blocks', () => {
+  it('reports the overlaps of the Huổi Vanh layout instead of hiding them: 31 pairs, 59 blocks (12° tilt)', () => {
     const { state, results, batch } = setup('PA2_DEADWEIGHT');
     const s = buildDeadweightSchedule(state, results, batch);
-    expect(s.clashes).toHaveLength(34);
-    expect(s.blocks.filter((b) => b.clashWith.length > 0)).toHaveLength(63);
+    expect(s.clashes).toHaveLength(31);
+    expect(s.blocks.filter((b) => b.clashWith.length > 0)).toHaveLength(59);
     for (const c of s.clashes) {
       const a = s.blocks.find((b) => b.blockId === c.a)!, b = s.blocks.find((x) => x.blockId === c.b)!;
       expect(c.distance_m).toBeCloseTo(Math.hypot(a.x - b.x, a.y - b.y), 9);
@@ -204,11 +204,11 @@ describe('Blocks that do not fit at the pile layout points', () => {
 
   it('says so on the drawing and in the workbook', () => {
     const { out, state, results, batch } = built();
-    expect(out.dxf).toContain('CANH BAO: 34 cap khoi CHONG LAN nhau tren mat bang');
+    expect(out.dxf).toContain('CANH BAO: 31 cap khoi CHONG LAN nhau tren mat bang');
     expect(out.dxf).toContain('CHONG LAN VOI');
     const wb = buildDeadweightScheduleWorkbook(state, results, batch);
     const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeKhoiBeTong, { header: 1 });
-    expect(rows.filter((r) => /^HV-DW\d{3}$/.test(String(r[0])) && r[19] !== '-')).toHaveLength(63);
-    expect(rows.find((r) => String(r[0]).startsWith('Số cặp khối CHỒNG LẤN'))![1]).toBe(34);
+    expect(rows.filter((r) => /^HV-DW\d{3}$/.test(String(r[0])) && r[19] !== '-')).toHaveLength(59);
+    expect(rows.find((r) => String(r[0]).startsWith('Số cặp khối CHỒNG LẤN'))![1]).toBe(31);
   });
 });

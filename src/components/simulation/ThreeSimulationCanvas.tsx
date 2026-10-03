@@ -61,7 +61,7 @@ const fmt = (v: number, d = 2) => v.toFixed(d);
 
 export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationCanvasProps>(
   ({ windParams, layers, waterLevel_m, ifcData, selectedElement, onSelectElement, mooringStates }, ref) => {
-    const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 15);
+    const solarTilt_deg = useProjectStore((s) => s.currentProject.raft.solarTilt_deg ?? 12);
     const shoreArm_e_m = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
     const bed1Stickup_m = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
     // Pile sizes of the raft being edited in Tab 2 (the other 11 keep the design catalogue).

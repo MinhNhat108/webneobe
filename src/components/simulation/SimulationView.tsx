@@ -57,7 +57,7 @@ export const SimulationView: React.FC = () => {
   const [ifcData, setIfcData] = useState<LoadedIfcMetadata | null>(null);
   const currentProject = useProjectStore((s) => s.currentProject);
   const activeRaftId = useProjectStore((s) => s.activeRaftId);
-  const solarTilt_deg = currentProject.raft.solarTilt_deg ?? 15;
+  const solarTilt_deg = currentProject.raft.solarTilt_deg ?? 12;
 
   // The calculation engine, run for the 12 rafts at the chosen wind: one
   // source for the 3D colours, the KPI cards and the inspector panel. The

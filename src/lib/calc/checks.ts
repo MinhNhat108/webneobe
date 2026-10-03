@@ -346,9 +346,21 @@ export function runChecks(
     );
   };
 
+  // PA2: the lake-bed anchors are gravity blocks, so the lake-bed PILE rows
+  // (C11, BP-3..BP-5) do not apply and DW-1..DW-4 take their place.
+  const block = results.bedBlock;
+  const NOT_PILE = 'Không áp dụng (PA2: neo đáy hồ bằng khối bê tông trọng lực, xem DW-1…DW-4).';
+
   if (results.shorePileOpt || results.bedPileOpt) {
     pushPmax('C10', 'Sức chịu tải cho phép của cọc BỜ (P_max)', results.shorePileOpt);
-    pushPmax('C11', 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', results.bedPileOpt);
+    if (block) {
+      checks.push(skipped({
+        id: 'C11', label: 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', formula: 'P_req = T_dây × SF ≤ P_max',
+        unit: 'kN', threshold: '≤ P_max', isMandatory: true
+      }, NOT_PILE));
+    } else {
+      pushPmax('C11', 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', results.bedPileOpt);
+    }
   }
 
   // ---- Broms pile checks --------------------------------------------------
@@ -375,7 +387,46 @@ export function runChecks(
       `M_max = ${sp.Mmax.toFixed(1)} kNm, M_rd = ${sp.Mrd.toFixed(1)} kNm`);
   }
 
-  if (results.bedPile1) {
+  if (block) {
+    for (const [id, label, formula] of [
+      ['BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0'],
+      ['BP-4', 'Sức chịu NHỔ cọc LÒNG HỒ (ma sát thân)', 'Tv / Q_uplift,all ≤ 1.0'],
+      ['BP-5', 'Ứng suất uốn tiết diện cọc LÒNG HỒ', 'M_max / M_rd ≤ 1.0']
+    ] as const) {
+      checks.push(skipped({ id, label, formula, unit: '-', threshold: '≤ 1.0', isMandatory: true }, NOT_PILE));
+    }
+
+    // A safety factor check: utilisation = required / achieved.
+    const p = block.params;
+    const dims = `Khối ${block.L_m.toFixed(2)} × ${block.W_m.toFixed(2)} × ${block.H_m.toFixed(2)} m, W = ${block.mass_t.toFixed(1)} T, W_sub = ${block.weightSub_kN.toFixed(1)} kN`;
+    const pushSf = (id: string, label: string, formula: string, sf: number, req: number, note: string) => {
+      const spec: CheckSpec = { id, label, formula, unit: '-', threshold: `≥ ${req}`, isMandatory: true };
+      if (!(sf > 0)) {
+        checks.push(evaluated(spec, Infinity, '0', 0, note));
+        return;
+      }
+      checks.push(evaluated(spec, req / sf, Number.isFinite(sf) ? sf.toFixed(2) : '∞', Number.isFinite(sf) ? sf : null, note));
+    };
+    pushSf('DW-1', 'Khối bê tông neo đáy — ổn định chống TRƯỢT', 'SF = μ·(W_sub − V) / H', block.sfSlide, p.sfSlide,
+      `μ = ${p.mu}, H = ${block.H_kN.toFixed(1)} kN, V = ${block.V_kN.toFixed(1)} kN. ${dims}`);
+    pushSf('DW-2', 'Khối bê tông neo đáy — ổn định chống NHẤC BỔNG', 'SF = W_sub / V', block.sfUplift, p.sfUplift,
+      `V = ${block.V_kN.toFixed(1)} kN, W_sub = ${block.weightSub_kN.toFixed(1)} kN`);
+    pushSf('DW-3', 'Khối bê tông neo đáy — ổn định chống LẬT', 'SF = (W_sub − V)·(L/2) / (H·h)', block.sfOverturn, p.sfOverturn,
+      'Cáp buộc tại tâm mặt trên khối (cánh tay đòn lật lớn nhất).');
+    const qSpec: CheckSpec = {
+      id: 'DW-4', label: 'Khối bê tông neo đáy — áp lực lên nền bùn đáy hồ',
+      formula: 'q = max(W_sub/A ; áp lực mép khi chịu tải) ≤ q_allow', unit: 'kPa', threshold: `≤ ${p.qAllow_kPa} kPa`, isMandatory: true
+    };
+    checks.push(evaluated(
+      qSpec,
+      block.qContact_kPa / p.qAllow_kPa,
+      Number.isFinite(block.qContact_kPa) ? block.qContact_kPa.toFixed(1) : '∞',
+      Number.isFinite(block.qContact_kPa) ? block.qContact_kPa : null,
+      `Nước lặng: ${block.qStatic_kPa.toFixed(1)} kPa; mép khối khi chịu tải: ${Number.isFinite(block.qEdge_kPa) ? block.qEdge_kPa.toFixed(1) : '∞'} kPa. ` +
+        'q_allow là giá trị giả định, chưa có khảo sát địa chất đáy hồ; chưa tính lún.' +
+        (block.bearingGovernsShape ? ' Khối đã được mở rộng đáy để giảm áp lực nền.' : '')
+    ));
+  } else if (results.bedPile1) {
     const bp1 = results.bedPile1;
     pushPile('BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0', bp1.utilization_H,
       `Th = ${(results.bedCableTh_kN ?? 0).toFixed(1)} kN, H_all = ${bp1.H_allow.toFixed(1)} kN`);

@@ -111,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
     {
       id: 'compare',
       label: '9. So Sánh Phương Án',
-      description: 'PA1 cọc đóng / PA2 khối bê tông',
+      description: 'Kỹ thuật: cọc đóng / khối bê tông',
       icon: Scale
     }
   ];

@@ -27,7 +27,7 @@ import {
   RaftMooringState,
   utilisationColour
 } from './sceneModel';
-import { evaluateDeadweightBlock } from '../../lib/calc/deadweight';
+import { evaluateDeadweightBlock, deadweightOk } from '../../lib/calc/deadweight';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -71,12 +71,10 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const bed1D_m = useProjectStore((s) => s.currentProject.anchor.bed1D_m);
     const bed1L_m = useProjectStore((s) => s.currentProject.anchor.bed1L_m);
     // PA2 (comparison option): the 175 lake-bed anchors are gravity blocks.
-    const mooringOption = useProjectStore((s) => s.mooringOption);
-    const costInputs = useProjectStore((s) => s.costInputs);
     const currentProject = useProjectStore((s) => s.currentProject);
     const blocks = useMemo(
-      () => (mooringOption === 'PA2_DEADWEIGHT' ? buildBlockAnchors(currentProject, activeRaftId, costInputs) : undefined),
-      [mooringOption, currentProject, activeRaftId, costInputs]
+      () => (currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT' ? buildBlockAnchors(currentProject, activeRaftId) : undefined),
+      [currentProject, activeRaftId]
     );
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -455,7 +453,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         list.forEach((p, i) => {
           const st = mooringStates.get(p.raft);
           const u = !st ? NaN
-            : p.block ? blockUtilisation(p.block, st.tension_kN, costInputs)
+            : p.block ? blockUtilisation(p.block, st.tension_kN)
             : kind === 'shore' ? st.shorePileUtil : st.bedPileUtil;
           col.setHex(selectedElement?.id === p.code ? 0xfacc15 : utilisationColour(u));
           mesh.setColorAt(i, col);
@@ -464,7 +462,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       };
       paint(shoreAbove, shorePiles, 'shore');
       paint(bedAbove, bedPiles, 'bed');
-    }, [mooringStates, selectedElement, shorePiles, bedPiles, costInputs]);
+    }, [mooringStates, selectedElement, shorePiles, bedPiles]);
 
     // ------------------------------------------------------------ cables
     useEffect(() => {
@@ -564,8 +562,10 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const describeBlock = (p: PileModel, b: BlockAnchor): SelectedElement => {
       const st = mooringStates.get(p.raft);
       const T = st?.tension_kN ?? 0;
-      const e = evaluateDeadweightBlock(b.block, T, b.cableAngle_deg, costInputs.mu);
-      const ok = e.sfSlide >= costInputs.sfSlide && e.sfUplift >= costInputs.sfUplift;
+      const prm = b.block.params;
+      const e = evaluateDeadweightBlock(b.block, T, b.cableAngle_deg, prm.mu);
+      const ok = deadweightOk(e, prm);
+      const inf = (v: number, d = 2) => (Number.isFinite(v) ? fmt(v, d) : '∞');
       const depth = depthAt(p.x, p.y, waterLevel_m);
       return {
         type: 'pile',
@@ -575,18 +575,19 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           'Tuyến cáp': p.line,
           'Thuộc cụm bè': p.raft,
           'Kích thước L × W × H': `${fmt(b.block.L_m)} × ${fmt(b.block.W_m)} × ${fmt(b.block.H_m)} m`,
-          'Trọng lượng W (trong không khí)': `${fmt(b.block.mass_t, 1)} tấn (${fmt(b.block.volume_m3, 1)} m³)`,
-          'Trọng lượng chìm W_sub': `${fmt(b.block.weightSub_kN, 0)} kN`,
+          'Thể tích bê tông': `${fmt(b.block.volume_m3, 1)} m³ (diện tích đáy ${fmt(b.block.baseArea_m2, 1)} m²)`,
+          'Trọng lượng khô W_air': `${fmt(b.block.mass_t, 1)} tấn (${fmt(b.block.weightAir_kN, 0)} kN)`,
+          'Trọng lượng trong nước W_sub': `${fmt(b.block.weightSub_kN, 0)} kN`,
           'Lực cáp tại vận tốc gió đang chọn': `T = ${fmt(T, 1)} kN, góc ${fmt(b.cableAngle_deg, 1)}° → H = ${fmt(e.H_kN, 1)} kN, V = ${fmt(e.V_kN, 1)} kN`,
-          [`SF trượt (μ = ${costInputs.mu})`]: `${fmt(e.sfSlide, 2)} (yêu cầu ≥ ${costInputs.sfSlide})`,
-          'SF nhấc bổng': `${fmt(e.sfUplift, 2)} (yêu cầu ≥ ${costInputs.sfUplift})`,
-          'SF lật (cáp buộc đỉnh khối)': fmt(e.sfOverturn, 2),
-          'Chi phối khi định cỡ': b.block.governing === 'sliding' ? 'Chống trượt' : 'Chống nhấc bổng',
-          'Số lần cẩu / điểm neo': b.lifts > 1 ? `${b.lifts} (vượt sức nâng cẩu ${costInputs.craneCapacity_t} T, phải chia khối)` : '1',
+          [`DW-1 SF trượt (μ = ${prm.mu})`]: `${inf(e.sfSlide)} (yêu cầu ≥ ${prm.sfSlide})`,
+          'DW-2 SF nhấc bổng': `${inf(e.sfUplift)} (yêu cầu ≥ ${prm.sfUplift})`,
+          'DW-3 SF lật (cáp buộc đỉnh khối)': `${inf(e.sfOverturn)} (yêu cầu ≥ ${prm.sfOverturn})`,
+          'DW-4 Áp lực nền bùn q': `${inf(e.qContact_kPa, 1)} kPa (cho phép ≤ ${prm.qAllow_kPa} kPa)`,
+          'Chi phối khối lượng': b.block.governing === 'sliding' ? 'Chống trượt' : 'Chống nhấc bổng',
           'Cao độ đáy hồ': `${fmt(p.ground_m)} m`,
           'Mực nước tại khối': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
           'Kết luận': ok ? 'ĐẠT' : 'KHÔNG ĐẠT',
-          'Lưu ý': 'Chưa kiểm tra sức chịu tải / lún của bùn đáy hồ dưới khối',
+          'Lưu ý': 'μ và q_allow là giá trị giả định; chưa tính lún của khối trong bùn',
           ...trialNote(st)
         }
       };

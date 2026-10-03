@@ -64,9 +64,9 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - `catenary.ts`: Giải phương trình đường dây xích Catenary.
   - `broms.ts`: Tính toán sức chịu tải cọc theo phương pháp Broms.
   - `checks.ts`: Các kiểm tra an toàn C1..C11 và BP-1..BP-5 (C9 là kiểm tra bắt buộc).
-  - `deadweight.ts`: Phương án 2 (so sánh) — khối bê tông trọng lực thay 175 cọc đáy hồ; kiểm tra trượt (μ = 0,35 giả định) và nhấc bổng, SF ≥ 1,5. Cọc bờ giữ nguyên ở cả hai phương án.
-  - `optionComparison.ts`: `compareMooringOptions()` — khối lượng và chi phí PA1/PA2, TÍNH từ engine (không có con số chốt sẵn). Đơn giá trong `DEFAULT_COST_INPUTS` là GIẢ ĐỊNH sửa được, không phải định mức. Kết quả hiện tại: khối 52–158 tấn/điểm neo, ~6.550 m³ bê tông so với ~396 m³ cọc đáy.
-- `mooringOption` trong store (`PA1_PILE` mặc định / `PA2_DEADWEIGHT`): chỉ đổi cách vẽ 175 neo đáy trên 3D và bảng so sánh (Mục 9, báo cáo). Bảng kiểm tra, bảng cọc, Excel và CAD luôn là PA1.
+  - `deadweight.ts`: Phương án 2 — khối bê tông trọng lực thay 175 cọc đáy hồ (cọc bờ giữ nguyên). Định cỡ theo DW-1 trượt, DW-2 nhấc bổng, DW-3 lật, DW-4 áp lực nền bùn (q = max của nước lặng và áp lực mép khi chịu tải). Mặc định μ = 0,35; SF = 1,5; q_allow = 40 kPa; ρ_c = 2,4 — đều là GIẢ ĐỊNH, chưa có khảo sát đáy hồ. Khối lượng làm tròn lên 0,5 T, kích thước làm tròn lên 0,05 m.
+  - `technicalComparison.ts`: `compareMooringOptions()` — so sánh KỸ THUẬT thuần túy PA1/PA2 (kích thước, trọng lượng, thể tích bê tông, diện tích chiếm đáy, hệ số an toàn). KHÔNG có tiền tệ / đơn giá (yêu cầu của người dùng 2026-10-03). Kết quả hiện tại: khối 51–156 tấn, đáy 3,35–5,5 m, ~6.530 m³ so với ~396 m³ cọc đáy.
+- Phương án neo đáy nằm TRONG dự án: `anchor.bedAnchorOption` (`PA1_PILE` mặc định / `PA2_DEADWEIGHT`) và `anchor.deadweight`. Ở PA2, `calculateProject` trả `bedBlock`, các dòng cọc đáy (C11, BP-3..BP-5) thành "Không áp dụng" và DW-1..DW-4 thay thế; BP-1, BP-2 (cọc bờ) giữ nguyên. Tab 4, báo cáo, 3D, bảng 12 bè và Excel tổng hợp đi theo. Bảng thống kê cọc và DXF vẫn liệt kê cọc đáy PA1.
 - `src/components/simulation/`: Mô phỏng 3D WebGL Three.js (Mục 8 trên Web):
   - `ThreeSimulationCanvas.tsx`: Canvas WebGL, địa hình IFC, hạt gió 3D, mực nước động.
   - `SimulationControls.tsx`: Bảng điều khiển vận tốc gió, góc phương vị, thanh trượt mực nước.
@@ -74,6 +74,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 148 tests tại 2026-10-03).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 153 tests tại 2026-10-03).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

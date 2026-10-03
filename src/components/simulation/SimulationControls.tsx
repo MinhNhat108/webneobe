@@ -125,7 +125,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   const shoreArm = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
   const bedStickup = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
   const piles = useMemo(() => buildPileModels({ shoreArm_e_m: shoreArm, bed1Stickup_m: bedStickup }), [shoreArm, bedStickup]);
-  const isPa2 = useProjectStore((s) => s.mooringOption) === 'PA2_DEADWEIGHT';
+  const isPa2 = useProjectStore((s) => s.currentProject.anchor.bedAnchorOption) === 'PA2_DEADWEIGHT';
   const floodedShoreHeads = piles.filter((p) => p.type === 'SHORE' && p.head_m < waterLevel_m).length;
   const dryBedPiles = piles.filter((p) => p.type === 'BED' && p.ground_m >= waterLevel_m).map((p) => p.code);
   const agroundRafts = RAFT_MODELS.filter((r) => raftWaterline(r, waterLevel_m).aground).map((r) => r.name);
@@ -243,7 +243,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
         <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Mặt bằng thiết kế:</span>
         <span className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-600 text-white shadow-sm">
           {isPa2
-            ? '12 cụm bè · 90.724 m² · PA2 (so sánh): 129 cọc bờ + 175 khối bê tông neo đáy'
+            ? '12 cụm bè · 90.724 m² · PA2: 129 cọc bờ + 175 khối bê tông neo đáy'
             : '12 cụm bè · 90.724 m² · 304 cọc (129 bờ + 175 đáy)'}
         </span>
       </div>

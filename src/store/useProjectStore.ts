@@ -4,7 +4,8 @@ import { ProjectState, CalcResults, RaftInput, EnvInput, LineInput, AnchorInput,
 import { calculateProject } from '../lib/calc';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../data/huoiVanhProject';
 import { buildRaftProjectState, resolveRaftState, RaftDeviation } from '../lib/calc/raftState';
-import { CostInputs, DEFAULT_COST_INPUTS, MooringOption } from '../lib/calc/optionComparison';
+import type { MooringOption } from '../lib/calc/technicalComparison';
+import type { DeadweightParams } from '../lib/calc/deadweight';
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
 /**
@@ -41,13 +42,11 @@ export interface ProjectStore {
   // Calculation results
   results: CalcResults;
 
-  // Lake-bed anchoring option shown across the app: PA1 = driven piles (the
-  // design), PA2 = gravity blocks (comparison only). Shore anchors are piles in both.
-  mooringOption: MooringOption;
-  /** Editable assumptions of the PA1 / PA2 cost comparison. */
-  costInputs: CostInputs;
+  // Lake-bed anchoring option: PA1 = driven piles (the design), PA2 = gravity
+  // blocks. It lives IN the project (`anchor.bedAnchorOption`, `anchor.deadweight`)
+  // so the engine, the checks, the report and the 3D view all follow it.
   setMooringOption: (option: MooringOption) => void;
-  updateCostInputs: (inputs: Partial<CostInputs>) => void;
+  updateDeadweightParams: (params: Partial<DeadweightParams>) => void;
 
   // Batch calculation across all rafts in raftsSummary — populated by
   // calculateAllRafts(), consumed by RaftsOverviewTable and the Master Excel export.
@@ -104,10 +103,9 @@ export const useProjectStore = create<ProjectStore>()(
       results: calculateProject(HUOI_VANH_START),
       batchResults: [],
       batchCalculatedAt: null,
-      mooringOption: 'PA1_PILE',
-      costInputs: DEFAULT_COST_INPUTS,
-      setMooringOption: (mooringOption) => set({ mooringOption }),
-      updateCostInputs: (inputs) => set({ costInputs: { ...get().costInputs, ...inputs } }),
+      setMooringOption: (option) => get().updateAnchor({ bedAnchorOption: option }),
+      updateDeadweightParams: (params) =>
+        get().updateAnchor({ deadweight: { ...(get().currentProject.anchor.deadweight ?? {}), ...params } }),
 
       updateMeta: (meta) => {
         const current = get().currentProject;
@@ -374,7 +372,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 9,
+      version: 10,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -463,6 +461,11 @@ export const useProjectStore = create<ProjectStore>()(
             persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
           }
 
+          // v10 (2026-10-03): the anchoring option moved into the project and the
+          // first PA2 draft's stand-alone keys are gone.
+          delete persistedState.mooringOption;
+          delete persistedState.costInputs;
+
           // Whatever the history, never leave the app pointing at a raft that
           // is not in the list: the selector would render nothing selected.
           if (Array.isArray(persistedState.raftsSummary)
@@ -491,9 +494,7 @@ export const useProjectStore = create<ProjectStore>()(
         currentProject: state.currentProject,
         projectList: state.projectList,
         activeRaftId: state.activeRaftId,
-        raftsSummary: state.raftsSummary,
-        mooringOption: state.mooringOption,
-        costInputs: state.costInputs
+        raftsSummary: state.raftsSummary
       })
     }
   )

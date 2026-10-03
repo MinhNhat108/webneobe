@@ -36,7 +36,7 @@ import { HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT, RaftSummaryItem, MooringCoo
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2, RaftPolygonV2 } from '../../data/huoiVanhLayout';
 import { calculateProject } from '../../lib/calc';
 import { resolveRaftState, type RaftDeviation } from '../../lib/calc/raftState';
-import { compareMooringOptions, type CostInputs } from '../../lib/calc/optionComparison';
+import { compareMooringOptions } from '../../lib/calc/technicalComparison';
 import { evaluateDeadweightBlock, type DeadweightResult } from '../../lib/calc/deadweight';
 import type { ProjectState } from '../../lib/calc/types';
 
@@ -295,20 +295,23 @@ export interface PileModel {
 export interface BlockAnchor {
   block: DeadweightResult;
   cableAngle_deg: number;
-  /** Units the block is split into for the floating crane. */
-  lifts: number;
 }
 
-/** PA2 blocks per raft name, from the same comparison the cost table uses. */
-export function buildBlockAnchors(base: ProjectState, activeRaftId: number, costs: CostInputs): Map<string, BlockAnchor> {
-  const cmp = compareMooringOptions(base, activeRaftId, HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT.anchor as ProjectState['anchor'], costs);
-  return new Map(cmp.rows.map((r) => [r.name, { block: r.block, cableAngle_deg: r.bedCableAngle_deg, lifts: r.liftsPerBlock }]));
+/** PA2 blocks per raft name, from the same comparison the technical table uses. */
+export function buildBlockAnchors(base: ProjectState, activeRaftId: number): Map<string, BlockAnchor> {
+  const cmp = compareMooringOptions(base, activeRaftId, HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT.anchor as ProjectState['anchor']);
+  return new Map(cmp.rows.map((r) => [r.name, { block: r.block, cableAngle_deg: r.bedCableAngle_deg }]));
 }
 
-/** Block utilisation at a given line tension: the worse of sliding and uplift against their required SF. */
-export function blockUtilisation(b: BlockAnchor, tension_kN: number, costs: CostInputs): number {
-  const e = evaluateDeadweightBlock(b.block, tension_kN, b.cableAngle_deg, costs.mu);
-  return Math.max(costs.sfSlide / e.sfSlide, costs.sfUplift / e.sfUplift);
+/**
+ * Block utilisation at a given line tension: the worst of sliding, uplift,
+ * overturning (required SF / achieved SF) and mud pressure (q / q_allow).
+ */
+export function blockUtilisation(b: BlockAnchor, tension_kN: number): number {
+  const p = b.block.params;
+  const e = evaluateDeadweightBlock(b.block, tension_kN, b.cableAngle_deg, p.mu);
+  const sf = (req: number, got: number) => (got > 0 ? req / got : Infinity);
+  return Math.max(sf(p.sfSlide, e.sfSlide), sf(p.sfUplift, e.sfUplift), sf(p.sfOverturn, e.sfOverturn), e.qContact_kPa / p.qAllow_kPa);
 }
 
 interface PileFileRow { code: string; line: string; raft: string; type: 'SHORE' | 'BED'; shape: string; x: number; y: number }
@@ -446,7 +449,8 @@ export function computeRaftMooringStates(
       cableUtil: r.cableUtilization ?? r.mbl_required_kN / s.line.mbl_kN,
       safetyFactor: s.line.mbl_kN / r.t_max_intact_kN,
       shorePileUtil: sp ? Math.max(sp.utilization_H, sp.utilization_M) : 0,
-      bedPileUtil: bp ? Math.max(bp.utilization_H, bp.utilization_M, bp.utilization_Uplift ?? 0) : 0,
+      // PA2: the lake-bed anchor is a block; its piles are not checked.
+      bedPileUtil: r.bedBlock ? 0 : bp ? Math.max(bp.utilization_H, bp.utilization_M, bp.utilization_Uplift ?? 0) : 0,
       verdict: r.overallVerdict,
       isActive: resolved.isActive,
       deviations: resolved.deviations

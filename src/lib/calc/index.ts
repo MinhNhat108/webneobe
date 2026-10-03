@@ -5,6 +5,7 @@ import { calculateAnchor } from './anchor';
 import { calculateBromsPile } from './broms';
 import { optimizePileEmbedment, pileAllowableTension } from './pileOptimizer';
 import { runChecks } from './checks';
+import { sizeDeadweightBlock, DEADWEIGHT_DEFAULTS, type DeadweightResult } from './deadweight';
 import { round, roundOrNull } from './constants';
 
 export * from './types';
@@ -204,6 +205,18 @@ export function calculateProject(state: ProjectState): CalcResults {
     });
   }
 
+  // ---- PA2: gravity block at the lake-bed anchors, loaded by the same T and
+  // cable angle as the lake-bed pile it replaces.
+  let bedBlock: DeadweightResult | undefined;
+  if (state.anchor.bedAnchorOption === 'PA2_DEADWEIGHT' && bedCableAngle_deg !== undefined) {
+    bedBlock = sizeDeadweightBlock({
+      tension_kN: loads.t_max_intact_kN,
+      cableAngle_deg: bedCableAngle_deg,
+      ...DEADWEIGHT_DEFAULTS,
+      ...(state.anchor.deadweight ?? {})
+    });
+  }
+
   // ---- C8 / C9 geometry: bed clearance and average line spacing ---------
   // P_bè: the measured outline perimeter when the raft catalogue supplies it
   // (C9 as specified: s_avg = P_bè / N_dây), else the bounding rectangle.
@@ -234,6 +247,7 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedPileOpt,
     shorePileCapacity,
     bedPileCapacity,
+    bedBlock,
     bedClearance_m,
     avgLineSpacing_m
   };

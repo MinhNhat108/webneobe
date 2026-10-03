@@ -201,7 +201,53 @@ export const ReportView: React.FC = () => {
                   </tr>
                 </>
               )}
-              {results.bedPile1 && (
+              {results.bedBlock && (
+                <>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Neo đáy hồ PA2: lực ngang H / lực đứng V tại khối</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.H_kN.toFixed(1)} / {results.bedBlock.V_kN.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">H = T_max·cos α, V = T_max·sin α, α = {results.bedCableAngle_deg}° (tuyến cáp đáy ngắn nhất)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Khối bê tông L × W × H</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.L_m.toFixed(2)} × {results.bedBlock.W_m.toFixed(2)} × {results.bedBlock.H_m.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">m</td>
+                    <td className="p-2">Diện tích đáy {results.bedBlock.baseArea_m2.toFixed(1)} m², thể tích {results.bedBlock.volume_m3.toFixed(1)} m³{results.bedBlock.bearingGovernsShape ? ' (đáy mở rộng theo áp lực nền)' : ''}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Trọng lượng khô W_air / trong nước W_sub</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.weightAir_kN.toFixed(0)} / {results.bedBlock.weightSub_kN.toFixed(0)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">W_air = {results.bedBlock.mass_t.toFixed(1)} tấn; W_sub = W_air·(1 − 1/{results.bedBlock.params.rhoConcrete_tm3})</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">DW-1 Chống trượt: SF = μ·(W_sub − V)/H</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.sfSlide.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">μ = {results.bedBlock.params.mu}, yêu cầu ≥ {results.bedBlock.params.sfSlide}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">DW-2 Chống nhấc bổng: SF = W_sub/V</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.sfUplift.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">Yêu cầu ≥ {results.bedBlock.params.sfUplift}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">DW-3 Chống lật: SF = (W_sub − V)·(L/2)/(H·h)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.sfOverturn.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">Cáp buộc tâm mặt trên khối, yêu cầu ≥ {results.bedBlock.params.sfOverturn}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">DW-4 Áp lực nền bùn q</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.qContact_kPa.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kPa</td>
+                    <td className="p-2">Nước lặng {results.bedBlock.qStatic_kPa.toFixed(1)} / mép khi chịu tải {results.bedBlock.qEdge_kPa.toFixed(1)}; cho phép ≤ {results.bedBlock.params.qAllow_kPa} kPa (giả định)</td>
+                  </tr>
+                </>
+              )}
+              {!results.bedBlock && results.bedPile1 && (
                 <tr>
                   <td className="p-2 border-r border-slate-200 font-sans">Sức chịu cọc LÒNG HỒ (H_all / Tv_all)</td>
                   <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedPile1.H_allow} / {results.bedPile1.upliftCapacity_all}</td>
@@ -257,11 +303,11 @@ export const ReportView: React.FC = () => {
           </table>
         </div>
 
-        {/* Economic / technical comparison of the two lake-bed anchoring options (whole project) */}
+        {/* Technical comparison of the two lake-bed anchoring options (whole project) */}
         {isSolar && (
           <div className="space-y-1">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
-              So sánh kinh tế – kỹ thuật hai phương án neo đáy hồ (toàn dự án, 12 cụm bè)
+              So sánh kỹ thuật hai phương án neo đáy hồ (toàn dự án, 12 cụm bè)
             </h2>
             <OptionComparisonView compact />
           </div>

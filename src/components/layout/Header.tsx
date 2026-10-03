@@ -23,7 +23,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGoToCompare, onGoToGuide, onLock }) => {
-  const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts, mooringOption, setMooringOption } = useProjectStore();
+  const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts, setMooringOption } = useProjectStore();
+  const mooringOption = currentProject.anchor.bedAnchorOption ?? 'PA1_PILE';
 
   const handleExportExcel = () => {
     // The Master sheet and per-raft detailed checks need batch data — compute
@@ -159,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
         </div>
       </div>
 
-      {/* Lake-bed anchoring option. PA1 is the design; PA2 is shown for comparison only. */}
+      {/* Lake-bed anchoring option. PA1 is the design; PA2 replaces the lake-bed piles with gravity blocks. */}
       <div className="border-t border-slate-800 bg-slate-950/60">
         <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex flex-wrap items-center gap-2 text-xs">
           <span className="text-slate-400">Phương án neo đáy hồ:</span>
@@ -183,16 +184,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            🟡 Phương án 2: Khối bê tông neo đáy (so sánh)
+            🟡 Phương án 2: Khối bê tông neo đáy
           </button>
           {mooringOption === 'PA2_DEADWEIGHT' && (
             <span className="text-amber-300">
-              Mô phỏng 3D đang vẽ 175 khối bê tông. Bảng kiểm tra, bảng cọc, Excel và CAD vẫn là PA1.
+              Đang tính 175 neo đáy bằng khối bê tông (DW-1…DW-4). Bảng thống kê cọc và bản vẽ CAD vẫn liệt kê cọc đáy của PA1.
             </span>
           )}
           {onGoToCompare && (
             <button type="button" onClick={onGoToCompare} className="ml-auto text-brand-300 hover:text-brand-200 underline">
-              Xem bảng so sánh
+              Xem so sánh kỹ thuật
             </button>
           )}
         </div>

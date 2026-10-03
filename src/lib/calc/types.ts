@@ -117,6 +117,14 @@ export interface LineInput {
 
 export interface AnchorInput {
   mode: 'pile' | 'drag' | 'deadweight';
+  /**
+   * Lake-bed anchoring option. PA1 (default): driven square RC piles, checked
+   * by Broms BP-3..BP-5. PA2: gravity blocks on the bed, checked by DW-1..DW-4.
+   * Shore anchors are piles (BP-1, BP-2) in both.
+   */
+  bedAnchorOption?: 'PA1_PILE' | 'PA2_DEADWEIGHT';
+  /** PA2 block parameters (friction, safety factors, allowable mud pressure, concrete density). */
+  deadweight?: Partial<import('./deadweight').DeadweightParams>;
   pileBedType?: 'method1' | 'method2';
   soilShore?: 'clay' | 'mud' | 'sand' | 'rock';
   soilBed?: 'clay' | 'mud' | 'sand' | 'rock';
@@ -428,6 +436,8 @@ export interface CalcResults {
    */
   shorePileCapacity?: PileCapacityBreakdown;
   bedPileCapacity?: PileCapacityBreakdown;
+  /** PA2 only: the gravity block sized for this raft's lake-bed anchors. */
+  bedBlock?: import('./deadweight').DeadweightResult;
 
   // C8 / C9 geometry
   /** Clearance between raft draft and the lake bed, m (C8). */

@@ -275,6 +275,7 @@ export function exportProjectToExcel(
       'X (m)',
       'Y (m)',
       'Z (m)',
+      'SỐ CỌC',
       'a (m)',
       'L_opt (m)',
       'L_tk (m)',
@@ -294,6 +295,7 @@ export function exportProjectToExcel(
       Number(r.x.toFixed(2)),
       Number(r.y.toFixed(2)),
       Number(r.z.toFixed(2)),
+      r.pileCount,
       Number(r.D_m.toFixed(2)),
       r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
       Number(r.Linput_m.toFixed(2)),
@@ -363,7 +365,7 @@ export function buildPileScheduleWorkbook(
     [`BẢNG THỐNG KÊ CỌC NEO - ${code}`],
     [`Dự án: ${name}`],
     [
-      `Tổng số cọc: ${schedule.length} (cọc VUÔNG BTCT, a = cạnh tiết diện)  |  L_opt: chiều sâu ngàm TỐI THIỂU theo Broms (tham khảo)  |  ` +
+      `Tổng số điểm neo: ${schedule.length}, tổng số cọc: ${schedule.reduce((s, r) => s + r.pileCount, 0)} (cọc VUÔNG BTCT, a = cạnh tiết diện; SỐ CỌC = số cọc tại điểm neo, các cột lực tính cho MỘT cọc)  |  L_opt: chiều sâu ngàm TỐI THIỂU theo Broms (tham khảo)  |  ` +
         `L_tk: chiều sâu ĐÓNG CỌC theo thiết kế  |  P_max: sức chịu tải cho phép của cọc TẠI L_tk  |  P_req = T_max × SF`
     ],
     [''],
@@ -375,6 +377,7 @@ export function buildPileScheduleWorkbook(
       'X (m)',
       'Y (m)',
       'Z (m)',
+      'SỐ CỌC',
       'a (m)',
       'L_opt (m)',
       'L_tk (m)',
@@ -394,6 +397,7 @@ export function buildPileScheduleWorkbook(
       Number(r.x.toFixed(2)),
       Number(r.y.toFixed(2)),
       Number(r.z.toFixed(2)),
+      r.pileCount,
       Number(r.D_m.toFixed(2)),
       r.Lopt_m !== null ? Number(r.Lopt_m.toFixed(2)) : 'KHÔNG ĐẠT',
       Number(r.Linput_m.toFixed(2)),
@@ -430,21 +434,27 @@ export function buildPileScheduleWorkbook(
   const bedLtkLabel = depthLabel(bedPiles);
 
   rows.push(['TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN']);
-  rows.push(['Tổng số điểm cọc neo', schedule.length, 'cọc', '100%']);
+  rows.push(['Tổng số điểm neo', schedule.length, 'điểm', '100%']);
   rows.push([
-    'Số lượng cọc neo bờ (BỜ)',
-    shorePiles.length,
+    'Tổng số CỌC (điểm neo cọc đôi tính 2 cọc)',
+    schedule.reduce((s, r) => s + r.pileCount, 0),
     'cọc',
+    'SỐ CỌC > 1: cụm cọc đặt cạnh nhau vuông góc phương cáp, cách nhau ≥ 3a, chung đài / bích neo; P_req và P_max tính cho MỘT cọc.'
+  ]);
+  rows.push([
+    'Số điểm neo bờ (BỜ)',
+    shorePiles.length,
+    'điểm',
     `${((shorePiles.length / schedule.length) * 100).toFixed(1)}%`
   ]);
   rows.push([
-    'Số lượng cọc neo lòng hồ (ĐÁY HỒ)',
+    'Số điểm neo lòng hồ (ĐÁY HỒ)',
     bedPiles.length,
-    'cọc',
+    'điểm',
     `${((bedPiles.length / schedule.length) * 100).toFixed(1)}%`
   ]);
   rows.push([
-    'Số cọc ĐẠT sức chịu tải (P_req ≤ P_max)',
+    'Số điểm neo ĐẠT sức chịu tải (P_req ≤ P_max, tính cho một cọc)',
     passedPiles.length,
     'cọc',
     `${((passedPiles.length / schedule.length) * 100).toFixed(1)}%`
@@ -479,6 +489,7 @@ export function buildPileScheduleWorkbook(
     { wch: 12 }, // X (m)
     { wch: 12 }, // Y (m)
     { wch: 12 }, // Z (m)
+    { wch: 8 }, // SỐ CỌC — piles at the anchor point
     { wch: 10 }, // a (m) — side of the square pile
     { wch: 12 }, // L_opt (m)
     { wch: 11 }, // L_tk (m)

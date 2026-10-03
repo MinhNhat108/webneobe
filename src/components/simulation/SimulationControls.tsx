@@ -244,7 +244,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
         <span className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-600 text-white shadow-sm">
           {isPa2
             ? '12 cụm bè · 90.724 m² · PA2: 129 cọc bờ + 175 khối bê tông neo đáy'
-            : '12 cụm bè · 90.724 m² · 304 cọc (129 bờ + 175 đáy)'}
+            : '12 cụm bè · 90.724 m² · 304 điểm neo (129 bờ + 175 đáy) · 343 cọc 350×350 (BÈ 5 cọc đôi)'}
         </span>
       </div>
 

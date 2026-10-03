@@ -170,8 +170,8 @@ describe('Cable and pile colours come from the calculation engine', () => {
       expect(st.tension_kN).toBe(r.t_max_intact_kN);
       expect(st.safetyFactor).toBeCloseTo(st.mbl_kN / st.tension_kN, 9);
       expect(st.verdict).toBe(r.overallVerdict);
-      // 350 mm piles: every raft passes except BÈ 5, whose shore pile fails in bending.
-      expect(st.verdict, item.name).toBe(item.name === 'BÈ 5' ? 'FAIL' : 'PASS');
+      // 350 mm piles everywhere; BÈ 5 passes with its twin piles.
+      expect(st.verdict, item.name).toBe('PASS');
     }
   });
 

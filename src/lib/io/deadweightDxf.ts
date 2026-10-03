@@ -39,6 +39,7 @@ const SHORE_COLUMNS: Column<PileScheduleRow>[] = [
   { title: 'X (m)', width: 12, value: (r) => r.x.toFixed(2) },
   { title: 'Y (m)', width: 12, value: (r) => r.y.toFixed(2) },
   { title: 'Z (m)', width: 10, value: (r) => r.z.toFixed(2) },
+  { title: 'SO COC', width: 8, value: (r) => String(r.pileCount) },
   { title: 'CANH a (m)', width: 12, value: (r) => r.D_m.toFixed(2) },
   { title: 'L_opt (m)', width: 11, value: (r) => (r.Lopt_m === null ? 'KHONG DAT' : r.Lopt_m.toFixed(2)) },
   { title: 'L_tk (m)', width: 10, value: (r) => r.Linput_m.toFixed(2) },
@@ -235,10 +236,25 @@ export function buildMooringDeadweightDxf(
   for (const r of schedule.shorePiles) {
     const p = { x: r.x, y: r.y };
     e += line(L.shoreLine.name, { x: r.xRaft, y: r.yRaft }, p);
-    e += square(L.shorePile.name, p, r.D_m);
+    if (r.pileCount > 1) {
+      // Twin piles: side by side ACROSS the cable, 3 pile widths centre to centre.
+      const dx = p.x - r.xRaft, dy = p.y - r.yRaft, len = Math.hypot(dx, dy) || 1;
+      const nx = -dy / len, ny = dx / len;
+      for (let k = 0; k < r.pileCount; k++) {
+        const off = (k - (r.pileCount - 1) / 2) * 3 * r.D_m;
+        e += square(L.shorePile.name, { x: p.x + nx * off, y: p.y + ny * off }, r.D_m);
+      }
+    } else {
+      e += square(L.shorePile.name, p, r.D_m);
+    }
     e += circle(L.shorePile.name, p, shoreR);
     e += point(L.shorePile.name, p);
-    e += text(L.text.name, { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 }, h, `${r.pileId} (${r.code})`);
+    e += text(
+      L.text.name,
+      { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 },
+      h,
+      `${r.pileId} (${r.code})${r.pileCount > 1 ? ` ${r.pileCount}x(${Math.round(r.D_m * 1000)}x${Math.round(r.D_m * 1000)})` : ''}`
+    );
   }
 
   // Lake-bed blocks at true plan size L × W, with an X to tell them from piles.

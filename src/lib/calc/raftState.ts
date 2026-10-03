@@ -59,7 +59,9 @@ export function buildRaftProjectState(
       shoreRebarDia_mm: raftItem.shoreRebarDia_mm ?? defaultAnchor.shoreRebarDia_mm,
       bedRebarFaceCount: raftItem.bedRebarFaceCount ?? defaultAnchor.bedRebarFaceCount,
       bedRebarDia_mm: raftItem.bedRebarDia_mm ?? defaultAnchor.bedRebarDia_mm,
-      pileRebarRs_MPa: raftItem.pileRebarRs_MPa ?? defaultAnchor.pileRebarRs_MPa
+      pileRebarRs_MPa: raftItem.pileRebarRs_MPa ?? defaultAnchor.pileRebarRs_MPa,
+      shorePilesPerPoint: raftItem.shorePilesPerPoint ?? 1,
+      bedPilesPerPoint: raftItem.bedPilesPerPoint ?? 1
     }
   };
 }
@@ -94,7 +96,9 @@ const RAFT_SPECIFIC_FIELDS: Array<[Section, string, string]> = [
   ['anchor', 'shoreRebarDia_mm', 'Đường kính thép cọc bờ (mm)'],
   ['anchor', 'bedRebarFaceCount', 'Số thanh thép / mặt cọc đáy'],
   ['anchor', 'bedRebarDia_mm', 'Đường kính thép cọc đáy (mm)'],
-  ['anchor', 'pileRebarRs_MPa', 'Rs thép cọc (MPa)']
+  ['anchor', 'pileRebarRs_MPa', 'Rs thép cọc (MPa)'],
+  ['anchor', 'shorePilesPerPoint', 'Số cọc / điểm neo bờ'],
+  ['anchor', 'bedPilesPerPoint', 'Số cọc / điểm neo đáy']
 ];
 
 /**

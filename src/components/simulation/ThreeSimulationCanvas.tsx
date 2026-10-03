@@ -605,7 +605,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         data: {
           'Tuyến cáp': p.line,
           'Thuộc cụm bè': p.raft,
-          'Tiết diện': `Vuông BTCT ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} mm`,
+          'Tiết diện': `${p.pilesAtPoint > 1 ? `Cụm ${p.pilesAtPoint} cọc vuông BTCT` : 'Vuông BTCT'} ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} mm${p.pilesAtPoint > 1 ? ' (đặt cạnh nhau, vẽ một cọc đại diện)' : ''}`,
           'Chiều sâu ngàm L_tk': `${fmt(p.embed_m)} m`,
           'Đoạn nhô khỏi nền': `${fmt(p.stickup_m)} m`,
           'Cao độ mặt đất': `${fmt(p.ground_m)} m`,

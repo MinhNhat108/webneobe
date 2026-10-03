@@ -450,12 +450,40 @@ describe('Full project', () => {
       if (failed.length > 0) {
         console.log(`Raft ${raft.id} (${raft.name}) FAILED:`, failed.map((c: any) => `${c.id} (${c.label}) actual: ${c.displayActual}, thresh: ${c.threshold}`));
       }
-      // 350 x 350 mm piles only (owner's instruction): BÈ 5 fails BP-2, the rest pass.
-      if (raft.name === 'BÈ 5') {
-        expect(failed.map((c: any) => c.id)).toEqual(['BP-2']);
-      } else {
-        expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
-      }
+      // 350 x 350 mm piles only (owner's instruction); BÈ 5 has twin piles at each point.
+      expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
+      expect(s.anchor.shoreD_m, raft.name).toBe(0.35);
+      expect(s.anchor.bed1D_m, raft.name).toBe(0.35);
+    }
+  });
+
+  it('twin piles: each pile of a 2-pile point is checked for T / (2 x 0.9); one pile takes the whole tension', () => {
+    const be5 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 5')!;
+    const s = buildRaftProjectState(base(), be5, base().anchor);
+    expect(s.anchor.shorePilesPerPoint).toBe(2);
+    expect(s.anchor.bedPilesPerPoint).toBe(2);
+    const twin = calculateProject(s);
+    expect(twin.shorePileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
+    expect(twin.bedPileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
+    expect(twin.overallVerdict).toBe('PASS');
+
+    // The same piles, one per point: the shore pile is over in bending — the reason for the twin piles.
+    const single = calculateProject({ ...s, anchor: { ...s.anchor, shorePilesPerPoint: 1, bedPilesPerPoint: 1 } });
+    expect(single.shorePileTension_kN).toBe(single.t_max_intact_kN);
+    expect(single.t_max_intact_kN).toBe(twin.t_max_intact_kN); // the line tension does not depend on the anchor
+    expect(single.shorePile!.Mmax).toBeGreaterThan(twin.shorePile!.Mmax);
+    expect(single.checks.find((c) => c.id === 'BP-2')!.status).toBe('FAIL');
+    expect(single.overallVerdict).toBe('FAIL');
+
+    // A less efficient group loads each pile more.
+    const weak = calculateProject({ ...s, anchor: { ...s.anchor, pileGroupEfficiency: 0.7 } });
+    expect(weak.shorePileTension_kN!).toBeGreaterThan(twin.shorePileTension_kN!);
+
+    // The other 11 rafts have one pile per point.
+    for (const raft of HUOI_VANH_RAFTS.filter((r) => r.name !== 'BÈ 5')) {
+      const r = calculateProject(buildRaftProjectState(base(), raft, base().anchor));
+      expect(r.shorePileTension_kN, raft.name).toBe(r.t_max_intact_kN);
+      expect(r.bedPileTension_kN, raft.name).toBe(r.t_max_intact_kN);
     }
   });
 });

@@ -408,6 +408,37 @@ export const AnchorForm: React.FC = () => {
               />
             </div>
 
+            {/* Piles per anchor point (twin piles) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+              <NumberField
+                label="Số cọc tại mỗi điểm neo BỜ"
+                value={anchor.shorePilesPerPoint ?? 1}
+                onChange={(val) => updateAnchor({ shorePilesPerPoint: val })}
+                unit="cọc"
+                step={1}
+                min={1}
+                helpText="2 = cọc đôi đặt cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3a"
+              />
+              <NumberField
+                label="Số cọc tại mỗi điểm neo ĐÁY"
+                value={anchor.bedPilesPerPoint ?? 1}
+                onChange={(val) => updateAnchor({ bedPilesPerPoint: val })}
+                unit="cọc"
+                step={1}
+                min={1}
+                helpText="2 = cọc đôi chung đài / bích neo"
+              />
+              <NumberField
+                label="Hệ số làm việc nhóm cọc"
+                value={anchor.pileGroupEfficiency ?? 0.9}
+                onChange={(val) => updateAnchor({ pileGroupEfficiency: val })}
+                unit="-"
+                step={0.05}
+                min={0.5}
+                helpText="Mỗi cọc trong cụm n cọc kiểm tra với T / (n × hệ số). Chỉ dùng khi n > 1"
+              />
+            </div>
+
             {/* Reinforcement and bending check shared by both pile types (TCVN 5574:2018) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
               <NumberField

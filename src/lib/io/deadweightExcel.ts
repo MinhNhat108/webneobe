@@ -27,17 +27,17 @@ export function buildDeadweightScheduleWorkbook(
     [`Dự án: ${name}`],
     ['Cọc vuông BTCT, a = cạnh tiết diện | L_opt: chiều sâu ngàm tối thiểu theo Broms | L_tk: chiều sâu đóng cọc thiết kế | P_max: sức chịu tải cho phép tại L_tk. Mã cọc giữ nguyên theo bảng Phương án 1.'],
     [''],
-    ['MÃ CỌC', 'KÝ HIỆU KS', 'CỤM BÈ', 'X (m)', 'Y (m)', 'Z (m)', 'CẠNH a (m)', 'L_opt (m)', 'L_tk (m)', 'T_max (kN)', 'P_max (kN)', 'KẾT LUẬN']
+    ['MÃ CỌC', 'KÝ HIỆU KS', 'CỤM BÈ', 'X (m)', 'Y (m)', 'Z (m)', 'SỐ CỌC', 'CẠNH a (m)', 'L_opt (m)', 'L_tk (m)', 'T_max (kN)', 'P_max (kN)', 'KẾT LUẬN']
   ];
   for (const r of s.shorePiles) {
     shore.push([
-      r.pileId, r.code, r.raft, num(r.x, 2), num(r.y, 2), num(r.z, 2), num(r.D_m, 2),
+      r.pileId, r.code, r.raft, num(r.x, 2), num(r.y, 2), num(r.z, 2), r.pileCount, num(r.D_m, 2),
       r.Lopt_m !== null ? num(r.Lopt_m, 2) : 'KHÔNG ĐẠT', num(r.Linput_m, 2), num(r.Tmax_kN, 1), num(r.Pmax_kN, 1),
       r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA'
     ]);
   }
   const wsShore = XLSX.utils.aoa_to_sheet(shore);
-  wsShore['!cols'] = [12, 14, 10, 12, 12, 10, 12, 11, 10, 12, 12, 12].map((wch) => ({ wch }));
+  wsShore['!cols'] = [12, 14, 10, 12, 12, 10, 8, 12, 11, 10, 12, 12, 12].map((wch) => ({ wch }));
   XLSX.utils.book_append_sheet(wb, wsShore, 'ThongKeCocBo');
 
   const p = s.blocks[0];

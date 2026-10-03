@@ -379,6 +379,14 @@ export function runChecks(
     checks.push(evaluated(spec, utilization, utilization.toFixed(3), utilization, note));
   };
 
+  // Several piles under one anchor point: each row above is for ONE pile.
+  const group = (n?: number) =>
+    (n ?? 1) > 1
+      ? ` (cụm ${n} cọc đặt cạnh nhau, mỗi cọc chịu T / (${n} × ${anchor.pileGroupEfficiency ?? 0.9}))`
+      : '';
+  const bedShare = results.t_max_intact_kN > 0 && results.bedPileTension_kN !== undefined
+    ? results.bedPileTension_kN / results.t_max_intact_kN
+    : 1;
   const bars = (n?: number, dia?: number) =>
     (n ?? 0) > 0 && (dia ?? 0) > 0
       ? `${n}Φ${dia} mặt chịu kéo, Rs = ${anchor.pileRebarRs_MPa ?? 350} MPa`
@@ -387,7 +395,7 @@ export function runChecks(
   if (results.shorePile) {
     const sp = results.shorePile;
     pushPile('BP-1', 'Sức chịu ngang cọc neo BỜ (Broms)', 'H_applied / H_allow ≤ 1.0', sp.utilization_H,
-      `H_kéo = ${results.t_max_intact_kN.toFixed(1)} kN, H_cho_phép = ${sp.H_allow.toFixed(1)} kN`);
+      `H_kéo = ${(results.shorePileTension_kN ?? results.t_max_intact_kN).toFixed(1)} kN / cọc${group(anchor.shorePilesPerPoint)}, H_cho_phép = ${sp.H_allow.toFixed(1)} kN`);
     pushPile('BP-2', 'Uốn tiết diện cọc BỜ (TCVN 5574:2018)', 'γ·M_max / M_rd ≤ 1.0', sp.utilization_M,
       `M_max = ${sp.Mmax.toFixed(1)} kNm, γ = ${anchor.pileBendingLoadFactor ?? 1.2}, M_rd = ${sp.Mrd.toFixed(1)} kNm ` +
         `(${bars(anchor.shoreRebarFaceCount, anchor.shoreRebarDia_mm)})`);
@@ -435,9 +443,9 @@ export function runChecks(
   } else if (results.bedPile1) {
     const bp1 = results.bedPile1;
     pushPile('BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0', bp1.utilization_H,
-      `Th = ${(results.bedCableTh_kN ?? 0).toFixed(1)} kN, H_all = ${bp1.H_allow.toFixed(1)} kN`);
+      `Th = ${((results.bedCableTh_kN ?? 0) * bedShare).toFixed(1)} kN / cọc${group(anchor.bedPilesPerPoint)}, H_all = ${bp1.H_allow.toFixed(1)} kN`);
     pushPile('BP-4', 'Sức chịu NHỔ cọc LÒNG HỒ (ma sát thân)', 'Tv / Q_uplift,all ≤ 1.0', bp1.utilization_Uplift,
-      `Tv = ${(results.bedCableTv_kN ?? 0).toFixed(1)} kN, Q_nhổ = ${(bp1.upliftCapacity_all ?? 0).toFixed(1)} kN`);
+      `Tv = ${((results.bedCableTv_kN ?? 0) * bedShare).toFixed(1)} kN / cọc, Q_nhổ = ${(bp1.upliftCapacity_all ?? 0).toFixed(1)} kN`);
     pushPile('BP-5', 'Uốn tiết diện cọc LÒNG HỒ (TCVN 5574:2018)', 'γ·M_max / M_rd ≤ 1.0', bp1.utilization_M,
       `M_max = ${bp1.Mmax.toFixed(1)} kNm, γ = ${anchor.pileBendingLoadFactor ?? 1.2}, M_rd = ${bp1.Mrd.toFixed(1)} kNm ` +
         `(${bars(anchor.bedRebarFaceCount, anchor.bedRebarDia_mm)})`);

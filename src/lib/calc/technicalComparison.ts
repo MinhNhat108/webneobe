@@ -38,6 +38,9 @@ export interface RaftOptionRow {
   isTrial: boolean;
   shoreCount: number;
   bedCount: number;
+  /** Piles per shore / lake-bed anchor point (2 = twin piles). */
+  shorePilesPerPoint: number;
+  bedPilesPerPoint: number;
   tension_kN: number;
   bedCableAngle_deg: number;
   shorePile: PileGeometry;
@@ -52,6 +55,9 @@ export interface TechnicalComparison {
   rows: RaftOptionRow[];
   shoreCount: number;
   bedCount: number;
+  /** Number of PILES (an anchor point may hold more than one). */
+  shorePileCount: number;
+  pa1BedPileCount: number;
   /** Concrete of the shore piles (identical in both options), of the PA1 bed piles and of the PA2 blocks, m³. */
   shoreConcrete_m3: number;
   pa1BedConcrete_m3: number;
@@ -93,6 +99,7 @@ export function compareMooringOptions(
   });
 
   const rows: RaftOptionRow[] = [];
+  let shorePiles = 0, bedPiles = 0;
   let shoreN = 0, bedN = 0, shoreVol = 0, bedVol = 0, blockVol = 0, bedFoot = 0, blockFoot = 0;
 
   for (const item of rafts) {
@@ -108,8 +115,10 @@ export function compareMooringOptions(
     const block = sizeDeadweightBlock({ tension_kN: r.t_max_intact_kN, cableAngle_deg: angle, ...params });
     const bp = r.bedPile1;
 
-    shoreN += nShore; shoreVol += nShore * shorePile.volume_m3;
-    bedN += nBed; bedVol += nBed * bedPile.volume_m3; bedFoot += nBed * bedPile.footprint_m2;
+    const perShore = Math.max(1, Math.floor(state.anchor.shorePilesPerPoint ?? 1));
+    const perBed = Math.max(1, Math.floor(state.anchor.bedPilesPerPoint ?? 1));
+    shoreN += nShore; shorePiles += nShore * perShore; shoreVol += nShore * perShore * shorePile.volume_m3;
+    bedN += nBed; bedPiles += nBed * perBed; bedVol += nBed * perBed * bedPile.volume_m3; bedFoot += nBed * perBed * bedPile.footprint_m2;
     blockVol += nBed * block.volume_m3; blockFoot += nBed * block.baseArea_m2;
 
     rows.push({
@@ -117,6 +126,8 @@ export function compareMooringOptions(
       isTrial: deviations.length > 0,
       shoreCount: nShore,
       bedCount: nBed,
+      shorePilesPerPoint: perShore,
+      bedPilesPerPoint: perBed,
       tension_kN: r.t_max_intact_kN,
       bedCableAngle_deg: angle,
       shorePile,
@@ -132,6 +143,8 @@ export function compareMooringOptions(
     rows,
     shoreCount: shoreN,
     bedCount: bedN,
+    shorePileCount: shorePiles,
+    pa1BedPileCount: bedPiles,
     shoreConcrete_m3: shoreVol,
     pa1BedConcrete_m3: bedVol,
     pa2BedConcrete_m3: blockVol,

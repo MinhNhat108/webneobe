@@ -144,6 +144,20 @@ export interface AnchorInput {
   // 'pipe': D = outer diameter, hollow, wall thickness tWall_m.
   shorePileShape?: 'square' | 'circular' | 'pipe';
   shorePileTWall_m?: number;
+  /**
+   * Piles per anchor point (default 1). With 2 or more, the piles of a point
+   * stand SIDE BY SIDE across the cable direction, at least 3 pile widths
+   * apart, under one cap / yoke, and each is checked for
+   * T / (n × pileGroupEfficiency).
+   */
+  shorePilesPerPoint?: number;
+  bedPilesPerPoint?: number;
+  /**
+   * Share of the ideal equal split a grouped pile can be relied on for
+   * (uneven sharing through the yoke, pile–soil–pile interaction). Default
+   * 0.9; only used when a point has more than one pile.
+   */
+  pileGroupEfficiency?: number;
   // Reinforcement actually checked in bending (TCVN 5574:2018): bars on the tension face, one layer.
   shoreRebarFaceCount?: number;
   shoreRebarDia_mm?: number;
@@ -469,6 +483,9 @@ export interface CalcResults {
    */
   shorePileCapacity?: PileCapacityBreakdown;
   bedPileCapacity?: PileCapacityBreakdown;
+  /** Tension each shore / lake-bed PILE is checked for, kN (= T_max unless the point has several piles). */
+  shorePileTension_kN?: number;
+  bedPileTension_kN?: number;
   /** PA2 only: the gravity block sized for this raft's lake-bed anchors. */
   bedBlock?: import('./deadweight').DeadweightResult;
 

@@ -33,6 +33,9 @@ export interface RaftSummaryItem {
   bedRebarDia_mm?: number;
   /** Design strength of this raft's pile bars Rs, MPa (omit for the project value). */
   pileRebarRs_MPa?: number;
+  /** Piles per shore / lake-bed anchor point (omit for 1). BÈ 5 uses twin piles. */
+  shorePilesPerPoint?: number;
+  bedPilesPerPoint?: number;
 }
 
 export interface MooringCoordinate {
@@ -79,10 +82,13 @@ export interface MooringCoordinate {
  *    single layer of bars on the tension face (2..4 bars, D18..D32, CB400-V,
  *    Rs = 350 MPa) with gamma x M_max / M_rd <= 0.95, gamma = 1.2
  *    (TCVN 5574:2018, see pileMrd_kNm in broms.ts).
- *  - BÈ 5 DOES NOT PASS with one 350 mm pile per line: the shore pile fails
- *    in bending (BP-2) even with the heaviest layer that fits (5 D28, CB500-V)
- *    and the lake-bed pile needs 16 m (slenderness 49). The catalogue carries
- *    that best attempt so the FAIL is visible; it needs the owner's decision.
+ *  - BÈ 5 cannot be held by ONE 350 mm pile per line (shore pile over in
+ *    bending even with 5 D28 CB500-V; lake-bed pile would need 16 m). By the
+ *    owner's decision it has TWIN piles at each of its 39 anchor points: two
+ *    350 x 350 mm piles side by side across the cable, >= 3 pile widths apart,
+ *    under one yoke. Each pile is checked for T / (2 x 0.9) — see
+ *    DEFAULT_PILE_GROUP_EFFICIENCY — and sized like the other rafts.
+ *    Project total: 304 anchor points, 343 piles (141 shore + 202 lake-bed).
  */
 export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
@@ -207,14 +213,16 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     bedAnchorDist_m: 9.2,
     shoreAnchorDist_m: 21.2,
     shorePileD_m: 0.35,
-    shorePileL_m: 10.5,
+    shorePileL_m: 6.5,
     bedPileD_m: 0.35,
-    bedPileL_m: 16,
-    shoreRebarFaceCount: 5,
-    shoreRebarDia_mm: 28,
-    bedRebarFaceCount: 4,
-    bedRebarDia_mm: 32,
-    pileRebarRs_MPa: 435
+    bedPileL_m: 9.5,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 25,
+    // Twin piles at every anchor point (owner's decision, 2026-10-03).
+    shorePilesPerPoint: 2,
+    bedPilesPerPoint: 2
   },
   {
     id: 6,
@@ -407,7 +415,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
   designer: 'Kỹ sư Kết cấu Thủy công & Năng lượng tái tạo',
   date: '2026-08-19',
-  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi V2 (BÈ 1 đến BÈ 12, tổng 90.724 m²), 304 tuyến cáp neo Polyester PES-28/32/36/40/48 và 304 cọc neo VUÔNG BTCT (129 cọc bờ + 175 cọc đáy hồ, cạnh 0.35–0.60 m, chiều sâu thiết kế L_tk theo Broms), 12/12 bè đạt C9 (P/N ≤ 15 m).',
+  note: 'Tính toán hệ thống neo 12 cụm bè pin nổi V2 (BÈ 1 đến BÈ 12, tổng 90.724 m²), 304 tuyến cáp neo Polyester PES-28/32/36/40/48 và 343 cọc neo VUÔNG BTCT 350×350 tại 304 điểm neo (129 bờ + 175 đáy hồ; BÈ 5 cọc đôi; cốt thép theo TCVN 5574:2018, chiều sâu thiết kế L_tk theo Broms), 12/12 bè đạt C9 (P/N ≤ 15 m).',
   systemType: 'solar_fpv' as const,
   activeRaftId: 1,
   meta: {
@@ -416,7 +424,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
     designer: 'Kỹ sư Kết cấu Thủy công',
     date: '2026-08-19',
-    note: 'Hồ chứa nước Huổi Vanh — Hệ neo 12 bè pin mặt trời nổi V2 (BÈ 1 đến BÈ 12, 304 cọc vuông BTCT)'
+    note: 'Hồ chứa nước Huổi Vanh — Hệ neo 12 bè pin mặt trời nổi V2 (BÈ 1 đến BÈ 12, 343 cọc vuông BTCT 350×350)'
   },
   raft: {
     length_m: 90.0,

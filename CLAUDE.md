@@ -19,10 +19,11 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - **BÈ 2 (Cụm phía Tây):** $4.118\,\text{m}^2$ (Chu vi $P = 288.0\,\text{m}$).
   - **BÈ 11 (Cụm phía Bắc):** $4.091\,\text{m}^2$ (Chu vi $P = 258.1\,\text{m}$).
   - **BÈ 12 (Cụm cực Bắc):** $4.018\,\text{m}^2$ (Chu vi $P = 293.0\,\text{m}$).
-- **Hệ cọc neo (V2, 2026-09-27):** Tổng cộng **304 cọc = 304 tuyến cáp**, là KẾT QUẢ THIẾT KẾ của `scripts/planMooringLayoutV2.mjs`. KHÔNG lấy cọc từ DXF (cọc trong DXF Revit là cọc dummy; từ DXF chỉ lấy 12 đa giác bè):
+- **Hệ cọc neo (V2, 2026-09-27):** **304 điểm neo = 304 tuyến cáp**, là KẾT QUẢ THIẾT KẾ của `scripts/planMooringLayoutV2.mjs`; **343 cọc** vì 39 điểm neo của BÈ 5 dùng cọc đôi (141 cọc bờ + 202 cọc đáy). KHÔNG lấy cọc từ DXF (cọc trong DXF Revit là cọc dummy; từ DXF chỉ lấy 12 đa giác bè):
   - **129 Cọc bờ (`SHORE`)** bố trí trên sườn đồi ven hồ (script không bao giờ dời cọc bờ).
   - **175 Cọc đáy hồ (`BED`)**, cách mọi bè $\ge 5.0\,\text{m}$, đặt trên tim khe khi khe giữa hai bè hẹp hơn 35 m.
-  - **100% CỌC VUÔNG BTCT 350 × 350 mm** (`shape: 'square'`; Chủ đầu tư chốt 2026-10-03: chỉ dùng cọc 300×300 hoặc 350×350, được tăng chiều dài và cốt thép) — không dùng cọc tròn. $L_{tk}$ và cốt thép (số thanh trên mặt chịu kéo × đường kính) định riêng từng bè trong `HUOI_VANH_RAFTS`: cọc bờ $L_{tk} = 6.5 \div 7.0$ m, 2–4 thanh Φ20–Φ32; cọc đáy $L_{tk} = 8 \div 10.5$ m, 2–3 thanh Φ20–Φ32; thép CB400-V. **BÈ 5 KHÔNG ĐẠT với một cọc 350 mỗi tuyến** (BP-2 cọc bờ = 1,09 dù đặt 5Φ28 CB500-V; cọc đáy cần 16 m) — chờ Chủ đầu tư quyết định.
+  - **100% CỌC VUÔNG BTCT 350 × 350 mm** (`shape: 'square'`; Chủ đầu tư chốt 2026-10-03: chỉ dùng cọc 300×300 hoặc 350×350, được tăng chiều dài và cốt thép) — không dùng cọc tròn. $L_{tk}$ và cốt thép (số thanh trên mặt chịu kéo × đường kính) định riêng từng bè trong `HUOI_VANH_RAFTS`: cọc bờ $L_{tk} = 6.5 \div 7.0$ m, 2–4 thanh Φ20–Φ32; cọc đáy $L_{tk} = 8 \div 10.5$ m, 2–3 thanh Φ20–Φ32; thép CB400-V. Cả 12 bè ĐẠT.
+  - **BÈ 5 dùng CỌC ĐÔI** (Chủ đầu tư chốt 2026-10-03): mỗi điểm neo 2 cọc 350×350 đặt cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3a, chung đài/bích neo (`shorePilesPerPoint` / `bedPilesPerPoint` = 2). Mỗi cọc kiểm tra với $T / (2 \times 0{,}9)$ — hệ số làm việc nhóm 0,9 là GIẢ ĐỊNH (`anchor.pileGroupEfficiency`). Một cọc 350 đơn không chịu nổi BÈ 5 (uốn cọc bờ 1,09; cọc đáy cần 16 m). Đài/bích neo chung chưa được thiết kế. Mô phỏng 3D vẽ một cọc đại diện mỗi điểm.
   - Mức tối thiểu để cả 12 bè đạt C9 là $\sum \lceil P/15 \rceil = 300$ dây (BÈ 5 cần 35). Thiết kế giữ 304 dây: BÈ 5 có 39 dây với bước móc dọc mép $\le 15\,\text{m}$ trên toàn chu vi (mép Đông 150 m có 11 dây); không bè nào có cung hở > 60°.
   - Khi một đa giác bè thay đổi, script tự gắn lại móc của cọc bờ lên mép mới (cọc bờ không dời) và bố trí lại toàn bộ dây đáy của bè đó.
 - **Cao trình thủy văn hồ Huổi Vanh:**
@@ -77,6 +78,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 169 tests tại 2026-10-03; các test khẳng định 11 bè ĐẠT và BÈ 5 KHÔNG ĐẠT BP-2).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 170 tests tại 2026-10-03).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

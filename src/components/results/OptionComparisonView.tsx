@@ -101,7 +101,7 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
             So Sánh Kỹ Thuật Hai Phương Án Neo Đáy Hồ: PA1 (Cọc Đóng BTCT) & PA2 (Khối Bê Tông Neo Đáy)
           </h2>
           <p className="text-slate-500 mt-0.5">
-            {cmp.shoreCount} cọc bờ giống nhau ở cả hai phương án (bờ dốc, không đặt được khối). Khác nhau ở {cmp.bedCount} điểm
+            {cmp.shorePileCount} cọc bờ ({cmp.shoreCount} điểm neo) giống nhau ở cả hai phương án (bờ dốc, không đặt được khối). Khác nhau ở {cmp.bedCount} điểm
             neo đáy hồ. Cả hai tính từ cùng lực căng thiết kế T_max và góc cáp đáy của từng bè. Đang chọn:{' '}
             <strong>{option === 'PA2_DEADWEIGHT' ? 'Phương án 2' : 'Phương án 1'}</strong>.
           </p>
@@ -194,7 +194,7 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
             />
             <Row
               label="Tổng thể tích bê tông neo đáy"
-              a={<span className="font-mono">{num(cmp.pa1BedConcrete_m3, 0)} m³</span>}
+              a={<span className="font-mono">{num(cmp.pa1BedConcrete_m3, 0)} m³ ({cmp.pa1BedPileCount} cọc)</span>}
               b={<span className="font-mono">{num(cmp.pa2BedConcrete_m3, 0)} m³ (gấp {num(cmp.concreteRatio, 1)} lần)</span>}
             />
             <Row

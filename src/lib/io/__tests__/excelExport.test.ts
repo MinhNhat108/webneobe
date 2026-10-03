@@ -31,9 +31,11 @@ describe('Standalone Pile Schedule Excel Export', () => {
     // Row 2: Project name
     expect(data[1][0]).toContain('Dự án:');
     // Row 3: Description
-    expect(data[2][0]).toContain('Tổng số cọc: 304');
+    // No 12-raft batch is passed here, so every point takes the active project's single pile.
+    // (With the batch, the 39 points of the twin-pile raft count double: 343 — see auditVerification.test.ts.)
+    expect(data[2][0]).toContain('Tổng số điểm neo: 304, tổng số cọc: 304');
 
-    // Row 5: Column headers (14 columns matching the AutoCAD table, with both depths)
+    // Row 5: Column headers (15 columns matching the AutoCAD table, with both depths and the pile count)
     const headers = data[4];
     expect(headers).toEqual([
       'MÃ CỌC',
@@ -43,6 +45,7 @@ describe('Standalone Pile Schedule Excel Export', () => {
       'X (m)',
       'Y (m)',
       'Z (m)',
+      'SỐ CỌC',
       'a (m)',
       'L_opt (m)',
       'L_tk (m)',
@@ -60,17 +63,18 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(typeof firstRow[4]).toBe('number'); // X
     expect(typeof firstRow[5]).toBe('number'); // Y
     expect(typeof firstRow[6]).toBe('number'); // Z
-    expect(typeof firstRow[7]).toBe('number'); // D
-    expect(typeof firstRow[8]).toBe('number'); // L_opt
-    expect(typeof firstRow[9]).toBe('number'); // L_tk
-    expect(typeof firstRow[10]).toBe('number'); // T_max
-    expect(typeof firstRow[11]).toBe('number'); // P_req
-    expect(typeof firstRow[12]).toBe('number'); // P_max
-    expect(firstRow[13]).toBe('ĐẠT');
+    expect(firstRow[7]).toBe(1); // SỐ CỌC — one pile at this point
+    expect(typeof firstRow[8]).toBe('number'); // D
+    expect(typeof firstRow[9]).toBe('number'); // L_opt
+    expect(typeof firstRow[10]).toBe('number'); // L_tk
+    expect(typeof firstRow[11]).toBe('number'); // T_max
+    expect(typeof firstRow[12]).toBe('number'); // P_req
+    expect(typeof firstRow[13]).toBe('number'); // P_max
+    expect(firstRow[14]).toBe('ĐẠT');
     // The pile is driven deeper than the Broms minimum, so it must read as
     // genuinely stronger than the demand — not the 94-99% the old column showed.
-    expect(firstRow[9]).toBeGreaterThan(firstRow[8] as number);
-    expect(firstRow[12]).toBeGreaterThan((firstRow[11] as number) * 1.3);
+    expect(firstRow[10]).toBeGreaterThan(firstRow[9] as number);
+    expect(firstRow[13]).toBeGreaterThan((firstRow[12] as number) * 1.3);
 
     // Check 304th pile row
     const lastPileRow = data[5 + 304 - 1];
@@ -81,16 +85,16 @@ describe('Standalone Pile Schedule Excel Export', () => {
     const summaryHeader = data.find((r) => r[0] === 'TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN');
     expect(summaryHeader).toBeDefined();
 
-    const totalRow = data.find((r) => r[0] === 'Tổng số điểm cọc neo');
+    const totalRow = data.find((r) => r[0] === 'Tổng số điểm neo');
     expect(totalRow?.[1]).toBe(304);
 
-    const shoreRow = data.find((r) => r[0] === 'Số lượng cọc neo bờ (BỜ)');
+    const shoreRow = data.find((r) => r[0] === 'Số điểm neo bờ (BỜ)');
     expect(shoreRow?.[1]).toBe(129);
 
-    const bedRow = data.find((r) => r[0] === 'Số lượng cọc neo lòng hồ (ĐÁY HỒ)');
+    const bedRow = data.find((r) => r[0] === 'Số điểm neo lòng hồ (ĐÁY HỒ)');
     expect(bedRow?.[1]).toBe(175);
 
-    const passedRow = data.find((r) => r[0] === 'Số cọc ĐẠT sức chịu tải (P_req ≤ P_max)');
+    const passedRow = data.find((r) => r[0] === 'Số điểm neo ĐẠT sức chịu tải (P_req ≤ P_max, tính cho một cọc)');
     expect(passedRow?.[1]).toBe(304);
   });
 

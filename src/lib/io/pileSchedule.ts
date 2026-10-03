@@ -34,6 +34,8 @@ export interface PileScheduleRow {
   yRaft: number;
   span_m: number;
   azimuth_deg: number;
+  /** Piles at this anchor point (1, or 2 for a twin-pile point). Loads and capacities below are PER PILE. */
+  pileCount: number;
   /** Pile diameter / side width, m. */
   D_m: number;
   /**
@@ -43,7 +45,7 @@ export interface PileScheduleRow {
   Lopt_m: number | null;
   /** Design embedment — the depth this pile is actually built to, m. */
   Linput_m: number;
-  /** Governing line tension of the raft this pile belongs to, kN. */
+  /** Governing line tension of the raft this pile belongs to, kN (the whole line, not per pile). */
   Tmax_kN: number;
   /** P_req = T_max * SF, kN. */
   Preq_kN: number;
@@ -123,6 +125,9 @@ export function buildPileSchedule(
       yRaft: c.yRaft,
       span_m: c.span,
       azimuth_deg: c.azimuth,
+      pileCount: Math.max(1, Math.floor(
+        (isShore ? (batch?.state ?? state).anchor.shorePilesPerPoint : (batch?.state ?? state).anchor.bedPilesPerPoint) ?? 1
+      )),
       D_m: round(D_m),
       Lopt_m: opt?.L_opt_m ?? null,
       Linput_m: round(Linput_m),

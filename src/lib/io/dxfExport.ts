@@ -262,7 +262,12 @@ export function buildMooringPileDxf(
     }
 
     const labelPt = { x: anchorPt.x + shoreR + 0.4, y: anchorPt.y + shoreR + 0.4 };
-    entities += text(DXF_LAYERS.text.name, labelPt, labelH, `${row.pileId} (${row.code})`);
+    entities += text(
+      DXF_LAYERS.text.name,
+      labelPt,
+      labelH,
+      `${row.pileId} (${row.code})${row.pileCount > 1 ? ` ${row.pileCount}x(${Math.round(row.D_m * 1000)}x${Math.round(row.D_m * 1000)})` : ''}`
+    );
   }
 
   // ---- Layer 07 — Pile Schedule table ------------------------------------
@@ -292,6 +297,7 @@ const SCHEDULE_COLUMNS: Array<{ title: string; width: number; value: (r: PileSch
   { title: 'X (m)', width: 12, value: (r) => r.x.toFixed(2) },
   { title: 'Y (m)', width: 12, value: (r) => r.y.toFixed(2) },
   { title: 'Z (m)', width: 10, value: (r) => r.z.toFixed(2) },
+  { title: 'SO COC', width: 8, value: (r) => String(r.pileCount) },
   { title: 'a (m)', width: 8, value: (r) => r.D_m.toFixed(2) },
   { title: 'L_opt (m)', width: 11, value: (r) => (r.Lopt_m === null ? 'KHONG DAT' : r.Lopt_m.toFixed(2)) },
   { title: 'L_tk (m)', width: 10, value: (r) => r.Linput_m.toFixed(2) },
@@ -321,7 +327,8 @@ function scheduleTable(
   const titleLines = [
     `BANG THONG KE COC NEO - ${state.meta.code || state.code || 'DA'}`,
     `${state.meta.name || state.name || ''}`,
-    `Tong so coc: ${rows.length}  |  L_opt: chieu sau dong coc toi uu (Broms)  |  P_max: suc chiu tai cho phep lon nhat cua coc`
+    `Tong so diem neo: ${rows.length}  |  Tong so coc: ${rows.reduce((s, r) => s + r.pileCount, 0)}  |  L_opt: chieu sau dong coc toi uu (Broms)  |  P_max: suc chiu tai cho phep lon nhat cua MOT coc`,
+    'SO COC > 1: cum coc dat canh nhau, vuong goc phuong cap, cach nhau >= 3a, lien ket chung dai/bich neo; P_req va P_max tinh cho MOT coc.'
   ];
 
   let out = '';

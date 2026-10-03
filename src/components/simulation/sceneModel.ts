@@ -287,6 +287,8 @@ export interface PileModel {
   ground_m: number;
   head_m: number;
   toe_m: number;
+  /** Piles at this anchor point (2 for BÈ 5's twin piles); one is drawn. */
+  pilesAtPoint: number;
   /** PA2 only: this lake-bed anchor is a gravity block resting on the bed (side_m = plan side, stickup_m = height, embed_m = 0). */
   block?: BlockAnchor;
 }
@@ -354,7 +356,7 @@ export function buildPileModels(
       return {
         code: p.code, line: p.line, raft: p.raft, type: p.type, x: p.x, y: p.y,
         side_m: blk.block.L_m, embed_m: 0, stickup_m: blk.block.H_m,
-        ground_m: ground, head_m: ground + blk.block.H_m, toe_m: ground, block: blk
+        ground_m: ground, head_m: ground + blk.block.H_m, toe_m: ground, pilesAtPoint: 1, block: blk
       };
     }
     const stickup = isShore ? shoreStickup : bedStickup;
@@ -368,6 +370,10 @@ export function buildPileModels(
       side_m: side,
       embed_m: embed,
       stickup_m: stickup,
+      pilesAtPoint: Math.max(1, Math.floor(
+        (edited ? (isShore ? anchor.shorePilesPerPoint : anchor.bedPilesPerPoint) : undefined)
+          ?? (isShore ? r.shorePilesPerPoint : r.bedPilesPerPoint) ?? 1
+      )),
       ground_m: ground,
       head_m: ground + stickup,
       toe_m: ground - embed

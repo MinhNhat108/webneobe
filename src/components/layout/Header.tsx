@@ -133,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
             title={isPa2
               ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
-              : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra Excel (.xlsx)'}
+              : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 điểm neo, L_opt, P_max) ra Excel (.xlsx)'}
           >
             <Table className="w-4 h-4 text-emerald-400" />
             <span className="hidden xl:inline">{isPa2 ? 'Bảng Neo PA2 Excel' : 'Bảng Cọc Excel'}</span>

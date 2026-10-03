@@ -463,7 +463,7 @@ export const MooringLayoutMap: React.FC = () => {
               className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
               title={isPa2
                 ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
-                : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra file Excel (.xlsx)'}
+                : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 điểm neo, L_opt, P_max) ra file Excel (.xlsx)'}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
               <span>{isPa2 ? 'Xuất Excel Bảng Neo PA2' : 'Xuất Excel Bảng Cọc'}</span>
@@ -515,6 +515,7 @@ export const MooringLayoutMap: React.FC = () => {
                   <th className="px-3 py-2 text-right">Y (m)</th>
                   <th className="px-3 py-2 text-right">Z (m)</th>
                   <th className="px-3 py-2 text-right" title="Cạnh tiết diện cọc vuông BTCT">a (m)</th>
+                  <th className="px-3 py-2 text-right" title="Số cọc tại điểm neo (2 = cọc đôi; P_req, P_max tính cho một cọc)">Số cọc</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu ngàm tối thiểu theo Broms">L_opt (m)</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu đóng cọc theo thiết kế — P_max tính theo chiều sâu này">L_tk (m)</th>
                   <th className="px-3 py-2 text-right">T_max (kN)</th>
@@ -554,6 +555,7 @@ export const MooringLayoutMap: React.FC = () => {
                       <td className="px-3 py-1.5 text-right">{r.y.toFixed(2)}</td>
                       <td className="px-3 py-1.5 text-right">{r.z.toFixed(2)}</td>
                       <td className="px-3 py-1.5 text-right">{r.D_m.toFixed(2)}</td>
+                      <td className={`px-3 py-1.5 text-right ${r.pileCount > 1 ? 'font-bold text-amber-700' : ''}`}>{r.pileCount}</td>
                       <td className="px-3 py-1.5 text-right font-bold text-sky-700">
                         {r.Lopt_m !== null ? r.Lopt_m.toFixed(2) : 'KHÔNG ĐẠT'}
                       </td>

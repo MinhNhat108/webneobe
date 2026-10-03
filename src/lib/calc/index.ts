@@ -11,6 +11,16 @@ import { calculateBromsPile } from './broms';
  * (`anchor.pileBendingLoadFactor`).
  */
 export const DEFAULT_PILE_BENDING_LOAD_FACTOR = 1.2;
+
+/**
+ * How much of the ideal equal split each pile of a multi-pile anchor point is
+ * credited with: 0.9, i.e. every pile is checked for 1/(0.9 n) of the line
+ * tension. Covers uneven sharing through the yoke and side-by-side
+ * pile–soil–pile interaction at a spacing of about 3 pile widths. An
+ * assumption, editable (`anchor.pileGroupEfficiency`); piles in a row ALONG
+ * the cable would need a lower value.
+ */
+export const DEFAULT_PILE_GROUP_EFFICIENCY = 0.9;
 import { optimizePileEmbedment, pileAllowableTension } from './pileOptimizer';
 import { runChecks } from './checks';
 import { sizeDeadweightBlock, DEADWEIGHT_DEFAULTS, type DeadweightResult } from './deadweight';
@@ -78,6 +88,8 @@ export function calculateProject(state: ProjectState): CalcResults {
   let bedPileOpt;
   let shorePileCapacity;
   let bedPileCapacity;
+  let shorePileTension_kN: number | undefined;
+  let bedPileTension_kN: number | undefined;
 
   if (state.anchor.mode === 'pile' || isSolar) {
     // Reinforcement and the bending load factor shared by both pile types.
@@ -108,6 +120,18 @@ export function calculateProject(state: ProjectState): CalcResults {
       ...rebarCommon
     };
 
+    // Load carried by ONE pile of an anchor point. A point with n > 1 piles
+    // (side by side across the cable, under one yoke) shares the line tension,
+    // derated by the group efficiency; a single pile takes the whole tension.
+    const perPile = (n: number | undefined) => {
+      const count = Math.max(1, Math.floor(n ?? 1));
+      return count > 1 ? 1 / (count * (state.anchor.pileGroupEfficiency ?? DEFAULT_PILE_GROUP_EFFICIENCY)) : 1;
+    };
+    const shoreShare = perPile(state.anchor.shorePilesPerPoint);
+    const bedShare = perPile(state.anchor.bedPilesPerPoint);
+    shorePileTension_kN = loads.t_max_intact_kN * shoreShare;
+    bedPileTension_kN = loads.t_max_intact_kN * bedShare;
+
     shorePile = calculateBromsPile(state.anchor.soilShore ?? 'clay', {
       cu_kPa: state.anchor.cuShore_kPa ?? 40.0,
       phi_deg: state.anchor.phiShore_deg,
@@ -116,7 +140,7 @@ export function calculateProject(state: ProjectState): CalcResults {
       D: state.anchor.shoreD_m ?? 0.45,
       L: state.anchor.shoreL_m ?? 6.5,
       FS: state.anchor.sfPile ?? 2.5,
-      appliedH: loads.t_max_intact_kN,
+      appliedH: shorePileTension_kN,
       appliedTv: 0, // the shore line is essentially horizontal at the pile head
       concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
       section: shoreSection
@@ -140,8 +164,8 @@ export function calculateProject(state: ProjectState): CalcResults {
       D: state.anchor.bed1D_m ?? 0.35,
       L: state.anchor.bed1L_m ?? 8.0,
       FS: state.anchor.sfPile ?? 2.5,
-      appliedH: bedCableTh_kN,
-      appliedTv: bedCableTv_kN,
+      appliedH: bedCableTh_kN * bedShare,
+      appliedTv: bedCableTv_kN * bedShare,
       concreteRb_MPa: state.anchor.concreteRb_MPa ?? 14.5,
       section: bedSection
     });
@@ -182,9 +206,9 @@ export function calculateProject(state: ProjectState): CalcResults {
       e: state.anchor.shoreArm_e_m ?? 0.5,
       D: state.anchor.shoreD_m ?? 0.45,
       section: shoreSection,
-      appliedH: loads.t_max_intact_kN,
+      appliedH: shorePileTension_kN,
       appliedTv: 0,
-      cableTension_kN: loads.t_max_intact_kN,
+      cableTension_kN: shorePileTension_kN,
       cableAngle_deg: 0, // the shore line is essentially horizontal at the pile head
       ratedPmax_kN: state.anchor.pileRatedPmaxShore_kN
     });
@@ -218,9 +242,9 @@ export function calculateProject(state: ProjectState): CalcResults {
       e: state.anchor.bed1Arm_e_m ?? 0.0,
       D: state.anchor.bed1D_m ?? 0.35,
       section: bedSection,
-      appliedH: bedCableTh_kN,
-      appliedTv: bedCableTv_kN,
-      cableTension_kN: loads.t_max_intact_kN,
+      appliedH: bedCableTh_kN * bedShare,
+      appliedTv: bedCableTv_kN * bedShare,
+      cableTension_kN: bedPileTension_kN,
       cableAngle_deg: bedCableAngle_deg,
       ratedPmax_kN: state.anchor.pileRatedPmaxBed_kN
     });
@@ -268,6 +292,8 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedPileOpt,
     shorePileCapacity,
     bedPileCapacity,
+    shorePileTension_kN,
+    bedPileTension_kN,
     bedBlock,
     bedClearance_m,
     avgLineSpacing_m
@@ -313,6 +339,8 @@ export function calculateProject(state: ProjectState): CalcResults {
     bedCableAngle_deg: bedCableAngle_deg !== undefined ? round(bedCableAngle_deg, 1) : undefined,
     bedCableTh_kN: bedCableTh_kN !== undefined ? round(bedCableTh_kN) : undefined,
     bedCableTv_kN: bedCableTv_kN !== undefined ? round(bedCableTv_kN) : undefined,
+    shorePileTension_kN: shorePileTension_kN !== undefined ? round(shorePileTension_kN) : undefined,
+    bedPileTension_kN: bedPileTension_kN !== undefined ? round(bedPileTension_kN) : undefined,
     bedClearance_m: roundOrNull(raw.bedClearance_m),
     avgLineSpacing_m: roundOrNull(raw.avgLineSpacing_m, 1),
     ...checkResults

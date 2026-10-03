@@ -300,22 +300,22 @@ export const AnchorForm: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
               <NumberField
-                label="Diện tích cốt thép dọc BỜ (As)"
-                value={anchor.shoreRebarArea_mm2}
-                onChange={(val) => updateAnchor({ shoreRebarArea_mm2: val })}
-                unit="mm²"
-                step={50}
+                label="Số thanh thép trên MẶT CHỊU KÉO cọc BỜ"
+                value={anchor.shoreRebarFaceCount}
+                onChange={(val) => updateAnchor({ shoreRebarFaceCount: val })}
+                unit="thanh"
+                step={1}
                 min={0}
-                helpText="Tổng diện tích thép dọc chịu lực; 0 = bỏ qua cốt thép (chỉ tính bê tông)"
+                helpText="Một lớp trên một mặt cọc; 0 = cọc không cốt thép (chỉ chịu được mômen nứt Rbt·W)"
               />
               <NumberField
-                label="Cường độ chảy cốt thép BỜ (fy)"
-                value={anchor.shoreRebarFy_MPa}
-                onChange={(val) => updateAnchor({ shoreRebarFy_MPa: val })}
-                unit="MPa"
-                step={10}
-                min={200}
-                helpText="CB300-V: 300 MPa · CB400-V: 400 MPa"
+                label="Đường kính thép cọc BỜ (Φ)"
+                value={anchor.shoreRebarDia_mm}
+                onChange={(val) => updateAnchor({ shoreRebarDia_mm: val })}
+                unit="mm"
+                step={2}
+                min={10}
+                helpText="Φ18 · 20 · 22 · 25 · 28 · 32"
               />
             </div>
           </div>
@@ -380,22 +380,22 @@ export const AnchorForm: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
               <NumberField
-                label="Diện tích cốt thép dọc ĐÁY (As)"
-                value={anchor.bedRebarArea_mm2}
-                onChange={(val) => updateAnchor({ bedRebarArea_mm2: val })}
-                unit="mm²"
-                step={50}
+                label="Số thanh thép trên MẶT CHỊU KÉO cọc ĐÁY"
+                value={anchor.bedRebarFaceCount}
+                onChange={(val) => updateAnchor({ bedRebarFaceCount: val })}
+                unit="thanh"
+                step={1}
                 min={0}
-                helpText="0 = bỏ qua cốt thép"
+                helpText="Một lớp trên một mặt cọc; 0 = cọc không cốt thép"
               />
               <NumberField
-                label="Cường độ chảy cốt thép ĐÁY (fy)"
-                value={anchor.bedRebarFy_MPa}
-                onChange={(val) => updateAnchor({ bedRebarFy_MPa: val })}
-                unit="MPa"
-                step={10}
-                min={200}
-                helpText="CB300-V: 300 MPa"
+                label="Đường kính thép cọc ĐÁY (Φ)"
+                value={anchor.bedRebarDia_mm}
+                onChange={(val) => updateAnchor({ bedRebarDia_mm: val })}
+                unit="mm"
+                step={2}
+                min={10}
+                helpText="Φ18 · 20 · 22 · 25 · 28 · 32"
               />
               <NumberField
                 label="Cường độ bê tông cọc (Rb)"
@@ -407,6 +407,41 @@ export const AnchorForm: React.FC = () => {
                 helpText="Bê tông B25: Rb = 14.5 MPa"
               />
             </div>
+
+            {/* Reinforcement and bending check shared by both pile types (TCVN 5574:2018) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+              <NumberField
+                label="Cường độ tính toán cốt thép cọc (Rs)"
+                value={anchor.pileRebarRs_MPa ?? 350}
+                onChange={(val) => updateAnchor({ pileRebarRs_MPa: val })}
+                unit="MPa"
+                step={5}
+                min={200}
+                helpText="CB300-V: 260 · CB400-V: 350 · CB500-V: 435"
+              />
+              <NumberField
+                label="Khoảng cách mép bê tông → tâm thép (a_s)"
+                value={anchor.pileRebarCover_mm ?? 50}
+                onChange={(val) => updateAnchor({ pileRebarCover_mm: val })}
+                unit="mm"
+                step={5}
+                min={25}
+                helpText="Cánh tay đòn nội lực = a − 2·a_s"
+              />
+              <NumberField
+                label="Hệ số tải trọng cho mômen uốn cọc (γ)"
+                value={anchor.pileBendingLoadFactor ?? 1.2}
+                onChange={(val) => updateAnchor({ pileBendingLoadFactor: val })}
+                unit="-"
+                step={0.05}
+                min={1}
+                helpText="Kiểm tra γ·M_max ≤ M_rd. 1,2 = hệ số vượt tải gió TCVN 2737:1995"
+              />
+            </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Khả năng chịu uốn theo TCVN 5574:2018: M_rd = Rs · As(mặt chịu kéo) · (a − 2·a_s). Bê tông đã nứt không tham gia chịu kéo;
+              cọc không cốt thép chỉ chịu được M = Rbt · W. Thép bố trí một lớp, khoảng cách tim thanh ≥ max(2Φ, Φ + 30 mm).
+            </p>
 
             {/* P_max & tối ưu hóa chiều sâu đóng cọc ---------------------- */}
             <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4 space-y-4">

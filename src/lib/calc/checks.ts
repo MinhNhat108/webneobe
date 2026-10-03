@@ -379,12 +379,18 @@ export function runChecks(
     checks.push(evaluated(spec, utilization, utilization.toFixed(3), utilization, note));
   };
 
+  const bars = (n?: number, dia?: number) =>
+    (n ?? 0) > 0 && (dia ?? 0) > 0
+      ? `${n}Φ${dia} mặt chịu kéo, Rs = ${anchor.pileRebarRs_MPa ?? 350} MPa`
+      : 'KHÔNG cốt thép: M_rd = Rbt·W';
+
   if (results.shorePile) {
     const sp = results.shorePile;
     pushPile('BP-1', 'Sức chịu ngang cọc neo BỜ (Broms)', 'H_applied / H_allow ≤ 1.0', sp.utilization_H,
       `H_kéo = ${results.t_max_intact_kN.toFixed(1)} kN, H_cho_phép = ${sp.H_allow.toFixed(1)} kN`);
-    pushPile('BP-2', 'Ứng suất uốn tiết diện cọc BỜ', 'M_max / M_rd ≤ 1.0', sp.utilization_M,
-      `M_max = ${sp.Mmax.toFixed(1)} kNm, M_rd = ${sp.Mrd.toFixed(1)} kNm`);
+    pushPile('BP-2', 'Uốn tiết diện cọc BỜ (TCVN 5574:2018)', 'γ·M_max / M_rd ≤ 1.0', sp.utilization_M,
+      `M_max = ${sp.Mmax.toFixed(1)} kNm, γ = ${anchor.pileBendingLoadFactor ?? 1.2}, M_rd = ${sp.Mrd.toFixed(1)} kNm ` +
+        `(${bars(anchor.shoreRebarFaceCount, anchor.shoreRebarDia_mm)})`);
   }
 
   if (block) {
@@ -432,8 +438,9 @@ export function runChecks(
       `Th = ${(results.bedCableTh_kN ?? 0).toFixed(1)} kN, H_all = ${bp1.H_allow.toFixed(1)} kN`);
     pushPile('BP-4', 'Sức chịu NHỔ cọc LÒNG HỒ (ma sát thân)', 'Tv / Q_uplift,all ≤ 1.0', bp1.utilization_Uplift,
       `Tv = ${(results.bedCableTv_kN ?? 0).toFixed(1)} kN, Q_nhổ = ${(bp1.upliftCapacity_all ?? 0).toFixed(1)} kN`);
-    pushPile('BP-5', 'Ứng suất uốn tiết diện cọc LÒNG HỒ', 'M_max / M_rd ≤ 1.0', bp1.utilization_M,
-      `M_max = ${bp1.Mmax.toFixed(1)} kNm, M_rd = ${bp1.Mrd.toFixed(1)} kNm`);
+    pushPile('BP-5', 'Uốn tiết diện cọc LÒNG HỒ (TCVN 5574:2018)', 'γ·M_max / M_rd ≤ 1.0', bp1.utilization_M,
+      `M_max = ${bp1.Mmax.toFixed(1)} kNm, γ = ${anchor.pileBendingLoadFactor ?? 1.2}, M_rd = ${bp1.Mrd.toFixed(1)} kNm ` +
+        `(${bars(anchor.bedRebarFaceCount, anchor.bedRebarDia_mm)})`);
   }
 
   // ---- Overall verdict ----------------------------------------------------

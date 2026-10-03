@@ -1,6 +1,31 @@
 import { BromsResult, PileSectionInput } from './types';
 
-const DEFAULT_REBAR_FY_MPA = 300; // CB300-V, common Vietnamese pile reinforcement grade
+const DEFAULT_REBAR_FY_MPA = 300; // CB300-V — only for the legacy total-area input
+/** TCVN 5574:2018 design strengths. */
+export const DEFAULT_REBAR_RS_MPA = 350; // CB400-V
+export const DEFAULT_REBAR_COVER_MM = 50; // concrete face to bar centre
+/** Share of a LEGACY total bar area counted on the tension face (3 of the 8 bars of a ring). */
+const LEGACY_TENSION_SHARE = 3 / 8;
+
+/** Rbt of the concrete class whose Rb is given (TCVN 5574:2018, B15…B40), MPa. */
+export function concreteRbtFromRb_MPa(rb_MPa: number): number {
+  const table: Array<[number, number]> = [[8.5, 0.75], [11.5, 0.9], [14.5, 1.05], [17, 1.15], [19.5, 1.3], [22, 1.4]];
+  if (rb_MPa <= table[0][0]) return table[0][1];
+  for (let i = 1; i < table.length; i++) {
+    if (rb_MPa <= table[i][0]) {
+      const [x0, y0] = table[i - 1], [x1, y1] = table[i];
+      return y0 + ((y1 - y0) * (rb_MPa - x0)) / (x1 - x0);
+    }
+  }
+  return table[table.length - 1][1];
+}
+
+/** Bars of diameter d that fit in ONE layer on a face of side `side_m`: spacing ≥ max(2d, d + 30 mm). */
+export function maxBarsPerFace(side_m: number, dia_mm: number, cover_mm: number = DEFAULT_REBAR_COVER_MM): number {
+  const width = side_m * 1000 - 2 * cover_mm;
+  if (width < 0) return 0;
+  return Math.floor(width / Math.max(2 * dia_mm, dia_mm + 30) + 1e-9) + 1;
+}
 
 /**
  * Effective width the soil "sees" for lateral (Broms) resistance, m.
@@ -47,32 +72,47 @@ export function pileCrossSectionArea_m2(section: PileSectionInput): number {
 }
 
 /**
- * Reinforced-concrete bending capacity, kNm.
- * Mrd = Mrd_concrete (0.9 * Rb * W_section, the existing plain-concrete
- * estimate) + Mrd_steel, a simplified strength contribution from the
- * longitudinal reinforcement acting at an internal lever arm ~0.85D
- * (symmetric reinforcement, both faces active in tension/compression at the
- * ultimate limit state — a standard hand-calc simplification, NOT a full
- * RC section design; always verify against the governing concrete code).
+ * Bending capacity of the pile section, kNm — TCVN 5574:2018.
+ *
+ *  - REINFORCED (symmetric bars, pure bending — the axial load of a mooring
+ *    pile is negligible): the compression zone is taken by the compression
+ *    bars (x ≈ 0 since As = As'), so
+ *        M_rd = Rs · As_tension · (h0 − a') = Rs · As_tension · (D − 2·a_s)
+ *    with As_tension the bars of ONE face. Cracked concrete carries no tension,
+ *    so nothing is added for the concrete.
+ *  - UNREINFORCED: a plain section fails when it cracks, M_crc = Rbt · W. (The
+ *    compressive strength Rb is irrelevant to it.)
+ *
+ * Until 2026-10-03 this returned 0.9·Rb·W + As_total·fy·0.85·D, which
+ * overstated the capacity 5–12× (compressive strength for a tension failure,
+ * concrete and steel added together, all bars counted, characteristic fy and a
+ * lever arm that ignored the cover).
  */
 export function pileMrd_kNm(
   section: PileSectionInput,
   concreteRb_MPa: number
-): { Mrd_kNm: number; MrdConcrete_kNm: number; MrdSteel_kNm: number } {
+): { Mrd_kNm: number; MrdConcrete_kNm: number; MrdSteel_kNm: number; AsTension_mm2: number } {
   const D = Math.max(0.05, section.D_m);
-  const W = pileSectionModulus_m3(section);
-  const MrdConcrete_kNm = 0.9 * (concreteRb_MPa * 1000) * W;
+  const cover_m = (section.rebarCover_mm ?? DEFAULT_REBAR_COVER_MM) / 1000;
+  const lever_m = Math.max(0, D - 2 * cover_m);
 
-  const As_mm2 = section.rebarArea_mm2 ?? 0;
-  let MrdSteel_kNm = 0;
-  if (As_mm2 > 0) {
-    const fy_kPa = (section.rebarFy_MPa ?? DEFAULT_REBAR_FY_MPA) * 1000;
-    const As_m2 = As_mm2 / 1_000_000;
-    const leverArm_m = 0.85 * D;
-    MrdSteel_kNm = As_m2 * fy_kPa * leverArm_m;
+  let AsTension_mm2 = 0;
+  let Rs_MPa = section.rebarRs_MPa ?? DEFAULT_REBAR_RS_MPA;
+  if ((section.rebarFaceCount ?? 0) > 0 && (section.rebarDia_mm ?? 0) > 0) {
+    AsTension_mm2 = section.rebarFaceCount! * (Math.PI * section.rebarDia_mm! * section.rebarDia_mm!) / 4;
+  } else if ((section.rebarArea_mm2 ?? 0) > 0) {
+    AsTension_mm2 = section.rebarArea_mm2! * LEGACY_TENSION_SHARE;
+    Rs_MPa = section.rebarRs_MPa ?? (section.rebarFy_MPa ?? DEFAULT_REBAR_FY_MPA) / 1.15;
   }
 
-  return { Mrd_kNm: MrdConcrete_kNm + MrdSteel_kNm, MrdConcrete_kNm, MrdSteel_kNm };
+  if (AsTension_mm2 > 0) {
+    const MrdSteel_kNm = (AsTension_mm2 / 1_000_000) * (Rs_MPa * 1000) * lever_m;
+    return { Mrd_kNm: MrdSteel_kNm, MrdConcrete_kNm: 0, MrdSteel_kNm, AsTension_mm2 };
+  }
+
+  const rbt_MPa = section.concreteRbt_MPa ?? concreteRbtFromRb_MPa(concreteRb_MPa);
+  const MrdConcrete_kNm = rbt_MPa * 1000 * pileSectionModulus_m3(section);
+  return { Mrd_kNm: MrdConcrete_kNm, MrdConcrete_kNm, MrdSteel_kNm: 0, AsTension_mm2: 0 };
 }
 
 /**
@@ -136,7 +176,7 @@ export function calculateBromsCohesivePile(
   const upliftCapacity_all = upliftCapacity_ult / 2.0; // FS=2.0 for uplift
 
   const utilization_H = H_allow > 0 ? appliedH / H_allow : 999;
-  const utilization_M = Mrd > 0 ? Mmax / Mrd : 999;
+  const utilization_M = Mrd > 0 ? ((sec.bendingLoadFactor ?? 1.0) * Mmax) / Mrd : 999;
   const utilization_Uplift = upliftCapacity_all > 0 ? appliedTv / upliftCapacity_all : 0;
 
   // Concrete volume
@@ -244,7 +284,7 @@ export function calculateBromsSandPile(
   const upliftCapacity_all = upliftCapacity_ult / 2.0; // FS = 2.0 for uplift, matching the clay model
 
   const utilization_H = H_allow > 0 ? appliedH / H_allow : 999;
-  const utilization_M = Mrd > 0 ? Mmax / Mrd : 999;
+  const utilization_M = Mrd > 0 ? ((sec.bendingLoadFactor ?? 1.0) * Mmax) / Mrd : 999;
   const utilization_Uplift = upliftCapacity_all > 0 ? appliedTv / upliftCapacity_all : 0;
 
   const orderedLength_m = safeL + (e > 0 ? e + 1.0 : 1.0);

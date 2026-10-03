@@ -17,7 +17,8 @@ import {
   pileEffectiveWidth_m,
   pilePerimeter_m,
   pileSectionModulus_m3,
-  pileMrd_kNm
+  pileMrd_kNm,
+  maxBarsPerFace
 } from '../broms';
 import { ProjectState, CheckItem, PileSectionInput } from '../types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
@@ -449,7 +450,12 @@ describe('Full project', () => {
       if (failed.length > 0) {
         console.log(`Raft ${raft.id} (${raft.name}) FAILED:`, failed.map((c: any) => `${c.id} (${c.label}) actual: ${c.displayActual}, thresh: ${c.threshold}`));
       }
-      expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
+      // 350 x 350 mm piles only (owner's instruction): BÈ 5 fails BP-2, the rest pass.
+      if (raft.name === 'BÈ 5') {
+        expect(failed.map((c: any) => c.id)).toEqual(['BP-2']);
+      } else {
+        expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
+      }
     }
   });
 });
@@ -476,18 +482,48 @@ describe('Broms — pile shape / section helpers', () => {
     expect(pilePerimeter_m(pipe)).toBeCloseTo(pilePerimeter_m(solid), 9);
   });
 
-  it('adds a positive steel moment contribution only when rebar area is given', () => {
+  it('bending capacity follows TCVN 5574:2018, not the compressive strength of the concrete', () => {
+    // Unreinforced: the section fails when it cracks, M = Rbt x W (B25: Rbt = 1.05 MPa).
     const plain: PileSectionInput = { shape: 'square', D_m: 0.45 };
-    const reinforced: PileSectionInput = { shape: 'square', D_m: 0.45, rebarArea_mm2: 2000, rebarFy_MPa: 300 };
     const mPlain = pileMrd_kNm(plain, 14.5);
-    const mReinforced = pileMrd_kNm(reinforced, 14.5);
     expect(mPlain.MrdSteel_kNm).toBe(0);
-    expect(mReinforced.MrdSteel_kNm).toBeGreaterThan(0);
-    expect(mReinforced.Mrd_kNm).toBeGreaterThan(mPlain.Mrd_kNm);
-    expect(mReinforced.MrdConcrete_kNm).toBeCloseTo(mPlain.MrdConcrete_kNm, 6); // concrete term unaffected
-    // Doubling the steel area doubles its moment contribution (linear in As).
-    const doubleSteel: PileSectionInput = { ...reinforced, rebarArea_mm2: 4000 };
-    expect(pileMrd_kNm(doubleSteel, 14.5).MrdSteel_kNm).toBeCloseTo(2 * mReinforced.MrdSteel_kNm, 6);
+    expect(mPlain.Mrd_kNm).toBeCloseTo(1.05 * 1000 * (0.45 ** 3 / 6), 6); // 15.95 kNm — the old formula gave 198
+    expect(mPlain.Mrd_kNm).toBeLessThan(20);
+
+    // Reinforced: M = Rs x As(tension face) x (D - 2 a_s); the cracked concrete adds nothing.
+    const rc: PileSectionInput = { shape: 'square', D_m: 0.35, rebarFaceCount: 3, rebarDia_mm: 25, rebarRs_MPa: 350, rebarCover_mm: 50 };
+    const m = pileMrd_kNm(rc, 14.5);
+    const As = 3 * Math.PI * 25 * 25 / 4; // 1472.6 mm2
+    expect(m.AsTension_mm2).toBeCloseTo(As, 6);
+    expect(m.MrdConcrete_kNm).toBe(0);
+    expect(m.Mrd_kNm).toBeCloseTo((As / 1e6) * 350e3 * 0.25, 6); // 128.9 kNm
+    // Linear in the bar count, in Rs and in the lever arm.
+    expect(pileMrd_kNm({ ...rc, rebarFaceCount: 6 }, 14.5).Mrd_kNm).toBeCloseTo(2 * m.Mrd_kNm, 6);
+    expect(pileMrd_kNm({ ...rc, rebarRs_MPa: 435 }, 14.5).Mrd_kNm).toBeCloseTo((435 / 350) * m.Mrd_kNm, 6);
+    expect(pileMrd_kNm({ ...rc, rebarCover_mm: 75 }, 14.5).Mrd_kNm).toBeCloseTo((0.2 / 0.25) * m.Mrd_kNm, 6);
+
+    // Legacy total-area input: only 3/8 of it is on the tension face, at fy / 1.15.
+    const legacy = pileMrd_kNm({ shape: 'square', D_m: 0.45, rebarArea_mm2: 2000, rebarFy_MPa: 300 }, 14.5);
+    expect(legacy.AsTension_mm2).toBeCloseTo(750, 6);
+    expect(legacy.Mrd_kNm).toBeCloseTo((750 / 1e6) * (300 / 1.15) * 1000 * 0.35, 6);
+  });
+
+  it('the bending check compares the FACTORED moment with M_rd and leaves M_max unfactored', () => {
+    const sec: PileSectionInput = { shape: 'square', D_m: 0.35, rebarFaceCount: 3, rebarDia_mm: 25 };
+    const p = { cu_kPa: 40, e: 0.5, D: 0.35, L: 6.5, FS: 2.5, appliedH: 70, appliedTv: 0 };
+    const a = calculateBromsPile('clay', { ...p, section: sec });
+    const b = calculateBromsPile('clay', { ...p, section: { ...sec, bendingLoadFactor: 1.2 } });
+    expect(b.Mmax).toBe(a.Mmax);
+    expect(b.Mrd).toBe(a.Mrd);
+    expect(b.utilization_M).toBeCloseTo(1.2 * a.utilization_M, 2);
+    expect(a.utilization_M).toBeCloseTo(a.Mmax / a.Mrd, 2);
+  });
+
+  it('fits bars in one layer at a spacing of max(2d, d + 30 mm)', () => {
+    expect(maxBarsPerFace(0.35, 25)).toBe(5);
+    expect(maxBarsPerFace(0.35, 32)).toBe(4);
+    expect(maxBarsPerFace(0.3, 32)).toBe(4);
+    expect(maxBarsPerFace(0.3, 20)).toBe(5);
   });
 
   it('calculateBromsCohesivePile with no section arg matches the original plain-square behaviour', () => {

@@ -26,6 +26,13 @@ export interface RaftSummaryItem {
   shorePileL_m?: number;
   bedPileD_m?: number;
   bedPileL_m?: number;
+  /** Bars on the tension face of the shore / lake-bed pile (one layer) and their diameter, mm. */
+  shoreRebarFaceCount?: number;
+  shoreRebarDia_mm?: number;
+  bedRebarFaceCount?: number;
+  bedRebarDia_mm?: number;
+  /** Design strength of this raft's pile bars Rs, MPa (omit for the project value). */
+  pileRebarRs_MPa?: number;
 }
 
 export interface MooringCoordinate {
@@ -63,10 +70,19 @@ export interface MooringCoordinate {
  *  - bedAnchorDist_m       : the SHORTEST bed line of the raft (floored to
  *    0.1 m). It sets the bed cable inclination atan(depth / span): the
  *    steepest cable, i.e. the largest uplift on the bed pile.
- *  - selectedCable / pile D, L : smallest PES cable and square RC pile
- *    (cọc vuông BTCT) for which every check passes with utilisation <= 0.95
- *    (cable MBL, Broms BP-1..BP-5 at the design depth L_tk, Broms FS = 2.5).
- *    L_tk is never shallower than the V1 design depth.
+ *  - selectedCable         : smallest PES cable with utilisation <= 0.95,
+ *    selected at the earlier 15° tilt (more margin at the present 12°).
+ *  - piles (2026-10-03, owner's instruction: 300 or 350 mm square piles only,
+ *    longer piles and more reinforcement allowed): every pile is 350 x 350 mm.
+ *    L_tk = the previous design depth, or deeper where lateral / uplift need
+ *    it (utilisation <= 0.95, Broms FS = 2.5). Reinforcement = the lightest
+ *    single layer of bars on the tension face (2..4 bars, D18..D32, CB400-V,
+ *    Rs = 350 MPa) with gamma x M_max / M_rd <= 0.95, gamma = 1.2
+ *    (TCVN 5574:2018, see pileMrd_kNm in broms.ts).
+ *  - BÈ 5 DOES NOT PASS with one 350 mm pile per line: the shore pile fails
+ *    in bending (BP-2) even with the heaviest layer that fits (5 D28, CB500-V)
+ *    and the lake-bed pile needs 16 m (slenderness 49). The catalogue carries
+ *    that best attempt so the FAIL is visible; it needs the owner's decision.
  */
 export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
   {
@@ -86,10 +102,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6,
     bedAnchorDist_m: 11.6,
     shoreAnchorDist_m: 5.7,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
-    bedPileL_m: 8.5
+    bedPileL_m: 8.5,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 25,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 20
   },
   {
     id: 2,
@@ -108,10 +128,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 6.4,
     shoreAnchorDist_m: 12.7,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
-    bedPileL_m: 8
+    bedPileL_m: 8,
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 28,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 20
   },
   {
     id: 3,
@@ -130,10 +154,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 5.6,
     shoreAnchorDist_m: 15.8,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.4,
-    bedPileL_m: 9
+    bedPileD_m: 0.35,
+    bedPileL_m: 9,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 28,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 20
   },
   {
     id: 4,
@@ -152,10 +180,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 5.4,
     shoreAnchorDist_m: 16.4,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.4,
-    bedPileL_m: 9
+    bedPileD_m: 0.35,
+    bedPileL_m: 9,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 25
   },
   {
     id: 5,
@@ -174,10 +206,15 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 9.2,
     shoreAnchorDist_m: 21.2,
-    shorePileD_m: 0.6,
-    shorePileL_m: 8.5,
-    bedPileD_m: 0.6,
-    bedPileL_m: 12.5
+    shorePileD_m: 0.35,
+    shorePileL_m: 10.5,
+    bedPileD_m: 0.35,
+    bedPileL_m: 16,
+    shoreRebarFaceCount: 5,
+    shoreRebarDia_mm: 28,
+    bedRebarFaceCount: 4,
+    bedRebarDia_mm: 32,
+    pileRebarRs_MPa: 435
   },
   {
     id: 6,
@@ -196,10 +233,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 10.1,
     shoreAnchorDist_m: 22.7,
-    shorePileD_m: 0.5,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.45,
-    bedPileL_m: 10
+    bedPileD_m: 0.35,
+    bedPileL_m: 10,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 32
   },
   {
     id: 7,
@@ -218,10 +259,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 10.4,
     shoreAnchorDist_m: 17.8,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.45,
-    bedPileL_m: 10.5
+    bedPileD_m: 0.35,
+    bedPileL_m: 10.5,
+    shoreRebarFaceCount: 4,
+    shoreRebarDia_mm: 25,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 25
   },
   {
     id: 8,
@@ -240,10 +285,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 9.6,
     shoreAnchorDist_m: 2.6,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.4,
-    bedPileL_m: 10
+    bedPileD_m: 0.35,
+    bedPileL_m: 10,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 25
   },
   {
     id: 9,
@@ -262,10 +311,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 5,
     shoreAnchorDist_m: 13.1,
-    shorePileD_m: 0.5,
-    shorePileL_m: 6.5,
-    bedPileD_m: 0.45,
-    bedPileL_m: 10.5
+    shorePileD_m: 0.35,
+    shorePileL_m: 7,
+    bedPileD_m: 0.35,
+    bedPileL_m: 10.5,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 22
   },
   {
     id: 10,
@@ -284,10 +337,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 8.6,
     shoreAnchorDist_m: 20.3,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
-    bedPileD_m: 0.4,
-    bedPileL_m: 9.5
+    bedPileD_m: 0.35,
+    bedPileL_m: 9.5,
+    shoreRebarFaceCount: 4,
+    shoreRebarDia_mm: 25,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 28
   },
   {
     id: 11,
@@ -306,10 +363,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 8.6,
     shoreAnchorDist_m: 13.6,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
-    bedPileL_m: 8
+    bedPileL_m: 8,
+    shoreRebarFaceCount: 4,
+    shoreRebarDia_mm: 20,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 22
   },
   {
     id: 12,
@@ -328,10 +389,14 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     waterDepth_m: 6.2,
     bedAnchorDist_m: 7.2,
     shoreAnchorDist_m: 12.8,
-    shorePileD_m: 0.45,
+    shorePileD_m: 0.35,
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
-    bedPileL_m: 8
+    bedPileL_m: 8,
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 28,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 22
   }
 ];
 
@@ -429,8 +494,18 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     sfPile: 2.5,
     sfUplift: 2.0,
     concreteRb_MPa: 14.5,
+    // Pile bending per TCVN 5574:2018: bars on the tension face, design strength
+    // Rs (CB400-V), a_s = 50 mm, and a load factor of 1.2 on the wind-governed moment.
+    concreteRbt_MPa: 1.05,
+    pileRebarRs_MPa: 350,
+    pileRebarCover_mm: 50,
+    pileBendingLoadFactor: 1.2,
+    shoreRebarFaceCount: 3,
+    shoreRebarDia_mm: 25,
+    bedRebarFaceCount: 3,
+    bedRebarDia_mm: 20,
     shoreArm_e_m: 0.5,
-    shoreD_m: 0.45,
+    shoreD_m: 0.35,
     shoreL_m: 6.5,
     bed1Arm_e_m: 0.0,
     bed1D_m: 0.35,

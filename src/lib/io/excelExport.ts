@@ -192,11 +192,11 @@ export function exportProjectToExcel(
       ['Sức chịu ngang cực hạn', 'Hu', results.shorePile.Hu, 'kN', ''],
       ['Sức chịu ngang cho phép', 'H_all', results.shorePile.H_allow, 'kN', 'Hu / FS'],
       ['Mômen uốn lớn nhất', 'M_max', results.shorePile.Mmax, 'kNm', ''],
-      ['Mômen kháng uốn tiết diện (bê tông)', 'Mrd_bt', results.shorePile.MrdConcrete_kNm ?? '-', 'kNm', '0.9 * Rb * W'],
-      ['Mômen kháng uốn cốt thép', 'Mrd_thep', results.shorePile.MrdSteel_kNm ?? '-', 'kNm', 'As * fy * 0.85D'],
-      ['Mômen kháng uốn tổng', 'Mrd', results.shorePile.Mrd, 'kNm', 'Mrd_bt + Mrd_thep'],
+      ['Cốt thép mặt chịu kéo', 'As', `${state.anchor.shoreRebarFaceCount ?? 0}Φ${state.anchor.shoreRebarDia_mm ?? 0}`, '', `Rs = ${state.anchor.pileRebarRs_MPa ?? 350} MPa, a_s = ${state.anchor.pileRebarCover_mm ?? 50} mm`],
+      ['Mômen kháng uốn tiết diện', 'Mrd', results.shorePile.Mrd, 'kNm', 'TCVN 5574:2018: Rs * As * (a - 2*a_s); không thép: Rbt * W'],
+      ['Hệ số tải trọng cho mômen uốn', 'gamma', state.anchor.pileBendingLoadFactor ?? 1.2, '-', ''],
       ['Hệ số sử dụng chịu ngang', 'Eta_H', results.shorePile.utilization_H, '-', 'H_applied / H_all'],
-      ['Hệ số sử dụng tiết diện', 'Eta_M', results.shorePile.utilization_M, '-', 'M_max / M_rd']
+      ['Hệ số sử dụng tiết diện', 'Eta_M', results.shorePile.utilization_M, '-', 'gamma * M_max / M_rd']
     );
   }
 

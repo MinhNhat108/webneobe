@@ -119,8 +119,9 @@ describe('Pile schedule quotes the as-built capacity', () => {
     expect(shore.Linput_m).toBe(state.anchor.shoreL_m);       // driven depth
     expect(shore.Lopt_m!).toBeLessThan(shore.Linput_m);        // minimum depth
     expect(shore.Pmax_kN).toBe(results.shorePileCapacity!.Pmax_kN);
-    // Deeper pile ⇒ materially stronger than the L_opt figure it used to show.
-    expect(shore.Pmax_kN).toBeGreaterThan(shore.PmaxAtLopt_kN * 1.5);
+    // Deeper pile ⇒ stronger than the L_opt figure it used to show (the gain is
+    // capped by the section's bending capacity, which does not grow with depth).
+    expect(shore.Pmax_kN).toBeGreaterThan(shore.PmaxAtLopt_kN);
 
     const bed = rows.find((r) => r.type === 'BED')!;
     expect(bed.Pmax_kN).toBe(results.bedPileCapacity!.Pmax_kN);

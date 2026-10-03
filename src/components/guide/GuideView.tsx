@@ -1075,7 +1075,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div className="p-3 bg-slate-900 text-brand-300 rounded-lg font-mono text-xs overflow-x-auto space-y-1">
                 <div>T_v = T_max &times; sin(&theta;_line)</div>
                 <div>Q_uplift = &alpha; &times; c_u,bed &times; (4D) &times; L_bed (&alpha; = 0.7)</div>
-                <div>M_rd = 0.9 &times; R_b &times; (D&sup3; / 6) &ge; M_max</div>
+                <div>M_rd = R_s &times; A_s(mặt chịu kéo) &times; (a &minus; 2a_s) &ge; &gamma; &times; M_max (TCVN 5574:2018)</div>
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-700">
                 <span className="font-bold text-slate-900">Ví dụ tính toán mẫu (Cọc đáy BÈ 1):</span>

@@ -144,7 +144,24 @@ export interface AnchorInput {
   // 'pipe': D = outer diameter, hollow, wall thickness tWall_m.
   shorePileShape?: 'square' | 'circular' | 'pipe';
   shorePileTWall_m?: number;
-  shoreRebarArea_mm2?: number; // total longitudinal reinforcement area As, mm2 (0/undefined = plain concrete)
+  // Reinforcement actually checked in bending (TCVN 5574:2018): bars on the tension face, one layer.
+  shoreRebarFaceCount?: number;
+  shoreRebarDia_mm?: number;
+  bedRebarFaceCount?: number;
+  bedRebarDia_mm?: number;
+  /** Design tensile strength of the pile bars Rs, MPa (CB300-V 260, CB400-V 350, CB500-V 435). Default 350. */
+  pileRebarRs_MPa?: number;
+  /** Concrete face to bar centre, mm. Default 50. */
+  pileRebarCover_mm?: number;
+  /** Design tensile strength of the pile concrete Rbt, MPa (B25: 1.05). */
+  concreteRbt_MPa?: number;
+  /**
+   * Load factor on the pile bending moment (wind governs the line tension).
+   * Default 1.2 — the wind load factor of TCVN 2737:1995 that TCVN 5574 strength
+   * checks are normally run with. M_max in the results stays UNFACTORED.
+   */
+  pileBendingLoadFactor?: number;
+  shoreRebarArea_mm2?: number; // LEGACY total As, mm2 — superseded by shoreRebarFaceCount / shoreRebarDia_mm
   shoreRebarFy_MPa?: number;   // reinforcement yield strength, MPa (default 300 = CB300-V)
   bedPileShape?: 'square' | 'circular' | 'pipe';
   bedPileTWall_m?: number;
@@ -250,10 +267,26 @@ export interface PileSectionInput {
   D_m: number;
   /** Pipe only: wall thickness. Ignored otherwise. */
   tWall_m?: number;
-  /** Total longitudinal reinforcement area As, mm2. 0/undefined = plain concrete section. */
+  /**
+   * LEGACY input: total longitudinal reinforcement area As, mm2, with no bar
+   * layout. Only 3/8 of it is counted on the tension face (the share of an
+   * 8-bar ring). Prefer `rebarFaceCount` + `rebarDia_mm`.
+   */
   rebarArea_mm2?: number;
-  /** Reinforcement yield strength, MPa. Default 300 (CB300-V) when rebarArea_mm2 > 0. */
+  /** LEGACY: characteristic yield strength, MPa (design strength taken as fy / 1.15). */
   rebarFy_MPa?: number;
+  /** Bars on the TENSION face (one layer). With `rebarDia_mm`, this is the reinforcement the bending check uses. */
+  rebarFaceCount?: number;
+  /** Bar diameter, mm. */
+  rebarDia_mm?: number;
+  /** Design tensile strength of the bars Rs, MPa (TCVN 5574:2018: CB300-V 260, CB400-V 350, CB500-V 435). Default 350. */
+  rebarRs_MPa?: number;
+  /** Distance from the concrete face to the bar centre a_s, mm. Default 50. */
+  rebarCover_mm?: number;
+  /** Design tensile strength of the concrete Rbt, MPa. Default: from Rb (B25: 1.05). */
+  concreteRbt_MPa?: number;
+  /** Load factor applied to M_max before it is compared with M_rd. Default 1.0. */
+  bendingLoadFactor?: number;
 }
 
 export interface BromsResult {

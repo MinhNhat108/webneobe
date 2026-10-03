@@ -19,6 +19,10 @@ const check = (checks: CheckItem[], id: string): CheckItem => {
   return c;
 };
 
+// A reinforced 0.45 m section (4 D25 on the tension face): an unreinforced
+// pile fails in bending at any depth, which is not what these tests are about.
+const RC: PileSectionInput = { shape: 'square', D_m: 0.45, rebarFaceCount: 4, rebarDia_mm: 25 };
+
 const clayPile = (overrides: Partial<Parameters<typeof optimizePileEmbedment>[0]> = {}) =>
   optimizePileEmbedment({
     soilType: 'clay',
@@ -28,6 +32,7 @@ const clayPile = (overrides: Partial<Parameters<typeof optimizePileEmbedment>[0]
     FS: 2.5,
     appliedH: 60,
     appliedTv: 0,
+    section: RC,
     ...overrides
   });
 
@@ -51,14 +56,14 @@ describe('optimizePileEmbedment — Broms inverse solve', () => {
 
     const L = r.L_opt_m as number;
     const at = calculateBromsPile('clay', {
-      cu_kPa: 40, e: 0.5, D: 0.45, L, FS: 2.5, appliedH: 60, appliedTv: 0
+      cu_kPa: 40, e: 0.5, D: 0.45, L, FS: 2.5, appliedH: 60, appliedTv: 0, section: RC
     });
     expect(at.utilization_H).toBeLessThanOrEqual(1.0);
     expect(at.utilization_M).toBeLessThanOrEqual(1.0);
 
     // One step shallower must NOT pass — otherwise it was not the minimum.
     const below = calculateBromsPile('clay', {
-      cu_kPa: 40, e: 0.5, D: 0.45, L: L - r.step_m, FS: 2.5, appliedH: 60, appliedTv: 0
+      cu_kPa: 40, e: 0.5, D: 0.45, L: L - r.step_m, FS: 2.5, appliedH: 60, appliedTv: 0, section: RC
     });
     expect(below.utilization_H).toBeGreaterThan(1.0);
   });
@@ -92,12 +97,13 @@ describe('optimizePileEmbedment — Broms inverse solve', () => {
       e: 0.5,
       D: 0.45,
       FS: 2.5,
-      appliedH: 60
+      appliedH: 60,
+      section: RC
     });
     expect(r.converged).toBe(true);
     const at = calculateBromsPile('sand', {
       phi_deg: 32, gammaSub_kNm3: 10, e: 0.5, D: 0.45,
-      L: r.L_opt_m as number, FS: 2.5, appliedH: 60
+      L: r.L_opt_m as number, FS: 2.5, appliedH: 60, section: RC
     });
     expect(at.utilization_H).toBeLessThanOrEqual(1.0);
   });

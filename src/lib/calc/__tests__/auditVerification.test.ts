@@ -9,7 +9,7 @@ import { MOORING_LINES_V2 as coordinates } from '../../../data/huoiVanhLayout';
 import { buildRaftProjectState } from '../raftState';
 
 describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
-  it('all 12 rafts pass all mandatory checks C1-C11 and BP-1-BP-5', () => {
+  it('11 rafts pass all mandatory checks C1-C11 and BP-1-BP-5 with 350 mm piles; BÈ 5 fails BP-2 only', () => {
     const summary: any[] = [];
     const batchResults: any[] = [];
 
@@ -20,8 +20,15 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
       const r = calculateProject(s);
       batchResults.push({ raft, state: s, results: r });
 
-      // Check overall verdict
-      expect(r.overallVerdict).toBe('PASS');
+      // Check overall verdict. With the owner's 350 x 350 mm piles BÈ 5 cannot
+      // pass: its shore pile fails in bending (BP-2) even with the heaviest
+      // single layer of CB500-V that fits. Every other raft passes.
+      if (raft.name === 'BÈ 5') {
+        expect(r.overallVerdict).toBe('FAIL');
+        expect(r.checks.filter((c) => c.status === 'FAIL').map((c) => c.id)).toEqual(['BP-2']);
+      } else {
+        expect(r.overallVerdict, raft.name).toBe('PASS');
+      }
 
       // Check cable safety factor (intact >= 3.0)
       const c2 = r.checks.find((c) => c.id === 'C2');
@@ -40,8 +47,13 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
 
       // Check Broms shore pile moment
       const bp2 = r.checks.find((c) => c.id === 'BP-2');
-      expect(bp2?.status).toBe('PASS');
-      expect(bp2?.utilization).toBeLessThanOrEqual(1.0);
+      if (raft.name === 'BÈ 5') {
+        expect(bp2?.status).toBe('FAIL'); // see above
+        expect(bp2?.utilization).toBeGreaterThan(1.0);
+      } else {
+        expect(bp2?.status, raft.name).toBe('PASS');
+        expect(bp2?.utilization).toBeLessThanOrEqual(1.0);
+      }
 
       // Check Broms bed pile lateral
       const bp3 = r.checks.find((c) => c.id === 'BP-3');
@@ -100,12 +112,19 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
 
     expect(schedule).toHaveLength(304);
     for (const p of schedule) {
-      expect(p.Lopt_m).not.toBeNull();
-      expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
       expect(p.Pmax_kN).toBeGreaterThan(0);
       expect(p.Preq_kN).toBeGreaterThan(0);
-      expect(p.isPmaxOk).toBe(true);
+      if (p.raft === 'BÈ 5' && p.type === 'SHORE') {
+        // The section fails in bending at every depth: no L_opt, and the schedule says so.
+        expect(p.Lopt_m, p.pileId).toBeNull();
+        expect(p.isPmaxOk, p.pileId).toBe(false);
+        continue;
+      }
+      expect(p.Lopt_m, p.pileId).not.toBeNull();
+      expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
+      expect(p.isPmaxOk, p.pileId).toBe(true);
     }
+    expect(schedule.filter((p) => !p.isPmaxOk)).toHaveLength(12); // the 12 shore piles of BÈ 5
 
     // Verify Excel Workbook creation
     const wb = buildPileScheduleWorkbook(baseState, baseResults, batchResults, coordinates as any);

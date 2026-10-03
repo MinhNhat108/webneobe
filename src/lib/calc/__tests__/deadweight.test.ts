@@ -106,12 +106,14 @@ describe('PA2 in the calculation engine (checks DW-1..DW-4)', () => {
       const pa1 = calculateProject({ ...s, anchor: { ...s.anchor, bedAnchorOption: 'PA1_PILE' } });
       const status = (id: string) => r.checks.find((c) => c.id === id)?.status;
       for (const id of ['BP-3', 'BP-4', 'BP-5', 'C11']) expect(status(id), `${item.name} ${id}`).toBe('SKIP');
+      // BÈ 5's 350 mm SHORE pile fails in bending in both options; the blocks themselves pass.
+      const verdict = item.name === 'BÈ 5' ? 'FAIL' : 'PASS';
       for (const id of ['DW-1', 'DW-2', 'DW-3', 'DW-4']) expect(status(id), `${item.name} ${id}`).toBe('PASS');
       for (const id of ['BP-1', 'BP-2']) {
         expect(r.checks.find((c) => c.id === id), `${item.name} ${id}`).toEqual(pa1.checks.find((c) => c.id === id));
       }
       expect(r.t_max_intact_kN, item.name).toBe(pa1.t_max_intact_kN); // the loads do not depend on the anchor type
-      expect(r.overallVerdict, item.name).toBe('PASS');
+      expect(r.overallVerdict, item.name).toBe(verdict);
       const b = r.bedBlock!;
       expect(r.checks.find((c) => c.id === 'DW-1')!.utilization).toBeCloseTo(b.params.sfSlide / b.sfSlide, 9);
       expect(r.checks.find((c) => c.id === 'DW-4')!.utilization).toBeCloseTo(b.qContact_kPa / b.params.qAllow_kPa, 9);
@@ -154,14 +156,15 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.shoreConcrete_m3).toBeCloseTo(shore, 6);
   });
 
-  it('pins the computed quantities at the 12° tilt: blocks 42–129 t against piles of 2.6–11.7 t, ~5 380 m³ against ~396 m³', () => {
+  it('pins the computed quantities at the 12° tilt: blocks 42–129 t against 350 mm piles of 2.6–5.0 t, ~5 380 m³ against ~246 m³', () => {
     const c = compare();
     expect(c.blockMass_t[0]).toBeGreaterThan(40);
     expect(c.blockMass_t[0]).toBeLessThan(45);
     expect(c.blockMass_t[1]).toBeGreaterThan(125);
     expect(c.blockMass_t[1]).toBeLessThan(135);
-    expect(c.bedPileMass_t[1]).toBeLessThan(12);
-    expect(c.pa1BedConcrete_m3).toBeCloseTo(396.5, 0);
+    expect(c.bedPileSide_m).toEqual([0.35, 0.35]);
+    expect(c.bedPileMass_t[1]).toBeLessThan(5.1);
+    expect(c.pa1BedConcrete_m3).toBeCloseTo(246.2, 0);
     expect(c.pa2BedConcrete_m3).toBeGreaterThan(5000);
     expect(c.pa2BedConcrete_m3).toBeLessThan(5800);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
@@ -210,7 +213,7 @@ describe('PA2 in the 3D scene', () => {
       expect(b.mass_t, item.name).toBeCloseTo(r.bedBlock!.mass_t, 6);
     }
     const states = computeRaftMooringStates(s, s.env.windSpeed_ms, 1);
-    for (const st of states.values()) expect(st.verdict, st.name).toBe('PASS');
+    for (const st of states.values()) expect(st.verdict, st.name).toBe(st.name === 'BÈ 5' ? 'FAIL' : 'PASS');
   });
 
   it('block utilisation is ≤ 1 at the design tension and grows with the load', () => {

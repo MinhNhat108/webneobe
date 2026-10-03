@@ -40,7 +40,8 @@ export function pileMomentLimitedH_kN(
   section: PileSectionInput,
   concreteRb_MPa: number
 ): number {
-  const { Mrd_kNm } = pileMrd_kNm(section, concreteRb_MPa);
+  // The lateral load the SECTION allows: γ·M_max(H) = M_rd.
+  const Mrd_kNm = pileMrd_kNm(section, concreteRb_MPa).Mrd_kNm / (section.bendingLoadFactor ?? 1.0);
   if (Mrd_kNm <= 0) return 0;
 
   if (broms.soilModel === 'sand') {

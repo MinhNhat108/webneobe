@@ -3,6 +3,14 @@ import { calculateLoads } from './loads';
 import { calculateCatenary } from './catenary';
 import { calculateAnchor } from './anchor';
 import { calculateBromsPile } from './broms';
+
+/**
+ * Load factor on the pile bending moment. The line tension is wind-governed
+ * and unfactored; a TCVN 5574:2018 strength check needs a design load, and
+ * 1.2 is the wind load factor of TCVN 2737:1995. Editable per project
+ * (`anchor.pileBendingLoadFactor`).
+ */
+export const DEFAULT_PILE_BENDING_LOAD_FACTOR = 1.2;
 import { optimizePileEmbedment, pileAllowableTension } from './pileOptimizer';
 import { runChecks } from './checks';
 import { sizeDeadweightBlock, DEADWEIGHT_DEFAULTS, type DeadweightResult } from './deadweight';
@@ -72,19 +80,32 @@ export function calculateProject(state: ProjectState): CalcResults {
   let bedPileCapacity;
 
   if (state.anchor.mode === 'pile' || isSolar) {
+    // Reinforcement and the bending load factor shared by both pile types.
+    const rebarCommon = {
+      rebarRs_MPa: state.anchor.pileRebarRs_MPa,
+      rebarCover_mm: state.anchor.pileRebarCover_mm,
+      concreteRbt_MPa: state.anchor.concreteRbt_MPa,
+      bendingLoadFactor: state.anchor.pileBendingLoadFactor ?? DEFAULT_PILE_BENDING_LOAD_FACTOR
+    };
     const shoreSection: PileSectionInput = {
       shape: state.anchor.shorePileShape ?? 'square',
       D_m: state.anchor.shoreD_m ?? 0.45,
       tWall_m: state.anchor.shorePileTWall_m,
       rebarArea_mm2: state.anchor.shoreRebarArea_mm2,
-      rebarFy_MPa: state.anchor.shoreRebarFy_MPa
+      rebarFy_MPa: state.anchor.shoreRebarFy_MPa,
+      rebarFaceCount: state.anchor.shoreRebarFaceCount,
+      rebarDia_mm: state.anchor.shoreRebarDia_mm,
+      ...rebarCommon
     };
     const bedSection: PileSectionInput = {
       shape: state.anchor.bedPileShape ?? 'square',
       D_m: state.anchor.bed1D_m ?? 0.35,
       tWall_m: state.anchor.bedPileTWall_m,
       rebarArea_mm2: state.anchor.bedRebarArea_mm2,
-      rebarFy_MPa: state.anchor.bedRebarFy_MPa
+      rebarFy_MPa: state.anchor.bedRebarFy_MPa,
+      rebarFaceCount: state.anchor.bedRebarFaceCount,
+      rebarDia_mm: state.anchor.bedRebarDia_mm,
+      ...rebarCommon
     };
 
     shorePile = calculateBromsPile(state.anchor.soilShore ?? 'clay', {

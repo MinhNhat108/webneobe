@@ -22,7 +22,7 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 - **Hệ cọc neo (V2, 2026-09-27):** Tổng cộng **304 cọc = 304 tuyến cáp**, là KẾT QUẢ THIẾT KẾ của `scripts/planMooringLayoutV2.mjs`. KHÔNG lấy cọc từ DXF (cọc trong DXF Revit là cọc dummy; từ DXF chỉ lấy 12 đa giác bè):
   - **129 Cọc bờ (`SHORE`)** bố trí trên sườn đồi ven hồ (script không bao giờ dời cọc bờ).
   - **175 Cọc đáy hồ (`BED`)**, cách mọi bè $\ge 5.0\,\text{m}$, đặt trên tim khe khi khe giữa hai bè hẹp hơn 35 m.
-  - **100% CỌC VUÔNG BTCT** (`shape: 'square'`, yêu cầu của Chủ đầu tư) — không dùng cọc tròn, không dùng công thức cọc tròn. Cạnh $a = 0.35 \div 0.60\,\text{m}$ và chiều sâu $L_{tk}$ định cỡ riêng từng bè trong `HUOI_VANH_RAFTS`.
+  - **100% CỌC VUÔNG BTCT 350 × 350 mm** (`shape: 'square'`; Chủ đầu tư chốt 2026-10-03: chỉ dùng cọc 300×300 hoặc 350×350, được tăng chiều dài và cốt thép) — không dùng cọc tròn. $L_{tk}$ và cốt thép (số thanh trên mặt chịu kéo × đường kính) định riêng từng bè trong `HUOI_VANH_RAFTS`: cọc bờ $L_{tk} = 6.5 \div 7.0$ m, 2–4 thanh Φ20–Φ32; cọc đáy $L_{tk} = 8 \div 10.5$ m, 2–3 thanh Φ20–Φ32; thép CB400-V. **BÈ 5 KHÔNG ĐẠT với một cọc 350 mỗi tuyến** (BP-2 cọc bờ = 1,09 dù đặt 5Φ28 CB500-V; cọc đáy cần 16 m) — chờ Chủ đầu tư quyết định.
   - Mức tối thiểu để cả 12 bè đạt C9 là $\sum \lceil P/15 \rceil = 300$ dây (BÈ 5 cần 35). Thiết kế giữ 304 dây: BÈ 5 có 39 dây với bước móc dọc mép $\le 15\,\text{m}$ trên toàn chu vi (mép Đông 150 m có 11 dây); không bè nào có cung hở > 60°.
   - Khi một đa giác bè thay đổi, script tự gắn lại móc của cọc bờ lên mép mới (cọc bờ không dời) và bố trí lại toàn bộ dây đáy của bè đó.
 - **Cao trình thủy văn hồ Huổi Vanh:**
@@ -43,7 +43,8 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - Hệ số an toàn kéo đứt: $SF = T_{\text{brk}} / T_{\max} \ge 1.67$.
 - **Địa kỹ thuật cọc neo Broms:**
   - Đất sườn đồi: Đất sét dẻo cứng, $\phi = 28^\circ, c = 12\,\text{kPa}, \gamma = 18\,\text{kN/m}^3$.
-  - Cọc vuông BTCT: Kiểm tra Broms BP-1..BP-5 (ngang, uốn, nhổ) tại chiều sâu thiết kế $L_{tk}$, FS Broms = 2.5; thiết kế chọn hệ số sử dụng $\le 0.95$ cho cả 12 bè khi định cỡ ở 15° (cáp BÈ 5 PES-48 = 0.945 ở 15°).
+  - Cọc vuông BTCT: Kiểm tra Broms BP-1..BP-5 (ngang, uốn, nhổ) tại chiều sâu thiết kế $L_{tk}$, FS Broms = 2.5; chọn hệ số sử dụng $\le 0.95$.
+  - **Uốn cọc theo TCVN 5574:2018** (`pileMrd_kNm` trong `broms.ts`, sửa 2026-10-03): $M_{rd} = R_s \cdot A_{s,kéo} \cdot (a - 2a_s)$ với thép một mặt, $a_s = 50$ mm, CB400-V $R_s = 350$ MPa; cọc không thép chỉ có $M = R_{bt} \cdot W$. Kiểm tra $\gamma \cdot M_{max} \le M_{rd}$ với $\gamma = 1.2$ (`anchor.pileBendingLoadFactor`, hệ số vượt tải gió TCVN 2737:1995). Công thức cũ $0.9 R_b W + A_s f_y 0.85D$ cho kết quả cao hơn 5–12 lần — KHÔNG dùng lại.
   - Góc cáp tại cọc đáy lấy theo tuyến cáp đáy NGẮN NHẤT của mỗi bè (`bedAnchorDist_m`), tức cáp dốc nhất và lực nhổ lớn nhất.
 - **Tải gió trong engine:** nghiêng 12°, $C_d = 1.15$, $V = 30\,\text{m/s}$ ($q = 0.56 \ge 0.54\,\text{kN/m}^2$). So với 15°: lực môi trường và $T_{\max}$ giảm 17–19%. Danh mục cáp/cọc trong `HUOI_VANH_RAFTS` vẫn là bộ đã định cỡ ở 15° (dư an toàn hơn ở 12°), CHƯA định cỡ lại.
 - **Tiêu chuẩn khoảng cách cáp (C9, BẮT BUỘC):** $s_{\text{avg}} = P_{\text{bè}} / N_{\text{dây}} \le 15.0\,\text{m}$ cho tất cả 12 bè, với $P_{\text{bè}}$ là chu vi đa giác đo được (`raft.perimeter_m`).
@@ -76,6 +77,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 167 tests tại 2026-10-03).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 169 tests tại 2026-10-03; các test khẳng định 11 bè ĐẠT và BÈ 5 KHÔNG ĐẠT BP-2).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

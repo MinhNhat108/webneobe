@@ -372,7 +372,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 11,
+      version: 12,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -469,6 +469,18 @@ export const useProjectStore = create<ProjectStore>()(
           // v11 (2026-10-03): default panel tilt adjusted to 12.0°
           if (version < 11 && persistedState.currentProject?.raft) {
             persistedState.currentProject.raft.solarTilt_deg = 12.0;
+          }
+
+          // v12 (2026-10-03): 350 x 350 mm piles with explicit reinforcement
+          // (TCVN 5574:2018 bending). A cached Huổi Vanh raft list still holds
+          // the 0.35–0.60 m piles and no bars — which the corrected check would
+          // show as unreinforced. Re-sync the list and the active raft's pile
+          // inputs; project-wide inputs the user set are kept.
+          if (version < 12 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId) ?? HUOI_VANH_RAFTS[0];
+            persistedState.activeRaftId = item.id;
+            persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
           }
 
           // Whatever the history, never leave the app pointing at a raft that

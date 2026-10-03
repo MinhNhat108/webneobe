@@ -354,13 +354,13 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-600 font-sans">
-                  Mômen giới hạn tiết diện (M_rd{(results.shorePile.MrdSteel_kNm ?? 0) > 0 ? ' = bê tông + thép' : ''}):
+                  Mômen giới hạn tiết diện (M_rd, TCVN 5574:2018{(results.shorePile.MrdSteel_kNm ?? 0) > 0
+                    ? ` — ${state.anchor.shoreRebarFaceCount ?? '?'}Φ${state.anchor.shoreRebarDia_mm ?? '?'} mặt chịu kéo`
+                    : ' — KHÔNG cốt thép, Rbt·W'}):
                 </span>
                 <span>
                   {results.shorePile.Mrd} kNm
-                  {(results.shorePile.MrdSteel_kNm ?? 0) > 0 && (
-                    <span className="text-slate-400"> ({results.shorePile.MrdConcrete_kNm} + {results.shorePile.MrdSteel_kNm})</span>
-                  )}
+                  <span className="text-slate-400"> (γ = {state.anchor.pileBendingLoadFactor ?? 1.2})</span>
                 </span>
               </div>
               <div className="flex justify-between">

@@ -197,7 +197,10 @@ export const ReportView: React.FC = () => {
                     <td className="p-2 border-r border-slate-200 font-sans">Mômen uốn cọc bờ (M_max / M_rd)</td>
                     <td className="p-2 border-r border-slate-200 text-right">{results.shorePile.Mmax} / {results.shorePile.Mrd}</td>
                     <td className="p-2 border-r border-slate-200">kNm</td>
-                    <td className="p-2">Kiểm tra tiết diện bê tông B25</td>
+                    <td className="p-2">
+                      TCVN 5574:2018: M_rd = Rs·As·(a − 2a_s), {currentProject.anchor.shoreRebarFaceCount ?? 0}Φ{currentProject.anchor.shoreRebarDia_mm ?? 0} mặt
+                      chịu kéo, Rs = {currentProject.anchor.pileRebarRs_MPa ?? 350} MPa; kiểm tra γ·M_max ≤ M_rd với γ = {currentProject.anchor.pileBendingLoadFactor ?? 1.2}
+                    </td>
                   </tr>
                 </>
               )}

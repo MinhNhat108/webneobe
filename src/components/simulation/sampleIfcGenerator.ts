@@ -10,7 +10,7 @@ const guid = (prefix19: string, n: number) => `${prefix19}${n.toString().padStar
  */
 export function generateHuoiVanhSampleIfc(): string {
   // Digits and 'T' only (the ISO '-', ':' and '.' removed). Not written as a
-  // bracketed class like '[-:.]': Tailwind scans src/ and emits a broken CSS rule for it.
+  // bracketed character class listing them: Tailwind scans src/ and turns such a class into a broken CSS rule.
   const timestamp = new Date().toISOString().replace(/[^0-9T]/g, '').slice(0, 15);
 
   let idCounter = 1;

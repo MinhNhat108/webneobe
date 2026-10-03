@@ -18,6 +18,7 @@ import { AttachmentPanel } from '../files/AttachmentPanel';
 import { ReportView } from '../report/ReportView';
 import { GuideView } from '../guide/GuideView';
 import { SimulationView } from '../simulation/SimulationView';
+import { OptionComparisonView } from '../results/OptionComparisonView';
 import { useProjectStore } from '../../store/useProjectStore';
 
 interface AppShellProps {
@@ -35,6 +36,7 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
       {/* Top Header */}
       <Header
         onOpenImport={() => setIsImportOpen(true)}
+        onGoToCompare={() => setActiveSection('compare')}
         onGoToReport={() => setActiveSection('report')}
         onGoToGuide={() => setActiveSection('guide')}
         onLock={onLock}
@@ -117,6 +119,13 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'simulation' && (
             <div className="animate-in fade-in duration-200">
               <SimulationView />
+            </div>
+          )}
+
+          {/* Section 9: PA1 piles vs PA2 gravity blocks */}
+          {activeSection === 'compare' && (
+            <div className="section-stack">
+              <OptionComparisonView />
             </div>
           )}
 

@@ -125,6 +125,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   const shoreArm = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
   const bedStickup = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
   const piles = useMemo(() => buildPileModels({ shoreArm_e_m: shoreArm, bed1Stickup_m: bedStickup }), [shoreArm, bedStickup]);
+  const isPa2 = useProjectStore((s) => s.mooringOption) === 'PA2_DEADWEIGHT';
   const floodedShoreHeads = piles.filter((p) => p.type === 'SHORE' && p.head_m < waterLevel_m).length;
   const dryBedPiles = piles.filter((p) => p.type === 'BED' && p.ground_m >= waterLevel_m).map((p) => p.code);
   const agroundRafts = RAFT_MODELS.filter((r) => raftWaterline(r, waterLevel_m).aground).map((r) => r.name);
@@ -241,7 +242,9 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
       <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
         <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Mặt bằng thiết kế:</span>
         <span className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-600 text-white shadow-sm">
-          12 cụm bè · 90.724 m² · 304 cọc (129 bờ + 175 đáy)
+          {isPa2
+            ? '12 cụm bè · 90.724 m² · PA2 (so sánh): 129 cọc bờ + 175 khối bê tông neo đáy'
+            : '12 cụm bè · 90.724 m² · 304 cọc (129 bờ + 175 đáy)'}
         </span>
       </div>
 
@@ -522,7 +525,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               <div className="text-[11px] leading-relaxed">
                 Bè mắc cạn: <strong>{agroundRafts.length ? agroundRafts.join(', ') : 'không'}</strong>
                 {' · '}Đỉnh cọc bờ bị ngập: <strong>{floodedShoreHeads}/129</strong>
-                {' · '}Cọc đáy nằm trên mặt nước: <strong>{dryBedPiles.length}/175</strong>
+                {' · '}{isPa2 ? 'Khối neo đáy' : 'Cọc đáy'} nằm trên mặt nước: <strong>{dryBedPiles.length}/175</strong>
               </div>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
@@ -661,7 +664,9 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, bedPiles: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">📍 175 cọc đáy hồ (vuông BTCT)</span>
+                <span className="font-medium text-slate-700">
+                  {isPa2 ? '🧱 175 khối bê tông neo đáy (PA2)' : '📍 175 cọc đáy hồ (vuông BTCT)'}
+                </span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">

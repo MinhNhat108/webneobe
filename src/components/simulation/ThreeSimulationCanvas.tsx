@@ -19,11 +19,15 @@ import {
   raftWaterline,
   buildPileModels,
   buildCableModels,
+  buildBlockAnchors,
+  blockUtilisation,
+  BlockAnchor,
   PileModel,
   CLEAT_ABOVE_WATERLINE_M,
   RaftMooringState,
   utilisationColour
 } from './sceneModel';
+import { evaluateDeadweightBlock } from '../../lib/calc/deadweight';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -66,6 +70,14 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const shoreL_m = useProjectStore((s) => s.currentProject.anchor.shoreL_m);
     const bed1D_m = useProjectStore((s) => s.currentProject.anchor.bed1D_m);
     const bed1L_m = useProjectStore((s) => s.currentProject.anchor.bed1L_m);
+    // PA2 (comparison option): the 175 lake-bed anchors are gravity blocks.
+    const mooringOption = useProjectStore((s) => s.mooringOption);
+    const costInputs = useProjectStore((s) => s.costInputs);
+    const currentProject = useProjectStore((s) => s.currentProject);
+    const blocks = useMemo(
+      () => (mooringOption === 'PA2_DEADWEIGHT' ? buildBlockAnchors(currentProject, activeRaftId, costInputs) : undefined),
+      [mooringOption, currentProject, activeRaftId, costInputs]
+    );
 
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -101,8 +113,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     // The 304 piles and their cables at their CAD positions; sizes as designed,
     // except the active raft, which shows the side / L_tk entered in Tab 2.
     const piles = useMemo(
-      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m }, `BÈ ${activeRaftId}`),
-      [shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m, activeRaftId]
+      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m }, `BÈ ${activeRaftId}`, blocks),
+      [shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m, activeRaftId, blocks]
     );
     const cables = useMemo(() => buildCableModels(piles), [piles]);
     const shorePiles = useMemo(() => piles.filter((p) => p.type === 'SHORE'), [piles]);
@@ -442,7 +454,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         const col = new THREE.Color();
         list.forEach((p, i) => {
           const st = mooringStates.get(p.raft);
-          const u = st ? (kind === 'shore' ? st.shorePileUtil : st.bedPileUtil) : NaN;
+          const u = !st ? NaN
+            : p.block ? blockUtilisation(p.block, st.tension_kN, costInputs)
+            : kind === 'shore' ? st.shorePileUtil : st.bedPileUtil;
           col.setHex(selectedElement?.id === p.code ? 0xfacc15 : utilisationColour(u));
           mesh.setColorAt(i, col);
         });
@@ -450,7 +464,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       };
       paint(shoreAbove, shorePiles, 'shore');
       paint(bedAbove, bedPiles, 'bed');
-    }, [mooringStates, selectedElement, shorePiles, bedPiles]);
+    }, [mooringStates, selectedElement, shorePiles, bedPiles, costInputs]);
 
     // ------------------------------------------------------------ cables
     useEffect(() => {
@@ -547,7 +561,39 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         ? { 'Trạng thái': `⚠️ Đang thử nghiệm – khác thiết kế chốt (${st.deviations.map((d) => `${d.label} ${d.design} → ${d.current}`).join('; ')})` }
         : {};
 
+    const describeBlock = (p: PileModel, b: BlockAnchor): SelectedElement => {
+      const st = mooringStates.get(p.raft);
+      const T = st?.tension_kN ?? 0;
+      const e = evaluateDeadweightBlock(b.block, T, b.cableAngle_deg, costInputs.mu);
+      const ok = e.sfSlide >= costInputs.sfSlide && e.sfUplift >= costInputs.sfUplift;
+      const depth = depthAt(p.x, p.y, waterLevel_m);
+      return {
+        type: 'pile',
+        id: p.code,
+        title: `Khối bê tông neo đáy ${p.code} (${p.raft}) — PA2`,
+        data: {
+          'Tuyến cáp': p.line,
+          'Thuộc cụm bè': p.raft,
+          'Kích thước L × W × H': `${fmt(b.block.L_m)} × ${fmt(b.block.W_m)} × ${fmt(b.block.H_m)} m`,
+          'Trọng lượng W (trong không khí)': `${fmt(b.block.mass_t, 1)} tấn (${fmt(b.block.volume_m3, 1)} m³)`,
+          'Trọng lượng chìm W_sub': `${fmt(b.block.weightSub_kN, 0)} kN`,
+          'Lực cáp tại vận tốc gió đang chọn': `T = ${fmt(T, 1)} kN, góc ${fmt(b.cableAngle_deg, 1)}° → H = ${fmt(e.H_kN, 1)} kN, V = ${fmt(e.V_kN, 1)} kN`,
+          [`SF trượt (μ = ${costInputs.mu})`]: `${fmt(e.sfSlide, 2)} (yêu cầu ≥ ${costInputs.sfSlide})`,
+          'SF nhấc bổng': `${fmt(e.sfUplift, 2)} (yêu cầu ≥ ${costInputs.sfUplift})`,
+          'SF lật (cáp buộc đỉnh khối)': fmt(e.sfOverturn, 2),
+          'Chi phối khi định cỡ': b.block.governing === 'sliding' ? 'Chống trượt' : 'Chống nhấc bổng',
+          'Số lần cẩu / điểm neo': b.lifts > 1 ? `${b.lifts} (vượt sức nâng cẩu ${costInputs.craneCapacity_t} T, phải chia khối)` : '1',
+          'Cao độ đáy hồ': `${fmt(p.ground_m)} m`,
+          'Mực nước tại khối': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
+          'Kết luận': ok ? 'ĐẠT' : 'KHÔNG ĐẠT',
+          'Lưu ý': 'Chưa kiểm tra sức chịu tải / lún của bùn đáy hồ dưới khối',
+          ...trialNote(st)
+        }
+      };
+    };
+
     const describePile = (p: PileModel): SelectedElement => {
+      if (p.block) return describeBlock(p, p.block);
       const st = mooringStates.get(p.raft);
       const u = st ? (p.type === 'SHORE' ? st.shorePileUtil : st.bedPileUtil) : NaN;
       const depth = depthAt(p.x, p.y, waterLevel_m);
@@ -642,7 +688,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       const obj = hit.object;
       if (obj instanceof THREE.InstancedMesh && obj.userData.type === 'pile' && hit.instanceId !== undefined) {
         const p = (obj.userData.list as PileModel[])[hit.instanceId];
-        setHoveredInfo(`Cọc ${p.code} · ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} · L_tk ${fmt(p.embed_m)} m`);
+        setHoveredInfo(p.block
+          ? `Khối BT ${p.code} · ${fmt(p.block.block.L_m)}×${fmt(p.block.block.W_m)}×${fmt(p.block.block.H_m)} m · ${fmt(p.block.block.mass_t, 1)} T`
+          : `Cọc ${p.code} · ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} · L_tk ${fmt(p.embed_m)} m`);
       } else if (obj === cablesRef.current && hit.index !== undefined) {
         const cb = cables[Math.floor(hit.index / 2)];
         setHoveredInfo(`Tuyến cáp ${cb.code} (${cb.type === 'SHORE' ? 'bờ' : 'đáy'}) · ${cb.raft}`);

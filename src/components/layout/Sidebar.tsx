@@ -8,13 +8,14 @@ import {
   Printer,
   BookOpen,
   Box,
+  Scale,
   CheckCircle2,
   XCircle,
   AlertCircle
 } from 'lucide-react';
 import { useProjectStore } from '../../store/useProjectStore';
 
-export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide' | 'simulation';
+export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide' | 'simulation' | 'compare';
 
 interface SidebarProps {
   activeSection: ActiveSection;
@@ -106,6 +107,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
           3D / IFC
         </span>
       )
+    },
+    {
+      id: 'compare',
+      label: '9. So Sánh Phương Án',
+      description: 'PA1 cọc đóng / PA2 khối bê tông',
+      icon: Scale
     }
   ];
 

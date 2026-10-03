@@ -36,6 +36,8 @@ import { HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT, RaftSummaryItem, MooringCoo
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2, RaftPolygonV2 } from '../../data/huoiVanhLayout';
 import { calculateProject } from '../../lib/calc';
 import { resolveRaftState, type RaftDeviation } from '../../lib/calc/raftState';
+import { compareMooringOptions, type CostInputs } from '../../lib/calc/optionComparison';
+import { evaluateDeadweightBlock, type DeadweightResult } from '../../lib/calc/deadweight';
 import type { ProjectState } from '../../lib/calc/types';
 
 // ------------------------------------------------------------------ levels
@@ -285,6 +287,28 @@ export interface PileModel {
   ground_m: number;
   head_m: number;
   toe_m: number;
+  /** PA2 only: this lake-bed anchor is a gravity block resting on the bed (side_m = plan side, stickup_m = height, embed_m = 0). */
+  block?: BlockAnchor;
+}
+
+/** The PA2 gravity block of one raft, sized at the design wind. */
+export interface BlockAnchor {
+  block: DeadweightResult;
+  cableAngle_deg: number;
+  /** Units the block is split into for the floating crane. */
+  lifts: number;
+}
+
+/** PA2 blocks per raft name, from the same comparison the cost table uses. */
+export function buildBlockAnchors(base: ProjectState, activeRaftId: number, costs: CostInputs): Map<string, BlockAnchor> {
+  const cmp = compareMooringOptions(base, activeRaftId, HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT.anchor as ProjectState['anchor'], costs);
+  return new Map(cmp.rows.map((r) => [r.name, { block: r.block, cableAngle_deg: r.bedCableAngle_deg, lifts: r.liftsPerBlock }]));
+}
+
+/** Block utilisation at a given line tension: the worse of sliding and uplift against their required SF. */
+export function blockUtilisation(b: BlockAnchor, tension_kN: number, costs: CostInputs): number {
+  const e = evaluateDeadweightBlock(b.block, tension_kN, b.cableAngle_deg, costs.mu);
+  return Math.max(costs.sfSlide / e.sfSlide, costs.sfUplift / e.sfUplift);
 }
 
 interface PileFileRow { code: string; line: string; raft: string; type: 'SHORE' | 'BED'; shape: string; x: number; y: number }
@@ -303,7 +327,12 @@ const raftItem = (name: string): RaftSummaryItem => {
  * for a shore pile (the free arm the Broms check loads) and
  * `anchor.bed1Stickup_m` for a lake-bed pile. Plan positions never change.
  */
-export function buildPileModels(anchor: Partial<ProjectState['anchor']> = {}, activeRaft?: string): PileModel[] {
+export function buildPileModels(
+  anchor: Partial<ProjectState['anchor']> = {},
+  activeRaft?: string,
+  /** PA2: when given, every lake-bed anchor is the gravity block of its raft instead of a pile. */
+  blocks?: Map<string, BlockAnchor>
+): PileModel[] {
   const base = HUOI_VANH_DEFAULT_PROJECT.anchor;
   const shoreStickup = anchor.shoreArm_e_m ?? base.shoreArm_e_m ?? 0.5;
   const bedStickup = anchor.bed1Stickup_m ?? base.bed1Stickup_m ?? 1.0;
@@ -315,9 +344,17 @@ export function buildPileModels(anchor: Partial<ProjectState['anchor']> = {}, ac
       ?? (isShore ? r.shorePileD_m : r.bedPileD_m) ?? (isShore ? base.shoreD_m : base.bed1D_m);
     const embed = (edited ? (isShore ? anchor.shoreL_m : anchor.bed1L_m) : undefined)
       ?? (isShore ? r.shorePileL_m : r.bedPileL_m) ?? (isShore ? base.shoreL_m : base.bed1L_m);
-    const stickup = isShore ? shoreStickup : bedStickup;
     const ground = groundAt(p.x, p.y);
     if (ground === null) throw new Error(`Pile ${p.code} lies outside the terrain model`);
+    const blk = isShore ? undefined : blocks?.get(p.raft);
+    if (blk) {
+      return {
+        code: p.code, line: p.line, raft: p.raft, type: p.type, x: p.x, y: p.y,
+        side_m: blk.block.L_m, embed_m: 0, stickup_m: blk.block.H_m,
+        ground_m: ground, head_m: ground + blk.block.H_m, toe_m: ground, block: blk
+      };
+    }
+    const stickup = isShore ? shoreStickup : bedStickup;
     return {
       code: p.code,
       line: p.line,

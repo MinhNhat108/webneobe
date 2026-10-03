@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Printer, CheckCircle2, XCircle } from 'lucide-react';
+import { OptionComparisonView } from '../results/OptionComparisonView';
 
 export const ReportView: React.FC = () => {
   const { currentProject, results, raftsSummary, setActiveRaft } = useProjectStore();
@@ -255,6 +256,16 @@ export const ReportView: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Economic / technical comparison of the two lake-bed anchoring options (whole project) */}
+        {isSolar && (
+          <div className="space-y-1">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
+              So sánh kinh tế – kỹ thuật hai phương án neo đáy hồ (toàn dự án, 12 cụm bè)
+            </h2>
+            <OptionComparisonView compact />
+          </div>
+        )}
 
         {/* Section 4: Attachments List */}
         {currentProject.attachments && currentProject.attachments.length > 0 && (

@@ -64,6 +64,9 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - `catenary.ts`: Giải phương trình đường dây xích Catenary.
   - `broms.ts`: Tính toán sức chịu tải cọc theo phương pháp Broms.
   - `checks.ts`: Các kiểm tra an toàn C1..C11 và BP-1..BP-5 (C9 là kiểm tra bắt buộc).
+  - `deadweight.ts`: Phương án 2 (so sánh) — khối bê tông trọng lực thay 175 cọc đáy hồ; kiểm tra trượt (μ = 0,35 giả định) và nhấc bổng, SF ≥ 1,5. Cọc bờ giữ nguyên ở cả hai phương án.
+  - `optionComparison.ts`: `compareMooringOptions()` — khối lượng và chi phí PA1/PA2, TÍNH từ engine (không có con số chốt sẵn). Đơn giá trong `DEFAULT_COST_INPUTS` là GIẢ ĐỊNH sửa được, không phải định mức. Kết quả hiện tại: khối 52–158 tấn/điểm neo, ~6.550 m³ bê tông so với ~396 m³ cọc đáy.
+- `mooringOption` trong store (`PA1_PILE` mặc định / `PA2_DEADWEIGHT`): chỉ đổi cách vẽ 175 neo đáy trên 3D và bảng so sánh (Mục 9, báo cáo). Bảng kiểm tra, bảng cọc, Excel và CAD luôn là PA1.
 - `src/components/simulation/`: Mô phỏng 3D WebGL Three.js (Mục 8 trên Web):
   - `ThreeSimulationCanvas.tsx`: Canvas WebGL, địa hình IFC, hạt gió 3D, mực nước động.
   - `SimulationControls.tsx`: Bảng điều khiển vận tốc gió, góc phương vị, thanh trượt mực nước.
@@ -71,6 +74,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 136 tests tại 2026-09-30).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 148 tests tại 2026-10-03).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

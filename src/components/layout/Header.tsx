@@ -2,6 +2,8 @@ import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { exportProjectToExcel, exportPileScheduleToExcel } from '../../lib/io/excelExport';
 import { exportMooringPileDxf } from '../../lib/io/dxfExport';
+import { exportMooringDeadweightDxf } from '../../lib/io/deadweightDxf';
+import { exportDeadweightScheduleToExcel } from '../../lib/io/deadweightExcel';
 import {
   Anchor,
   FileSpreadsheet,
@@ -24,8 +26,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGoToCompare, onGoToGuide, onLock }) => {
   const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts, setMooringOption } = useProjectStore();
-  const mooringOption = currentProject.anchor.bedAnchorOption ?? 'PA1_PILE';
-
   const handleExportExcel = () => {
     // The Master sheet and per-raft detailed checks need batch data — compute
     // it on demand if the user exports before ever opening the overview tab.
@@ -33,15 +33,26 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
     exportProjectToExcel(currentProject, results, raftsSummary, batch);
   };
 
+  const mooringOption = currentProject.anchor.bedAnchorOption ?? 'PA1_PILE';
+  const isPa2 = mooringOption === 'PA2_DEADWEIGHT';
+
+  // The schedule and the drawing follow the selected lake-bed option.
   const handleExportPileSchedule = () => {
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    exportPileScheduleToExcel(currentProject, results, batch);
+    if (isPa2) exportDeadweightScheduleToExcel(currentProject, results, batch);
+    else exportPileScheduleToExcel(currentProject, results, batch);
   };
 
   const handleExportDxf = () => {
     // Same on-demand batch as the Excel export: every pile in the schedule
     // takes its L_opt / P_max from its own raft's calculation.
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
+    if (isPa2) {
+      const built = exportMooringDeadweightDxf(currentProject, results, batch);
+      // eslint-disable-next-line no-console
+      console.info(`[DXF PA2] Đã xuất ${built.shorePileCount} cọc bờ + ${built.blockCount} khối bê tông / ${built.raftCount} cụm bè.`);
+      return;
+    }
     const built = exportMooringPileDxf(currentProject, results, batch);
     // eslint-disable-next-line no-console
     console.info(
@@ -120,18 +131,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             type="button"
             onClick={handleExportPileSchedule}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra Excel (.xlsx)"
+            title={isPa2
+              ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
+              : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra Excel (.xlsx)'}
           >
             <Table className="w-4 h-4 text-emerald-400" />
-            <span className="hidden xl:inline">Bảng Cọc Excel</span>
-            <span className="hidden md:inline xl:hidden">Bảng Cọc</span>
+            <span className="hidden xl:inline">{isPa2 ? 'Bảng Neo PA2 Excel' : 'Bảng Cọc Excel'}</span>
+            <span className="hidden md:inline xl:hidden">{isPa2 ? 'Bảng Neo' : 'Bảng Cọc'}</span>
           </button>
 
           <button
             type="button"
             onClick={handleExportDxf}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc (L_opt, P_max)"
+            title={isPa2
+              ? 'Xuất bản vẽ CAD PA2: Khối bê tông neo đáy hồ & Cọc neo bờ (.DXF)'
+              : 'Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc (L_opt, P_max)'}
           >
             <DraftingCompass className="w-4 h-4 text-amber-400" />
             <span className="hidden md:inline">Xuất CAD</span>
@@ -188,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           </button>
           {mooringOption === 'PA2_DEADWEIGHT' && (
             <span className="text-amber-300">
-              Đang tính 175 neo đáy bằng khối bê tông (DW-1…DW-4). Bảng thống kê cọc và bản vẽ CAD vẫn liệt kê cọc đáy của PA1.
+              Đang chọn Phương án 2: 175 khối bê tông neo đáy (DW-1…DW-4) + 129 cọc neo bờ. Nút "Bảng Neo" và "Xuất CAD" xuất theo khối bê tông.
             </span>
           )}
           {onGoToCompare && (

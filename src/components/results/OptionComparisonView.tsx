@@ -5,6 +5,8 @@ import { HUOI_VANH_DEFAULT_PROJECT } from '../../data/huoiVanhProject';
 import { compareMooringOptions } from '../../lib/calc/technicalComparison';
 import { DEADWEIGHT_DEFAULTS, DeadweightParams } from '../../lib/calc/deadweight';
 import type { ProjectState } from '../../lib/calc/types';
+import { findBlockClashes } from '../../lib/io/deadweightSchedule';
+import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
 
@@ -80,6 +82,14 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
   const p = cmp.params;
   const hasTrial = cmp.rows.some((r) => r.isTrial);
   const widened = cmp.rows.filter((r) => r.block.bearingGovernsShape).map((r) => r.name);
+  // Blocks that cannot physically fit side by side at the layout's lake-bed points.
+  const clashes = useMemo(() => {
+    const side = new Map(cmp.rows.map((r) => [r.name, Math.max(r.block.L_m, r.block.W_m)]));
+    return findBlockClashes(
+      MOORING_LINES_V2.filter((l) => l.type === 'BED' && side.has(l.raft))
+        .map((l) => ({ id: l.code, x: l.xAnchor, y: l.yAnchor, L_m: side.get(l.raft)! }))
+    );
+  }, [cmp]);
   const sfCls = (v: number, req: number) => (v >= req ? 'text-emerald-700' : 'text-rose-600 font-bold');
 
   return (
@@ -106,6 +116,14 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
       {!cmp.allBlocksOk && (
         <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-rose-900 font-semibold">
           ❌ Không định cỡ được khối đạt cả 4 điều kiện cho: {cmp.failingRafts.join(', ')} (xem bảng bên dưới).
+        </div>
+      )}
+
+      {clashes.length > 0 && (
+        <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-rose-900">
+          <strong>❌ {clashes.length} cặp khối bê tông chồng lấn nhau trên mặt bằng.</strong> 175 điểm neo đáy được bố trí cho cọc
+          (có điểm chỉ cách nhau khoảng 3 m trên tim khe hẹp giữa hai bè), trong khi đáy khối rộng {rng(cmp.blockSide_m, 2)} m. Muốn dùng
+          Phương án 2 phải bố trí lại các điểm neo đáy; bảng thống kê và bản vẽ CAD PA2 đánh dấu từng khối bị chồng lấn.
         </div>
       )}
 

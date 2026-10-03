@@ -19,6 +19,8 @@ import {
 import { buildPileSchedule } from '../../lib/io/pileSchedule';
 import { exportPileScheduleToExcel } from '../../lib/io/excelExport';
 import { exportMooringPileDxf } from '../../lib/io/dxfExport';
+import { exportMooringDeadweightDxf } from '../../lib/io/deadweightDxf';
+import { exportDeadweightScheduleToExcel } from '../../lib/io/deadweightExcel';
 
 /** Heatmap colour by cable-tension utilization: Xanh < 0.7, Vàng 0.7–1.0, Đỏ > 1.0. */
 function utilizationColor(u: number | null | undefined): string {
@@ -129,14 +131,19 @@ export const MooringLayoutMap: React.FC = () => {
     });
   }, [pileSchedule, filterRaft, searchQuery]);
 
+  // Exports follow the selected lake-bed option (PA1 piles / PA2 gravity blocks).
+  const isPa2 = currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT';
+
   const handleExportPileSchedule = () => {
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    exportPileScheduleToExcel(currentProject, results, batch);
+    if (isPa2) exportDeadweightScheduleToExcel(currentProject, results, batch);
+    else exportPileScheduleToExcel(currentProject, results, batch);
   };
 
   const handleExportCad = () => {
     const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    exportMooringPileDxf(currentProject, results, batch);
+    if (isPa2) exportMooringDeadweightDxf(currentProject, results, batch);
+    else exportMooringPileDxf(currentProject, results, batch);
   };
 
   // Unique rafts
@@ -454,19 +461,23 @@ export const MooringLayoutMap: React.FC = () => {
               type="button"
               onClick={handleExportPileSchedule}
               className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
-              title="Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra file Excel (.xlsx)"
+              title={isPa2
+                ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
+                : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 cọc, L_opt, P_max) ra file Excel (.xlsx)'}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Xuất Excel Bảng Cọc</span>
+              <span>{isPa2 ? 'Xuất Excel Bảng Neo PA2' : 'Xuất Excel Bảng Cọc'}</span>
             </button>
             <button
               type="button"
               onClick={handleExportCad}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
-              title="Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc"
+              title={isPa2
+                ? 'Xuất bản vẽ CAD PA2: Khối bê tông neo đáy hồ & Cọc neo bờ (.DXF)'
+                : 'Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc'}
             >
               <DraftingCompass className="w-3.5 h-3.5 text-amber-400" />
-              <span>Xuất CAD</span>
+              <span>{isPa2 ? 'Xuất CAD PA2' : 'Xuất CAD'}</span>
             </button>
           </div>
         </div>

@@ -22,7 +22,7 @@ import {
  */
 
 /** AutoCAD Color Index. */
-const ACI = {
+export const ACI = {
   red: 1,
   yellow: 2,
   green: 3,
@@ -41,10 +41,10 @@ export const DXF_LAYERS = {
   schedule: { name: '07_BANG_THONG_KE_COC', color: ACI.white }
 } as const;
 
-type Pt = { x: number; y: number };
+export type Pt = { x: number; y: number };
 
 /** A DXF group-code pair: the code on its own line, then the value. */
-function pair(code: number | string, value: string | number): string {
+export function pair(code: number | string, value: string | number): string {
   return `${code}\n${value}\n`;
 }
 
@@ -81,7 +81,7 @@ export function toAsciiCad(input: string): string {
     .replace(/[^\x20-\x7E]/g, '?');
 }
 
-function line(layer: string, a: Pt, b: Pt): string {
+export function line(layer: string, a: Pt, b: Pt): string {
   return (
     pair(0, 'LINE') +
     pair(8, layer) +
@@ -90,7 +90,7 @@ function line(layer: string, a: Pt, b: Pt): string {
   );
 }
 
-function circle(layer: string, c: Pt, r: number): string {
+export function circle(layer: string, c: Pt, r: number): string {
   return (
     pair(0, 'CIRCLE') +
     pair(8, layer) +
@@ -99,11 +99,11 @@ function circle(layer: string, c: Pt, r: number): string {
   );
 }
 
-function point(layer: string, p: Pt): string {
+export function point(layer: string, p: Pt): string {
   return pair(0, 'POINT') + pair(8, layer) + pair(10, n(p.x)) + pair(20, n(p.y)) + pair(30, '0.0');
 }
 
-function text(layer: string, p: Pt, height: number, value: string): string {
+export function text(layer: string, p: Pt, height: number, value: string): string {
   return (
     pair(0, 'TEXT') +
     pair(8, layer) +
@@ -114,7 +114,7 @@ function text(layer: string, p: Pt, height: number, value: string): string {
 }
 
 /** Axis-aligned square marker centred on `c`, drawn as 4 LINEs. */
-function square(layer: string, c: Pt, size: number): string {
+export function square(layer: string, c: Pt, size: number): string {
   const h = size / 2;
   const p1 = { x: c.x - h, y: c.y - h };
   const p2 = { x: c.x + h, y: c.y - h };
@@ -123,7 +123,7 @@ function square(layer: string, c: Pt, size: number): string {
   return line(layer, p1, p2) + line(layer, p2, p3) + line(layer, p3, p4) + line(layer, p4, p1);
 }
 
-function closedPolyline(layer: string, pts: Pt[]): string {
+export function closedPolyline(layer: string, pts: Pt[]): string {
   if (pts.length < 2) return '';
   let out = '';
   for (let i = 0; i < pts.length; i++) {
@@ -132,8 +132,7 @@ function closedPolyline(layer: string, pts: Pt[]): string {
   return out;
 }
 
-function layerTable(): string {
-  const layers = Object.values(DXF_LAYERS);
+function layerTable(layers: ReadonlyArray<{ name: string; color: number }>): string {
   let out = pair(0, 'TABLE') + pair(2, 'LAYER') + pair(70, layers.length + 1);
   out += pair(0, 'LAYER') + pair(2, '0') + pair(70, 0) + pair(62, ACI.white) + pair(6, 'CONTINUOUS');
   for (const l of layers) {
@@ -141,6 +140,52 @@ function layerTable(): string {
   }
   out += pair(0, 'ENDTAB');
   return out;
+}
+
+/** Wraps entities in a complete R12 document (header in metres, layer table, ENTITIES, EOF). */
+export function dxfDocument(layers: ReadonlyArray<{ name: string; color: number }>, entities: string): string {
+  return (
+    pair(0, 'SECTION') +
+    pair(2, 'HEADER') +
+    pair(9, '$ACADVER') + pair(1, 'AC1009') +
+    pair(9, '$INSUNITS') + pair(70, 6) + // 6 = metres
+    pair(9, '$MEASUREMENT') + pair(70, 1) + // metric
+    pair(0, 'ENDSEC') +
+    pair(0, 'SECTION') +
+    pair(2, 'TABLES') +
+    layerTable(layers) +
+    pair(0, 'ENDSEC') +
+    pair(0, 'SECTION') +
+    pair(2, 'ENTITIES') +
+    entities +
+    pair(0, 'ENDSEC') +
+    pair(0, 'EOF')
+  );
+}
+
+/** `<prefix>_<project code>_<YYYYMMDD>.dxf` */
+export function dxfStampedName(prefix: string, state: ProjectState, now: Date = new Date()): string {
+  const code = toAsciiCad(state.meta.code || state.code || 'du-an')
+    .replace(/[^A-Za-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'du-an';
+  const stamp =
+    `${now.getFullYear()}` +
+    `${String(now.getMonth() + 1).padStart(2, '0')}` +
+    `${String(now.getDate()).padStart(2, '0')}`;
+  return `${prefix}_${code}_${stamp}.dxf`;
+}
+
+/** Hands a finished DXF string to the browser as a download (BOM-free ASCII). */
+export function downloadDxf(dxf: string, fileName: string): void {
+  const blob = new Blob([dxf], { type: 'application/dxf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export interface DxfExportOptions {
@@ -229,22 +274,7 @@ export function buildMooringPileDxf(
     entities += scheduleTable(schedule, state, { x: tableX, y: tableTop }, labelH);
   }
 
-  const dxf =
-    pair(0, 'SECTION') +
-    pair(2, 'HEADER') +
-    pair(9, '$ACADVER') + pair(1, 'AC1009') +
-    pair(9, '$INSUNITS') + pair(70, 6) + // 6 = metres
-    pair(9, '$MEASUREMENT') + pair(70, 1) + // metric
-    pair(0, 'ENDSEC') +
-    pair(0, 'SECTION') +
-    pair(2, 'TABLES') +
-    layerTable() +
-    pair(0, 'ENDSEC') +
-    pair(0, 'SECTION') +
-    pair(2, 'ENTITIES') +
-    entities +
-    pair(0, 'ENDSEC') +
-    pair(0, 'EOF');
+  const dxf = dxfDocument(Object.values(DXF_LAYERS), entities);
 
   return {
     dxf,
@@ -338,14 +368,7 @@ function scheduleTable(
 
 /** `mat-bang-coc-neo_<code>_<YYYYMMDD>.dxf` */
 export function dxfFileName(state: ProjectState, now: Date = new Date()): string {
-  const code = toAsciiCad(state.meta.code || state.code || 'du-an')
-    .replace(/[^A-Za-z0-9_-]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'du-an';
-  const stamp =
-    `${now.getFullYear()}` +
-    `${String(now.getMonth() + 1).padStart(2, '0')}` +
-    `${String(now.getDate()).padStart(2, '0')}`;
-  return `mat-bang-coc-neo_${code}_${stamp}.dxf`;
+  return dxfStampedName('mat-bang-coc-neo', state, now);
 }
 
 /**
@@ -361,15 +384,7 @@ export function exportMooringPileDxf(
   const built = buildMooringPileDxf(state, results, batchResults, options);
 
   // BOM-free ASCII; DXF readers are strict about stray bytes at the head.
-  const blob = new Blob([built.dxf], { type: 'application/dxf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = dxfFileName(state);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  downloadDxf(built.dxf, dxfFileName(state));
 
   return built;
 }

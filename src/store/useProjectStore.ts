@@ -6,6 +6,7 @@ import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../
 import { buildRaftProjectState, resolveRaftState, RaftDeviation } from '../lib/calc/raftState';
 import type { MooringOption } from '../lib/calc/technicalComparison';
 import type { DeadweightParams } from '../lib/calc/deadweight';
+import { CostParams, DEFAULT_COST_PARAMS } from '../lib/calc/costEstimate';
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
 /**
@@ -45,6 +46,10 @@ export interface ProjectStore {
   // Lake-bed anchoring option: PA1 = driven piles (the design), PA2 = gravity
   // blocks. It lives IN the project (`anchor.bedAnchorOption`, `anchor.deadweight`)
   // so the engine, the checks, the report and the 3D view all follow it.
+  /** Unit prices of the construction quotation (section 10) — editable, persisted. */
+  costParams: CostParams;
+  updateCostParams: (params: Partial<CostParams>) => void;
+  resetCostParams: () => void;
   setMooringOption: (option: MooringOption) => void;
   updateDeadweightParams: (params: Partial<DeadweightParams>) => void;
 
@@ -103,6 +108,9 @@ export const useProjectStore = create<ProjectStore>()(
       results: calculateProject(HUOI_VANH_START),
       batchResults: [],
       batchCalculatedAt: null,
+      costParams: DEFAULT_COST_PARAMS,
+      updateCostParams: (params) => set({ costParams: { ...get().costParams, ...params } }),
+      resetCostParams: () => set({ costParams: DEFAULT_COST_PARAMS }),
       setMooringOption: (option) => get().updateAnchor({ bedAnchorOption: option }),
       updateDeadweightParams: (params) =>
         get().updateAnchor({ deadweight: { ...(get().currentProject.anchor.deadweight ?? {}), ...params } }),
@@ -517,7 +525,8 @@ export const useProjectStore = create<ProjectStore>()(
         currentProject: state.currentProject,
         projectList: state.projectList,
         activeRaftId: state.activeRaftId,
-        raftsSummary: state.raftsSummary
+        raftsSummary: state.raftsSummary,
+        costParams: state.costParams
       })
     }
   )

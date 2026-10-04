@@ -19,6 +19,7 @@ import { ReportView } from '../report/ReportView';
 import { GuideView } from '../guide/GuideView';
 import { SimulationView } from '../simulation/SimulationView';
 import { OptionComparisonView } from '../results/OptionComparisonView';
+import { CostEstimateView } from '../cost/CostEstimateView';
 import { useProjectStore } from '../../store/useProjectStore';
 
 interface AppShellProps {
@@ -126,6 +127,13 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'compare' && (
             <div className="section-stack">
               <OptionComparisonView />
+            </div>
+          )}
+
+          {/* Section 10: construction quotation (bored shore piles + driven lake-bed piles) */}
+          {activeSection === 'cost' && (
+            <div className="animate-in fade-in duration-200">
+              <CostEstimateView />
             </div>
           )}
 

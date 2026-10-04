@@ -9,13 +9,14 @@ import {
   BookOpen,
   Box,
   Scale,
+  Receipt,
   CheckCircle2,
   XCircle,
   AlertCircle
 } from 'lucide-react';
 import { useProjectStore } from '../../store/useProjectStore';
 
-export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide' | 'simulation' | 'compare';
+export type ActiveSection = 'project' | 'input' | 'map' | 'results' | 'files' | 'report' | 'guide' | 'simulation' | 'compare' | 'cost';
 
 interface SidebarProps {
   activeSection: ActiveSection;
@@ -113,6 +114,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
       label: '9. So Sánh Phương Án',
       description: 'Kỹ thuật: cọc đóng / khối bê tông',
       icon: Scale
+    },
+    {
+      id: 'cost',
+      label: '10. Báo Giá Thi Công',
+      description: 'Cọc nhồi bờ & cọc đóng lòng hồ',
+      icon: Receipt,
+      badge: (
+        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">
+          VNĐ
+        </span>
+      )
     }
   ];
 

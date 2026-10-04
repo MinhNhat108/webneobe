@@ -136,9 +136,9 @@ function blockDetail(schedule: DeadweightSchedule, origin: Pt, h: number): strin
   out += rect(layer, plan, S, S);
   out += line(layer, plan, { x: plan.x + S, y: plan.y + S });
   out += line(layer, { x: plan.x, y: plan.y + S }, { x: plan.x + S, y: plan.y });
-  out += point(layer, { x: plan.x + S / 2, y: plan.y + S / 2 });
-  out += circle(layer, { x: plan.x + S / 2, y: plan.y + S / 2 }, h * 0.8);
-  out += text(layer, { x: plan.x + S / 2 + h * 1.5, y: plan.y + S / 2 + h * 0.5 }, h, 'Diem buoc cap: tam mat tren');
+  out += point(layer, { x: plan.x, y: plan.y + S / 2 });
+  out += circle(layer, { x: plan.x, y: plan.y + S / 2 }, h * 0.8);
+  out += text(layer, { x: plan.x + h * 1.5, y: plan.y + S / 2 + h * 0.5 }, h, `Tai neo cap: canh khoi phia be, cao ${p0 ? p0.tieHeight_m : 0.3} m tren day`);
   out += text(layer, { x: plan.x + S / 2 - h, y: plan.y - h * 2.2 }, h * 1.2, 'L');
   out += text(layer, { x: plan.x - h * 2.5, y: plan.y + S / 2 }, h * 1.2, 'W');
 
@@ -148,9 +148,19 @@ function blockDetail(schedule: DeadweightSchedule, origin: Pt, h: number): strin
   out += rect(layer, elev, S, E);
   out += line(layer, { x: elev.x - 6 * h, y: elev.y }, { x: elev.x + S + 6 * h, y: elev.y }); // lake bed
   out += text(layer, { x: elev.x + S + 1.5 * h, y: elev.y - h * 1.8 }, h, 'Mat bun day ho');
-  out += point(layer, { x: elev.x + S / 2, y: elev.y + E });
-  out += line(layer, { x: elev.x + S / 2, y: elev.y + E }, { x: elev.x + S / 2 - 12 * h, y: elev.y + E + 9 * h }); // cable
-  out += text(layer, { x: elev.x + S / 2 - 12 * h, y: elev.y + E + 10 * h }, h, 'Cap neo T_max, goc alpha so voi phuong ngang');
+  // Padeye low on the side facing the raft; the cable rises from it at the angle alpha.
+  const tieY = elev.y + Math.min(E, E * 0.15);
+  out += point(layer, { x: elev.x, y: tieY });
+  out += line(layer, { x: elev.x, y: tieY }, { x: elev.x - 14 * h, y: tieY + 9 * h }); // cable
+  out += text(layer, { x: elev.x - 14 * h, y: tieY + 10 * h }, h, 'Cap neo T_max, goc alpha so voi phuong ngang');
+  out += text(layer, { x: elev.x - 14 * h, y: tieY - 2.2 * h }, h, 'h_tie');
+  if (p0 && p0.slidingModel === 'shear_key') {
+    // skirts (shear keys) under the two edges, schematic
+    const z = E * 0.25;
+    out += line(layer, { x: elev.x, y: elev.y }, { x: elev.x, y: elev.y - z });
+    out += line(layer, { x: elev.x + S, y: elev.y }, { x: elev.x + S, y: elev.y - z });
+    out += text(layer, { x: elev.x + S + 1.5 * h, y: elev.y - z }, h, `Go chong truot z_s = ${p0.keyDepth_m} m`);
+  }
   out += text(layer, { x: elev.x + S / 2 - h, y: elev.y - h * 2.2 }, h * 1.2, 'L');
   out += text(layer, { x: elev.x + S + h * 1.5, y: elev.y + E / 2 }, h * 1.2, 'H');
 
@@ -181,7 +191,10 @@ function blockDetail(schedule: DeadweightSchedule, origin: Pt, h: number): strin
       ? `1. Thong so tinh toan: he so ma sat khoi - bun = ${p0.mu}; SF truot >= ${p0.sfSlide}; SF nhac bong >= ${p0.sfUplift}; SF lat >= ${p0.sfOverturn}; q cho phep = ${p0.qAllow_kPa} kPa; khoi luong rieng be tong = ${p0.rhoConcrete_tm3} T/m3.`
       : '1. Thong so tinh toan: xem thuyet minh.',
     '2. He so ma sat va q cho phep la GIA THIET, chua co khao sat dia chat day ho. Chua tinh lun cua khoi trong bun.',
-    '3. Khoi dat truc tiep tren mat bun day ho, khong ngam. Kiem tra lat tinh voi cap buoc tai tam mat tren khoi.',
+    p0 && p0.slidingModel === 'shear_key'
+      ? `3. Khoi co GO CHONG TRUOT sau ${p0.keyDepth_m} m cam vao bun; suc khang truot = c_u x A + 2 c_u z_s B voi c_u bun mat = ${p0.cuSurface_kPa} kPa (GIA THIET). Go chua duoc thiet ke ket cau.`
+      : '3. Khoi day phang dat truc tiep tren mat bun day ho, chong truot bang ma sat.',
+    `   Tai neo cap dat cao ${p0 ? p0.tieHeight_m : 0.3} m tren day khoi (yeu cau cau tao: dat cao hon lam tang mo men lat).`,
     '4. CHUA THIET KE: cot thep, tai cau, chi tiet moc cap. Cac hang muc nay khong the hien tren ban ve.',
     '5. Huong dat khoi tren mat bang ve song song truc toa do; huong thuc te do don vi thiet ke quyet dinh.',
     schedule.clashes.length > 0

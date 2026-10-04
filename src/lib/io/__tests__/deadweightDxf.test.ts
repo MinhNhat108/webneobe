@@ -55,7 +55,7 @@ describe('Option 2 schedule (129 shore piles + 175 gravity blocks)', () => {
       expect(b.mass_t, b.blockId).toBe(blk.mass_t);
       expect([b.sfSlide, b.sfUplift, b.sfOverturn, b.qContact_kPa], b.blockId).toEqual([blk.sfSlide, blk.sfUplift, blk.sfOverturn, blk.qContact_kPa]);
       expect(b.Tmax_kN, b.blockId).toBe(eng.t_max_intact_kN);
-      expect(b.L_m, b.blockId).toBeGreaterThan(3.0);
+      expect(b.L_m, b.blockId).toBeGreaterThan(2.5);
       expect(b.ok, b.blockId).toBe(true);
     }
   });
@@ -108,7 +108,7 @@ describe('Option 2 DXF drawing', () => {
       expect(Math.max(...ys) - Math.min(...ys), b.blockId).toBeCloseTo(b.W_m, 2);
       expect((Math.max(...xs) + Math.min(...xs)) / 2, b.blockId).toBeCloseTo(b.x, 2);
       expect((Math.max(...ys) + Math.min(...ys)) / 2, b.blockId).toBeCloseTo(b.y, 2);
-      expect(Math.max(...xs) - Math.min(...xs), b.blockId).toBeGreaterThan(3.0);
+      expect(Math.max(...xs) - Math.min(...xs), b.blockId).toBeGreaterThan(2.5);
     });
     expect(onLayer(DXF_LAYERS_PA2.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(129);
     expect(onLayer(DXF_LAYERS_PA2.shoreLine.name)).toHaveLength(129);
@@ -191,11 +191,13 @@ describe('Blocks that do not fit at the pile layout points', () => {
     expect(hit[0].required_m).toBe(3.5);
   });
 
-  it('reports the overlaps of the Huổi Vanh layout instead of hiding them: 31 pairs, 59 blocks (12° tilt)', () => {
+  it('reports the overlaps of the Huổi Vanh layout instead of hiding them: 18 pairs (12° tilt, padeye 0.3 m above the base)', () => {
     const { state, results, batch } = setup('PA2_DEADWEIGHT');
     const s = buildDeadweightSchedule(state, results, batch);
-    expect(s.clashes).toHaveLength(31);
-    expect(s.blocks.filter((b) => b.clashWith.length > 0)).toHaveLength(59);
+    expect(s.clashes).toHaveLength(18);
+    const clashing = s.blocks.filter((b) => b.clashWith.length > 0).length;
+    expect(clashing).toBeGreaterThan(18);
+    expect(clashing).toBeLessThanOrEqual(36);
     for (const c of s.clashes) {
       const a = s.blocks.find((b) => b.blockId === c.a)!, b = s.blocks.find((x) => x.blockId === c.b)!;
       expect(c.distance_m).toBeCloseTo(Math.hypot(a.x - b.x, a.y - b.y), 9);
@@ -207,11 +209,31 @@ describe('Blocks that do not fit at the pile layout points', () => {
 
   it('says so on the drawing and in the workbook', () => {
     const { out, state, results, batch } = built();
-    expect(out.dxf).toContain('CANH BAO: 31 cap khoi CHONG LAN nhau tren mat bang');
+    expect(out.dxf).toContain('CANH BAO: 18 cap khoi CHONG LAN nhau tren mat bang');
     expect(out.dxf).toContain('CHONG LAN VOI');
     const wb = buildDeadweightScheduleWorkbook(state, results, batch);
     const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeKhoiBeTong, { header: 1 });
-    expect(rows.filter((r) => /^HV-DW\d{3}$/.test(String(r[0])) && r[19] !== '-')).toHaveLength(59);
-    expect(rows.find((r) => String(r[0]).startsWith('Số cặp khối CHỒNG LẤN'))![1]).toBe(31);
+    expect(rows.filter((r) => /^HV-DW\d{3}$/.test(String(r[0])) && r[19] !== '-')).toHaveLength(
+      buildDeadweightSchedule(state, results, batch).blocks.filter((b) => b.clashWith.length > 0).length
+    );
+    expect(rows.find((r) => String(r[0]).startsWith('Số cặp khối CHỒNG LẤN'))![1]).toBe(18);
+  });
+});
+
+describe('Option 2 with shear keys on the drawing', () => {
+  it('uses the keyed blocks of the engine, says how they hold, and clashes far less', () => {
+    const s0 = setup('PA2_DEADWEIGHT');
+    const state: ProjectState = { ...s0.state, anchor: { ...s0.state.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 20 } } };
+    const batch = HUOI_VANH_RAFTS.map((raft) => {
+      const r = resolveRaftState(state, 1, raft, dflt().anchor);
+      return { raft, state: r.state, results: calculateProject(r.state) };
+    });
+    const out = buildMooringDeadweightDxf(state, calculateProject(state), batch);
+    expect(out.schedule.blocks.every((b) => b.ok)).toBe(true);
+    expect(Math.max(...out.schedule.blocks.map((b) => b.mass_t))).toBeLessThan(30);
+    expect(out.schedule.clashes).toHaveLength(0);
+    expect(out.dxf).toContain('GO CHONG TRUOT');
+    expect(out.dxf).toContain('c_u bun mat = 20 kPa (GIA THIET)');
+    expect(out.dxf).toContain('Khong co khoi nao chong lan nhau');
   });
 });

@@ -25,8 +25,12 @@ export function useOptionComparison() {
   );
 }
 
-const PARAM_FIELDS: Array<{ key: keyof DeadweightParams; label: string; unit: string; step: number }> = [
-  { key: 'mu', label: 'Hệ số ma sát khối – bùn đáy μ', unit: '', step: 0.05 },
+type NumericParam = Exclude<keyof DeadweightParams, 'slidingModel'>;
+const PARAM_FIELDS: Array<{ key: NumericParam; label: string; unit: string; step: number; model?: DeadweightParams['slidingModel'] }> = [
+  { key: 'mu', label: 'Hệ số ma sát khối – bùn đáy μ', unit: '', step: 0.05, model: 'friction' },
+  { key: 'cuSurface_kPa', label: 'Sức kháng cắt bùn mặt c_u (gờ chống trượt)', unit: 'kPa', step: 1, model: 'shear_key' },
+  { key: 'keyDepth_m', label: 'Chiều sâu gờ chống trượt z_s', unit: 'm', step: 0.1, model: 'shear_key' },
+  { key: 'tieHeight_m', label: 'Chiều cao tai neo cáp trên đáy khối', unit: 'm', step: 0.1 },
   { key: 'sfSlide', label: 'SF chống trượt yêu cầu', unit: '', step: 0.1 },
   { key: 'sfUplift', label: 'SF chống nhấc bổng yêu cầu', unit: '', step: 0.1 },
   { key: 'sfOverturn', label: 'SF chống lật yêu cầu', unit: '', step: 0.1 },
@@ -140,8 +144,24 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
               Đặt lại mặc định
             </button>
           </div>
+          <label className="flex flex-wrap items-center gap-2 border border-slate-200 rounded-lg px-2.5 py-1.5 mb-2">
+            <span className="text-slate-600">Cơ chế chống trượt của khối:</span>
+            <select
+              value={p.slidingModel}
+              onChange={(e) => updateDeadweightParams({ slidingModel: e.target.value as DeadweightParams['slidingModel'] })}
+              className="font-semibold border border-slate-300 rounded px-1.5 py-0.5 bg-white"
+            >
+              <option value="friction">Đáy phẳng — ma sát μ·(W_sub − V)</option>
+              <option value="shear_key">Có gờ chống trượt cắm vào bùn — c_u·A + 2·c_u·z_s·B</option>
+            </select>
+            <span className="text-slate-500">
+              {p.slidingModel === 'shear_key'
+                ? 'Khối nhẹ hơn nhiều, nhưng kết quả phụ thuộc hoàn toàn vào c_u của lớp bùn mặt (chưa có khảo sát).'
+                : 'Khối nặng vì toàn bộ lực ngang do ma sát gánh.'}
+            </span>
+          </label>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {PARAM_FIELDS.map((f) => (
+            {PARAM_FIELDS.filter((f) => !f.model || f.model === p.slidingModel).map((f) => (
               <label key={f.key} className="flex items-center justify-between gap-2 border border-slate-200 rounded-lg px-2.5 py-1.5">
                 <span className="text-slate-600">{f.label}</span>
                 <span className="flex items-center gap-1">
@@ -166,7 +186,9 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
       )}
       {compact && (
         <p className="text-slate-600">
-          Thông số khối bê tông: μ = {p.mu}; SF trượt ≥ {p.sfSlide}; SF nhấc bổng ≥ {p.sfUplift}; SF lật ≥ {p.sfOverturn}; q_allow ={' '}
+          Thông số khối bê tông: {p.slidingModel === 'shear_key'
+            ? `gờ chống trượt sâu ${p.keyDepth_m} m, c_u bùn mặt = ${p.cuSurface_kPa} kPa`
+            : `đáy phẳng, μ = ${p.mu}`}; tai neo cao {p.tieHeight_m} m; SF trượt ≥ {p.sfSlide}; SF nhấc bổng ≥ {p.sfUplift}; SF lật ≥ {p.sfOverturn}; q_allow ={' '}
           {p.qAllow_kPa} kPa; ρ_c = {p.rhoConcrete_tm3} t/m³.
         </p>
       )}
@@ -220,11 +242,13 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
         <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
         <div className="space-y-1">
           <div>
-            Chống trượt quyết định khối lượng khối; khối được định cỡ để đạt DW-1…DW-4 tại gió thiết kế, nên các hệ số an toàn nằm sát
-            ngưỡng yêu cầu.
+            {p.slidingModel === 'shear_key'
+              ? 'Gờ chống trượt: diện tích đáy do chống trượt quyết định (c_u), khối lượng do chống nhấc bổng quyết định.'
+              : 'Đáy phẳng: chống trượt quyết định khối lượng khối (cần W_sub ≈ SF·H/μ + V). Cáp thoải hơn KHÔNG làm khối nhẹ đi, vì lực ngang H tăng.'}{' '}
+            Khối được định cỡ để đạt DW-1…DW-4 tại gió thiết kế, nên các hệ số an toàn nằm sát ngưỡng yêu cầu.
             {widened.length > 0 && <> Đáy khối phải mở rộng (khối dẹt hơn L = 1,4·H) để áp lực nền không vượt q_allow ở: {widened.join(', ')}.</>}
           </div>
-          <div>μ và q_allow là giá trị giả định cho đến khi có khảo sát địa chất đáy hồ. Lún của khối trong bùn chưa được tính.</div>
+          <div>μ, c_u bùn mặt và q_allow là giá trị giả định cho đến khi có khảo sát địa chất đáy hồ. Lún của khối trong bùn chưa được tính.</div>
         </div>
       </div>
 
@@ -277,8 +301,7 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
           </tbody>
         </table>
         <p className="text-slate-500 mt-1">
-          H = T·cos α, V = T·sin α. W_sub = W_air·(1 − 1/ρ_c). DW-1: μ·(W_sub − V)/H. DW-2: W_sub/V. DW-3: (W_sub − V)·(L/2)/(H·h), cáp
-          buộc tâm mặt trên khối. DW-4: q = max(W_sub/A khi nước lặng; áp lực mép khi chịu tải). η cọc = hệ số sử dụng Broms lớn nhất của
+          H = T·cos α, V = T·sin α. W_sub = W_air·(1 − 1/ρ_c). DW-1: μ·(W_sub − V)/H (đáy phẳng) hoặc (c_u·A + 2·c_u·z_s·B)/H (gờ chống trượt). DW-2: W_sub/V. DW-3: (W_sub − V)·(L/2)/(H·h_tie), h_tie là chiều cao tai neo trên đáy khối. DW-4: q = max(W_sub/A khi nước lặng; áp lực mép khi chịu tải). η cọc = hệ số sử dụng Broms lớn nhất của
           cọc đáy PA1. Chiều dài cọc gồm L_tk và đoạn nhô. Khối lượng khối làm tròn lên 0,5 T, kích thước làm tròn lên 0,05 m.
         </p>
       </div>

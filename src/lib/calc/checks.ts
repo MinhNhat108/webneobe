@@ -421,12 +421,18 @@ export function runChecks(
       }
       checks.push(evaluated(spec, req / sf, Number.isFinite(sf) ? sf.toFixed(2) : '∞', Number.isFinite(sf) ? sf : null, note));
     };
-    pushSf('DW-1', 'Khối bê tông neo đáy — ổn định chống TRƯỢT', 'SF = μ·(W_sub − V) / H', block.sfSlide, p.sfSlide,
-      `μ = ${p.mu}, H = ${block.H_kN.toFixed(1)} kN, V = ${block.V_kN.toFixed(1)} kN. ${dims}`);
+    if (p.slidingModel === 'shear_key') {
+      pushSf('DW-1', 'Khối bê tông neo đáy — ổn định chống TRƯỢT (gờ chống trượt)', 'SF = (c_u·A + 2·c_u·z_s·B) / H', block.sfSlide, p.sfSlide,
+        `c_u bùn mặt = ${p.cuSurface_kPa} kPa (GIẢ ĐỊNH), gờ sâu z_s = ${p.keyDepth_m} m, sức kháng = ${block.slideResistance_kN.toFixed(1)} kN, ` +
+          `H = ${block.H_kN.toFixed(1)} kN, V = ${block.V_kN.toFixed(1)} kN. ${dims}`);
+    } else {
+      pushSf('DW-1', 'Khối bê tông neo đáy — ổn định chống TRƯỢT', 'SF = μ·(W_sub − V) / H', block.sfSlide, p.sfSlide,
+        `μ = ${p.mu}, H = ${block.H_kN.toFixed(1)} kN, V = ${block.V_kN.toFixed(1)} kN. ${dims}`);
+    }
     pushSf('DW-2', 'Khối bê tông neo đáy — ổn định chống NHẤC BỔNG', 'SF = W_sub / V', block.sfUplift, p.sfUplift,
       `V = ${block.V_kN.toFixed(1)} kN, W_sub = ${block.weightSub_kN.toFixed(1)} kN`);
-    pushSf('DW-3', 'Khối bê tông neo đáy — ổn định chống LẬT', 'SF = (W_sub − V)·(L/2) / (H·h)', block.sfOverturn, p.sfOverturn,
-      'Cáp buộc tại tâm mặt trên khối (cánh tay đòn lật lớn nhất).');
+    pushSf('DW-3', 'Khối bê tông neo đáy — ổn định chống LẬT', 'SF = (W_sub − V)·(L/2) / (H·h_tie)', block.sfOverturn, p.sfOverturn,
+      `Tai neo cáp đặt cao h_tie = ${Math.min(p.tieHeight_m, block.H_m).toFixed(2)} m trên đáy khối (yêu cầu cấu tạo).`);
     const qSpec: CheckSpec = {
       id: 'DW-4', label: 'Khối bê tông neo đáy — áp lực lên nền bùn đáy hồ',
       formula: 'q = max(W_sub/A ; áp lực mép khi chịu tải) ≤ q_allow', unit: 'kPa', threshold: `≤ ${p.qAllow_kPa} kPa`, isMandatory: true

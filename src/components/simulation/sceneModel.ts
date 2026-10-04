@@ -311,7 +311,7 @@ export function buildBlockAnchors(base: ProjectState, activeRaftId: number): Map
  */
 export function blockUtilisation(b: BlockAnchor, tension_kN: number): number {
   const p = b.block.params;
-  const e = evaluateDeadweightBlock(b.block, tension_kN, b.cableAngle_deg, p.mu);
+  const e = evaluateDeadweightBlock(b.block, tension_kN, b.cableAngle_deg, p);
   const sf = (req: number, got: number) => (got > 0 ? req / got : Infinity);
   return Math.max(sf(p.sfSlide, e.sfSlide), sf(p.sfUplift, e.sfUplift), sf(p.sfOverturn, e.sfOverturn), e.qContact_kPa / p.qAllow_kPa);
 }

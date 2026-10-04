@@ -57,12 +57,52 @@ describe('Gravity block (PA2) sizing', () => {
   it('mud pressure: hand check of the still-water and edge pressures', () => {
     // 4 × 4 × 2 m block, ρ_c 2.4: W_sub = 32·2.4·0.58333·9.81 = 439.49 kN.
     const blk = { weightSub_kN: 32 * 2.4 * (1 - 1 / 2.4) * G_MS2, L_m: 4, W_m: 4, H_m: 2 };
-    const e = evaluateDeadweightBlock(blk, 100, 30);
+    // cable padeye at the TOP of the block (h_tie = 2 m): the worst lever arm
+    const e = evaluateDeadweightBlock(blk, 100, 30, { tieHeight_m: 2 });
     expect(e.qStatic_kPa).toBeCloseTo(439.49 / 16, 2);
     // N = 439.49 − 50 = 389.49; e = 86.603·2 / 389.49 = 0.4447 m ≤ L/6; q_edge = N/A · (1 + 6e/L)
     expect(e.qEdge_kPa).toBeCloseTo((389.49 / 16) * (1 + (6 * 0.4447) / 4), 1);
     expect(e.qContact_kPa).toBe(Math.max(e.qStatic_kPa, e.qEdge_kPa));
     expect(e.sfOverturn).toBeCloseTo((389.49 * 2) / (86.603 * 2), 2);
+
+    // padeye 0.3 m above the base (the default): the same block, a much smaller overturning arm
+    const low = evaluateDeadweightBlock(blk, 100, 30);
+    expect(low.sfOverturn).toBeCloseTo((389.49 * 2) / (86.603 * 0.3), 1);
+    expect(low.qEdge_kPa).toBeLessThan(e.qEdge_kPa);
+    expect(low.sfSlide).toBe(e.sfSlide); // sliding does not depend on the padeye height
+    // a padeye "above the block" is clamped to its top
+    expect(evaluateDeadweightBlock(blk, 100, 30, { tieHeight_m: 99 }).sfOverturn).toBeCloseTo(e.sfOverturn, 9);
+  });
+
+  it('a flatter cable does NOT give a lighter friction block: the horizontal pull grows', () => {
+    const m = (a: number) => sizeDeadweightBlock({ tension_kN: 100, cableAngle_deg: a }).designMass_t;
+    expect(m(10)).toBeGreaterThan(m(35));
+    expect(m(0)).toBeGreaterThan(m(35));
+  });
+
+  it('shear keys: the base area resists sliding through the mud strength, the weight only has to hold the uplift', () => {
+    const flat = sizeDeadweightBlock({ tension_kN: 100, cableAngle_deg: 30 });
+    const keyed = sizeDeadweightBlock({ tension_kN: 100, cableAngle_deg: 30, slidingModel: 'shear_key', cuSurface_kPa: 10, keyDepth_m: 0.5 });
+    expect(keyed.ok).toBe(true);
+    expect(keyed.massSlide_t).toBe(0);
+    expect(keyed.governing).toBe('uplift');
+    expect(keyed.mass_t).toBeLessThan(flat.mass_t / 3);
+    // R = c_u·A + 2·c_u·z_s·B, hand check on the block as built
+    expect(keyed.slideResistance_kN).toBeCloseTo(10 * keyed.L_m * keyed.W_m + 2 * 10 * 0.5 * keyed.W_m, 9);
+    expect(keyed.sfSlide).toBeCloseTo(keyed.slideResistance_kN / keyed.H_kN, 9);
+    expect(keyed.sfSlide).toBeGreaterThanOrEqual(1.5);
+    expect(keyed.sfUplift).toBeGreaterThanOrEqual(1.5);
+    expect(keyed.qContact_kPa).toBeLessThanOrEqual(40);
+    // side from c_u·s² + 2·c_u·z_s·s ≥ 1.5·H : s ≥ 3.14 m for H = 86.6 kN
+    expect(keyed.L_m).toBeGreaterThanOrEqual(3.1);
+
+    // weaker mud -> a wider base; stronger mud -> a smaller one
+    const side = (cu: number) => sizeDeadweightBlock({ tension_kN: 100, cableAngle_deg: 30, slidingModel: 'shear_key', cuSurface_kPa: cu }).L_m;
+    expect(side(5)).toBeGreaterThan(side(10));
+    expect(side(10)).toBeGreaterThan(side(20));
+
+    // a keyed block lifted off the bed holds nothing
+    expect(evaluateDeadweightBlock(keyed, 5000, 60, keyed.params).sfSlide).toBe(0);
   });
 
   it('a softer bed gives a wider, flatter block of the same mass class; an impossible bed is reported, not hidden', () => {
@@ -171,8 +211,23 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.pa2BedConcrete_m3).toBeLessThan(5800);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
     expect(c.pa2BedFootprint_m2).toBeGreaterThan(50 * c.pa1BedFootprint_m2);
+    expect(c.params.slidingModel).toBe('friction'); // the default: a flat block, friction only
+    expect(c.params.tieHeight_m).toBe(0.3);
     expect(c.allBlocksOk).toBe(true);
     expect(c.failingRafts).toEqual([]);
+  });
+
+  it('with shear keys the same 175 anchors need 9–26 t blocks instead of 42–129 t — if the surface mud has c_u = 10 kPa', () => {
+    const s = start();
+    const keyed = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 10 } } });
+    expect(keyed.allBlocksOk).toBe(true);
+    expect(keyed.blockMass_t[0]).toBeGreaterThan(8);
+    expect(keyed.blockMass_t[1]).toBeLessThan(28);
+    expect(keyed.pa2BedConcrete_m3).toBeLessThan(compare().pa2BedConcrete_m3 / 3);
+    // and it is very sensitive to that strength
+    const weak = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 5 } } });
+    expect(weak.blockSide_m[1]).toBeGreaterThan(keyed.blockSide_m[1] * 1.3);
+    expect(weak.pa2BedConcrete_m3).toBeGreaterThan(keyed.pa2BedConcrete_m3 * 1.3);
   });
 
   it('follows the block parameters of the project', () => {

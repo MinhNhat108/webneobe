@@ -240,7 +240,7 @@ export const ReportView: React.FC = () => {
                     <td className="p-2 border-r border-slate-200 font-sans">DW-3 Chống lật: SF = (W_sub − V)·(L/2)/(H·h)</td>
                     <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.sfOverturn.toFixed(2)}</td>
                     <td className="p-2 border-r border-slate-200">-</td>
-                    <td className="p-2">Cáp buộc tâm mặt trên khối, yêu cầu ≥ {results.bedBlock.params.sfOverturn}</td>
+                    <td className="p-2">Tai neo cao {results.bedBlock.params.tieHeight_m} m trên đáy khối, yêu cầu ≥ {results.bedBlock.params.sfOverturn}</td>
                   </tr>
                   <tr>
                     <td className="p-2 border-r border-slate-200 font-sans">DW-4 Áp lực nền bùn q</td>

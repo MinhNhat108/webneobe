@@ -563,7 +563,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       const st = mooringStates.get(p.raft);
       const T = st?.tension_kN ?? 0;
       const prm = b.block.params;
-      const e = evaluateDeadweightBlock(b.block, T, b.cableAngle_deg, prm.mu);
+      const e = evaluateDeadweightBlock(b.block, T, b.cableAngle_deg, prm);
+      const keyed = prm.slidingModel === 'shear_key';
       const ok = deadweightOk(e, prm);
       const inf = (v: number, d = 2) => (Number.isFinite(v) ? fmt(v, d) : '∞');
       const depth = depthAt(p.x, p.y, waterLevel_m);
@@ -579,15 +580,15 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           'Trọng lượng khô W_air': `${fmt(b.block.mass_t, 1)} tấn (${fmt(b.block.weightAir_kN, 0)} kN)`,
           'Trọng lượng trong nước W_sub': `${fmt(b.block.weightSub_kN, 0)} kN`,
           'Lực cáp tại vận tốc gió đang chọn': `T = ${fmt(T, 1)} kN, góc ${fmt(b.cableAngle_deg, 1)}° → H = ${fmt(e.H_kN, 1)} kN, V = ${fmt(e.V_kN, 1)} kN`,
-          [`DW-1 SF trượt (μ = ${prm.mu})`]: `${inf(e.sfSlide)} (yêu cầu ≥ ${prm.sfSlide})`,
+          [keyed ? `DW-1 SF trượt (gờ ${prm.keyDepth_m} m, c_u = ${prm.cuSurface_kPa} kPa)` : `DW-1 SF trượt (μ = ${prm.mu})`]: `${inf(e.sfSlide)} (yêu cầu ≥ ${prm.sfSlide})`,
           'DW-2 SF nhấc bổng': `${inf(e.sfUplift)} (yêu cầu ≥ ${prm.sfUplift})`,
-          'DW-3 SF lật (cáp buộc đỉnh khối)': `${inf(e.sfOverturn)} (yêu cầu ≥ ${prm.sfOverturn})`,
+          [`DW-3 SF lật (tai neo cao ${prm.tieHeight_m} m)`]: `${inf(e.sfOverturn)} (yêu cầu ≥ ${prm.sfOverturn})`,
           'DW-4 Áp lực nền bùn q': `${inf(e.qContact_kPa, 1)} kPa (cho phép ≤ ${prm.qAllow_kPa} kPa)`,
           'Chi phối khối lượng': b.block.governing === 'sliding' ? 'Chống trượt' : 'Chống nhấc bổng',
           'Cao độ đáy hồ': `${fmt(p.ground_m)} m`,
           'Mực nước tại khối': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
           'Kết luận': ok ? 'ĐẠT' : 'KHÔNG ĐẠT',
-          'Lưu ý': 'μ và q_allow là giá trị giả định; chưa tính lún của khối trong bùn',
+          'Lưu ý': `${keyed ? 'c_u bùn mặt' : 'μ'} và q_allow là giá trị giả định; chưa tính lún của khối trong bùn`,
           ...trialNote(st)
         }
       };

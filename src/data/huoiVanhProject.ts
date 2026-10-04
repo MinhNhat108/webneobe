@@ -78,10 +78,14 @@ export interface MooringCoordinate {
  *  - piles (2026-10-03, owner's instruction: 300 or 350 mm square piles only,
  *    longer piles and more reinforcement allowed): every pile is 350 x 350 mm.
  *    L_tk = the previous design depth, or deeper where lateral / uplift need
- *    it (utilisation <= 0.95, Broms FS = 2.5). Reinforcement = the lightest
- *    single layer of bars on the tension face (2..4 bars, D18..D32, CB400-V,
- *    Rs = 350 MPa) with gamma x M_max / M_rd <= 0.95, gamma = 1.2
- *    (TCVN 5574:2018, see pileMrd_kNm in broms.ts).
+ *    it (utilisation <= 0.95, Broms FS = 2.5).
+ *  - reinforcement (2026-10-04, owner's instruction: 4 corner bars per pile,
+ *    nothing more): 2 bars on the tension face, the smallest diameter
+ *    D18..D32 with gamma x M_max / M_rd <= 0.95, gamma = 1.2 (TCVN 5574:2018,
+ *    see pileMrd_kNm in broms.ts). CB400-V (Rs = 350 MPa) everywhere except
+ *    BÈ 9, whose shore pile needs CB500-V (Rs = 435 MPa) to stay at 4 D32.
+ *    This only works with the shore cable attached 0.1 m above the ground
+ *    (anchor.shoreArm_e_m); at 0.5 m four bars are not enough.
  *  - BÈ 5 cannot be held by ONE 350 mm pile per line (shore pile over in
  *    bending even with 5 D28 CB500-V; lake-bed pile would need 16 m). By the
  *    owner's decision it has TWIN piles at each of its 39 anchor points: two
@@ -112,10 +116,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8.5,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 25,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 20
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 25
   },
   {
     id: 2,
@@ -139,7 +143,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     bedPileD_m: 0.35,
     bedPileL_m: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 28,
+    shoreRebarDia_mm: 25,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 20
   },
@@ -164,10 +168,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9,
-    shoreRebarFaceCount: 3,
-    shoreRebarDia_mm: 28,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 20
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 25
   },
   {
     id: 4,
@@ -190,7 +194,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 25
@@ -216,10 +220,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9.5,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 25,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 32,
     // Twin piles at every anchor point (owner's decision, 2026-10-03).
     shorePilesPerPoint: 2,
     bedPilesPerPoint: 2
@@ -245,7 +249,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 32
@@ -271,10 +275,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10.5,
-    shoreRebarFaceCount: 4,
-    shoreRebarDia_mm: 25,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 25
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 32,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 32
   },
   {
     id: 8,
@@ -297,10 +301,10 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 25
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 32
   },
   {
     id: 9,
@@ -323,10 +327,11 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 7,
     bedPileD_m: 0.35,
     bedPileL_m: 10.5,
-    shoreRebarFaceCount: 3,
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 22
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 25,
+    pileRebarRs_MPa: 435
   },
   {
     id: 10,
@@ -349,8 +354,8 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9.5,
-    shoreRebarFaceCount: 4,
-    shoreRebarDia_mm: 25,
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 28
   },
@@ -375,8 +380,8 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8,
-    shoreRebarFaceCount: 4,
-    shoreRebarDia_mm: 20,
+    shoreRebarFaceCount: 2,
+    shoreRebarDia_mm: 25,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 22
   },
@@ -402,7 +407,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     bedPileD_m: 0.35,
     bedPileL_m: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 28,
+    shoreRebarDia_mm: 25,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 22
   }
@@ -508,11 +513,15 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     pileRebarRs_MPa: 350,
     pileRebarCover_mm: 50,
     pileBendingLoadFactor: 1.2,
-    shoreRebarFaceCount: 3,
+    // Every pile has 4 corner bars (owner's instruction): 2 bars on the tension face.
+    shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 25,
-    bedRebarFaceCount: 3,
-    bedRebarDia_mm: 20,
-    shoreArm_e_m: 0.5,
+    bedRebarFaceCount: 2,
+    bedRebarDia_mm: 25,
+    // The shore cable is shackled at the pile neck, 0.1 m above the ground.
+    // This is a CONSTRUCTION REQUIREMENT of the 4-bar design: a higher
+    // attachment point raises the bending moment (it was 0.5 m before 2026-10-04).
+    shoreArm_e_m: 0.1,
     shoreD_m: 0.35,
     shoreL_m: 6.5,
     bed1Arm_e_m: 0.0,

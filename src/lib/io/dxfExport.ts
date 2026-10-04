@@ -284,7 +284,7 @@ export function buildMooringPileDxf(
     entities += scheduleTable(schedule, state, { x: tableX, y: tableTop }, labelH);
     if (options.includeDetails !== false) {
       const tableW = SCHEDULE_COLUMNS.reduce((s, c) => s + c.width * labelH * 0.75, 0);
-      entities += pileCageDetails(DXF_LAYERS.detail.name, schedule, { x: tableX + tableW + 30, y: tableTop }, labelH);
+      entities += pileCageDetails(DXF_LAYERS.detail.name, schedule, { x: tableX + tableW + 30, y: tableTop }, labelH, state.anchor.shoreArm_e_m);
     }
   }
 

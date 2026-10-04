@@ -73,30 +73,33 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
       const k = r.type === 'SHORE' ? a.shoreRebarFaceCount! : a.bedRebarFaceCount!;
       expect(r.rebarFaceCount, r.pileId).toBe(k);
       expect(r.cage.totalBars, r.pileId).toBe(4 * (k - 1));
-      expect([4, 8, 12], r.pileId).toContain(r.cage.totalBars);
-      expect(r.Ltotal_m, r.pileId).toBeCloseTo(r.Linput_m + (r.type === 'SHORE' ? 0.5 : 1.0), 9);
+      // Owner's instruction: 4 corner bars in every pile, nothing more.
+      expect(r.cage.totalBars, r.pileId).toBe(4);
+      expect(r.rebarFaceCount, r.pileId).toBe(2);
+      // shore cable shackled 0.1 m above the ground; lake-bed pile 1.0 m above the bed
+      expect(r.Ltotal_m, r.pileId).toBeCloseTo(r.Linput_m + (r.type === 'SHORE' ? 0.1 : 1.0), 9);
       expect(r.cage.segments_m, r.pileId).toEqual([r.Ltotal_m]);
-      expect(r.cage.grade, r.pileId).toBe('CB400-V');
+      expect(r.cage.grade, r.pileId).toBe(r.raft === 'BÈ 9' ? 'CB500-V' : 'CB400-V');
+      expect(r.cage.steelRatio, r.pileId).toBeLessThan(0.03);
     }
-    // the two rafts calculated with 4 bars per face get 12 bars, not 8
-    expect(rows.find((r) => r.raft === 'BÈ 7' && r.type === 'SHORE')!.cage.label).toBe('12Φ25');
-    expect(rows.find((r) => r.raft === 'BÈ 2' && r.type === 'SHORE')!.cage.label).toBe('4Φ28');
-    expect(rows.find((r) => r.raft === 'BÈ 5' && r.type === 'BED')!.cage.label).toBe('8Φ25');
+    expect(rows.find((r) => r.raft === 'BÈ 2' && r.type === 'BED')!.cage.label).toBe('4Φ20');
+    expect(rows.find((r) => r.raft === 'BÈ 1' && r.type === 'SHORE')!.cage.label).toBe('4Φ25');
+    expect(rows.find((r) => r.raft === 'BÈ 9' && r.type === 'SHORE')!.cage.label).toBe('4Φ32');
   });
 
-  it('bill of materials: 343 piles, 3 113.5 m, 381.4 m3, and the steel adds up', () => {
+  it('bill of materials: 343 piles, 3 057.1 m, 374.5 m3, about 77 t of steel, and the steel adds up', () => {
     const { state, results, batch } = setup();
     const rows = buildPileSchedule(state, results, batch);
     const m = summarisePileMaterials(rows);
     expect([m.anchorPoints, m.piles, m.shorePiles, m.bedPiles]).toEqual([304, 343, 141, 202]);
-    expect(m.totalLength_m).toBeCloseTo(3113.5, 6);
-    expect(m.concrete_m3).toBeCloseTo(381.4, 1);
+    expect(m.totalLength_m).toBeCloseTo(3057.1, 6);
+    expect(m.concrete_m3).toBeCloseTo(374.5, 1);
     const main = Object.values(m.mainSteelByDia_kg).reduce((s, v) => s + v, 0);
     expect(m.steel_kg).toBeCloseTo(main + m.stirrupSteel_kg + m.hookSteel_kg, 6);
     expect(m.steel_kg).toBeCloseTo(rows.reduce((s, r) => s + r.pileCount * r.cage.steel_kg, 0), 6);
     expect(Object.keys(m.mainSteelByDia_kg).map(Number).sort((a, b) => a - b)).toEqual([20, 22, 25, 28, 32]);
-    expect(m.steel_kg / 1000).toBeGreaterThan(100);
-    expect(m.steel_kg / 1000).toBeLessThan(120);
+    expect(m.steel_kg / 1000).toBeGreaterThan(74);
+    expect(m.steel_kg / 1000).toBeLessThan(80);
   });
 
   it('the workbook lists the cage of every pile and the materials table', () => {
@@ -108,7 +111,8 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     const rows = buildPileSchedule(state, results, batch);
     const first = data[5];
     expect(first[col('THÉP CHỦ')]).toBe(rows[0].cage.label);
-    expect(first[col('MÁC THÉP')]).toBe('CB400-V');
+    expect(first[col('MÁC THÉP')]).toBe(rows[0].cage.grade);
+    expect(String(first[col('THÉP CHỦ')])).toMatch(/^4Φ\d+$/);
     expect(first[col('CỐT ĐAI')]).toBe('Φ8 a100/a200');
     expect(first[col('L_tổng (m)')]).toBe(rows[0].Ltotal_m);
     expect(first[col('PHÂN ĐOẠN CỌC')]).toBe(rows[0].cage.segmentNote);
@@ -116,8 +120,8 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     const find = (label: string) => data.find((r) => r[0] === label);
     expect(find('BẢNG TỔNG HỢP VẬT TƯ CỌC TOÀN HỒ')).toBeDefined();
     expect(find('Tổng số cọc')![1]).toBe(343);
-    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(3113.5);
-    expect(find('Tổng bê tông B25')![1]).toBe(381.4);
+    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(3057.1);
+    expect(find('Tổng bê tông B25')![1]).toBe(374.5);
     for (const d of [20, 22, 25, 28, 32]) expect(find(`Thép chủ Φ${d}`)![1]).toBeGreaterThan(0);
     expect(find('TỔNG THÉP')![1]).toBe(Number((summarisePileMaterials(rows).steel_kg / 1000).toFixed(2)));
   });
@@ -130,20 +134,22 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     const texts = (layer: string) => doc.entities.filter((e: any) => e.layer === layer && e.type === 'TEXT').map((e: any) => e.text as string);
     const table = texts(DXF_LAYERS.schedule.name);
     for (const c of ['THEP CHU', 'THEP DAI', 'DOAN COC', 'L_tong (m)']) expect(table, c).toContain(c);
-    expect(table).toContain('12D25 CB400-V');
-    expect(table).toContain('4D28 CB400-V');
+    expect(table).toContain('4D25 CB400-V');
+    expect(table).toContain('4D32 CB500-V'); // BÈ 9
+    expect(table.some((x) => /^(8|12)D\d+/.test(x))).toBe(false);
     expect(table.filter((x) => x === '1 DOAN')).toHaveLength(304);
     const detail = texts(DXF_LAYERS.detail.name);
     expect(detail.some((x) => x.includes('COC 4 THANH'))).toBe(true);
-    expect(detail.some((x) => x.includes('COC 8 THANH'))).toBe(true);
-    expect(detail.some((x) => x.includes('COC 12 THANH'))).toBe(true);
+    expect(detail.some((x) => x.includes('COC 8 THANH') || x.includes('COC 12 THANH'))).toBe(false);
     expect(detail.some((x) => x.includes('CUM 2 COC'))).toBe(true);
     expect(detail.some((x) => x.includes('CHUA THIET KE'))).toBe(true); // the twin-pile yoke
     expect(detail.some((x) => x.includes('NGUYEN MOT DOAN'))).toBe(true);
+    // the condition the 4-bar design depends on is written on the sheet
+    expect(detail.some((x) => x.includes('YEU CAU THI CONG: cap coc bo moc sat co coc, cach mat dat <= 0.1 m'))).toBe(true);
     expect(detail.some((x) => x.includes('343 coc tai 304 diem neo'))).toBe(true);
-    // 4 + 8 + 12 bar circles in the three cross-sections
+    // one cross-section, four corner bars
     const circles = doc.entities.filter((e: any) => e.layer === DXF_LAYERS.detail.name && e.type === 'CIRCLE');
-    expect(circles).toHaveLength(24);
+    expect(circles).toHaveLength(4);
     // without the option the details are left out
     const plain = buildMooringPileDxf(state, results, batch, { includeDetails: false });
     expect(plain.dxf).not.toContain('CHI TIET CAU TAO COC');

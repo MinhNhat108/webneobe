@@ -372,7 +372,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 13,
+      version: 14,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -476,7 +476,11 @@ export const useProjectStore = create<ProjectStore>()(
           // the 0.35–0.60 m piles and no bars — which the corrected check would
           // show as unreinforced. Re-sync the list and the active raft's pile
           // inputs; project-wide inputs the user set are kept.
-          if (version < 13 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          // v14 (2026-10-04): 4 corner bars per pile, shore cable shackled 0.1 m above the ground.
+          if (version < 14 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            if (persistedState.currentProject.anchor) {
+              persistedState.currentProject.anchor.shoreArm_e_m = DEFAULT_ANCHOR.shoreArm_e_m;
+            }
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId) ?? HUOI_VANH_RAFTS[0];
             persistedState.activeRaftId = item.id;

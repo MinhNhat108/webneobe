@@ -36,7 +36,7 @@ export function cageBarPositions(a_m: number, barsPerFace: number, cover_m: numb
   return pts;
 }
 
-function sectionDetail(layer: string, title: string, rows: PileScheduleRow[], origin: Pt, h: number): { dxf: string; width: number } {
+function sectionDetail(layer: string, title: string, rows: PileScheduleRow[], origin: Pt, h: number, shoreArm_m?: number): { dxf: string; width: number } {
   const first = rows[0];
   const a = first.D_m, S = a * SECTION_SCALE;
   const k = first.rebarFaceCount;
@@ -67,7 +67,10 @@ function sectionDetail(layer: string, title: string, rows: PileScheduleRow[], or
     `Thep chu: ${first.cage.totalBars} thanh = ${k} thanh moi mat (thanh goc dung chung), a_s = ${Math.round(cover * 1000)} mm`,
     ...[...uses].map(([key, who]) => `  ${key}: coc ${who.join(', ')}`),
     `Dai D${STIRRUP_DIA_MM} a${STIRRUP_END_PITCH_M * 1000} (${STIRRUP_END_ZONE_M} m hai dau) / a${STIRRUP_BODY_PITCH_M * 1000}${first.cage.totalBars > 4 ? ' + dai phu giu thanh giua canh' : ''} - CAU TAO, chua tinh luc cat`,
-    'Be tong B25. Ty le phong 40:1.'
+    'Be tong B25. Ty le phong 40:1.',
+    ...(shoreArm_m !== undefined
+      ? [`YEU CAU THI CONG: cap coc bo moc sat co coc, cach mat dat <= ${shoreArm_m.toFixed(1)} m. Moc cao hon thi ${first.cage.totalBars} thanh khong du chiu uon.`]
+      : [])
   ];
   let width = S;
   for (const t of notes) {
@@ -79,7 +82,7 @@ function sectionDetail(layer: string, title: string, rows: PileScheduleRow[], or
 }
 
 /** All pile details, left to right from `origin` (its top-left corner). */
-export function pileCageDetails(layer: string, schedule: PileScheduleRow[], origin: Pt, h: number): string {
+export function pileCageDetails(layer: string, schedule: PileScheduleRow[], origin: Pt, h: number, shoreArm_m?: number): string {
   let out = '';
   let x = origin.x;
   const m = summarisePileMaterials(schedule);
@@ -99,7 +102,7 @@ export function pileCageDetails(layer: string, schedule: PileScheduleRow[], orig
     byBars.get(r.cage.totalBars)!.push(r);
   }
   [...byBars.entries()].sort((p, q) => p[0] - q[0]).forEach(([bars, rows], i) => {
-    const d = sectionDetail(layer, `MAT CAT ${i + 1}-${i + 1}: COC ${bars} THANH`, rows, { x, y: origin.y - 2 * h }, h);
+    const d = sectionDetail(layer, `MAT CAT ${i + 1}-${i + 1}: COC ${bars} THANH`, rows, { x, y: origin.y - 2 * h }, h, shoreArm_m);
     out += d.dxf;
     x += d.width + 12 * h;
   });

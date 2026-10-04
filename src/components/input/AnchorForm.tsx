@@ -294,7 +294,7 @@ export const AnchorForm: React.FC = () => {
                 unit="m"
                 step={0.1}
                 min={0}
-                helpText="Khoảng cách từ mặt đất tới điểm buộc cáp (0.5m)"
+                helpText="Khoảng cách từ mặt đất tới điểm buộc cáp. Thiết kế 4 thanh thép góc yêu cầu ≤ 0,1 m (bích neo sát cổ cọc)"
               />
             </div>
 

@@ -20,6 +20,7 @@ import { GuideView } from '../guide/GuideView';
 import { SimulationView } from '../simulation/SimulationView';
 import { OptionComparisonView } from '../results/OptionComparisonView';
 import { CostEstimateView } from '../cost/CostEstimateView';
+import { ShorePileHeadDetail } from '../results/ShorePileHeadDetail';
 import { useProjectStore } from '../../store/useProjectStore';
 
 interface AppShellProps {
@@ -76,6 +77,7 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'map' && (
             <div className="section-stack">
               <MooringLayoutMap />
+              <ShorePileHeadDetail />
             </div>
           )}
 

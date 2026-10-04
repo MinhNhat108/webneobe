@@ -169,7 +169,8 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(detail.some((x) => x.includes('343 coc tai 304 diem neo'))).toBe(true);
     // round sections: concrete + spiral circles and 4 + 6 + 8 bars; the square section: 4 bars; the twin piles: 2 circles
     const circles = doc.entities.filter((e: any) => e.layer === DXF_LAYERS.detail.name && e.type === 'CIRCLE');
-    expect(circles).toHaveLength(3 * 2 + (4 + 6 + 8) + 4 + 2);
+    // + the shore pile head detail: pin hole, shackle, pile outline on plan, 4 anchor bars
+    expect(circles).toHaveLength(3 * 2 + (4 + 6 + 8) + 4 + 2 + 7);
     // without the option the details are left out
     const plain = buildMooringPileDxf(state, results, batch, { includeDetails: false });
     expect(plain.dxf).not.toContain('CHI TIET CAU TAO COC');

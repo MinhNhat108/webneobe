@@ -1,6 +1,7 @@
 import { CalcResults, ProjectState } from '../calc/types';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
 import { pileCageDetails } from './pileCageDetailDxf';
+import { buildShorePileHead, shorePileHeadDxf } from './shorePileHeadDetail';
 import { STIRRUP_DIA_MM } from '../calc/pileCage';
 import {
   buildPileSchedule,
@@ -289,6 +290,11 @@ export function buildMooringPileDxf(
     if (options.includeDetails !== false) {
       const tableW = SCHEDULE_COLUMNS.reduce((s, c) => s + c.width * labelH * 0.75, 0);
       entities += pileCageDetails(DXF_LAYERS.detail.name, schedule, { x: tableX + tableW + 30, y: tableTop }, labelH, state.anchor.shoreArm_e_m);
+      // Head of the bored shore piles with the cable connection, below the cage details.
+      const head = buildShorePileHead(state, schedule, batchResults);
+      if (head) {
+        entities += shorePileHeadDxf(DXF_LAYERS.detail.name, head, { x: tableX + tableW + 30, y: tableTop - 75 * labelH }, labelH);
+      }
     }
   }
 

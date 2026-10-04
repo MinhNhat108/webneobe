@@ -516,6 +516,7 @@ export const MooringLayoutMap: React.FC = () => {
                   <th className="px-3 py-2 text-right">Z (m)</th>
                   <th className="px-3 py-2 text-right" title="Cạnh tiết diện cọc vuông BTCT">a (m)</th>
                   <th className="px-3 py-2 text-right" title="Số cọc tại điểm neo (2 = cọc đôi; P_req, P_max tính cho một cọc)">Số cọc</th>
+                  <th className="px-3 py-2 text-left" title="Lồng thép chủ = 4 × (số thanh mỗi mặt chịu kéo − 1); cọc đúc nguyên một đoạn">Thép chủ</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu ngàm tối thiểu theo Broms">L_opt (m)</th>
                   <th className="px-3 py-2 text-right" title="Chiều sâu đóng cọc theo thiết kế — P_max tính theo chiều sâu này">L_tk (m)</th>
                   <th className="px-3 py-2 text-right">T_max (kN)</th>
@@ -556,6 +557,7 @@ export const MooringLayoutMap: React.FC = () => {
                       <td className="px-3 py-1.5 text-right">{r.z.toFixed(2)}</td>
                       <td className="px-3 py-1.5 text-right">{r.D_m.toFixed(2)}</td>
                       <td className={`px-3 py-1.5 text-right ${r.pileCount > 1 ? 'font-bold text-amber-700' : ''}`}>{r.pileCount}</td>
+                      <td className="px-3 py-1.5 text-left whitespace-nowrap">{r.cage.label} <span className="text-slate-400">{r.cage.totalBars > 0 ? r.cage.grade : ''}</span></td>
                       <td className="px-3 py-1.5 text-right font-bold text-sky-700">
                         {r.Lopt_m !== null ? r.Lopt_m.toFixed(2) : 'KHÔNG ĐẠT'}
                       </td>

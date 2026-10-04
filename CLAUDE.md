@@ -69,6 +69,8 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
   - `deadweight.ts`: Phương án 2 — khối bê tông trọng lực thay 175 cọc đáy hồ (cọc bờ giữ nguyên). Định cỡ theo DW-1 trượt, DW-2 nhấc bổng, DW-3 lật, DW-4 áp lực nền bùn (q = max của nước lặng và áp lực mép khi chịu tải). Mặc định μ = 0,35; SF = 1,5; q_allow = 40 kPa; ρ_c = 2,4 — đều là GIẢ ĐỊNH, chưa có khảo sát đáy hồ. Khối lượng làm tròn lên 0,5 T, kích thước làm tròn lên 0,05 m.
   - `technicalComparison.ts`: `compareMooringOptions()` — so sánh KỸ THUẬT thuần túy PA1/PA2 (kích thước, trọng lượng, thể tích bê tông, diện tích chiếm đáy, hệ số an toàn). KHÔNG có tiền tệ / đơn giá (yêu cầu của người dùng 2026-10-03). Kết quả ở 12°: khối 42–129 tấn, đáy 3,05–5,05 m, ~5.380 m³ so với ~396 m³ cọc đáy (ở 15°: 51–156 tấn, ~6.530 m³).
 - Phương án neo đáy nằm TRONG dự án: `anchor.bedAnchorOption` (`PA1_PILE` mặc định / `PA2_DEADWEIGHT`) và `anchor.deadweight`. Ở PA2, `calculateProject` trả `bedBlock`, các dòng cọc đáy (C11, BP-3..BP-5) thành "Không áp dụng" và DW-1..DW-4 thay thế; BP-1, BP-2 (cọc bờ) giữ nguyên. Tab 4, báo cáo, 3D, bảng 12 bè, Excel tổng hợp, và nút "Bảng Neo" / "Xuất CAD" đều đi theo phương án đang chọn.
+- `src/lib/calc/pileCage.ts`: từ số thanh trên MẶT CHỊU KÉO (k, dùng trong kiểm tra uốn) sang LỒNG THÉP thực tế = 4·(k − 1) thanh (k = 2 → 4 thanh góc; 3 → 8 thanh; 4 → 12 thanh — KHÔNG được ghi 8 thanh cho mặt tính 4). Kèm khối lượng một cọc. Cốt đai Φ8 a100/a200 và 2 móc cẩu Φ16 là CẤU TẠO (chưa tính lực cắt). Cọc ≤ 12 m đúc và hạ nguyên một đoạn — toàn bộ cọc dự án (7,0–11,5 m) không có mối nối.
+- `src/lib/io/pileSchedule.ts`: mỗi dòng có `pileCount`, `Ltotal_m`, `cage` (lồng thép, đai, phân đoạn, bê tông và thép một cọc); `summarisePileMaterials()` cho bảng tổng hợp vật tư. Hiện tại: 343 cọc, 3.113,5 m, 381,4 m³ bê tông, ≈ 109,6 tấn thép (≈ 287 kg/m³). `src/lib/io/pileCageDetailDxf.ts` vẽ chi tiết trên layer `08_CHI_TIET_COC`: mặt cắt cọc 4 / 8 / 12 thanh, cụm cọc đôi, sơ đồ cẩu. Đài/bích neo cọc đôi và mối nối cọc CHƯA thiết kế — bản vẽ ghi rõ.
 - `src/lib/io/deadweightSchedule.ts`, `deadweightDxf.ts`, `deadweightExcel.ts`: bảng thống kê và bản vẽ DXF R12 của PA2 (129 cọc bờ + 175 khối `HV-DW001..175`, lấy từ `results.bedBlock`). Bản vẽ/bảng PA1 (`dxfExport.ts`, `pileSchedule.ts`) không đổi. Mã cọc bờ giữ nguyên như PA1. Chi tiết khối chỉ là sơ đồ kích thước: cốt thép, tai cẩu, móc cáp CHƯA thiết kế nên không vẽ; KHÔNG vẽ chi tiết cấu tạo cọc (người dùng tự làm).
 - **PA2 không đặt vừa trên mặt bằng hiện tại:** 304 điểm neo được bố trí cho cọc; `findBlockClashes()` cho 31 cặp khối chồng lấn ở 12° (59/175 khối, tâm cách nhau từ 3,0 m, đáy khối 3,05–5,05 m; ở 15° là 34 cặp). Bảng, bản vẽ và Tab 9 đều ghi cảnh báo này — không được ẩn.
 - `src/components/simulation/`: Mô phỏng 3D WebGL Three.js (Mục 8 trên Web):
@@ -78,6 +80,6 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 170 tests tại 2026-10-03).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 177 tests tại 2026-10-04).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.

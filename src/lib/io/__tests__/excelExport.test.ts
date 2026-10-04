@@ -52,7 +52,14 @@ describe('Standalone Pile Schedule Excel Export', () => {
       'T_max (kN)',
       'P_req (kN)',
       'P_max (kN)',
-      'KL'
+      'KL',
+      'L_tổng (m)',
+      'PHÂN ĐOẠN CỌC',
+      'THÉP CHỦ',
+      'MÁC THÉP',
+      'CỐT ĐAI',
+      'V BÊ TÔNG 1 CỌC (m³)',
+      'KL THÉP 1 CỌC (kg)'
     ]);
 
     // Check first pile row

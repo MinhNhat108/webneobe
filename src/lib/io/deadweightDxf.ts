@@ -45,7 +45,9 @@ const SHORE_COLUMNS: Column<PileScheduleRow>[] = [
   { title: 'L_tk (m)', width: 10, value: (r) => r.Linput_m.toFixed(2) },
   { title: 'T_max (kN)', width: 12, value: (r) => r.Tmax_kN.toFixed(1) },
   { title: 'P_max (kN)', width: 12, value: (r) => r.Pmax_kN.toFixed(1) },
-  { title: 'KET LUAN', width: 11, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') }
+  { title: 'KET LUAN', width: 11, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') },
+  { title: 'THEP CHU', width: 18, value: (r) => (r.cage.totalBars > 0 ? `${r.cage.totalBars}D${r.rebarDia_mm} ${r.cage.grade}` : 'KHONG') },
+  { title: 'DOAN COC', width: 10, value: (r) => `${r.cage.segments_m.length} DOAN` }
 ];
 
 const BLOCK_COLUMNS: Column<BlockScheduleRow>[] = [

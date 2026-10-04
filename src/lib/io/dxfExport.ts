@@ -1,5 +1,7 @@
 import { CalcResults, ProjectState } from '../calc/types';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
+import { pileCageDetails } from './pileCageDetailDxf';
+import { STIRRUP_DIA_MM } from '../calc/pileCage';
 import {
   buildPileSchedule,
   buildRaftOutlines,
@@ -38,7 +40,8 @@ export const DXF_LAYERS = {
   shorePile: { name: '04_COC_NEO_BO', color: ACI.yellow },
   bedPile: { name: '05_COC_NEO_DAY', color: ACI.magenta },
   text: { name: '06_TOA_DO_TEXT', color: ACI.white },
-  schedule: { name: '07_BANG_THONG_KE_COC', color: ACI.white }
+  schedule: { name: '07_BANG_THONG_KE_COC', color: ACI.white },
+  detail: { name: '08_CHI_TIET_COC', color: ACI.yellow }
 } as const;
 
 export type Pt = { x: number; y: number };
@@ -197,6 +200,8 @@ export interface DxfExportOptions {
   labelHeight_m?: number;
   /** Include the Pile Schedule table block beside the plan. */
   includeSchedule?: boolean;
+  /** Include the pile reinforcement details (cross-sections, twin piles, lifting). */
+  includeDetails?: boolean;
   coordinates?: MooringCoordinate[];
 }
 
@@ -277,6 +282,10 @@ export function buildMooringPileDxf(
     const tableX = Math.max(...xs) + 30;
     const tableTop = Math.max(...ys);
     entities += scheduleTable(schedule, state, { x: tableX, y: tableTop }, labelH);
+    if (options.includeDetails !== false) {
+      const tableW = SCHEDULE_COLUMNS.reduce((s, c) => s + c.width * labelH * 0.75, 0);
+      entities += pileCageDetails(DXF_LAYERS.detail.name, schedule, { x: tableX + tableW + 30, y: tableTop }, labelH);
+    }
   }
 
   const dxf = dxfDocument(Object.values(DXF_LAYERS), entities);
@@ -304,7 +313,11 @@ const SCHEDULE_COLUMNS: Array<{ title: string; width: number; value: (r: PileSch
   { title: 'T_max (kN)', width: 12, value: (r) => r.Tmax_kN.toFixed(1) },
   { title: 'P_req (kN)', width: 12, value: (r) => r.Preq_kN.toFixed(1) },
   { title: 'P_max (kN)', width: 12, value: (r) => r.Pmax_kN.toFixed(1) },
-  { title: 'KL', width: 8, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') }
+  { title: 'KL', width: 8, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') },
+  { title: 'L_tong (m)', width: 11, value: (r) => r.Ltotal_m.toFixed(2) },
+  { title: 'THEP CHU', width: 18, value: (r) => (r.cage.totalBars > 0 ? `${r.cage.totalBars}D${r.rebarDia_mm} ${r.cage.grade}` : 'KHONG') },
+  { title: 'THEP DAI', width: 15, value: () => `D${STIRRUP_DIA_MM} a100/200` },
+  { title: 'DOAN COC', width: 10, value: (r) => `${r.cage.segments_m.length} DOAN` }
 ];
 
 /**

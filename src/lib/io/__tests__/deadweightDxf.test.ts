@@ -134,8 +134,11 @@ describe('Option 2 DXF drawing', () => {
     expect(detail.some((t) => t.includes('CHI TIET B'))).toBe(true);
     expect(detail.some((t) => t.includes('KHONG THEO TY LE'))).toBe(true);
     expect(detail.some((t) => t.includes('CHUA THIET KE'))).toBe(true);
-    // Reinforcement, lifting lugs and shear keys were never calculated: they must not appear as if they were.
-    expect(/a150|a100|CB400|D50|go chong truot/i.test(out.dxf)).toBe(false);
+    // Block reinforcement, lifting lugs and shear keys were never calculated: they must not appear as if they were.
+    // (The SHORE PILE cage, e.g. "8D25 CB400-V", is calculated and is listed in the shore table.)
+    expect(/a150|luoi thep|tai cau D|go chong truot/i.test(out.dxf)).toBe(false);
+    expect(shore).toContain('THEP CHU');
+    expect(shore.some((t) => /^\d+D\d+ CB400-V$/.test(t))).toBe(true);
     // No money anywhere.
     expect(/VND|don gia|chi phi/i.test(out.dxf)).toBe(false);
   });

@@ -2,7 +2,20 @@ import * as XLSX from 'xlsx';
 import { ProjectState, CalcResults } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
-import { buildPileSchedule } from './pileSchedule';
+import { buildPileSchedule, summarisePileMaterials, PileScheduleRow } from './pileSchedule';
+import { STIRRUP_DIA_MM } from '../calc/pileCage';
+
+/** The reinforcement / casting columns shared by both pile tables. */
+const pileCageCells = (r: PileScheduleRow): Array<string | number> => [
+  Number(r.Ltotal_m.toFixed(2)),
+  r.cage.segmentNote,
+  r.cage.label,
+  r.cage.totalBars > 0 ? r.cage.grade : '-',
+  r.cage.stirrupLabel,
+  Number(r.cage.concreteVol_m3.toFixed(3)),
+  Number(r.cage.steel_kg.toFixed(1))
+];
+const PILE_CAGE_COLS = [{ wch: 11 }, { wch: 22 }, { wch: 12 }, { wch: 11 }, { wch: 14 }, { wch: 20 }, { wch: 18 }];
 
 export interface RaftBatchResultLike {
   raft: RaftSummaryItem;
@@ -283,7 +296,14 @@ export function exportProjectToExcel(
       'P_req (kN)',
       'P_max (kN)',
       'KL',
-      'Ghi chú'
+      'Ghi chú',
+      'L_tổng (m)',
+      'PHÂN ĐOẠN CỌC',
+      'THÉP CHỦ',
+      'MÁC THÉP',
+      'CỐT ĐAI',
+      'V BÊ TÔNG 1 CỌC (m³)',
+      'KL THÉP 1 CỌC (kg)'
     ]
   ];
   for (const r of schedule) {
@@ -303,7 +323,8 @@ export function exportProjectToExcel(
       Number(r.Preq_kN.toFixed(1)),
       Number(r.Pmax_kN.toFixed(1)),
       r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA',
-      r.note ?? ''
+      r.note ?? '',
+      ...pileCageCells(r)
     ]);
   }
   const wsSchedule = XLSX.utils.aoa_to_sheet(scheduleRows);
@@ -311,7 +332,8 @@ export function exportProjectToExcel(
     { wch: 12 }, { wch: 14 }, { wch: 10 }, { wch: 12 },
     { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 },
     { wch: 12 }, { wch: 11 }, { wch: 14 }, { wch: 14 },
-    { wch: 14 }, { wch: 12 }, { wch: 24 }
+    { wch: 14 }, { wch: 12 }, { wch: 24 },
+    ...PILE_CAGE_COLS
   ];
   XLSX.utils.book_append_sheet(wb, wsSchedule, 'ThongKeCoc');
 
@@ -384,7 +406,14 @@ export function buildPileScheduleWorkbook(
       'T_max (kN)',
       'P_req (kN)',
       'P_max (kN)',
-      'KL'
+      'KL',
+      'L_tổng (m)',
+      'PHÂN ĐOẠN CỌC',
+      'THÉP CHỦ',
+      'MÁC THÉP',
+      'CỐT ĐAI',
+      'V BÊ TÔNG 1 CỌC (m³)',
+      'KL THÉP 1 CỌC (kg)'
     ]
   ];
 
@@ -404,7 +433,8 @@ export function buildPileScheduleWorkbook(
       Number(r.Tmax_kN.toFixed(1)),
       Number(r.Preq_kN.toFixed(1)),
       Number(r.Pmax_kN.toFixed(1)),
-      r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA'
+      r.isPmaxOk ? 'ĐẠT' : 'KIỂM TRA',
+      ...pileCageCells(r)
     ]);
   }
 
@@ -478,6 +508,21 @@ export function buildPileScheduleWorkbook(
     'P_max tính theo chiều sâu ĐÓNG CỌC THỰC TẾ (L_tk), không phải theo L_opt. L_opt chỉ là chiều sâu tối thiểu vừa đủ chịu tải.'
   ]);
 
+  // Bill of materials for the whole lake: every pile of every anchor point.
+  const mat = summarisePileMaterials(schedule);
+  rows.push(['']);
+  rows.push(['BẢNG TỔNG HỢP VẬT TƯ CỌC TOÀN HỒ']);
+  rows.push(['Tổng số cọc', mat.piles, 'cọc', `${mat.shorePiles} cọc bờ + ${mat.bedPiles} cọc đáy, tại ${mat.anchorPoints} điểm neo`]);
+  rows.push(['Tổng chiều dài cọc (L_tk + đoạn nhô)', Number(mat.totalLength_m.toFixed(1)), 'm', '']);
+  rows.push(['Tổng bê tông B25', Number(mat.concrete_m3.toFixed(1)), 'm³', '']);
+  for (const dia of Object.keys(mat.mainSteelByDia_kg).map(Number).sort((p, q) => p - q)) {
+    rows.push([`Thép chủ Φ${dia}`, Number(mat.mainSteelByDia_kg[dia].toFixed(0)), 'kg', 'Theo kiểm tra uốn TCVN 5574:2018; lồng thép = 4 × (số thanh mỗi mặt − 1)']);
+  }
+  rows.push([`Cốt đai Φ${STIRRUP_DIA_MM}`, Number(mat.stirrupSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO (a100 trong 1,5 m hai đầu, a200 thân cọc; thêm đai phụ khi lồng 8–12 thanh). Chưa tính lực cắt.']);
+  rows.push(['Móc cẩu Φ16', Number(mat.hookSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO: 2 móc mỗi cọc, đặt tại 0,207 L']);
+  rows.push(['TỔNG THÉP', Number((mat.steel_kg / 1000).toFixed(2)), 'tấn', `≈ ${(mat.steel_kg / mat.concrete_m3).toFixed(0)} kg thép / m³ bê tông. Chưa gồm hộp thép đầu cọc và đài / bích neo.`]);
+  rows.push(['Phân đoạn', '', '', 'Tất cả cọc ≤ 12 m: đúc và hạ NGUYÊN MỘT ĐOẠN, không có mối nối. Nếu thiết bị buộc phải chia đoạn thì mối nối chịu kéo / uốn phải được thiết kế riêng.']);
+
   const ws = XLSX.utils.aoa_to_sheet(rows);
 
   // Set column widths matching table layout
@@ -496,7 +541,8 @@ export function buildPileScheduleWorkbook(
     { wch: 14 }, // T_max (kN)
     { wch: 14 }, // P_req (kN)
     { wch: 14 }, // P_max (kN)
-    { wch: 12 } // KL
+    { wch: 12 }, // KL
+    ...PILE_CAGE_COLS
   ];
 
   XLSX.utils.book_append_sheet(wb, ws, 'BangThongKeCoc');

@@ -1,6 +1,7 @@
 import { CalcResults, ProjectState } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
+import { buildPileCage, PileCage, STIRRUP_DIA_MM, barUnitWeight_kg_m } from '../calc/pileCage';
 
 /** A surveyed raft-cluster boundary, site-local metres. */
 export interface RaftPolygon {
@@ -64,6 +65,13 @@ export interface PileScheduleRow {
   PmaxAtLopt_kN: number;
   /** Rated catalogue / load-test P_max, kN (undefined when not supplied). */
   PmaxRated_kN?: number;
+  /** Full pile length = L_tk + stick-up, m. */
+  Ltotal_m: number;
+  /** Bars on the tension face used by the bending check, and their diameter. */
+  rebarFaceCount: number;
+  rebarDia_mm: number;
+  /** The cage as built (4·(k − 1) bars), its stirrups, casting segments and the quantities of ONE pile. */
+  cage: PileCage;
   /** T_dây <= P_max. */
   isPmaxOk: boolean;
   note?: string;
@@ -103,6 +111,20 @@ export function buildPileSchedule(
       ? batch?.state?.anchor.shoreL_m ?? batch?.raft.shorePileL_m ?? state.anchor.shoreL_m ?? 6.5
       : batch?.state?.anchor.bed1L_m ?? batch?.raft.bedPileL_m ?? state.anchor.bed1L_m ?? 8.0;
 
+    const anchorIn = (batch?.state ?? state).anchor;
+    const stickup_m = (isShore ? anchorIn.shoreArm_e_m : anchorIn.bed1Stickup_m) ?? 0;
+    const rebarFaceCount = (isShore ? anchorIn.shoreRebarFaceCount : anchorIn.bedRebarFaceCount) ?? 0;
+    const rebarDia_mm = (isShore ? anchorIn.shoreRebarDia_mm : anchorIn.bedRebarDia_mm) ?? 0;
+    const Ltotal_m = Linput_m + stickup_m;
+    const cage = buildPileCage({
+      side_m: D_m,
+      faceCount: rebarFaceCount,
+      dia_mm: rebarDia_mm,
+      rs_MPa: anchorIn.pileRebarRs_MPa ?? 350,
+      cover_mm: anchorIn.pileRebarCover_mm ?? 50,
+      totalLength_m: Ltotal_m
+    });
+
     const Tmax_kN = res.t_max_intact_kN;
     const Preq_kN = opt ? opt.Preq_kN : Tmax_kN * (state.anchor.sfPileCapacity ?? 1.0);
 
@@ -136,12 +158,53 @@ export function buildPileSchedule(
       Pmax_kN: round(Pmax_kN),
       PmaxAtLopt_kN: round(PmaxAtLopt_kN),
       PmaxRated_kN: opt?.ratedPmax_kN,
+      Ltotal_m: round(Ltotal_m),
+      rebarFaceCount,
+      rebarDia_mm,
+      cage,
       // Checked against the as-built capacity, so this column can actually fail.
       isPmaxOk: Pmax_kN > 0 && Preq_kN <= Pmax_kN,
       note: opt?.converged === false ? opt.note : undefined
     };
   });
 }
+
+/** Bill of materials of a pile schedule: every pile of every anchor point. */
+export interface PileMaterials {
+  anchorPoints: number;
+  piles: number;
+  shorePiles: number;
+  bedPiles: number;
+  totalLength_m: number;
+  concrete_m3: number;
+  /** Main bars by diameter, kg (key = diameter in mm). */
+  mainSteelByDia_kg: Record<number, number>;
+  stirrupSteel_kg: number;
+  hookSteel_kg: number;
+  steel_kg: number;
+}
+
+export function summarisePileMaterials(rows: PileScheduleRow[]): PileMaterials {
+  const m: PileMaterials = {
+    anchorPoints: rows.length, piles: 0, shorePiles: 0, bedPiles: 0, totalLength_m: 0, concrete_m3: 0,
+    mainSteelByDia_kg: {}, stirrupSteel_kg: 0, hookSteel_kg: 0, steel_kg: 0
+  };
+  for (const r of rows) {
+    const n = r.pileCount;
+    m.piles += n;
+    if (r.type === 'SHORE') m.shorePiles += n; else m.bedPiles += n;
+    m.totalLength_m += n * r.Ltotal_m;
+    m.concrete_m3 += n * r.cage.concreteVol_m3;
+    if (r.cage.totalBars > 0) m.mainSteelByDia_kg[r.rebarDia_mm] = (m.mainSteelByDia_kg[r.rebarDia_mm] ?? 0) + n * r.cage.mainSteel_kg;
+    m.stirrupSteel_kg += n * r.cage.stirrupSteel_kg;
+    m.hookSteel_kg += n * r.cage.hookSteel_kg;
+    m.steel_kg += n * r.cage.steel_kg;
+  }
+  return m;
+}
+
+/** "Φ8", unit weight etc. re-exported for the tables. */
+export { STIRRUP_DIA_MM, barUnitWeight_kg_m };
 
 /** Convex hull (monotone chain) of the raft-edge attachment points. */
 export function convexHull(points: Array<{ x: number; y: number }>): Array<{ x: number; y: number }> {

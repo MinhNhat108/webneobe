@@ -20,6 +20,34 @@ export function concreteRbtFromRb_MPa(rb_MPa: number): number {
   return table[table.length - 1][1];
 }
 
+/**
+ * Σ|y_i| / r for n bars equally spaced on a circle, in the WORST orientation
+ * of the cage against the bending axis. A round pile's cage is not oriented
+ * when it is lowered into a bored hole, so the bending check may not rely on
+ * a favourable one. (4 bars: 2.0 with a bar on the axis, 2.83 at 45° — the
+ * check uses 2.0.)
+ */
+export function ringLeverFactor(n: number): number {
+  const count = Math.floor(n);
+  if (count < 2) return 0;
+  let worst = Infinity;
+  const steps = 720;
+  for (let s = 0; s < steps; s++) {
+    const phase = ((2 * Math.PI) / count) * (s / steps);
+    let sum = 0;
+    for (let i = 0; i < count; i++) sum += Math.abs(Math.sin(phase + (2 * Math.PI * i) / count));
+    worst = Math.min(worst, sum);
+  }
+  return worst;
+}
+
+/** Bars of diameter d that fit on the cage circle of a round pile: spacing along the circle ≥ max(2d, d + 30 mm). */
+export function maxBarsOnRing(dia_m: number, bar_mm: number, cover_mm: number = DEFAULT_REBAR_COVER_MM): number {
+  const r = dia_m * 1000 / 2 - cover_mm;
+  if (r <= 0) return 0;
+  return Math.floor((2 * Math.PI * r) / Math.max(2 * bar_mm, bar_mm + 30) + 1e-9);
+}
+
 /** Bars of diameter d that fit in ONE layer on a face of side `side_m`: spacing ≥ max(2d, d + 30 mm). */
 export function maxBarsPerFace(side_m: number, dia_mm: number, cover_mm: number = DEFAULT_REBAR_COVER_MM): number {
   const width = side_m * 1000 - 2 * cover_mm;
@@ -80,6 +108,13 @@ export function pileCrossSectionArea_m2(section: PileSectionInput): number {
  *        M_rd = Rs · As_tension · (h0 − a') = Rs · As_tension · (D − 2·a_s)
  *    with As_tension the bars of ONE face. Cracked concrete carries no tension,
  *    so nothing is added for the concrete.
+ *  - ROUND pile (bored / circular / pipe) with n bars equally spaced on a
+ *    circle of radius r_s = D/2 − a_s: the same steel couple,
+ *        M_rd = Rs · A_bar · r_s · Σ|sin θ_i|,
+ *    taken in the WORST orientation of the cage (see ringLeverFactor). With 4
+ *    bars that is Rs · A_bar · 2·r_s — HALF of a square pile of the same size
+ *    and bars, whose 2 tension bars sit a full D − 2·a_s from the compression
+ *    bars. A round pile therefore needs more bars for the same moment.
  *  - UNREINFORCED: a plain section fails when it cracks, M_crc = Rbt · W. (The
  *    compressive strength Rb is irrelevant to it.)
  *
@@ -98,7 +133,20 @@ export function pileMrd_kNm(
 
   let AsTension_mm2 = 0;
   let Rs_MPa = section.rebarRs_MPa ?? DEFAULT_REBAR_RS_MPA;
-  if ((section.rebarFaceCount ?? 0) > 0 && (section.rebarDia_mm ?? 0) > 0) {
+
+  if (section.shape !== 'square') {
+    // Round pile: bars on a circle. Without an explicit count, a square-style
+    // "k per face" input is read as the 4·(k − 1) bars it would build.
+    const n = Math.floor(section.rebarTotalCount ?? ((section.rebarFaceCount ?? 0) >= 2 ? 4 * (section.rebarFaceCount! - 1) : 0));
+    if (n >= 2 && (section.rebarDia_mm ?? 0) > 0) {
+      const Abar_mm2 = (Math.PI * section.rebarDia_mm! * section.rebarDia_mm!) / 4;
+      const r_m = Math.max(0, D / 2 - cover_m);
+      const MrdSteel_kNm = (Abar_mm2 / 1_000_000) * (Rs_MPa * 1000) * r_m * ringLeverFactor(n);
+      return { Mrd_kNm: MrdSteel_kNm, MrdConcrete_kNm: 0, MrdSteel_kNm, AsTension_mm2: (n / 2) * Abar_mm2 };
+    }
+  }
+
+  if (section.shape === 'square' && (section.rebarFaceCount ?? 0) > 0 && (section.rebarDia_mm ?? 0) > 0) {
     AsTension_mm2 = section.rebarFaceCount! * (Math.PI * section.rebarDia_mm! * section.rebarDia_mm!) / 4;
   } else if ((section.rebarArea_mm2 ?? 0) > 0) {
     AsTension_mm2 = section.rebarArea_mm2! * LEGACY_TENSION_SHARE;

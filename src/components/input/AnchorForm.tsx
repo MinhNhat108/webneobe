@@ -299,15 +299,27 @@ export const AnchorForm: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-              <NumberField
-                label="Số thanh thép trên MẶT CHỊU KÉO cọc BỜ"
-                value={anchor.shoreRebarFaceCount}
-                onChange={(val) => updateAnchor({ shoreRebarFaceCount: val })}
-                unit="thanh"
-                step={1}
-                min={0}
-                helpText="Một lớp trên một mặt cọc; 0 = cọc không cốt thép (chỉ chịu được mômen nứt Rbt·W)"
-              />
+              {(anchor.shorePileShape ?? 'square') === 'square' ? (
+                <NumberField
+                  label="Số thanh thép trên MẶT CHỊU KÉO cọc BỜ"
+                  value={anchor.shoreRebarFaceCount}
+                  onChange={(val) => updateAnchor({ shoreRebarFaceCount: val })}
+                  unit="thanh"
+                  step={1}
+                  min={0}
+                  helpText="Một lớp trên một mặt cọc; 0 = cọc không cốt thép (chỉ chịu được mômen nứt Rbt·W)"
+                />
+              ) : (
+                <NumberField
+                  label="Tổng số thanh thép cọc BỜ tròn"
+                  value={anchor.shoreRebarCount}
+                  onChange={(val) => updateAnchor({ shoreRebarCount: val })}
+                  unit="thanh"
+                  step={1}
+                  min={0}
+                  helpText="Chia đều trên vòng tròn. Cọc tròn 4 thanh chỉ chịu uốn bằng một nửa cọc vuông 4 thanh cùng cỡ"
+                />
+              )}
               <NumberField
                 label="Đường kính thép cọc BỜ (Φ)"
                 value={anchor.shoreRebarDia_mm}

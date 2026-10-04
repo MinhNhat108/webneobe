@@ -69,9 +69,11 @@ describe('PM Technical Audit of 12 Huoi Vanh Rafts', () => {
       expect(c9?.status).toBe('PASS');
       expect(raft.perimeter_m / raft.cableCount).toBeLessThanOrEqual(15.0);
 
-      // Every pile is a square RC pile, checked with the Broms FS >= 2.0
-      expect(s.anchor.shorePileShape).toBe('square');
+      // Shore piles: round bored piles D350; lake-bed piles: square precast 350 x 350. Broms FS >= 2.0
+      expect(s.anchor.shorePileShape).toBe('circular');
       expect(s.anchor.bedPileShape).toBe('square');
+      expect(s.anchor.shoreD_m).toBe(0.35);
+      expect(s.anchor.bed1D_m).toBe(0.35);
       expect(s.anchor.sfPile).toBeGreaterThanOrEqual(2.0);
 
       summary.push({

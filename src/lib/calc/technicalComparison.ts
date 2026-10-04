@@ -90,13 +90,11 @@ export function compareMooringOptions(
 ): TechnicalComparison {
   const params = deadweightParamsOf(current.anchor);
   const rho = params.rhoConcrete_tm3;
-  const pile = (side: number, length: number): PileGeometry => ({
-    side_m: side,
-    length_m: length,
-    volume_m3: side * side * length,
-    mass_t: side * side * length * rho,
-    footprint_m2: side * side
-  });
+  // `side` is the side of a square pile or the diameter of a round one.
+  const pile = (side: number, length: number, shape: AnchorInput['shorePileShape'] = 'square'): PileGeometry => {
+    const area = shape === 'square' || shape === undefined ? side * side : (Math.PI * side * side) / 4;
+    return { side_m: side, length_m: length, volume_m3: area * length, mass_t: area * length * rho, footprint_m2: area };
+  };
 
   const rows: RaftOptionRow[] = [];
   let shorePiles = 0, bedPiles = 0;
@@ -109,8 +107,8 @@ export function compareMooringOptions(
     const nShore = state.line.shoreLineCount ?? item.shoreAnchors;
     const nBed = state.line.bedLineCount ?? item.bedAnchors;
 
-    const shorePile = pile(state.anchor.shoreD_m, state.anchor.shoreL_m + (state.anchor.shoreArm_e_m ?? 0));
-    const bedPile = pile(state.anchor.bed1D_m, state.anchor.bed1L_m + (state.anchor.bed1Stickup_m ?? 0));
+    const shorePile = pile(state.anchor.shoreD_m, state.anchor.shoreL_m + (state.anchor.shoreArm_e_m ?? 0), state.anchor.shorePileShape);
+    const bedPile = pile(state.anchor.bed1D_m, state.anchor.bed1L_m + (state.anchor.bed1Stickup_m ?? 0), state.anchor.bedPileShape);
     const angle = r.bedCableAngle_deg ?? 0;
     const block = sizeDeadweightBlock({ tension_kN: r.t_max_intact_kN, cableAngle_deg: angle, ...params });
     const bp = r.bedPile1;

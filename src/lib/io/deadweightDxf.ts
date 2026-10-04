@@ -40,14 +40,14 @@ const SHORE_COLUMNS: Column<PileScheduleRow>[] = [
   { title: 'Y (m)', width: 12, value: (r) => r.y.toFixed(2) },
   { title: 'Z (m)', width: 10, value: (r) => r.z.toFixed(2) },
   { title: 'SO COC', width: 8, value: (r) => String(r.pileCount) },
-  { title: 'CANH a (m)', width: 12, value: (r) => r.D_m.toFixed(2) },
+  { title: 'D / a (m)', width: 12, value: (r) => r.D_m.toFixed(2) },
   { title: 'L_opt (m)', width: 11, value: (r) => (r.Lopt_m === null ? 'KHONG DAT' : r.Lopt_m.toFixed(2)) },
   { title: 'L_tk (m)', width: 10, value: (r) => r.Linput_m.toFixed(2) },
   { title: 'T_max (kN)', width: 12, value: (r) => r.Tmax_kN.toFixed(1) },
   { title: 'P_max (kN)', width: 12, value: (r) => r.Pmax_kN.toFixed(1) },
   { title: 'KET LUAN', width: 11, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') },
   { title: 'THEP CHU', width: 18, value: (r) => (r.cage.totalBars > 0 ? `${r.cage.totalBars}D${r.rebarDia_mm} ${r.cage.grade}` : 'KHONG') },
-  { title: 'DOAN COC', width: 10, value: (r) => `${r.cage.segments_m.length} DOAN` }
+  { title: 'DOAN COC', width: 12, value: (r) => (r.cage.shape === 'circular' ? 'DO TAI CHO' : `${r.cage.segments_m.length} DOAN`) }
 ];
 
 const BLOCK_COLUMNS: Column<BlockScheduleRow>[] = [
@@ -247,7 +247,9 @@ export function buildMooringDeadweightDxf(
     }
   }
 
-  // Shore piles: the real a × a section, plus a locating circle so it stays visible when zoomed out.
+  // Shore piles at true size (round bored or square), plus a locating circle so they stay visible when zoomed out.
+  const pileMark = (c: Pt, r: PileScheduleRow) =>
+    r.cage.shape === 'circular' ? circle(L.shorePile.name, c, r.D_m / 2) : square(L.shorePile.name, c, r.D_m);
   for (const r of schedule.shorePiles) {
     const p = { x: r.x, y: r.y };
     e += line(L.shoreLine.name, { x: r.xRaft, y: r.yRaft }, p);
@@ -257,10 +259,10 @@ export function buildMooringDeadweightDxf(
       const nx = -dy / len, ny = dx / len;
       for (let k = 0; k < r.pileCount; k++) {
         const off = (k - (r.pileCount - 1) / 2) * 3 * r.D_m;
-        e += square(L.shorePile.name, { x: p.x + nx * off, y: p.y + ny * off }, r.D_m);
+        e += pileMark({ x: p.x + nx * off, y: p.y + ny * off }, r);
       }
     } else {
-      e += square(L.shorePile.name, p, r.D_m);
+      e += pileMark(p, r);
     }
     e += circle(L.shorePile.name, p, shoreR);
     e += point(L.shorePile.name, p);
@@ -268,7 +270,7 @@ export function buildMooringDeadweightDxf(
       L.text.name,
       { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 },
       h,
-      `${r.pileId} (${r.code})${r.pileCount > 1 ? ` ${r.pileCount}x(${Math.round(r.D_m * 1000)}x${Math.round(r.D_m * 1000)})` : ''}`
+      `${r.pileId} (${r.code})${r.pileCount > 1 ? ` ${r.pileCount}x(${r.cage.shape === 'circular' ? 'D' + Math.round(r.D_m * 1000) : Math.round(r.D_m * 1000) + 'x' + Math.round(r.D_m * 1000)})` : r.cage.shape === 'circular' ? ` (D${Math.round(r.D_m * 1000)} KHOAN NHOI)` : ''}`
     );
   }
 
@@ -301,7 +303,7 @@ export function buildMooringDeadweightDxf(
       L.shoreTable.name,
       [
         `BANG THONG KE COC NEO BO BTCT (${schedule.shorePiles.length} COC) - PHUONG AN 2 - ${code}`,
-        'Coc vuong BTCT, a = canh tiet dien | L_opt: chieu sau ngam toi thieu (Broms) | L_tk: chieu sau dong coc thiet ke | P_max: suc chiu tai cho phep tai L_tk',
+        'Coc bo: D = duong kinh coc khoan nhoi tron (hoac a = canh coc vuong) | L_opt: chieu sau ngam toi thieu (Broms) | L_tk: chieu sau dong coc thiet ke | P_max: suc chiu tai cho phep tai L_tk',
         'Ma coc giu nguyen theo bang thong ke Phuong an 1 (danh so tren ca 304 diem neo).'
       ],
       SHORE_COLUMNS, schedule.shorePiles, { x: cursorX, y: top }, h

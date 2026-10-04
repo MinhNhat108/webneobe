@@ -594,6 +594,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       };
     };
 
+    const shoreRound = (currentProject.anchor.shorePileShape ?? 'square') !== 'square';
     const describePile = (p: PileModel): SelectedElement => {
       if (p.block) return describeBlock(p, p.block);
       const st = mooringStates.get(p.raft);
@@ -606,7 +607,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         data: {
           'Tuyến cáp': p.line,
           'Thuộc cụm bè': p.raft,
-          'Tiết diện': `${p.pilesAtPoint > 1 ? `Cụm ${p.pilesAtPoint} cọc vuông BTCT` : 'Vuông BTCT'} ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} mm${p.pilesAtPoint > 1 ? ' (đặt cạnh nhau, vẽ một cọc đại diện)' : ''}`,
+          'Tiết diện': p.type === 'SHORE' && shoreRound
+            ? `${p.pilesAtPoint > 1 ? `Cụm ${p.pilesAtPoint} cọc khoan nhồi` : 'Cọc khoan nhồi'} tròn D${Math.round(p.side_m * 1000)} mm, đổ tại chỗ${p.pilesAtPoint > 1 ? ' (đặt cạnh nhau, vẽ một cọc đại diện)' : ''} — mô hình vẽ dạng hộp`
+            : `${p.pilesAtPoint > 1 ? `Cụm ${p.pilesAtPoint} cọc vuông BTCT` : 'Vuông BTCT'} ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} mm${p.pilesAtPoint > 1 ? ' (đặt cạnh nhau, vẽ một cọc đại diện)' : ''}`,
           'Chiều sâu ngàm L_tk': `${fmt(p.embed_m)} m`,
           'Đoạn nhô khỏi nền': `${fmt(p.stickup_m)} m`,
           'Cao độ mặt đất': `${fmt(p.ground_m)} m`,

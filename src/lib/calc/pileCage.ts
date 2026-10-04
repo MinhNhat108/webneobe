@@ -1,17 +1,21 @@
 /**
- * From the reinforcement the bending check uses (k bars on the tension face)
- * to the cage that is actually built, and its quantities.
+ * From the reinforcement the bending check uses to the cage that is actually
+ * built, and its quantities.
  *
- * A square pile is reinforced symmetrically on all four faces — it has to
- * resist bending whichever way it ends up facing, and in handling. With k bars
- * on every face and the corner bars shared, the cage has 4·(k − 1) bars:
- *     k = 2 → 4 bars (corners);  k = 3 → 8 bars;  k = 4 → 12 bars.
- * Never fewer: 8 bars for a face that was calculated with 4 would leave only 3
- * on the tension face.
+ * SQUARE precast pile (driven from a barge): reinforced symmetrically on all
+ * four faces. With k bars on every face and the corner bars shared, the cage
+ * has 4·(k − 1) bars: k = 2 → 4 corner bars; 3 → 8; 4 → 12. Never fewer: 8
+ * bars for a face that was calculated with 4 would leave only 3 on the
+ * tension face.
+ *
+ * ROUND bored pile (drilled on the bank, cage lowered, concrete cast in
+ * place): n bars equally spaced on a circle, a continuous Φ8 spiral. It is not
+ * lifted or spliced, so it has no lifting hooks and no handling case.
  *
  * What is CALCULATED here: the main bars (from the bending check) and the
- * handling moment of a pile lifted at two points. What is CONSTRUCTIVE (not
- * calculated — no shear design exists in this tool): stirrups, lifting hooks.
+ * handling moment of a precast pile lifted at two points. What is CONSTRUCTIVE
+ * (not calculated — no shear design exists in this tool): stirrups / spiral,
+ * lifting hooks.
  */
 
 export const STEEL_DENSITY_KG_M3 = 7850;
@@ -20,7 +24,9 @@ export const STIRRUP_DIA_MM = 8;
 export const STIRRUP_END_PITCH_M = 0.1;
 export const STIRRUP_BODY_PITCH_M = 0.2;
 export const STIRRUP_END_ZONE_M = 1.5;
-/** Two Φ16 lifting hooks per pile, about 3.8 kg together (constructive). */
+/** Spiral of a bored pile: Φ8 at 150 mm pitch (constructive). */
+export const SPIRAL_PITCH_M = 0.15;
+/** Two Φ16 lifting hooks per precast pile, about 3.8 kg together (constructive). */
 export const LIFTING_HOOKS_KG = 3.8;
 /** Lifting points at 0.207 L from each end: M = 0.0214 · q · L². */
 export const LIFT_POINT_RATIO = 0.207;
@@ -30,6 +36,8 @@ const HANDLING_DYNAMIC_FACTOR = 1.5;
 const RC_UNIT_WEIGHT_KN_M3 = 25;
 /** Longest pile cast and driven in one piece (a standard precast length). */
 export const MAX_SINGLE_SEGMENT_M = 12;
+/** Concrete face to the outside of the stirrup, m. */
+const STIRRUP_COVER_M = 0.035;
 
 export const barUnitWeight_kg_m = (dia_mm: number) => ((Math.PI * dia_mm * dia_mm) / 4 / 1e6) * STEEL_DENSITY_KG_M3;
 
@@ -41,11 +49,17 @@ export function rebarGradeOf(rs_MPa: number): string {
   return `Rs ${rs_MPa} MPa`;
 }
 
+export type PileCageShape = 'square' | 'circular';
+
 export interface PileCageInput {
-  /** Side of the square pile, m. */
+  /** 'square' (precast, driven) or 'circular' (bored, cast in place). Default 'square'. */
+  shape?: PileCageShape;
+  /** Side of the square pile / diameter of the round pile, m. */
   side_m: number;
-  /** Bars on the tension face used by the bending check. */
+  /** SQUARE: bars on the tension face used by the bending check. */
   faceCount: number;
+  /** ROUND: bars of the cage on the circle. */
+  totalCount?: number;
   /** Bar diameter, mm. */
   dia_mm: number;
   /** Design strength of the bars, MPa. */
@@ -57,34 +71,69 @@ export interface PileCageInput {
 }
 
 export interface PileCage {
-  /** Bars in the cage, 4·(k − 1); 0 for an unreinforced pile. */
+  shape: PileCageShape;
+  /** How the pile is made, for the schedule. */
+  method: string;
+  /** Bars in the cage; 0 for an unreinforced pile. */
   totalBars: number;
   /** e.g. "8Φ25". */
   label: string;
   grade: string;
   /** Main steel area / concrete area. */
   steelRatio: number;
-  /** e.g. "Φ8 a100/a200". */
+  /** e.g. "Φ8 a100/a200" or "Đai xoắn Φ8 a150". */
   stirrupLabel: string;
+  /** Hoops (square pile) or turns of the spiral (round pile). */
   stirrupCount: number;
   /** Segments the pile is cast in, m (one entry = one piece). */
   segments_m: number[];
   /** e.g. "1 đoạn (L = 9.5 m)". */
   segmentNote: string;
+  /** Concrete cross-section, m². */
+  sectionArea_m2: number;
   concreteVol_m3: number;
   mainSteel_kg: number;
   stirrupSteel_kg: number;
   hookSteel_kg: number;
   /** Steel of one pile, kg. */
   steel_kg: number;
-  /** Lifting moment of the whole pile at two points, with the dynamic factor, kNm. */
+  /** Lifting moment of a precast pile at two points, with the dynamic factor, kNm (0 for a bored pile). */
   handlingMoment_kNm: number;
 }
 
 export function buildPileCage(input: PileCageInput): PileCage {
   const { side_m: a, faceCount, dia_mm, rs_MPa, cover_mm, totalLength_m: L } = input;
+  const shape: PileCageShape = input.shape ?? 'square';
+  const round = shape === 'circular';
   const k = Math.max(0, Math.floor(faceCount));
-  const totalBars = k >= 2 ? 4 * (k - 1) : 0;
+  const totalBars = round
+    ? Math.max(0, Math.floor(input.totalCount ?? (k >= 2 ? 4 * (k - 1) : 0)))
+    : k >= 2 ? 4 * (k - 1) : 0;
+  const sectionArea_m2 = round ? (Math.PI * a * a) / 4 : a * a;
+  const mainSteel_kg = totalBars * L * barUnitWeight_kg_m(dia_mm);
+  const steelRatio = totalBars > 0 ? (totalBars * Math.PI * dia_mm * dia_mm) / 4 / (sectionArea_m2 * 1e6) : 0;
+  const grade = rebarGradeOf(rs_MPa);
+  const label = totalBars > 0 ? `${totalBars}Φ${dia_mm}` : 'Không cốt thép';
+
+  if (round) {
+    // Continuous spiral around the cage, plus one closed turn at each end.
+    const turns = Math.ceil(L / SPIRAL_PITCH_M) + 2;
+    const turnLength_m = Math.hypot(Math.PI * Math.max(0, a - 2 * STIRRUP_COVER_M), SPIRAL_PITCH_M);
+    const stirrupSteel_kg = turns * turnLength_m * barUnitWeight_kg_m(STIRRUP_DIA_MM);
+    return {
+      shape, method: 'Khoan nhồi, đổ bê tông tại chỗ',
+      totalBars, label, grade, steelRatio,
+      stirrupLabel: `Đai xoắn Φ${STIRRUP_DIA_MM} a${SPIRAL_PITCH_M * 1000}`,
+      stirrupCount: turns,
+      segments_m: [L],
+      segmentNote: `Đổ tại chỗ (L = ${L.toFixed(1)} m)`,
+      sectionArea_m2,
+      concreteVol_m3: sectionArea_m2 * L,
+      mainSteel_kg, stirrupSteel_kg, hookSteel_kg: 0,
+      steel_kg: mainSteel_kg + stirrupSteel_kg,
+      handlingMoment_kNm: 0
+    };
+  }
 
   // Stirrups: closed Φ8 hoops around the main bars, plus one inner tie set per
   // hoop when the cage has intermediate bars to restrain (8 or 12 bars).
@@ -95,8 +144,6 @@ export function buildPileCage(input: PileCageInput): PileCage {
   const hoopLength_m = 4 * hoopSide_m + 0.16; // two 135° hooks
   const tieLength_m = totalBars > 4 ? 4 * (hoopSide_m / Math.SQRT2) + 0.16 : 0; // diamond tie on the mid-side bars
   const stirrupSteel_kg = stirrupCount * (hoopLength_m + tieLength_m) * barUnitWeight_kg_m(STIRRUP_DIA_MM);
-
-  const mainSteel_kg = totalBars * L * barUnitWeight_kg_m(dia_mm);
   const hookSteel_kg = totalBars > 0 ? LIFTING_HOOKS_KG : 0;
 
   const q_kN_m = a * a * RC_UNIT_WEIGHT_KN_M3;
@@ -105,17 +152,16 @@ export function buildPileCage(input: PileCageInput): PileCage {
   const segments_m = single ? [L] : [half, L - half];
 
   return {
-    totalBars,
-    label: totalBars > 0 ? `${totalBars}Φ${dia_mm}` : 'Không cốt thép',
-    grade: rebarGradeOf(rs_MPa),
-    steelRatio: totalBars > 0 ? (totalBars * Math.PI * dia_mm * dia_mm) / 4 / (a * a * 1e6) : 0,
+    shape, method: 'Đúc sẵn, đóng từ sà lan',
+    totalBars, label, grade, steelRatio,
     stirrupLabel: `Φ${STIRRUP_DIA_MM} a${STIRRUP_END_PITCH_M * 1000}/a${STIRRUP_BODY_PITCH_M * 1000}`,
     stirrupCount,
     segments_m,
     segmentNote: single
       ? `1 đoạn (L = ${L.toFixed(1)} m)`
       : `${segments_m.length} đoạn (${segments_m.map((s) => s.toFixed(1)).join(' + ')} m) — mối nối CHƯA thiết kế`,
-    concreteVol_m3: a * a * L,
+    sectionArea_m2,
+    concreteVol_m3: sectionArea_m2 * L,
     mainSteel_kg,
     stirrupSteel_kg,
     hookSteel_kg,

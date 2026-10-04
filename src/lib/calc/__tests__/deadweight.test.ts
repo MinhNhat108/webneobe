@@ -191,7 +191,8 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     const a = dflt().anchor;
     // piles per anchor point: 2 on BÈ 5 (twin piles), 1 elsewhere
     const bed = HUOI_VANH_RAFTS.reduce((s, r) => s + r.bedAnchors * (r.bedPilesPerPoint ?? 1) * r.bedPileD_m! ** 2 * (r.bedPileL_m! + (a.bed1Stickup_m ?? 0)), 0);
-    const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + r.shoreAnchors * (r.shorePilesPerPoint ?? 1) * r.shorePileD_m! ** 2 * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
+    // shore piles are ROUND (bored D350): area = pi D^2 / 4
+    const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + r.shoreAnchors * (r.shorePilesPerPoint ?? 1) * (Math.PI * r.shorePileD_m! ** 2 / 4) * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
     expect(c.shorePileCount).toBe(141);
     expect(c.pa1BedPileCount).toBe(202);
     expect(c.pa1BedConcrete_m3).toBeCloseTo(bed, 6);

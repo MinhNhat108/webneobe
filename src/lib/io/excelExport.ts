@@ -13,9 +13,16 @@ const pileCageCells = (r: PileScheduleRow): Array<string | number> => [
   r.cage.totalBars > 0 ? r.cage.grade : '-',
   r.cage.stirrupLabel,
   Number(r.cage.concreteVol_m3.toFixed(3)),
-  Number(r.cage.steel_kg.toFixed(1))
+  Number(r.cage.steel_kg.toFixed(1)),
+  pileSectionLabel(r)
 ];
-const PILE_CAGE_COLS = [{ wch: 11 }, { wch: 22 }, { wch: 12 }, { wch: 11 }, { wch: 14 }, { wch: 20 }, { wch: 18 }];
+
+/** "Tròn D350 — khoan nhồi tại chỗ" / "Vuông 350×350 — đúc sẵn". */
+export const pileSectionLabel = (r: PileScheduleRow): string => {
+  const mm = Math.round(r.D_m * 1000);
+  return r.cage.shape === 'circular' ? `Tròn D${mm} — khoan nhồi tại chỗ` : `Vuông ${mm}×${mm} — đúc sẵn`;
+};
+const PILE_CAGE_COLS = [{ wch: 11 }, { wch: 22 }, { wch: 12 }, { wch: 11 }, { wch: 18 }, { wch: 20 }, { wch: 18 }, { wch: 30 }];
 
 export interface RaftBatchResultLike {
   raft: RaftSummaryItem;
@@ -303,7 +310,8 @@ export function exportProjectToExcel(
       'MÁC THÉP',
       'CỐT ĐAI',
       'V BÊ TÔNG 1 CỌC (m³)',
-      'KL THÉP 1 CỌC (kg)'
+      'KL THÉP 1 CỌC (kg)',
+      'TIẾT DIỆN'
     ]
   ];
   for (const r of schedule) {
@@ -413,7 +421,8 @@ export function buildPileScheduleWorkbook(
       'MÁC THÉP',
       'CỐT ĐAI',
       'V BÊ TÔNG 1 CỌC (m³)',
-      'KL THÉP 1 CỌC (kg)'
+      'KL THÉP 1 CỌC (kg)',
+      'TIẾT DIỆN'
     ]
   ];
 
@@ -516,12 +525,12 @@ export function buildPileScheduleWorkbook(
   rows.push(['Tổng chiều dài cọc (L_tk + đoạn nhô)', Number(mat.totalLength_m.toFixed(1)), 'm', '']);
   rows.push(['Tổng bê tông B25', Number(mat.concrete_m3.toFixed(1)), 'm³', '']);
   for (const dia of Object.keys(mat.mainSteelByDia_kg).map(Number).sort((p, q) => p - q)) {
-    rows.push([`Thép chủ Φ${dia}`, Number(mat.mainSteelByDia_kg[dia].toFixed(0)), 'kg', 'Theo kiểm tra uốn TCVN 5574:2018; lồng thép = 4 × (số thanh mỗi mặt − 1)']);
+    rows.push([`Thép chủ Φ${dia}`, Number(mat.mainSteelByDia_kg[dia].toFixed(0)), 'kg', 'Theo kiểm tra uốn TCVN 5574:2018 (cọc vuông: 4 × (số thanh mỗi mặt − 1); cọc tròn: số thanh trên vòng)']);
   }
-  rows.push([`Cốt đai Φ${STIRRUP_DIA_MM}`, Number(mat.stirrupSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO (a100 trong 1,5 m hai đầu, a200 thân cọc; thêm đai phụ khi lồng 8–12 thanh). Chưa tính lực cắt.']);
-  rows.push(['Móc cẩu Φ16', Number(mat.hookSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO: 2 móc mỗi cọc, đặt tại 0,207 L']);
+  rows.push([`Cốt đai Φ${STIRRUP_DIA_MM}`, Number(mat.stirrupSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO (cọc vuông: a100 trong 1,5 m hai đầu, a200 thân cọc; cọc tròn khoan nhồi: đai xoắn a150). Chưa tính lực cắt.']);
+  rows.push(['Móc cẩu Φ16', Number(mat.hookSteel_kg.toFixed(0)), 'kg', 'CẤU TẠO: 2 móc mỗi cọc ĐÚC SẴN, đặt tại 0,207 L (cọc khoan nhồi không có)']);
   rows.push(['TỔNG THÉP', Number((mat.steel_kg / 1000).toFixed(2)), 'tấn', `≈ ${(mat.steel_kg / mat.concrete_m3).toFixed(0)} kg thép / m³ bê tông. Chưa gồm hộp thép đầu cọc và đài / bích neo.`]);
-  rows.push(['Phân đoạn', '', '', 'Tất cả cọc ≤ 12 m: đúc và hạ NGUYÊN MỘT ĐOẠN, không có mối nối. Nếu thiết bị buộc phải chia đoạn thì mối nối chịu kéo / uốn phải được thiết kế riêng.']);
+  rows.push(['Phân đoạn', '', '', 'Cọc bờ: khoan nhồi, đổ bê tông tại chỗ. Cọc đáy đúc sẵn ≤ 12 m: đúc và hạ NGUYÊN MỘT ĐOẠN, không có mối nối. Nếu thiết bị buộc phải chia đoạn thì mối nối chịu kéo / uốn phải được thiết kế riêng.']);
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
 

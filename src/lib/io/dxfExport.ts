@@ -260,6 +260,10 @@ export function buildMooringPileDxf(
 
     if (isShore) {
       entities += circle(DXF_LAYERS.shorePile.name, anchorPt, shoreR);
+      // the pile itself at true size (the circle above is only a locating marker)
+      entities += row.cage.shape === 'circular'
+        ? circle(DXF_LAYERS.shorePile.name, anchorPt, row.D_m / 2)
+        : square(DXF_LAYERS.shorePile.name, anchorPt, row.D_m);
       entities += point(DXF_LAYERS.shorePile.name, anchorPt);
     } else {
       entities += square(DXF_LAYERS.bedPile.name, anchorPt, bedSize);
@@ -271,7 +275,7 @@ export function buildMooringPileDxf(
       DXF_LAYERS.text.name,
       labelPt,
       labelH,
-      `${row.pileId} (${row.code})${row.pileCount > 1 ? ` ${row.pileCount}x(${Math.round(row.D_m * 1000)}x${Math.round(row.D_m * 1000)})` : ''}`
+      `${row.pileId} (${row.code})${row.pileCount > 1 ? ` ${row.pileCount}x(${sectionCad(row)})` : row.cage.shape === 'circular' ? ` (${sectionCad(row)} KHOAN NHOI)` : ''}`
     );
   }
 
@@ -316,9 +320,16 @@ const SCHEDULE_COLUMNS: Array<{ title: string; width: number; value: (r: PileSch
   { title: 'KL', width: 8, value: (r) => (r.isPmaxOk ? 'DAT' : 'KIEM TRA') },
   { title: 'L_tong (m)', width: 11, value: (r) => r.Ltotal_m.toFixed(2) },
   { title: 'THEP CHU', width: 18, value: (r) => (r.cage.totalBars > 0 ? `${r.cage.totalBars}D${r.rebarDia_mm} ${r.cage.grade}` : 'KHONG') },
-  { title: 'THEP DAI', width: 15, value: () => `D${STIRRUP_DIA_MM} a100/200` },
-  { title: 'DOAN COC', width: 10, value: (r) => `${r.cage.segments_m.length} DOAN` }
+  { title: 'THEP DAI', width: 15, value: (r) => (r.cage.shape === 'circular' ? `XOAN D${STIRRUP_DIA_MM} a150` : `D${STIRRUP_DIA_MM} a100/200`) },
+  { title: 'DOAN COC', width: 12, value: (r) => (r.cage.shape === 'circular' ? 'DO TAI CHO' : `${r.cage.segments_m.length} DOAN`) },
+  { title: 'TIET DIEN', width: 22, value: (r) => `${sectionCad(r)} ${r.cage.shape === 'circular' ? 'KHOAN NHOI' : 'DUC SAN'}` }
 ];
+
+/** "D350" for a round pile, "350x350" for a square one. */
+function sectionCad(r: PileScheduleRow): string {
+  const mm = Math.round(r.D_m * 1000);
+  return r.cage.shape === 'circular' ? `D${mm}` : `${mm}x${mm}`;
+}
 
 /**
  * Draws the Pile Schedule as a real table (grid LINEs + TEXT cells) beside

@@ -158,6 +158,9 @@ export interface AnchorInput {
    * 0.9; only used when a point has more than one pile.
    */
   pileGroupEfficiency?: number;
+  /** Total bars of a ROUND shore / lake-bed pile, equally spaced on a circle (used when the pile shape is circular or pipe). */
+  shoreRebarCount?: number;
+  bedRebarCount?: number;
   // Reinforcement actually checked in bending (TCVN 5574:2018): bars on the tension face, one layer.
   shoreRebarFaceCount?: number;
   shoreRebarDia_mm?: number;
@@ -289,8 +292,10 @@ export interface PileSectionInput {
   rebarArea_mm2?: number;
   /** LEGACY: characteristic yield strength, MPa (design strength taken as fy / 1.15). */
   rebarFy_MPa?: number;
-  /** Bars on the TENSION face (one layer). With `rebarDia_mm`, this is the reinforcement the bending check uses. */
+  /** SQUARE piles: bars on the TENSION face (one layer). With `rebarDia_mm`, this is the reinforcement the bending check uses. */
   rebarFaceCount?: number;
+  /** ROUND piles: bars of the cage, equally spaced on a circle of radius D/2 − a_s. */
+  rebarTotalCount?: number;
   /** Bar diameter, mm. */
   rebarDia_mm?: number;
   /** Design tensile strength of the bars Rs, MPa (TCVN 5574:2018: CB300-V 260, CB400-V 350, CB500-V 435). Default 350. */

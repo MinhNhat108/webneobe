@@ -116,9 +116,12 @@ export function buildPileSchedule(
     const rebarFaceCount = (isShore ? anchorIn.shoreRebarFaceCount : anchorIn.bedRebarFaceCount) ?? 0;
     const rebarDia_mm = (isShore ? anchorIn.shoreRebarDia_mm : anchorIn.bedRebarDia_mm) ?? 0;
     const Ltotal_m = Linput_m + stickup_m;
+    const shape = (isShore ? anchorIn.shorePileShape : anchorIn.bedPileShape) ?? 'square';
     const cage = buildPileCage({
+      shape: shape === 'square' ? 'square' : 'circular',
       side_m: D_m,
       faceCount: rebarFaceCount,
+      totalCount: isShore ? anchorIn.shoreRebarCount : anchorIn.bedRebarCount,
       dia_mm: rebarDia_mm,
       rs_MPa: anchorIn.pileRebarRs_MPa ?? 350,
       cover_mm: anchorIn.pileRebarCover_mm ?? 50,

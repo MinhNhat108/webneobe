@@ -18,7 +18,9 @@ import {
   pilePerimeter_m,
   pileSectionModulus_m3,
   pileMrd_kNm,
-  maxBarsPerFace
+  maxBarsPerFace,
+  maxBarsOnRing,
+  ringLeverFactor
 } from '../broms';
 import { ProjectState, CheckItem, PileSectionInput } from '../types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
@@ -545,6 +547,45 @@ describe('Broms — pile shape / section helpers', () => {
     expect(b.Mrd).toBe(a.Mrd);
     expect(b.utilization_M).toBeCloseTo(1.2 * a.utilization_M, 2);
     expect(a.utilization_M).toBeCloseTo(a.Mmax / a.Mrd, 2);
+  });
+
+  it('a round pile with 4 bars has half the bending capacity of a square pile with the same 4 bars', () => {
+    // worst orientation of the cage: sum |y_i| / r
+    expect(ringLeverFactor(4)).toBeCloseTo(2, 6); // a bar on the bending axis; 2.83 at 45 degrees
+    expect(ringLeverFactor(6)).toBeCloseTo(2 * Math.sqrt(3), 3);
+    expect(ringLeverFactor(8)).toBeCloseTo(2 + 2 * Math.SQRT2, 3);
+    const A32 = Math.PI * 32 * 32 / 4;
+    const round = pileMrd_kNm({ shape: 'circular', D_m: 0.35, rebarTotalCount: 4, rebarDia_mm: 32, rebarRs_MPa: 350 }, 14.5);
+    const square = pileMrd_kNm({ shape: 'square', D_m: 0.35, rebarFaceCount: 2, rebarDia_mm: 32, rebarRs_MPa: 350 }, 14.5);
+    expect(round.Mrd_kNm).toBeCloseTo((A32 / 1e6) * 350e3 * 0.125 * 2, 6); // 70.4 kNm, r_s = 0.175 - 0.05
+    expect(square.Mrd_kNm).toBeCloseTo((2 * A32 / 1e6) * 350e3 * 0.25, 6); // 140.7 kNm
+    expect(round.Mrd_kNm).toBeCloseTo(square.Mrd_kNm / 2, 6);
+    // more bars on the circle recover it
+    const six = pileMrd_kNm({ shape: 'circular', D_m: 0.35, rebarTotalCount: 6, rebarDia_mm: 32, rebarRs_MPa: 350 }, 14.5);
+    const eight = pileMrd_kNm({ shape: 'circular', D_m: 0.35, rebarTotalCount: 8, rebarDia_mm: 32, rebarRs_MPa: 350 }, 14.5);
+    expect(six.Mrd_kNm / round.Mrd_kNm).toBeCloseTo(Math.sqrt(3), 3);
+    expect(eight.Mrd_kNm).toBeGreaterThan(square.Mrd_kNm);
+    // a round pile never falls back on the square formula when only "bars per face" is given
+    const legacy = pileMrd_kNm({ shape: 'circular', D_m: 0.35, rebarFaceCount: 2, rebarDia_mm: 32, rebarRs_MPa: 350 }, 14.5);
+    expect(legacy.Mrd_kNm).toBeCloseTo(round.Mrd_kNm, 6);
+    // unreinforced round section: Rbt x W of the circle
+    expect(pileMrd_kNm({ shape: 'circular', D_m: 0.35 }, 14.5).Mrd_kNm).toBeCloseTo(1.05 * 1000 * Math.PI * 0.35 ** 3 / 32, 6);
+    expect(maxBarsOnRing(0.35, 32)).toBe(12);
+  });
+
+  it('Huổi Vanh shore piles are round bored D350 piles and pass with 4 to 8 bars; four bars are not enough on the big rafts', () => {
+    for (const raft of HUOI_VANH_RAFTS) {
+      const s = buildRaftProjectState(base(), raft, base().anchor);
+      expect(s.anchor.shorePileShape, raft.name).toBe('circular');
+      expect([4, 6, 8], raft.name).toContain(s.anchor.shoreRebarCount);
+      const r = calculateProject(s);
+      expect(r.checks.find((c) => c.id === 'BP-2')!.status, raft.name).toBe('PASS');
+      expect(r.shorePile!.utilization_M, raft.name).toBeLessThanOrEqual(0.95);
+    }
+    const be6 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 6')!;
+    const s6 = buildRaftProjectState(base(), be6, base().anchor);
+    const four = calculateProject({ ...s6, anchor: { ...s6.anchor, shoreRebarCount: 4, shoreRebarDia_mm: 32 } });
+    expect(four.checks.find((c) => c.id === 'BP-2')!.status).toBe('FAIL');
   });
 
   it('fits bars in one layer at a spacing of max(2d, d + 30 mm)', () => {

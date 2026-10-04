@@ -106,6 +106,7 @@ export function calculateProject(state: ProjectState): CalcResults {
       rebarArea_mm2: state.anchor.shoreRebarArea_mm2,
       rebarFy_MPa: state.anchor.shoreRebarFy_MPa,
       rebarFaceCount: state.anchor.shoreRebarFaceCount,
+      rebarTotalCount: state.anchor.shoreRebarCount,
       rebarDia_mm: state.anchor.shoreRebarDia_mm,
       ...rebarCommon
     };
@@ -116,6 +117,7 @@ export function calculateProject(state: ProjectState): CalcResults {
       rebarArea_mm2: state.anchor.bedRebarArea_mm2,
       rebarFy_MPa: state.anchor.bedRebarFy_MPa,
       rebarFaceCount: state.anchor.bedRebarFaceCount,
+      rebarTotalCount: state.anchor.bedRebarCount,
       rebarDia_mm: state.anchor.bedRebarDia_mm,
       ...rebarCommon
     };

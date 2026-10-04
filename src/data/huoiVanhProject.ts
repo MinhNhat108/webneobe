@@ -31,6 +31,8 @@ export interface RaftSummaryItem {
   shoreRebarDia_mm?: number;
   bedRebarFaceCount?: number;
   bedRebarDia_mm?: number;
+  /** ROUND shore pile: total bars of the cage, equally spaced on a circle. */
+  shoreRebarCount?: number;
   /** Design strength of this raft's pile bars Rs, MPa (omit for the project value). */
   pileRebarRs_MPa?: number;
   /** Piles per shore / lake-bed anchor point (omit for 1). BÈ 5 uses twin piles. */
@@ -116,8 +118,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8.5,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 25,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 25
   },
@@ -142,8 +145,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8,
+    shoreRebarCount: 4,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 25,
+    shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 20
   },
@@ -168,6 +172,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
@@ -194,8 +199,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9,
+    shoreRebarCount: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 32,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 25
   },
@@ -220,8 +226,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9.5,
+    shoreRebarCount: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 32,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 32,
     // Twin piles at every anchor point (owner's decision, 2026-10-03).
@@ -249,6 +256,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10,
+    shoreRebarCount: 8,
     shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
@@ -275,6 +283,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10.5,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
@@ -301,8 +310,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 10,
+    shoreRebarCount: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 32,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 32
   },
@@ -327,8 +337,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 7,
     bedPileD_m: 0.35,
     bedPileL_m: 10.5,
+    shoreRebarCount: 8,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 32,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 25,
     pileRebarRs_MPa: 435
@@ -354,6 +365,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 9.5,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 32,
     bedRebarFaceCount: 2,
@@ -380,8 +392,9 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
-    shoreRebarDia_mm: 25,
+    shoreRebarDia_mm: 28,
     bedRebarFaceCount: 2,
     bedRebarDia_mm: 22
   },
@@ -406,6 +419,7 @@ export const HUOI_VANH_RAFTS: RaftSummaryItem[] = [
     shorePileL_m: 6.5,
     bedPileD_m: 0.35,
     bedPileL_m: 8,
+    shoreRebarCount: 6,
     shoreRebarFaceCount: 2,
     shoreRebarDia_mm: 25,
     bedRebarFaceCount: 2,
@@ -500,7 +514,11 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     soil: 'mud' as const,
     // Client requirement: every pile is a SQUARE reinforced-concrete pile
     // (cọc vuông BTCT); shoreD_m / bed1D_m are the side of the square.
-    shorePileShape: 'square' as const,
+    // Shore piles: ROUND bored piles D350 cast in place (owner's decision,
+    // 2026-10-04 — a small rig works on the steep bank without vibration).
+    // Lake-bed piles: square precast 350 x 350, driven from a barge.
+    shorePileShape: 'circular' as const,
+    shoreRebarCount: 6,
     bedPileShape: 'square' as const,
     cuShore_kPa: 40.0,
     cuBed_kPa: 20.0,

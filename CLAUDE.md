@@ -4,86 +4,90 @@ Dự án phát triển ứng dụng Web kỹ thuật chuyên sâu phục vụ t�
 
 ---
 
-## 1. TỔNG QUAN HỆ THỐNG V2 (CẬP NHẬT THEO CAD & IFC MỚI)
-- **Quy mô:** 12 Cụm bè pin mặt trời nổi (BÈ 1 đến BÈ 12).
-- **Tổng diện tích mặt bằng:** $90.724\,\text{m}^2$ (Tăng 61.4% so với thiết kế sơ bộ $56.214\,\text{m}^2$; DXF Revit cập nhật 27/09/2026 23:12 cắt lại BÈ 5).
-  - **BÈ 5 (Đại cụm phía Nam):** $16.436\,\text{m}^2$, hình chữ nhật $150 \times 109.57\,\text{m}$ (Chu vi $P = 519.1\,\text{m}$; mép Đông lùi từ X = 232.81 về 213.01 m, trước đây 19.405 m²).
-  - **BÈ 9 (Đại cụm trung tâm hồ):** $10.979\,\text{m}^2$ (Chu vi $P = 472.1\,\text{m}$).
-  - **BÈ 8 (Cụm phía Đông Bắc):** $9.869\,\text{m}^2$ (Chu vi $P = 440.4\,\text{m}$).
-  - **BÈ 10 (Cụm trung tâm - Bắc):** $9.580\,\text{m}^2$ (Chu vi $P = 432.5\,\text{m}$).
-  - **BÈ 6 (Cụm Đông Nam):** $8.181\,\text{m}^2$ (Chu vi $P = 371.1\,\text{m}$).
-  - **BÈ 4 (Cụm phía Nam):** $6.878\,\text{m}^2$ (Chu vi $P = 370.1\,\text{m}$).
-  - **BÈ 7 (Cụm phía Đông):** $6.868\,\text{m}^2$ (Chu vi $P = 388.3\,\text{m}$).
-  - **BÈ 3 (Cụm Tây Nam):** $5.584\,\text{m}^2$ (Chu vi $P = 312.0\,\text{m}$).
-  - **BÈ 1 (Cụm Tây Bắc):** $4.122\,\text{m}^2$ (Chu vi $P = 276.2\,\text{m}$).
-  - **BÈ 2 (Cụm phía Tây):** $4.118\,\text{m}^2$ (Chu vi $P = 288.0\,\text{m}$).
-  - **BÈ 11 (Cụm phía Bắc):** $4.091\,\text{m}^2$ (Chu vi $P = 258.1\,\text{m}$).
-  - **BÈ 12 (Cụm cực Bắc):** $4.018\,\text{m}^2$ (Chu vi $P = 293.0\,\text{m}$).
-- **Hệ cọc neo (V2, 2026-09-27):** **304 điểm neo = 304 tuyến cáp**, là KẾT QUẢ THIẾT KẾ của `scripts/planMooringLayoutV2.mjs`; **343 cọc** vì 39 điểm neo của BÈ 5 dùng cọc đôi (141 cọc bờ + 202 cọc đáy). KHÔNG lấy cọc từ DXF (cọc trong DXF Revit là cọc dummy; từ DXF chỉ lấy 12 đa giác bè):
-  - **129 Cọc bờ (`SHORE`)** bố trí trên sườn đồi ven hồ (script không bao giờ dời cọc bờ).
-  - **175 Cọc đáy hồ (`BED`)**, cách mọi bè $\ge 5.0\,\text{m}$, đặt trên tim khe khi khe giữa hai bè hẹp hơn 35 m.
-  - **CỌC BỜ: CỌC KHOAN NHỒI TRÒN D350, đổ bê tông tại chỗ** (`shorePileShape: 'circular'`; Chủ đầu tư chốt 2026-10-04 là phương án chính: khoan, thả lồng thép, đổ bê tông — máy nhỏ đi được trên bờ dốc, không rung). **CỌC ĐÁY: CỌC VUÔNG ĐÚC SẴN 350 × 350, 4 thanh thép góc**, đóng từ sà lan (`bedPileShape: 'square'`). Thép từng bè trong `HUOI_VANH_RAFTS`: cọc bờ `shoreRebarCount` thanh trên vòng tròn (4Φ32, 6Φ25–6Φ32, 8Φ28–8Φ32; $L_{tk} = 6.5 \div 7.0$ m), cọc đáy 4Φ20–4Φ32 ($L_{tk} = 8 \div 10.5$ m). CB400-V, riêng BÈ 9 CB500-V. Cả 12 bè ĐẠT với $\gamma = 1.2$.
-  - **Cọc tròn yếu hơn cọc vuông khi chịu uốn:** 4 thanh trên vòng tròn chỉ cho $M_{rd} = R_s A_{bar} \cdot 2 r_s$ ở hướng lồng thép bất lợi nhất (lồng không định hướng khi thả vào lỗ khoan) — bằng MỘT NỬA cọc vuông 4 thanh góc cùng cỡ. Vì vậy cọc bờ tròn D350 cần 4–8 thanh (hàm lượng 3,1–6,7%), KHÔNG giữ được "4 thanh" như cọc vuông. Xem `ringLeverFactor()` trong `broms.ts`.
-  - **Điều kiện về điểm móc cáp cọc bờ:** cáp phải móc sát cổ cọc, cách mặt đất 0,1 m (`anchor.shoreArm_e_m = 0.1`, trước 2026-10-04 là 0,5 m). Móc cao hơn thì mômen tăng và thép đã chọn không đủ. Đây là yêu cầu thi công, phải ghi trên bản vẽ.
-  - **BÈ 5 dùng CỌC ĐÔI** (Chủ đầu tư chốt 2026-10-03): mỗi điểm neo 2 cọc 350×350 đặt cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3a, chung đài/bích neo (`shorePilesPerPoint` / `bedPilesPerPoint` = 2). Mỗi cọc kiểm tra với $T / (2 \times 0{,}9)$ — hệ số làm việc nhóm 0,9 là GIẢ ĐỊNH (`anchor.pileGroupEfficiency`). Một cọc 350 đơn không chịu nổi BÈ 5 (uốn cọc bờ 1,09; cọc đáy cần 16 m). Đài/bích neo chung chưa được thiết kế. Mô phỏng 3D vẽ một cọc đại diện mỗi điểm.
-  - Mức tối thiểu để cả 12 bè đạt C9 là $\sum \lceil P/15 \rceil = 300$ dây (BÈ 5 cần 35). Thiết kế giữ 304 dây: BÈ 5 có 39 dây với bước móc dọc mép $\le 15\,\text{m}$ trên toàn chu vi (mép Đông 150 m có 11 dây); không bè nào có cung hở > 60°.
-  - Khi một đa giác bè thay đổi, script tự gắn lại móc của cọc bờ lên mép mới (cọc bờ không dời) và bố trí lại toàn bộ dây đáy của bè đó.
-- **Cao trình thủy văn hồ Huổi Vanh:**
-  - Mực nước chết (MNC): $380.0\,\text{m}$.
-  - Mực nước dâng bình thường (MNDB): $384.5\,\text{m}$.
-  - Mực nước lũ kiểm tra (MNLKT): $386.0\,\text{m}$.
+## 1. TỔNG QUAN HỆ THỐNG (MẶT BẰNG 9 BÈ, 2026-10-08)
+- **Quy mô:** 9 cụm bè pin mặt trời nổi theo `Tài liệu hồ Huổi Vanh/HỒ HUỔI VANH.dxf` (08/10/2026): **BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9**. Tổng diện tích $95.873\,\text{m}^2$, **18.354 tấm pin**, 26 inverter (theo PDF `HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf`).
+- **Quan hệ với mặt bằng 12 bè cũ:** 3A = 4 + 5 cũ; 5A = 6 + 7 cũ; 6 = 8 cũ; 7 = 9 cũ; 8 = 10 + 11 cũ; 9 = 12 cũ. Tên bè KHÔNG còn là "BÈ " + id (id 4 = "BÈ 3A"): luôn tra tên qua `raftsSummary` / `RAFT_MODELS`, không ghép chuỗi.
+
+**GIÓ TÍNH TOÁN MẶC ĐỊNH: V = 20 m/s** (Chủ đầu tư chốt 2026-10-08: "tính toán mặc định với gió 20 m/s và để mặc định trên web, còn tùy chỉnh lúc ấy tính sau"). Đây là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (≈ 29,7 m/s): áp lực gió chỉ 45%. Mọi số liệu "thiết kế" dưới đây (cáp, cọc, đế) là ở 20 m/s và **KHÔNG đạt ở 30 m/s** (cả 9 bè FAIL, kiểm thử ghim). `src/lib/calc/designWind.ts` là nguồn DUY NHẤT của câu cảnh báo, hiển thị ở thanh trên cùng, Mục 9, báo cáo, bản vẽ, Excel — không được gỡ.
+
+| Bè | Diện tích (m²) | Chu vi (m) | Số dây (bờ + đáy) | T dây ở 20 m/s (kN) | Cáp | Cọc bờ D350 | Đế vít xoắn B × t (m) | T dây ở 30 m/s (kN) |
+|---|---|---|---|---|---|---|---|---|
+| BÈ 1 | 4.222 | 280,7 | 19 (14 + 5) | 30,2 | PES-28 | 4Φ25 | 2,50 × 0,4 | 61,8 |
+| BÈ 2 | 4.115 | 287,5 | 20 (10 + 10) | 27,8 | PES-28 | 4Φ25 | 2,50 × 0,4 | 56,2 |
+| BÈ 3 | 5.575 | 312,0 | 21 (11 + 10) | 40,1 | PES-28 | 4Φ25 | 2,50 × 0,4 | 84,1 |
+| BÈ 3A | 19.103 | 625,1 | 50 (17 + 33) | 73,7 | PES-28 | 6Φ28 | 3,00 × 0,4 | 159,5 |
+| BÈ 5A | 23.037 | 660,2 | 49 (9 + 40) | 87,3 | PES-32 | 6Φ32 | 2,75 × 0,4 | 190,3 |
+| BÈ 6 | 9.714 | 442,7 | 30 (16 + 14) | 41,9 | PES-28 | 4Φ25 | 2,50 × 0,4 | 88,1 |
+| BÈ 7 | 11.143 | 474,4 | 32 (18 + 14) | 45,6 | PES-28 | 4Φ28 | 2,50 × 0,4 | 96,3 |
+| BÈ 8 | 14.946 | 573,6 | 51 (20 + 31) | 59,1 | PES-28 | 6Φ25 | 2,50 × 0,4 | 126,8 |
+| BÈ 9 | 4.018 | 293,0 | 20 (14 + 6) | 30,9 | PES-28 | 4Φ25 | 2,50 × 0,4 | 63,2 |
+
+Ở 30 m/s (catalogue sinh ngày 2026-10-08 trước khi đổi gió): cọc đôi ở 3A, 5A; BÈ 8 thép CB500-V L 7,5 m; cọc bờ 6Φ25–8Φ32; đế 2,5–5,25 m (tới 28 tấn), 1.129 m³. Xem lại bằng `npx vite-node scripts/buildRaftCatalogue.ts -- --wind=30` (không ghi file).
+
+- **Hệ neo: 292 tuyến cáp tại 265 điểm neo** (214 cọc bờ + 51 đế đáy hồ; 27 đế dùng chung cho hai dây), là KẾT QUẢ THIẾT KẾ của `scripts/planMooringLayoutV2.mjs`. KHÔNG lấy điểm neo từ DXF (từ DXF chỉ lấy 9 đa giác bè và nhãn bè). **Quy tắc của Chủ đầu tư (2026-10-08, "OK triển khai đi"): gần bờ — kể cả chỗ mấp mé nước — neo bằng cọc khoan nhồi D350; đế vít xoắn CHỈ dùng giữa hai bè; hai bè đối diện dùng CHUNG một đế.**
+  - **214 điểm neo bờ (`SHORE`)**: 129 cọc đã định vị trên sườn đồi (script không bao giờ dời) + **85 điểm chuyển từ neo đáy** (`converted: true`, bước 2c / R1 của script). Điểm chuyển đổi là kết quả thiết kế: script quét phương dây 0, ±5 … ±45°, lấy điểm đầu tiên mà địa hình IFC đạt ≥ 384,0 m (`SHORE_LEVEL`, MNDB − 0,5 m) trong tầm ≤ 60 m (`MAX_SHORE_SPAN`), không cắt dây khác, không đè bè, cách cọc khác ≥ 3 m. Vị trí này lấy theo địa hình IFC, CHƯA phải khảo sát. `importRaftLayout9.mjs` bỏ các dây `converted` khi nhập lại mặt bằng. **CỌC KHOAN NHỒI TRÒN D350 đổ tại chỗ** (`shorePileShape: 'circular'`): ở 20 m/s là 214 cọc đơn, $L_{tk} = 6{,}5$ m, CB400-V; 1.412,4 m, 135,9 m³ bê tông, ≈ 35,1 tấn thép. (Ở 30 m/s cần cọc đôi tại BÈ 3A, 5A — `shorePilesPerPoint: 2`.) Theo địa hình IFC, mặt đất tại 172/214 cọc thấp hơn MNDB 384,5 m (thi công mùa nước thấp, có ống vách) và 213/214 đầu cọc ngập ở MNLKT.
+  - **12 dây đáy không nằm giữa hai bè vẫn phải giữ đế đơn** vì không có vị trí cọc bờ hợp lệ (cắt dây bờ có sẵn, cách cọc khác < 3 m, hoặc không có đất ≥ 384,0 m trong 60 m): B3A-D32, B3A-D33, B5A-D47/48/49, B6-D17, B8-D35…39, B8-D46 (`node scripts/planMooringLayoutV2.mjs --dry --explain` in lý do).
+  - **78 dây đáy (`BED`) neo vào 51 đế** (`anchorId` = `DV-001…051`): 27 đế DÙNG CHUNG (hai dây của hai bè đối diện, mỗi dây ghi `sharedWith` = mã dây kia; bước 2d / R2 của script: đế đặt ở trung điểm hai điểm neo cũ, trên tim khe) + 24 đế đơn. Đế cách mọi bè $\ge 5{,}0$ m, **hai đế khác nhau cách nhau $\ge 7{,}0$ m** (`MIN_BED_GAP`). Hai dây của một đế chung có CÙNG tọa độ và cùng `zAnchor` (lấy đáy thiết kế sâu hơn của hai bè). Mặc định là **ĐẾ BTCT + 4 VÍT XOẮN** (`anchor.bedAnchorOption = 'PA3_SCREW_BASE'`, Chủ đầu tư yêu cầu 2026-10-08). Kết quả thực tế KHÁC nghiên cứu sơ bộ `docs/neo-day-dung-chung/` (225 bờ / 40 đế): nghiên cứu chưa xét điều kiện khả thi của cọc bờ. `bedAnchorsOf()` và `LAYOUT_COUNTS` trong `huoiVanhLayout.ts` là nguồn số đếm cho giao diện.
+  - C9: mọi bè đạt $P/N \le 15$ m; ba bè gộp (3A, 5A, 8) còn có bước móc dọc mép $\le 15$ m (`GAP_LIMITED`); không bè nào có cung hở > 60°.
+- **Cọc tròn yếu hơn cọc vuông khi chịu uốn** (`ringLeverFactor()` trong `broms.ts`): lồng không định hướng khi thả vào lỗ khoan, nên cọc bờ cần 4–6 thanh ở 20 m/s (6–8 thanh ở 30 m/s).
+- **Điều kiện về điểm móc cáp cọc bờ:** tim chốt cáp cách mặt đất 0,1 m (`anchor.shoreArm_e_m = 0.1`). Đây là yêu cầu thi công, phải ghi trên bản vẽ.
+- **Cọc đôi:** 2 cọc D350 cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3D; mỗi cọc kiểm tra với $T/(2 \times 0{,}9)$ — hệ số nhóm 0,9 là GIẢ ĐỊNH (`anchor.pileGroupEfficiency`). Đài / bích neo chung CHƯA thiết kế.
+- **Cao trình thủy văn hồ Huổi Vanh:** MNC 380,0 m; MNDB 384,5 m; MNLKT 386,0 m.
+
+### Vấn đề còn mở — phải nói rõ khi báo cáo
+- **Lớp bê tông bảo vệ cọc bờ:** tính toán dùng $a_s = 50$ mm tới TIM thép chủ, nên lớp bảo vệ thực tới đai chỉ 26–30 mm (cọc khoan nhồi thường ≥ 50 mm). Tăng lên 50 mm mà giữ D350 thì thép không còn đủ → D400 hoặc tính lại. Chưa có quyết định.
+- **Hệ số tập trung của ba bè gộp là GIẢ ĐỊNH** (lấy tích focus × N lớn hơn của hai bè gốc): chưa có mô hình phân bố lực cho hình dạng gộp. Với bè lớn, engine lấy $T = F_{env}/(6\cos\alpha)$ (`line.effectiveCount = 6`, không phụ thuộc số dây) — thêm dây KHÔNG giảm T.
+- **Góc Đông của BÈ 6** (x = 460,6; y = −27,4) nằm trên đường bờ theo địa hình IFC ở MNDB (kiểm thử `sceneModel.test.ts` ghim sự việc này). BÈ 5A mắc cạn khi nước xuống 382,7 m, BÈ 9 ở 383,2 m.
+- **Khoảng cách bè hẹp:** 2–3: 10,75 m; 3–3A: 13,72 m; 8–9: 15,96 m; 1–2: 21,81 m; 7–8: 22,60 m. Dây đáy ngắn chùng nhiều khi nước thấp; độ trôi bè ở MNC chưa kiểm tra.
 
 ---
 
 ## 2. TIÊU CHUẨN KỸ THUẬT & CÔNG THỨC ÁP DỤNG
-- **Tải trọng gió:** TCVN 2737:2023
-  - Vùng gió II-B: $V_{100} = 29.7\,\text{m/s}$, áp lực gió cơ sở $q_0 = 0.54\,\text{kN/m}^2$.
-  - Góc nghiêng giàn pin: $12^\circ$ (người dùng chốt 2026-10-03, trước đó $15^\circ$), hệ số khí động $C_d = 1.15$, xét hiệu ứng chắn gió giàn pin.
-- **Tải trọng thủy lực & kết hợp:** DNV-ST-0119 & TCVN 6170-3:1998
-  - Lực dòng chảy và sóng nhỏ hồ chứa kết hợp $1.05 \times F_{\text{wind}}$.
-- **Đường cong Catenary & Cáp neo:**
-  - Cáp sợi tổng hợp Polyester (PES-28, PES-32, PES-36, PES-40, PES-48).
-  - Hệ số an toàn kéo đứt: $SF = T_{\text{brk}} / T_{\max} \ge 1.67$.
-- **Địa kỹ thuật cọc neo Broms:**
-  - Đất sườn đồi: Đất sét dẻo cứng, $\phi = 28^\circ, c = 12\,\text{kPa}, \gamma = 18\,\text{kN/m}^3$.
-  - Cọc vuông BTCT: Kiểm tra Broms BP-1..BP-5 (ngang, uốn, nhổ) tại chiều sâu thiết kế $L_{tk}$, FS Broms = 2.5; chọn hệ số sử dụng $\le 0.95$.
-  - **Uốn cọc theo TCVN 5574:2018** (`pileMrd_kNm` trong `broms.ts`, sửa 2026-10-03): $M_{rd} = R_s \cdot A_{s,kéo} \cdot (a - 2a_s)$ với thép một mặt, $a_s = 50$ mm, CB400-V $R_s = 350$ MPa; cọc không thép chỉ có $M = R_{bt} \cdot W$. Kiểm tra $\gamma \cdot M_{max} \le M_{rd}$ với $\gamma = 1.2$ (`anchor.pileBendingLoadFactor`, hệ số vượt tải gió TCVN 2737:1995). Công thức cũ $0.9 R_b W + A_s f_y 0.85D$ cho kết quả cao hơn 5–12 lần — KHÔNG dùng lại.
-  - Góc cáp tại cọc đáy lấy theo tuyến cáp đáy NGẮN NHẤT của mỗi bè (`bedAnchorDist_m`), tức cáp dốc nhất và lực nhổ lớn nhất.
-- **Tải gió trong engine:** nghiêng 12°, $C_d = 1.15$, $V = 30\,\text{m/s}$ ($q = 0.56 \ge 0.54\,\text{kN/m}^2$). So với 15°: lực môi trường và $T_{\max}$ giảm 17–19%. Danh mục cáp/cọc trong `HUOI_VANH_RAFTS` vẫn là bộ đã định cỡ ở 15° (dư an toàn hơn ở 12°), CHƯA định cỡ lại.
-- **Tiêu chuẩn khoảng cách cáp (C9, BẮT BUỘC):** $s_{\text{avg}} = P_{\text{bè}} / N_{\text{dây}} \le 15.0\,\text{m}$ cho tất cả 12 bè, với $P_{\text{bè}}$ là chu vi đa giác đo được (`raft.perimeter_m`).
+- **Tải trọng gió:** TCVN 2737:2023 — vùng II-B, $q_0 = 0{,}54\,\text{kN/m}^2$ (V ≈ 29,7 m/s). Engine dùng nghiêng 12°, $C_d = 1{,}15$, hệ số che chắn 0,55 và **vận tốc mặc định $V = 20\,\text{m/s}$ ($q = 0{,}25\,\text{kN/m}^2$) theo quyết định của Chủ đầu tư** — xem cảnh báo ở mục 1; kiểm tra bão thì nhập 30 m/s ở Tab 2.
+- **Thủy lực & kết hợp:** DNV-ST-0119 & TCVN 6170-3:1998 — dòng chảy và sóng nhỏ kết hợp $1{,}05 \times F_{\text{wind}}$.
+- **Cáp neo:** Polyester PES-28/32/36/40/48; $SF = T_{brk}/T_{max} \ge 3{,}0$ (nguyên vẹn), $\ge 2{,}0$ (đứt một dây).
+- **Cọc bờ (Broms + TCVN 5574:2018):** đất sườn đồi sét dẻo cứng $\phi = 28^\circ$, $c = 12$ kPa, $\gamma = 18\,\text{kN/m}^3$, $c_u = 40$ kPa — GIẢ ĐỊNH. BP-1 ngang, BP-2 uốn: $\gamma \cdot M_{max} \le M_{rd}$, $\gamma = 1{,}2$ (`anchor.pileBendingLoadFactor`), hệ số sử dụng chọn ≤ 0,95. Công thức uốn cũ $0{,}9 R_b W + A_s f_y 0{,}85D$ cao hơn 5–12 lần — KHÔNG dùng lại.
+- **Đế BTCT + vít xoắn (`screwAnchorBed.ts`)**: theo từng ô của sheet `6.DE_NEO_VIT` trong `BANG_TINH_NEO_DE_VIT_XOAN.xlsx` của Chủ đầu tư; trường hợp mẫu của sheet (T = 70 kN, đế 2,5 × 2,5 × 0,4 m, 4 vít Ø89×5 ren Ø105 dài 3 m, $c_u = 20$ kPa) được kiểm thử ghim tới 3–4 chữ số.
+  - Hai mực nước: thấp (`env.minWaterDepthUnderRaft_m`, dây thoải → trượt) và cao (`waterDepth_m + mncn − mndbt`, dây dốc → nhổ, lật). Tầm vươn = dây đáy NGẮN NHẤT của bè (`bedAnchorDist_m`).
+  - SV-1 nhổ: $T_v \le 0{,}9W' + nQ_a$; SV-2 trượt: $1{,}5\,T_h \le \alpha c_u B^2 + R_{gờ} + nH_u$ (bám dính đáy = 0 khi $T_v > W'$); SV-3 lật; SV-4 một vít; SV-5 nền $W'/B^2 \le 5{,}14c_u/2{,}5$; SV-6 thép bản.
+  - **Đế mẫu chỉ đạt với T ≈ 70 kN.** `autoSize` (mặc định) tăng B (bước 0,25 m, tới 8 m) rồi t cho tới khi đạt, lấy đế ít bê tông nhất; không đạt thì trả `ok: false`, không bao giờ trả đế "đạt giả". Kết quả ở 20 m/s, tính TỪNG ĐẾ: 51 đế đều đạt — 25 đế 2,5 m, 21 đế 2,75 m, 3 đế 3,0 m, 2 đế 3,25 m (nặng tới 10,8 tấn khi cẩu); 144,4 m³ bê tông, ≈ 6,8 tấn thép bản, 204 vít (755 m). (Trước quy tắc mới: 163 đế, 462 m³.)
+  - **Đế dùng chung** (`designScrewBaseForLines`): hai dây không đạt cực đại cùng lúc (gió thổi ngang khe làm bè đón gió trôi lại gần, dây chùng). Tổ hợp ở cả MNC và MNLKT: dây 1 căng cực đại + dây 2 ở lực căng trước (`line.pretension_kN`, 5 kN); ngược lại; và CẢ HAI cùng căng (bao an toàn). Lực ngang cộng véc-tơ theo phương vị, lực nhổ cộng số học; mỗi tổ hợp kiểm bằng "dây tương đương" có cùng (T_h, T_v). Đế dùng chung không nhỏ hơn đế đơn — cái tiết kiệm là SỐ đế. Hai đế lớn nhất (3,25 m) là đế chung ở khe hẹp BÈ 3 – BÈ 3A, do tổ hợp cả hai dây căng chi phối. Đế một dây cho kết quả trùng `designScrewBase` (có test). Tai neo đôi CHƯA thiết kế.
+  - $c_u$, $\gamma'$, α đáy 0,5, α thân vít 0,8, hệ số trọng lượng 0,9 đều là GIẢ ĐỊNH; bùn mặt lòng hồ thường chỉ 2–10 kPa. Chưa thiết kế: tai neo, khóa đầu vít, móc cẩu, chống ăn mòn.
+- **Tiêu chuẩn khoảng cách cáp (C9, BẮT BUỘC):** $s_{avg} = P_{bè}/N_{dây} \le 15{,}0$ m, $P$ là chu vi đa giác đo được.
 
 ---
 
 ## 3. CẤU TRÚC MÃ NGUỒN CHÍNH
-- `src/data/huoiVanhProject.ts`: Danh mục 12 cụm bè và cấu hình dự án mặc định.
-- `src/data/huoiVanhRaftPolygons_v2.json`: Đa giác ranh giới 12 cụm bè V2.
-- `src/data/huoiVanhCoordinates_v2.json`: 304 tuyến cáp neo (sinh bởi `node scripts/planMooringLayoutV2.mjs`, không sửa tay).
-- `src/data/huoiVanhPiles_v2.json`: 304 cọc vuông BTCT (129 SHORE + 175 BED), suy ra từ file tuyến cáp.
-- `src/data/huoiVanhLayout.ts`: Điểm truy cập DUY NHẤT tới layout V2 cho engine, bản đồ, bảng cọc, Excel và CAD.
-- `src/lib/calc/raftState.ts`: `buildRaftProjectState()` ánh xạ một dòng `HUOI_VANH_RAFTS` thành `ProjectState` (dùng chung cho store và test). `resolveRaftState()` là quy tắc DUY NHẤT cho mọi màn hình nhiều bè (3D, bản đồ, bảng 12 bè, Excel/CAD): bè đang chọn = đúng `currentProject` đã sửa ở Tab 2 (kèm danh sách sai khác so với thiết kế chốt), 11 bè còn lại = catalogue. `HUOI_VANH_DEFAULT_PROJECT` KHÔNG phải BÈ 1 — trạng thái mở đầu là `buildRaftProjectState(default, BÈ 1)`.
-- `src/data/huoiVanhTerrainMesh.json`: Lưới độ cao 128 × 113 (ô ~9 m) của Toposolid trong `dia hinh ho.ifc`, sinh bởi `node scripts/extractTerrainFromIfc.mjs` (không sửa tay). Hàng 0 = phía NAM (`rowOrder: south-to-north`). Cao độ lưu theo hệ IFC.
-- **Hai hệ cao độ:** mặt nước trong IFC (slab "mat nuoc") ở 402,0 m ≡ MNDB 384,5 m của dự án → **IFC = cao độ dự án + 17,5 m**. Mô phỏng 3D (`src/components/simulation/sceneModel.ts`) quy đổi mọi thứ về cao độ dự án.
-- `src/lib/calc/`: Bộ máy tính toán thủy lực, khí động và địa kỹ thuật:
-  - `loads.ts`: Tính toán tải trọng gió, sóng, dòng chảy.
-  - `catenary.ts`: Giải phương trình đường dây xích Catenary.
-  - `broms.ts`: Tính toán sức chịu tải cọc theo phương pháp Broms.
-  - `checks.ts`: Các kiểm tra an toàn C1..C11 và BP-1..BP-5 (C9 là kiểm tra bắt buộc).
-  - `deadweight.ts`: Phương án 2 — khối bê tông trọng lực thay cọc đáy hồ (cọc bờ giữ nguyên). DW-1 trượt, DW-2 nhấc bổng, DW-3 lật, DW-4 áp lực nền bùn (q = max của nước lặng và áp lực mép khi chịu tải). Hai cơ chế chống trượt (`slidingModel`): `friction` (MẶC ĐỊNH, đáy phẳng, μ·(W_sub − V)) và `shear_key` (gờ chống trượt cắm vào bùn, c_u·A + 2·c_u·z_s·B, theo NCEL). Tai neo cáp đặt cao `tieHeight_m` = 0,3 m trên đáy khối. Mặc định μ = 0,35; c_u bùn mặt = 10 kPa; z_s = 0,5 m; SF = 1,5; q_allow = 40 kPa; ρ_c = 2,4 — đều là GIẢ ĐỊNH, chưa có khảo sát đáy hồ. Khối lượng làm tròn lên 0,5 T, kích thước làm tròn lên 0,05 m. Với đáy phẳng, cáp thoải hơn KHÔNG làm khối nhẹ đi (H tăng).
-  - `technicalComparison.ts`: `compareMooringOptions()` — so sánh KỸ THUẬT thuần túy PA1/PA2 (kích thước, trọng lượng, thể tích bê tông, diện tích chiếm đáy, hệ số an toàn). KHÔNG có tiền tệ / đơn giá (yêu cầu của người dùng 2026-10-03). Kết quả ở 12°, đáy phẳng: khối 42–129 tấn, đáy 2,9–4,3 m, ~5.390 m³. Với gờ chống trượt: 9–26 tấn, ~1.260 m³ nếu c_u bùn mặt 10–20 kPa (c_u = 5 kPa: 13–45 tấn, đáy tới 6,15 m).
-- Phương án neo đáy nằm TRONG dự án: `anchor.bedAnchorOption` (`PA1_PILE` mặc định / `PA2_DEADWEIGHT`) và `anchor.deadweight`. Ở PA2, `calculateProject` trả `bedBlock`, các dòng cọc đáy (C11, BP-3..BP-5) thành "Không áp dụng" và DW-1..DW-4 thay thế; BP-1, BP-2 (cọc bờ) giữ nguyên. Tab 4, báo cáo, 3D, bảng 12 bè, Excel tổng hợp, và nút "Bảng Neo" / "Xuất CAD" đều đi theo phương án đang chọn.
-- `src/lib/calc/pileCage.ts`: từ thép dùng trong kiểm tra uốn sang LỒNG THÉP thực tế và khối lượng một cọc. Cọc VUÔNG đúc sẵn: k thanh mỗi mặt → 4·(k − 1) thanh (2 → 4 thanh góc; 3 → 8; 4 → 12), đai Φ8 a100/a200, 2 móc cẩu Φ16, đúc nguyên một đoạn khi ≤ 12 m. Cọc TRÒN khoan nhồi: n thanh trên vòng tròn, đai xoắn Φ8 a150, đổ tại chỗ, không có móc cẩu. Đai và móc cẩu là CẤU TẠO (chưa tính lực cắt).
-- `src/lib/io/pileSchedule.ts`: mỗi dòng có `pileCount`, `Ltotal_m`, `cage` (lồng thép, đai, phân đoạn, bê tông và thép một cọc); `summarisePileMaterials()` cho bảng tổng hợp vật tư. Hiện tại: 343 cọc (141 cọc bờ tròn D350 + 202 cọc đáy vuông), 3.057,1 m, 349,8 m³ bê tông, ≈ 87,2 tấn thép (≈ 249 kg/m³). `src/lib/io/pileCageDetailDxf.ts` vẽ chi tiết trên layer `08_CHI_TIET_COC`: mặt cắt cọc khoan nhồi tròn (4 / 6 / 8 thanh) và cọc vuông 4 thanh, cụm cọc đôi, sơ đồ cẩu. Đài/bích neo cọc đôi và mối nối cọc CHƯA thiết kế — bản vẽ ghi rõ.
-- `src/lib/calc/shorePileHead.ts`, `src/lib/io/shorePileHeadDetail.ts`, `src/components/results/ShorePileHeadDetail.tsx`: chi tiết ĐỀ XUẤT đầu cọc khoan nhồi bờ và liên kết cáp (mũ cọc 400×400, bản mã 400×400×20 trên 4Φ22 neo 600 mm, tai neo t = 25 lỗ Φ39, ma-ní WLL 12 T), có kiểm tra sơ bộ H-1..H-8 với lực γ·T của cọc bờ chịu lực lớn nhất (≈ 135,7 kN). Ràng buộc gốc: tim chốt cáp cách mặt đất đúng `anchor.shoreArm_e_m` (100 mm) — KHÔNG nâng cao tai neo. Vẽ trên layer `08_CHI_TIET_COC` của DXF và hiển thị SVG ở Mục 3 trên web. Không áp dụng khi cọc bờ là cọc vuông.
-- `src/lib/calc/costEstimate.ts`, `src/lib/io/costExcelExport.ts`, `src/components/cost/CostEstimateView.tsx` (Mục 10 "Báo Giá Thi Công", Chủ đầu tư yêu cầu 2026-10-04): báo giá cọc khoan nhồi bờ + cọc đóng lòng hồ. Khối lượng lấy từ `buildPileSchedule` (141 cọc bờ 939,6 md; 202 cọc đáy 2.117,5 md). Đơn giá mặc định = mức giữa các bảng giá THAM KHẢO do Chủ đầu tư cung cấp (D350: 480.000 đ/md trọn gói; cọc 350×350: 380.000 đ/md; đóng dưới nước 170.000 đ/md; sàn đạo 50 triệu; logistics 7%; dự phòng 5%; VAT 8%), sửa được và lưu trong `costParams`. Tổng mặc định ≈ 1,953 tỷ. Giá tham khảo là cho cọc thương mại thường, thép của thiết kế nặng hơn — cảnh báo này phải luôn hiển thị. Tiền tệ CHỈ có ở Mục 10; so sánh PA1/PA2 (Mục 9) vẫn thuần kỹ thuật.
-- `src/lib/io/deadweightSchedule.ts`, `deadweightDxf.ts`, `deadweightExcel.ts`: bảng thống kê và bản vẽ DXF R12 của PA2 (129 cọc bờ + 175 khối `HV-DW001..175`, lấy từ `results.bedBlock`). Bản vẽ/bảng PA1 (`dxfExport.ts`, `pileSchedule.ts`) không đổi. Mã cọc bờ giữ nguyên như PA1. Chi tiết khối chỉ là sơ đồ kích thước: cốt thép, tai cẩu, móc cáp CHƯA thiết kế nên không vẽ; KHÔNG vẽ chi tiết cấu tạo cọc (người dùng tự làm).
-- **PA2 và mặt bằng hiện tại:** 304 điểm neo được bố trí cho cọc. `findBlockClashes()`: đáy phẳng → 18 cặp khối chồng lấn (tâm cách nhau từ 3,0 m, đáy khối 2,9–4,3 m); gờ chống trượt c_u = 20 kPa → 0 cặp, c_u = 10 → 8 cặp, c_u = 5 → 35 cặp. Bảng, bản vẽ và Tab 9 đều ghi cảnh báo này — không được ẩn.
-- `src/components/simulation/`: Mô phỏng 3D WebGL Three.js (Mục 8 trên Web):
-  - `ThreeSimulationCanvas.tsx`: Canvas WebGL, địa hình IFC, hạt gió 3D, mực nước động.
-  - `SimulationControls.tsx`: Bảng điều khiển vận tốc gió, góc phương vị, thanh trượt mực nước.
+- **Quy trình khi có mặt bằng mới** (ba bước, không sửa tay file JSON nào):
+  1. `node scripts/importRaftLayout9.mjs "<plan.dxf>"` — đọc 9 đa giác (layer `A-DETL-THIN`) và nhãn bè (`A-ANNO-NOTE`), giữ 129 dây bờ gốc, bỏ mọi dây đáy và mọi dây bờ `converted`.
+  2. `node scripts/planMooringLayoutV2.mjs` — bố trí dây đáy, chuyển dây ven bờ sang cọc khoan nhồi (R1), ghép đế dùng chung (R2), kiểm C9, G1..G4. Chạy lại cho kết quả y hệt (idempotent). `--dry` không ghi file, `--explain` in lý do từng dây không chuyển / không ghép được.
+  3. `npx vite-node scripts/buildRaftCatalogue.ts` — sinh `src/data/huoiVanhRaftCatalogue.json` (hình chữ nhật bao, tấm pin chia theo diện tích, hệ số tập trung, cáp, cọc bờ, cọc đáy PA1) bằng chính engine.
+- `src/data/huoiVanhProject.ts`: `HUOI_VANH_RAFTS` (đọc từ `huoiVanhRaftCatalogue.json`) và cấu hình dự án mặc định. `HUOI_VANH_DEFAULT_PROJECT` KHÔNG phải BÈ 1 — trạng thái mở đầu là `buildRaftProjectState(default, BÈ 1)`.
+- `src/data/huoiVanhRaftPolygons_v2.json`, `huoiVanhCoordinates_v2.json`, `huoiVanhPiles_v2.json`: 9 đa giác, 292 tuyến cáp, 265 điểm neo (file điểm neo: một dòng mỗi ĐIỂM, có mảng `lines` / `rafts`; tên file giữ hậu tố `_v2`). `src/data/huoiVanhLayout.ts` là điểm truy cập DUY NHẤT.
+- `src/lib/calc/raftState.ts`: `buildRaftProjectState()`, `resolveRaftState()` — quy tắc DUY NHẤT cho mọi màn hình nhiều bè: bè đang chọn = `currentProject` đã sửa ở Tab 2 (kèm sai khác so với thiết kế chốt), các bè còn lại = catalogue.
+- `src/data/huoiVanhTerrainMesh.json`: lưới độ cao 128 × 113 của Toposolid IFC. **IFC = cao độ dự án + 17,5 m.**
+- `src/lib/calc/`: `loads.ts`, `catenary.ts`, `broms.ts`, `checks.ts` (C1..C11, BP-1..BP-5, DW-1..DW-4, SV-1..SV-6), `pileCage.ts`, `shorePileHead.ts`.
+- **Ba phương án neo đáy** (`anchor.bedAnchorOption`), neo bờ giống nhau ở cả ba:
+  - `PA3_SCREW_BASE` (MẶC ĐỊNH): `screwAnchorBed.ts`, `screwBaseSummary.ts`; kết quả `results.bedScrewBase`, kiểm tra SV-1..SV-6; C11, BP-3..BP-5 thành "Không áp dụng". Thông số sửa ở Mục 9 (`anchor.screwBase`, `updateScrewBaseParams`); $c_u$ mặc định lấy `anchor.cuBed_kPa`.
+  - `PA1_PILE`: cọc vuông đúc sẵn 350×350 đóng từ sà lan, BP-3..BP-5. Ở 20 m/s: 78 cọc đáy đơn (mỗi DÂY một cọc); cả hệ 292 cọc, 2.139,9 m, 225 m³, ≈ 49,1 tấn thép. **Mặt bằng hiện bố trí cho đế dùng chung: ở 27 điểm hai cọc trùng nhau — PA1 chỉ để so sánh, chưa thi công được nếu không bố trí lại.** Header và Excel "Bảng Neo" ghi cảnh báo này.
+  - `PA2_DEADWEIGHT`: `deadweight.ts`, khối bê tông trọng lực, DW-1..DW-4. Ở 20 m/s — đáy phẳng: 20–68 tấn, ~1.436 m³ (78 khối); gờ chống trượt $c_u = 10$ kPa: 4,6–14,6 tấn, ~341 m³. Cùng lý do như PA1: `findBlockClashes` báo 27 cặp khối trùng tâm tại 27 điểm dùng chung — cảnh báo này không được ẩn.
+- `src/lib/io/mooringExports.ts`: nút "Bảng Neo" và "Xuất CAD" (Header và Mục 3) xuất theo phương án đang chọn — chỉ một chỗ quyết định.
+- `src/lib/io/screwBaseSchedule.ts`, `screwBaseDxf.ts`, `screwBaseExcel.ts`: bảng thống kê và bản vẽ PA3 (214 điểm neo bờ + 51 đế `HV-DV001..051`). **Một dòng mỗi ĐẾ** (`lines[]`, `shared`, `combinations`, `governing`, `design`); `byRaft` chia khối lượng theo bè (đế chung tính mỗi bè một nửa); `baseByRaft` giữ đế kiểm tra theo bè của engine (SV-1…SV-6 ở Tab 4: một dây, dây đáy ngắn nhất). Đế vẽ đúng kích thước, một cạnh song song phương cáp, 4 lỗ vít; đế chung có hai tai neo và hai dây. `findBaseClashes` hiện báo 0 cặp — cảnh báo này không được ẩn. `screwBaseSummary.ts` (Tab 9, báo giá) và `buildScrewBaseAnchors` (3D) đều lấy từ bảng này.
+- **Chữ tiếng Việt CÓ DẤU trên bản vẽ** (Chủ đầu tư yêu cầu 2026-10-06): `src/lib/io/dxfVn.ts` — file vẫn thuần ASCII, mỗi ký tự có dấu ghi thành `\U+XXXX`, text style `VN` font `arial.ttf`; đã kiểm bằng AutoCAD 2027. Bản vẽ PA3 và bản vẽ cọc ven bờ dùng cách này; bản vẽ PA1/PA2 (`dxfExport.ts`, `deadweightDxf.ts`) vẫn là chữ không dấu.
+- `src/lib/calc/costEstimate.ts`, `CostEstimateView.tsx` (Mục 10): cọc khoan nhồi bờ theo bảng giá tham khảo (D350: 480.000 đ/md). Neo đáy theo phương án: PA3 → bê tông đế, thép, vít, hạ đế; **Chủ đầu tư CHƯA cung cấp giá cho các hạng mục này nên đơn giá mặc định = 0 và báo giá ghi "CHƯA CÓ ĐƠN GIÁ"** (`unpriced`), tổng không gồm chúng — cảnh báo phải luôn hiển thị, không tự đặt giá. PA1 theo giá tham khảo, ở 20 m/s: tổng ≈ 1,519 tỷ. Tiền tệ CHỈ có ở Mục 10.
+- `src/lib/io/anchorPointSchedule.ts`: tính TỪNG ĐIỂM NEO (214 cọc bờ + 51 đế) — mỗi đế định cỡ theo tầm vươn và phương vị của chính (các) dây neo vào nó, cao độ đáy thiết kế và MNC 380,0 / MNLKT 386,0; điểm bờ lặp lại BP-1, BP-2, đầu cọc của bè + góc cáp và ngập đầu cọc riêng từng điểm. Lực dây vẫn là lực bất lợi nhất của BÈ (chưa có mô hình chia lực theo dây). Xuất thành hai sheet `TungDiemNeoDay`, `TungDiemNeoBo` trong Excel "Bảng Neo". Bản vẽ, 3D, Tab 9 và báo giá dùng chính các đế từng điểm này. **Đế neo đáy luôn đặt ở cao độ ĐÁY HỒ THIẾT KẾ** (`zAnchor` = MNDB − độ sâu thiết kế của bè = 378,3–378,5 m; Chủ đầu tư chốt 2026-10-08: "neo đế vít xoắn luôn ở đáy hồ") → nước sâu 1,5–1,7 m ở MNC, 7,5–7,7 m ở MNLKT. Cao độ này là GIẢ ĐỊNH của mặt bằng neo, chưa phải khảo sát. Địa hình IFC chỉ ghi kèm để đối chiếu, không vào tính toán: tại 17/51 đế nó cao hơn đáy thiết kế trên 0,5 m (cần kiểm tra khảo sát / nạo vét). 213/214 đầu cọc bờ thấp hơn MNLKT theo địa hình IFC.
+- `src/components/results/ScrewBasePanel.tsx` (Mục 9, báo cáo): thông số và bảng đế từng bè; `OptionComparisonView.tsx`: so sánh kỹ thuật PA1/PA2.
+- `src/components/simulation/`: mô phỏng 3D; neo đáy vẽ theo phương án (PA3: bản đế, không vẽ vít).
+- **Bản vẽ / tài liệu sinh ngoài web** (không thuộc ứng dụng):
+  - `npx vite-node scripts/exportMooringDrawing.ts` → `docs/mat-bang-neo-9-be/` (DXF + Excel giống nút trên web).
+  - `npx vite-node scripts/buildShorePileDrawing.ts` → `docs/coc-ven-bo/` (bản vẽ CVB-01 cọc khoan nhồi ven bờ + biện pháp thi công).
+  - `scripts/planRaft1Tubes.mjs` → `docs/be1-ong-40x60/` (ống 40×60 trên dầm C52 của bè 1; dùng mặt bằng 12 bè cũ, chưa cập nhật).
+  - AutoCAD chạy ngầm để kiểm tra / đổi sang DWG: `C:\Program Files\Autodesk\AutoCAD 2027\accoreconsole.exe /i in.dxf /s script.scr`.
 
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 196 tests tại 2026-10-04).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 255 tests tại 2026-10-08).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.
+- Trả lời người dùng bằng tiếng Việt; chữ trên bản vẽ mới phải có dấu.

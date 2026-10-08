@@ -2,6 +2,8 @@ import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Printer, CheckCircle2, XCircle } from 'lucide-react';
 import { OptionComparisonView } from '../results/OptionComparisonView';
+import { ScrewBasePanel } from '../results/ScrewBasePanel';
+import { designWindCaveat } from '../../lib/calc/designWind';
 
 export const ReportView: React.FC = () => {
   const { currentProject, results, raftsSummary, setActiveRaft } = useProjectStore();
@@ -126,7 +128,10 @@ export const ReportView: React.FC = () => {
               {isSolar && (
                 <div>- Số tấm pin: {currentProject.raft.solarPanelCount} tấm (Góc nghiêng {currentProject.raft.solarTilt_deg}°)</div>
               )}
-              <div>- Vận tốc gió thiết kế: {currentProject.env.windSpeed_ms} m/s (q = {results.q_wind_Pa} Pa)</div>
+              <div>- Vận tốc gió tính toán: {currentProject.env.windSpeed_ms} m/s (q = {results.q_wind_Pa} Pa)</div>
+              {designWindCaveat(currentProject.env.windSpeed_ms) && (
+                <div className="font-bold text-amber-800">⚠️ {designWindCaveat(currentProject.env.windSpeed_ms)}</div>
+              )}
               <div>- Độ sâu hồ: {currentProject.env.waterDepth_m}m | Dao động: {currentProject.env.tideRange_m}m</div>
             </div>
 
@@ -250,7 +255,41 @@ export const ReportView: React.FC = () => {
                   </tr>
                 </>
               )}
-              {!results.bedBlock && results.bedPile1 && (
+              {results.bedScrewBase && (
+                <>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Neo đáy hồ: đế BTCT B × B × t</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.thickness_m.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">m</td>
+                    <td className="p-2">Bê tông {results.bedScrewBase.concrete_m3.toFixed(1)} m³, khối lượng cẩu {results.bedScrewBase.liftMass_t.toFixed(1)} tấn, W' = {results.bedScrewBase.weightSub_kN.toFixed(1)} kN{results.bedScrewBase.enlarged ? ' — đế đã TĂNG so với đế mẫu 2,5 × 2,5 × 0,4 m' : ''}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Vít xoắn: Q_a nhổ / H_u ngang (một vít)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwQa_kN.toFixed(1)} / {results.bedScrewBase.screwHu_kN.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">{results.bedScrewBase.params.screwCount} vít Ø{Math.round(results.bedScrewBase.params.tubeDia_m * 1000)}×{Math.round(results.bedScrewBase.params.tubeThk_m * 1000)}, ren Ø{Math.round(results.bedScrewBase.params.threadDia_m * 1000)}, ngập bùn {results.bedScrewBase.params.screwLength_m} m; c_u = {results.bedScrewBase.params.cuAverage_kPa} kPa (giả định)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Lực dây: Th (MN thấp) / Tv (MN cao)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.cases[0].Th_kN.toFixed(1)} / {results.bedScrewBase.cases[1].Tv_kN.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">Góc cáp {results.bedScrewBase.cases[0].angle_deg.toFixed(1)}° khi nước thấp, {results.bedScrewBase.cases[1].angle_deg.toFixed(1)}° khi nước cao (tuyến cáp đáy ngắn nhất, {results.bedScrewBase.load.span_m} m)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">SV-1 nhổ / SV-2 trượt / SV-3 lật (hệ số sử dụng)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.upliftUtil.toFixed(2)} / {results.bedScrewBase.slideUtil.toFixed(2)} / {results.bedScrewBase.overturnUtil.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">≤ 1,00 là đạt; FS trượt {results.bedScrewBase.params.sfSlide}, lật {results.bedScrewBase.params.sfOverturn}; lấy trường hợp bất lợi hơn trong hai mực nước</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">SV-4 một vít / SV-5 nền / SV-6 thép bản</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwUtil.toFixed(2)} / {results.bedScrewBase.bearingUtil.toFixed(2)} / {results.bedScrewBase.rebarUtil.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">Lưới 2 lớp Ø{results.bedScrewBase.rebarDia_mm} a{Math.round(results.bedScrewBase.rebarSpacing_m * 1000)} hai phương; theo bảng tính 6.DE_NEO_VIT của Chủ đầu tư</td>
+                  </tr>
+                </>
+              )}
+              {!results.bedBlock && !results.bedScrewBase && results.bedPile1 && (
                 <tr>
                   <td className="p-2 border-r border-slate-200 font-sans">Sức chịu cọc LÒNG HỒ (H_all / Tv_all)</td>
                   <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedPile1.H_allow} / {results.bedPile1.upliftCapacity_all}</td>
@@ -306,11 +345,21 @@ export const ReportView: React.FC = () => {
           </table>
         </div>
 
-        {/* Technical comparison of the two lake-bed anchoring options (whole project) */}
+        {/* Lake-bed anchors of the whole project: the screw-pile bases of every raft */}
         {isSolar && (
           <div className="space-y-1">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
-              So sánh kỹ thuật hai phương án neo đáy hồ (toàn dự án, 12 cụm bè)
+              Neo đáy hồ bằng đế BTCT + vít xoắn (toàn dự án, {raftsSummary.length} cụm bè)
+            </h2>
+            <ScrewBasePanel compact />
+          </div>
+        )}
+
+        {/* Technical comparison of the two alternative lake-bed options (whole project) */}
+        {isSolar && (
+          <div className="space-y-1">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
+              So sánh kỹ thuật cọc đóng / khối bê tông neo đáy hồ (toàn dự án, {raftsSummary.length} cụm bè)
             </h2>
             <OptionComparisonView compact />
           </div>

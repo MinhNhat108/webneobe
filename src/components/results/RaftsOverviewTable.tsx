@@ -92,7 +92,7 @@ export const RaftsOverviewTable: React.FC = () => {
               <th className="px-3 py-2.5 text-right">T_max (kN)</th>
               <th className="px-3 py-2.5 text-right">η cáp</th>
               <th className="px-3 py-2.5 text-right">η cọc bờ (H/M)</th>
-              <th className="px-3 py-2.5 text-right">η cọc đáy (H/Nhổ)</th>
+              <th className="px-3 py-2.5 text-right" title="Đế vít xoắn: trượt / nhổ / lật. Khối bê tông: xem DW-1…DW-4. Cọc đóng: ngang / nhổ.">η neo đáy</th>
               <th className="px-3 py-2.5 text-center">Hạng mục chi phối</th>
               <th className="px-3 py-2.5 text-center">Kết luận</th>
               <th className="px-3 py-2.5 text-center">Thao tác</th>
@@ -147,7 +147,11 @@ export const RaftsOverviewTable: React.FC = () => {
                     {res?.shorePile ? `${res.shorePile.utilization_H.toFixed(2)} / ${res.shorePile.utilization_M.toFixed(2)}` : '-'}
                   </td>
                   <td className="px-3 py-2 text-right text-slate-700">
-                    {res?.bedPile1 ? `${res.bedPile1.utilization_H.toFixed(2)} / ${(res.bedPile1.utilization_Uplift ?? 0).toFixed(2)}` : '-'}
+                    {res?.bedScrewBase
+                      ? `đế ${res.bedScrewBase.side_m.toFixed(2)} m: ${res.bedScrewBase.slideUtil.toFixed(2)} / ${res.bedScrewBase.upliftUtil.toFixed(2)} / ${res.bedScrewBase.overturnUtil.toFixed(2)}`
+                      : res?.bedBlock
+                        ? `khối ${res.bedBlock.mass_t.toFixed(0)} T`
+                        : res?.bedPile1 ? `${res.bedPile1.utilization_H.toFixed(2)} / ${(res.bedPile1.utilization_Uplift ?? 0).toFixed(2)}` : '-'}
                   </td>
                   <td className="px-3 py-2 text-center text-[11px] text-slate-600 font-sans">
                     {res?.governingCheck ? `${res.governingCheck.id} · ${res.governingCheck.label}` : '-'}

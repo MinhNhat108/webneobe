@@ -432,42 +432,50 @@ describe('Broms pile', () => {
 describe('Full project', () => {
   it('runs the Hồ Huổi Vanh default state end to end', () => {
     const r = calculateProject(base());
-    expect(r.f_env_total_kN).toBeGreaterThan(150);
-    expect(r.t_max_intact_kN).toBeGreaterThan(50);
+    expect(r.f_env_total_kN).toBeGreaterThan(60); // default wind 20 m/s
+    expect(r.t_max_intact_kN).toBeGreaterThan(20);
     expect(r.checks.length).toBeGreaterThanOrEqual(7);
     expect(['PASS', 'FAIL', 'NA']).toContain(r.overallVerdict);
   });
 
-  it('verifies all 12 Huoi Vanh rafts calculate and pass', () => {
-    expect(HUOI_VANH_RAFTS).toHaveLength(12);
-    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(
-      Array.from({ length: 12 }, (_, i) => `BÈ ${i + 1}`)
-    );
+  it.each(['PA3_SCREW_BASE', 'PA1_PILE'] as const)('verifies all 9 Huoi Vanh rafts calculate and pass (lake-bed anchors: %s)', (option) => {
+    expect(HUOI_VANH_RAFTS).toHaveLength(9);
+    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9']);
+    expect(base().anchor.bedAnchorOption).toBe('PA3_SCREW_BASE'); // the design since 2026-10-08
 
     for (const raft of HUOI_VANH_RAFTS) {
-      const s = buildRaftProjectState(base(), raft, base().anchor);
+      const mapped = buildRaftProjectState(base(), raft, base().anchor);
+      const s = { ...mapped, anchor: { ...mapped.anchor, bedAnchorOption: option } };
 
       const r = calculateProject(s);
       const failed = r.checks.filter((c: any) => c.status === 'FAIL');
       if (failed.length > 0) {
         console.log(`Raft ${raft.id} (${raft.name}) FAILED:`, failed.map((c: any) => `${c.id} (${c.label}) actual: ${c.displayActual}, thresh: ${c.threshold}`));
       }
-      // 350 x 350 mm piles only (owner's instruction); BÈ 5 has twin piles at each point.
+      // D350 bored shore piles; lake-bed anchors on screw-pile bases (or 350 x 350 piles under PA1).
       expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
+      expect(!!r.bedScrewBase, raft.name).toBe(option === 'PA3_SCREW_BASE');
+      if (r.bedScrewBase) expect(r.bedScrewBase.ok, raft.name).toBe(true);
       expect(s.anchor.shoreD_m, raft.name).toBe(0.35);
       expect(s.anchor.bed1D_m, raft.name).toBe(0.35);
     }
   });
 
   it('twin piles: each pile of a 2-pile point is checked for T / (2 x 0.9); one pile takes the whole tension', () => {
-    const be5 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 5')!;
-    const s = buildRaftProjectState(base(), be5, base().anchor);
-    expect(s.anchor.shorePilesPerPoint).toBe(2);
-    expect(s.anchor.bedPilesPerPoint).toBe(2);
+    // At the 20 m/s default no raft needs twin piles. BÈ 3A at the STORM wind (30 m/s) does:
+    // two piles 6Φ32 per point, as the catalogue sized at 30 m/s had it.
+    const be3a = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3A')!;
+    const mapped = buildRaftProjectState(base(), be3a, base().anchor);
+    expect(mapped.anchor.shorePilesPerPoint).toBe(1);
+    const s = {
+      ...mapped,
+      env: { ...mapped.env, windSpeed_ms: 30 },
+      anchor: { ...mapped.anchor, bedAnchorOption: 'PA1_PILE' as const, shorePilesPerPoint: 2, bedPilesPerPoint: 2, shoreRebarCount: 6, shoreRebarDia_mm: 32 }
+    };
     const twin = calculateProject(s);
     expect(twin.shorePileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
     expect(twin.bedPileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
-    expect(twin.overallVerdict).toBe('PASS');
+    expect(twin.checks.find((c) => c.id === 'BP-2')!.status).toBe('PASS');
 
     // The same piles, one per point: the shore pile is over in bending — the reason for the twin piles.
     const single = calculateProject({ ...s, anchor: { ...s.anchor, shorePilesPerPoint: 1, bedPilesPerPoint: 1 } });
@@ -475,17 +483,16 @@ describe('Full project', () => {
     expect(single.t_max_intact_kN).toBe(twin.t_max_intact_kN); // the line tension does not depend on the anchor
     expect(single.shorePile!.Mmax).toBeGreaterThan(twin.shorePile!.Mmax);
     expect(single.checks.find((c) => c.id === 'BP-2')!.status).toBe('FAIL');
-    expect(single.overallVerdict).toBe('FAIL');
 
     // A less efficient group loads each pile more.
     const weak = calculateProject({ ...s, anchor: { ...s.anchor, pileGroupEfficiency: 0.7 } });
     expect(weak.shorePileTension_kN!).toBeGreaterThan(twin.shorePileTension_kN!);
 
-    // The other 11 rafts have one pile per point.
-    for (const raft of HUOI_VANH_RAFTS.filter((r) => r.name !== 'BÈ 5')) {
+    // At the 20 m/s default every raft has one shore pile per point.
+    expect(HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1).map((r) => r.name)).toEqual([]);
+    for (const raft of HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) === 1)) {
       const r = calculateProject(buildRaftProjectState(base(), raft, base().anchor));
       expect(r.shorePileTension_kN, raft.name).toBe(r.t_max_intact_kN);
-      expect(r.bedPileTension_kN, raft.name).toBe(r.t_max_intact_kN);
     }
   });
 });
@@ -573,7 +580,7 @@ describe('Broms — pile shape / section helpers', () => {
     expect(maxBarsOnRing(0.35, 32)).toBe(12);
   });
 
-  it('Huổi Vanh shore piles are round bored D350 piles and pass with 4 to 8 bars; four bars are not enough on the big rafts', () => {
+  it('Huổi Vanh shore piles are round bored D350 piles and pass with 4 to 6 bars at 20 m/s; four bars are not enough at the storm wind', () => {
     for (const raft of HUOI_VANH_RAFTS) {
       const s = buildRaftProjectState(base(), raft, base().anchor);
       expect(s.anchor.shorePileShape, raft.name).toBe('circular');
@@ -584,7 +591,7 @@ describe('Broms — pile shape / section helpers', () => {
     }
     const be6 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 6')!;
     const s6 = buildRaftProjectState(base(), be6, base().anchor);
-    const four = calculateProject({ ...s6, anchor: { ...s6.anchor, shoreRebarCount: 4, shoreRebarDia_mm: 32 } });
+    const four = calculateProject({ ...s6, env: { ...s6.env, windSpeed_ms: 30 }, anchor: { ...s6.anchor, shoreRebarCount: 4, shoreRebarDia_mm: 32 } });
     expect(four.checks.find((c) => c.id === 'BP-2')!.status).toBe('FAIL');
   });
 

@@ -11,7 +11,7 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
   const rows: any[][] = [
     [`BÁO GIÁ THI CÔNG CỌC NEO — ${code}`],
     [`Công trình: ${name}`],
-    ['Phương án: cọc khoan nhồi trên bờ + cọc vuông đúc sẵn đóng dưới lòng hồ'],
+    [c.bedAnchorKind === 'screwBase' ? 'Phương án: cọc khoan nhồi trên bờ + đế BTCT giữ bằng vít xoắn dưới lòng hồ' : 'Phương án: cọc khoan nhồi trên bờ + cọc vuông đúc sẵn đóng dưới lòng hồ'],
     ['Đơn giá là GIÁ THAM KHẢO thị trường do Chủ đầu tư cung cấp (có thể điều chỉnh), không phải báo giá của nhà thầu.'],
     [''],
     ['STT', 'Hạng mục công việc', 'Đơn vị', 'Khối lượng', 'Đơn giá (VNĐ)', 'Thành tiền (VNĐ)', 'Căn cứ & ghi chú']
@@ -19,7 +19,10 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
   for (const l of c.lines) {
     rows.push([l.no, l.item, l.unit, Number(l.quantity.toFixed(1)), vnd(l.rate), vnd(l.amount_VND), l.note]);
   }
-  rows.push(['', 'Cộng cọc lòng hồ (B.1 → B.4)', '', '', '', vnd(c.bedTotal_VND), '']);
+  rows.push(['', c.bedAnchorKind === 'screwBase' ? 'Cộng neo đáy hồ (B.1 → B.5)' : 'Cộng cọc lòng hồ (B.1 → B.4)', '', '', '', vnd(c.bedTotal_VND), '']);
+  if (c.unpriced.length > 0) {
+    rows.push(['', `CHÚ Ý: ${c.unpriced.length} hạng mục CHƯA CÓ ĐƠN GIÁ, tổng bên dưới CHƯA gồm: ${c.unpriced.join('; ')}`, '', '', '', '', '']);
+  }
   rows.push(['', 'CỘNG CHI PHÍ TRỰC TIẾP (A + B)', '', '', '', vnd(c.directTotal_VND), '']);
   rows.push(['', `Dự phòng phí ${params.contingencyPercent}%`, '', '', '', vnd(c.contingency_VND), '']);
   rows.push(['', 'CỘNG TRƯỚC THUẾ', '', '', '', vnd(c.beforeVat_VND), '']);
@@ -28,7 +31,7 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
 
   rows.push(['']);
   rows.push(['PHÂN BỔ CHI PHÍ TRỰC TIẾP THEO CỤM BÈ']);
-  rows.push(['Cụm bè', 'Số cọc bờ', 'Cọc bờ (md)', 'Tiền cọc bờ (VNĐ)', 'Số cọc đáy', 'Cọc đáy (md)', 'Tiền cọc đáy (VNĐ)', 'Cộng (VNĐ)']);
+  rows.push(['Cụm bè', 'Số cọc bờ', 'Cọc bờ (md)', 'Tiền cọc bờ (VNĐ)', c.bedAnchorKind === 'screwBase' ? 'Số đế neo đáy' : 'Số cọc đáy', 'Cọc đáy (md)', 'Tiền neo đáy (VNĐ)', 'Cộng (VNĐ)']);
   for (const b of c.raftBreakdowns) {
     rows.push([
       b.raftName, b.shorePiles, Number(b.shoreMeters.toFixed(1)), vnd(b.shoreCost_VND),
@@ -37,7 +40,7 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
   }
   rows.push([
     'TỔNG', c.totalShorePiles, Number(c.totalShoreMeters.toFixed(1)), vnd(c.shoreTotal_VND),
-    c.totalBedPiles, Number(c.totalBedMeters.toFixed(1)), vnd(c.bedTotal_VND), vnd(c.directTotal_VND)
+    c.bedAnchorKind === 'screwBase' ? c.totalBases : c.totalBedPiles, Number(c.totalBedMeters.toFixed(1)), vnd(c.bedTotal_VND), vnd(c.directTotal_VND)
   ]);
 
   rows.push(['']);

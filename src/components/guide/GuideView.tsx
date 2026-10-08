@@ -54,7 +54,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
     },
     {
       q: 'Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của Dự án Hồ Huổi Vanh?',
-      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 12 cụm bè (BÈ 1 đến BÈ 12 theo bản vẽ CAD của khách hàng) theo đúng hồ sơ thiết kế mới nhất.'
+      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 9 cụm bè (BÈ 1 đến BÈ 12 theo bản vẽ CAD của khách hàng) theo đúng hồ sơ thiết kế mới nhất.'
     },
     {
       q: 'Làm sao để xuất hoặc in báo cáo thuyết minh tính toán sang file PDF đẹp mắt?',
@@ -192,7 +192,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     1. Quản Lý Dự Án &amp; Chọn Cụm Bè
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Chọn nhanh từ <strong>BÈ 1 đến BÈ 12</strong> của Hồ Huổi Vanh hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
+                    Chọn nhanh từ <strong>9 cụm bè (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9)</strong> của Hồ Huổi Vanh hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -242,7 +242,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     3. Mặt Bằng &amp; Tọa Độ Neo
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Bản đồ số hóa 304 điểm cọc bờ &amp; cọc đáy hồ, tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
+                    Bản đồ số hóa 292 tuyến cáp tại 265 điểm neo (214 cọc khoan nhồi bờ &amp; 51 đế vít xoắn đáy hồ, trong đó 27 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -416,7 +416,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Quản Lý Dự Án &amp; Chọn Cụm Bè Tính Toán
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Khởi tạo hồ sơ công trình và chọn cụm bè trong tổng thể 12 cụm bè Hồ Huổi Vanh
+                    Khởi tạo hồ sơ công trình và chọn cụm bè trong tổng thể 9 cụm bè Hồ Huổi Vanh
                   </p>
                 </div>
                 <button
@@ -437,7 +437,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </h4>
                   <ul className="list-disc pl-5 space-y-2">
                     <li>
-                      <strong>Chọn cụm bè (BÈ 1 đến BÈ 12):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa 12 cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
+                      <strong>Chọn cụm bè (9 bè: BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa các cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
                     </li>
                     <li>
                       <strong>Nút "Dữ liệu gốc Huổi Vanh":</strong> Nhấn nút này khi muốn hủy bỏ các chỉnh sửa thử nghiệm để khôi phục cấu hình chuẩn ban đầu theo hồ sơ thiết kế.
@@ -542,10 +542,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Bước 3 / 6
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
-                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 304 Điểm Neo
+                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 265 Điểm Neo (292 Tuyến Cáp)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Trực quan hóa vị trí thực địa của 12 cụm bè và hệ thống cọc neo hồ Huổi Vanh
+                    Trực quan hóa vị trí thực địa của 9 cụm bè và hệ thống neo hồ Huổi Vanh
                   </p>
                 </div>
                 <button
@@ -753,7 +753,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Trình Xem Bản Vẽ CAD (.DXF)
                   </div>
                   <p className="text-slate-600">
-                    Vẽ trực tiếp file DXF lên Canvas. Hỗ trợ đầy đủ phóng to, thu nhỏ, di chuyển bản vẽ mặt bằng bố trí hệ neo 12 bè.
+                    Vẽ trực tiếp file DXF lên Canvas. Hỗ trợ đầy đủ phóng to, thu nhỏ, di chuyển bản vẽ mặt bằng bố trí hệ neo 9 bè.
                   </p>
                 </div>
 
@@ -836,7 +836,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Xuất Bảng Thống Kê Cọc Neo (.xlsx)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Bảng Cọc Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Cọc"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 304 cọc neo vuông BTCT chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
+                    Bấm nút <strong>"Bảng Neo Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Neo"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 292 điểm neo (cọc bờ + neo đáy theo phương án đang chọn) neo vuông BTCT chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
                   </p>
                 </div>
 

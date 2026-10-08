@@ -1,9 +1,9 @@
 import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
-import { exportProjectToExcel, exportPileScheduleToExcel } from '../../lib/io/excelExport';
-import { exportMooringPileDxf } from '../../lib/io/dxfExport';
-import { exportMooringDeadweightDxf } from '../../lib/io/deadweightDxf';
-import { exportDeadweightScheduleToExcel } from '../../lib/io/deadweightExcel';
+import { exportProjectToExcel } from '../../lib/io/excelExport';
+import { exportAnchorSchedule, exportMooringCad, MOORING_OPTION_LABEL } from '../../lib/io/mooringExports';
+import { designWindCaveat } from '../../lib/calc/designWind';
+import { LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 import {
   Anchor,
   FileSpreadsheet,
@@ -34,30 +34,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
   };
 
   const mooringOption = currentProject.anchor.bedAnchorOption ?? 'PA1_PILE';
-  const isPa2 = mooringOption === 'PA2_DEADWEIGHT';
+  const optionLabel = MOORING_OPTION_LABEL[mooringOption];
+  // Shown on every screen while the calculation wind is under the code wind.
+  const windCaveat = designWindCaveat(currentProject.env.windSpeed_ms);
+  // Anchor POINTS of the layout: a lake-bed base shared by two rafts is one point for two lines.
+  const shoreTotal = LAYOUT_COUNTS.shorePoints;
+  const bedTotal = LAYOUT_COUNTS.bedBases;
 
   // The schedule and the drawing follow the selected lake-bed option.
+  // Every anchor takes its values from its own raft's calculation, so the batch is computed on demand.
   const handleExportPileSchedule = () => {
-    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    if (isPa2) exportDeadweightScheduleToExcel(currentProject, results, batch);
-    else exportPileScheduleToExcel(currentProject, results, batch);
+    exportAnchorSchedule(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
   };
-
   const handleExportDxf = () => {
-    // Same on-demand batch as the Excel export: every pile in the schedule
-    // takes its L_opt / P_max from its own raft's calculation.
-    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    if (isPa2) {
-      const built = exportMooringDeadweightDxf(currentProject, results, batch);
-      // eslint-disable-next-line no-console
-      console.info(`[DXF PA2] Đã xuất ${built.shorePileCount} cọc bờ + ${built.blockCount} khối bê tông / ${built.raftCount} cụm bè.`);
-      return;
-    }
-    const built = exportMooringPileDxf(currentProject, results, batch);
-    // eslint-disable-next-line no-console
-    console.info(
-      `[DXF] Đã xuất ${built.pileCount} cọc neo / ${built.raftCount} cụm bè.`
-    );
+    exportMooringCad(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
   };
 
   return (
@@ -79,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
               </span>
             </div>
             <p className="text-xs text-slate-400 truncate">
-              ⚡ Điện mặt trời nổi (FPV) — Hồ Huổi Vanh (12 Bè)
+              ⚡ Điện mặt trời nổi (FPV) — Hồ Huổi Vanh ({raftsSummary.length} Bè)
             </p>
           </div>
         </div>
@@ -131,22 +121,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             type="button"
             onClick={handleExportPileSchedule}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title={isPa2
-              ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
-              : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 điểm neo, L_opt, P_max) ra Excel (.xlsx)'}
+            title={`Xuất Bảng thống kê neo ra Excel (.xlsx): ${shoreTotal} điểm neo bờ + ${bedTotal} điểm neo đáy (${optionLabel})`}
           >
             <Table className="w-4 h-4 text-emerald-400" />
-            <span className="hidden xl:inline">{isPa2 ? 'Bảng Neo PA2 Excel' : 'Bảng Cọc Excel'}</span>
-            <span className="hidden md:inline xl:hidden">{isPa2 ? 'Bảng Neo' : 'Bảng Cọc'}</span>
+            <span className="hidden xl:inline">Bảng Neo Excel</span>
+            <span className="hidden md:inline xl:hidden">Bảng Neo</span>
           </button>
 
           <button
             type="button"
             onClick={handleExportDxf}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title={isPa2
-              ? 'Xuất bản vẽ CAD PA2: Khối bê tông neo đáy hồ & Cọc neo bờ (.DXF)'
-              : 'Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc (L_opt, P_max)'}
+            title={`Xuất bản vẽ mặt bằng hệ neo ra CAD (.DXF): cọc khoan nhồi bờ + neo đáy (${optionLabel}), kèm bảng thống kê`}
           >
             <DraftingCompass className="w-4 h-4 text-amber-400" />
             <span className="hidden md:inline">Xuất CAD</span>
@@ -175,10 +161,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
         </div>
       </div>
 
-      {/* Lake-bed anchoring option. PA1 is the design; PA2 replaces the lake-bed piles with gravity blocks. */}
+      {/* Lake-bed anchoring option. PA3 (RC base + screw piles) is the design since 2026-10-08; PA1 and PA2 are alternatives. */}
       <div className="border-t border-slate-800 bg-slate-950/60">
         <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex flex-wrap items-center gap-2 text-xs">
           <span className="text-slate-400">Phương án neo đáy hồ:</span>
+          <button
+            type="button"
+            onClick={() => setMooringOption('PA3_SCREW_BASE')}
+            className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+              mooringOption === 'PA3_SCREW_BASE'
+                ? 'bg-sky-600 border-sky-500 text-white'
+                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+            }`}
+          >
+            🔵 Đế BTCT + vít xoắn (thiết kế)
+          </button>
           <button
             type="button"
             onClick={() => setMooringOption('PA1_PILE')}
@@ -188,7 +185,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            🟢 Phương án 1: Cọc đóng BTCT (thiết kế)
+            🟢 Cọc đóng BTCT 350×350
           </button>
           <button
             type="button"
@@ -199,11 +196,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            🟡 Phương án 2: Khối bê tông neo đáy
+            🟡 Khối bê tông trọng lực
           </button>
-          {mooringOption === 'PA2_DEADWEIGHT' && (
-            <span className="text-amber-300">
-              Đang chọn Phương án 2: 175 khối bê tông neo đáy (DW-1…DW-4) + 129 cọc neo bờ. Nút "Bảng Neo" và "Xuất CAD" xuất theo khối bê tông.
+          <span className={mooringOption === 'PA2_DEADWEIGHT' ? 'text-amber-300' : 'text-slate-400'}>
+            {shoreTotal} cọc khoan nhồi bờ + {bedTotal} điểm neo đáy, trong đó {LAYOUT_COUNTS.sharedBases} điểm dùng chung hai bè ({optionLabel}); {LAYOUT_COUNTS.lines} tuyến cáp. Nút "Bảng Neo" và "Xuất CAD" xuất theo phương án đang chọn.
+          </span>
+          {mooringOption !== 'PA3_SCREW_BASE' && LAYOUT_COUNTS.sharedBases > 0 && (
+            <span className="text-rose-300 font-semibold">
+              ⚠️ Mặt bằng đang bố trí cho đế vít xoắn dùng chung: {LAYOUT_COUNTS.sharedBases} điểm đáy có hai dây. Phương án này tính mỗi dây một {mooringOption === 'PA2_DEADWEIGHT' ? 'khối' : 'cọc'} nên ở các điểm đó chúng trùng nhau — chỉ để so sánh, chưa thi công được.
             </span>
           )}
           {onGoToCompare && (
@@ -213,6 +213,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           )}
         </div>
       </div>
+      {windCaveat && (
+        <div className="border-t border-amber-500/40 bg-amber-500/15 text-amber-200">
+          <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1 text-[11px] leading-snug">⚠️ {windCaveat}</div>
+        </div>
+      )}
     </header>
   );
 };

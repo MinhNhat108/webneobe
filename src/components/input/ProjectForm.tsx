@@ -62,7 +62,7 @@ export const ProjectForm: React.FC = () => {
             Loại hình kết cấu hệ neo:
           </span>
           <p className="card-subtitle">
-            Hệ bè pin mặt trời nổi trên hồ chứa (12 cụm bè, cáp PES & cọc neo Broms)
+            Hệ bè pin mặt trời nổi trên hồ chứa ({raftsSummary.length} cụm bè, cáp PES, cọc khoan nhồi bờ & đế vít xoắn đáy hồ)
           </p>
         </div>
 
@@ -73,13 +73,13 @@ export const ProjectForm: React.FC = () => {
         </div>
       </div>
 
-      {/* Multi-Raft Quick Bar (for Huổi Vanh 12 bè) */}
+      {/* Multi-Raft Quick Bar (the Huổi Vanh rafts) */}
       {currentProject.systemType === 'solar_fpv' && raftsSummary && raftsSummary.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-brand-600" />
-              Chọn cụm bè cần tính toán chi tiết (12 Bè):
+              Chọn cụm bè cần tính toán chi tiết ({raftsSummary.length} Bè):
             </span>
             <span className="card-subtitle">
               Đang chọn: <strong className="text-brand-600 font-bold">{raftsSummary.find(r => r.id === activeRaftId)?.name || `BÈ ${activeRaftId}`}</strong>

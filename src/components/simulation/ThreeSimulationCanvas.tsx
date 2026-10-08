@@ -20,6 +20,7 @@ import {
   buildPileModels,
   buildCableModels,
   buildBlockAnchors,
+  buildScrewBaseAnchors,
   blockUtilisation,
   BlockAnchor,
   PileModel,
@@ -28,6 +29,8 @@ import {
   utilisationColour
 } from './sceneModel';
 import { evaluateDeadweightBlock, deadweightOk } from '../../lib/calc/deadweight';
+import { recheckScrewBase, screwBaseUtilisation, type ScrewBaseResult } from '../../lib/calc/screwAnchorBed';
+import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -76,6 +79,12 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       () => (currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT' ? buildBlockAnchors(currentProject, activeRaftId) : undefined),
       [currentProject, activeRaftId]
     );
+    // PA3 (the design): the lake-bed anchors are RC bases held by screw piles.
+    const screwBases = useMemo(
+      () => (currentProject.anchor.bedAnchorOption === 'PA3_SCREW_BASE' ? buildScrewBaseAnchors(currentProject, activeRaftId) : undefined),
+      [currentProject, activeRaftId]
+    );
+    const activeRaftName = HUOI_VANH_RAFTS.find((r) => r.id === activeRaftId)?.name;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -111,8 +120,8 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     // The 304 piles and their cables at their CAD positions; sizes as designed,
     // except the active raft, which shows the side / L_tk entered in Tab 2.
     const piles = useMemo(
-      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m }, `BÈ ${activeRaftId}`, blocks),
-      [shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m, activeRaftId, blocks]
+      () => buildPileModels({ shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m }, activeRaftName, blocks, screwBases),
+      [shoreArm_e_m, bed1Stickup_m, shoreD_m, shoreL_m, bed1D_m, bed1L_m, activeRaftName, blocks, screwBases]
     );
     const cables = useMemo(() => buildCableModels(piles), [piles]);
     const shorePiles = useMemo(() => piles.filter((p) => p.type === 'SHORE'), [piles]);
@@ -454,6 +463,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
           const st = mooringStates.get(p.raft);
           const u = !st ? NaN
             : p.block ? blockUtilisation(p.block, st.tension_kN)
+            : p.screwBase ? screwBaseUtilisation(recheckScrewBase(p.screwBase, st.tension_kN))
             : kind === 'shore' ? st.shorePileUtil : st.bedPileUtil;
           col.setHex(selectedElement?.id === p.code ? 0xfacc15 : utilisationColour(u));
           mesh.setColorAt(i, col);
@@ -594,9 +604,44 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       };
     };
 
+    const describeScrewBase = (p: PileModel, design: ScrewBaseResult): SelectedElement => {
+      const st = mooringStates.get(p.raft);
+      const T = st?.tension_kN ?? design.load.tension_kN;
+      const b = recheckScrewBase(design, T);
+      const prm = b.params;
+      const [low, high] = b.cases;
+      const depth = depthAt(p.x, p.y, waterLevel_m);
+      const u = (v: number) => (Number.isFinite(v) ? fmt(v, 2) : '∞');
+      return {
+        type: 'pile',
+        id: p.code,
+        title: `Đế neo vít xoắn ${p.code} (${p.rafts.join(' + ')})${p.lines.length > 1 ? ' — DÙNG CHUNG' : ''}`,
+        data: {
+          'Tuyến cáp': p.lines.join(' + '),
+          'Thuộc cụm bè': p.raft,
+          ...(p.lines.length > 1 ? { 'Đế dùng chung': `hai dây của ${p.rafts.join(' và ')} cùng neo vào một đế (hai tai neo); số liệu dưới đây tính cho dây căng hơn` } : {}),
+          'Đế BTCT B × B × t': `${fmt(b.side_m)} × ${fmt(b.side_m)} × ${fmt(b.thickness_m)} m${design.enlarged ? ' (lớn hơn đế mẫu 2,5 × 2,5 × 0,4 m)' : ''}`,
+          'Bê tông / khối lượng cẩu': `${fmt(b.concrete_m3, 1)} m³ / ${fmt(b.liftMass_t, 1)} tấn`,
+          'Vít xoắn': `${prm.screwCount} vít Ø${Math.round(prm.tubeDia_m * 1000)}×${Math.round(prm.tubeThk_m * 1000)}, ren Ø${Math.round(prm.threadDia_m * 1000)}, ngập bùn ${fmt(prm.screwLength_m, 1)} m (mô hình không vẽ vít)`,
+          'Lực cáp tại vận tốc gió đang chọn': `T = ${fmt(T, 1)} kN; MN thấp Th = ${fmt(low.Th_kN, 1)} kN; MN cao Tv = ${fmt(high.Tv_kN, 1)} kN (góc ${fmt(high.angle_deg, 1)}°)`,
+          'SV-1 Chống nhổ': u(b.upliftUtil),
+          [`SV-2 Chống trượt (c_u = ${prm.cuSurface_kPa} kPa)`]: u(b.slideUtil),
+          'SV-3 Chống lật': u(b.overturnUtil),
+          'SV-4 Lực nhổ một vít': u(b.screwUtil),
+          'SV-5 Áp lực nền bùn': `${fmt(b.bearingPressure_kPa, 1)} / ${fmt(b.bearingAllow_kPa, 1)} kPa`,
+          'Cao độ đáy hồ': `${fmt(p.ground_m)} m`,
+          'Mực nước tại đế': depth === null ? '—' : depth > 0 ? `ngập ${fmt(depth)} m` : `trên mặt nước ${fmt(-depth)} m`,
+          'Kết luận': b.ok ? 'ĐẠT' : 'KHÔNG ĐẠT',
+          'Lưu ý': 'c_u bùn và các hệ số bám dính là giá trị giả định, chưa có khảo sát đáy hồ',
+          ...trialNote(st)
+        }
+      };
+    };
+
     const shoreRound = (currentProject.anchor.shorePileShape ?? 'square') !== 'square';
     const describePile = (p: PileModel): SelectedElement => {
       if (p.block) return describeBlock(p, p.block);
+      if (p.screwBase) return describeScrewBase(p, p.screwBase);
       const st = mooringStates.get(p.raft);
       const u = st ? (p.type === 'SHORE' ? st.shorePileUtil : st.bedPileUtil) : NaN;
       const depth = depthAt(p.x, p.y, waterLevel_m);
@@ -695,7 +740,9 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         const p = (obj.userData.list as PileModel[])[hit.instanceId];
         setHoveredInfo(p.block
           ? `Khối BT ${p.code} · ${fmt(p.block.block.L_m)}×${fmt(p.block.block.W_m)}×${fmt(p.block.block.H_m)} m · ${fmt(p.block.block.mass_t, 1)} T`
-          : `Cọc ${p.code} · ${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)} · L_tk ${fmt(p.embed_m)} m`);
+          : p.screwBase
+            ? `Đế vít xoắn ${p.code} · ${fmt(p.screwBase.side_m)}×${fmt(p.screwBase.side_m)}×${fmt(p.screwBase.thickness_m)} m · ${fmt(p.screwBase.liftMass_t, 1)} T`
+            : `Cọc ${p.code} · ${p.type === 'SHORE' && shoreRound ? `D${Math.round(p.side_m * 1000)}` : `${Math.round(p.side_m * 1000)}×${Math.round(p.side_m * 1000)}`} · L_tk ${fmt(p.embed_m)} m`);
       } else if (obj === cablesRef.current && hit.index !== undefined) {
         const cb = cables[Math.floor(hit.index / 2)];
         setHoveredInfo(`Tuyến cáp ${cb.code} (${cb.type === 'SHORE' ? 'bờ' : 'đáy'}) · ${cb.raft}`);

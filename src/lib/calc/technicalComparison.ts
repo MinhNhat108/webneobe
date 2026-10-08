@@ -14,7 +14,7 @@ import { sizeDeadweightBlock, DeadweightResult, DeadweightParams, DEADWEIGHT_DEF
 import type { AnchorInput, ProjectState } from './types';
 import type { RaftSummaryItem } from '../../data/huoiVanhProject';
 
-export type MooringOption = 'PA1_PILE' | 'PA2_DEADWEIGHT';
+export type MooringOption = 'PA1_PILE' | 'PA2_DEADWEIGHT' | 'PA3_SCREW_BASE';
 
 /** The block parameters a project uses (its own, or the defaults). */
 export const deadweightParamsOf = (anchor: Pick<AnchorInput, 'deadweight'>): DeadweightParams => ({

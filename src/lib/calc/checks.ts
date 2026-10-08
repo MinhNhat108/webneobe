@@ -349,11 +349,14 @@ export function runChecks(
   // PA2: the lake-bed anchors are gravity blocks, so the lake-bed PILE rows
   // (C11, BP-3..BP-5) do not apply and DW-1..DW-4 take their place.
   const block = results.bedBlock;
-  const NOT_PILE = 'Không áp dụng (PA2: neo đáy hồ bằng khối bê tông trọng lực, xem DW-1…DW-4).';
+  const base = results.bedScrewBase;
+  const NOT_PILE = base
+    ? 'Không áp dụng (neo đáy hồ bằng đế BTCT + vít xoắn, xem SV-1…SV-6).'
+    : 'Không áp dụng (PA2: neo đáy hồ bằng khối bê tông trọng lực, xem DW-1…DW-4).';
 
   if (results.shorePileOpt || results.bedPileOpt) {
     pushPmax('C10', 'Sức chịu tải cho phép của cọc BỜ (P_max)', results.shorePileOpt);
-    if (block) {
+    if (block || base) {
       checks.push(skipped({
         id: 'C11', label: 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', formula: 'P_req = T_dây × SF ≤ P_max',
         unit: 'kN', threshold: '≤ P_max', isMandatory: true
@@ -401,7 +404,7 @@ export function runChecks(
         `(${bars(anchor.shoreRebarFaceCount, anchor.shoreRebarDia_mm)})`);
   }
 
-  if (block) {
+  if (block || base) {
     for (const [id, label, formula] of [
       ['BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0'],
       ['BP-4', 'Sức chịu NHỔ cọc LÒNG HỒ (ma sát thân)', 'Tv / Q_uplift,all ≤ 1.0'],
@@ -410,6 +413,40 @@ export function runChecks(
       checks.push(skipped({ id, label, formula, unit: '-', threshold: '≤ 1.0', isMandatory: true }, NOT_PILE));
     }
 
+  }
+  if (base) {
+    const p = base.params;
+    const [low, high] = base.cases;
+    const dims = `Đế ${base.side_m.toFixed(2)} × ${base.side_m.toFixed(2)} × ${base.thickness_m.toFixed(2)} m, W' = ${base.weightSub_kN.toFixed(1)} kN, ` +
+      `${p.screwCount} vít Ø${Math.round(p.tubeDia_m * 1000)}×${Math.round(p.tubeThk_m * 1000)} dài ${p.screwLength_m} m` +
+      (base.enlarged ? ' (đế đã được TĂNG kích thước so với đế mẫu 2,5 × 2,5 × 0,4 m để đạt)' : '');
+    const both = (f: (c: typeof low) => string) => `MN thấp: ${f(low)}; MN cao: ${f(high)}`;
+    const pushU = (id: string, label: string, formula: string, util: number, note: string) => {
+      const spec: CheckSpec = { id, label, formula, unit: '-', threshold: '≤ 1.0', isMandatory: true };
+      if (!Number.isFinite(util)) { checks.push(evaluated(spec, Infinity, '∞', null, note)); return; }
+      checks.push(evaluated(spec, util, util.toFixed(3), util, note));
+    };
+    pushU('SV-1', 'Đế vít xoắn — chống NHỔ', "Tv / (0,9·W' + n·Q_a) ≤ 1.0", base.upliftUtil,
+      `${both((c) => `Tv = ${c.Tv_kN.toFixed(1)} kN (góc cáp ${c.angle_deg.toFixed(1)}°)`)}. Sức chống nhổ ${low.upliftResistance_kN.toFixed(1)} kN, ` +
+        `Q_a một vít = ${base.screwQa_kN.toFixed(1)} kN (FS = ${p.sfScrewUplift}). ${dims}`);
+    pushU('SV-2', 'Đế vít xoắn — chống TRƯỢT', `${p.sfSlide}·Th / (α·c_u·B² + R_gờ + n·H_u) ≤ 1.0`, base.slideUtil,
+      `${both((c) => `Th = ${c.Th_kN.toFixed(1)} kN, sức chống ${c.slideResistance_kN.toFixed(1)} kN${c.adhesion_kN === 0 ? ' (đế bị nhấc, MẤT bám dính đáy)' : ''}`)}. ` +
+        `c_u = ${p.cuSurface_kPa} kPa (GIẢ ĐỊNH), α = ${p.alphaBase}, gờ sâu ${p.skirtDepth_m} m, H_u một vít = ${base.screwHu_kN.toFixed(1)} kN.`);
+    pushU('SV-3', 'Đế vít xoắn — chống LẬT', `${p.sfOverturn}·M_o / M_r ≤ 1.0`, base.overturnUtil,
+      `${both((c) => `M_o = ${c.overturningMoment_kNm.toFixed(1)} kNm`)}; M_r = ${low.resistingMoment_kNm.toFixed(1)} kNm (quay quanh mép đáy phía xa dây).`);
+    pushU('SV-4', 'Đế vít xoắn — lực nhổ một vít', 'N_1 / Q_a ≤ 1.0', base.screwUtil,
+      `${both((c) => `N_1 = ${c.screwPull_kN.toFixed(1)} kN`)}; Q_a = ${base.screwQa_kN.toFixed(1)} kN (ma sát thân ${base.screwShaftFriction_kN.toFixed(1)} kN / FS ${p.sfScrewUplift}).`);
+    const qSpec: CheckSpec = {
+      id: 'SV-5', label: 'Đế vít xoắn — áp lực lên nền bùn', formula: `W'/B² ≤ 5,14·c_u / ${p.sfBearing}`, unit: 'kPa',
+      threshold: `≤ ${base.bearingAllow_kPa.toFixed(1)} kPa`, isMandatory: true
+    };
+    checks.push(evaluated(qSpec, base.bearingUtil, base.bearingPressure_kPa.toFixed(1), base.bearingPressure_kPa,
+      'c_u bùn là giá trị giả định, chưa có khảo sát đáy hồ; chưa tính lún.'));
+    pushU('SV-6', 'Đế vít xoắn — cốt thép bản đế', 'max(A_s yc ; 0,1%) / A_s bố trí ≤ 1.0', base.rebarUtil,
+      `Lưới 2 lớp Ø${base.rebarDia_mm} a${Math.round(base.rebarSpacing_m * 1000)} hai phương: ${base.rebarProvided_mm2.toFixed(0)} mm²/m; yêu cầu ${Math.max(base.rebarRequired_mm2, base.rebarMin_mm2).toFixed(0)} mm²/m.` +
+        (base.holeFits ? '' : ' CẢNH BÁO: vít KHÔNG lọt lỗ chờ.'));
+  }
+  if (block) {
     // A safety factor check: utilisation = required / achieved.
     const p = block.params;
     const dims = `Khối ${block.L_m.toFixed(2)} × ${block.W_m.toFixed(2)} × ${block.H_m.toFixed(2)} m, W = ${block.mass_t.toFixed(1)} T, W_sub = ${block.weightSub_kN.toFixed(1)} kN`;
@@ -446,7 +483,7 @@ export function runChecks(
         'q_allow là giá trị giả định, chưa có khảo sát địa chất đáy hồ; chưa tính lún.' +
         (block.bearingGovernsShape ? ' Khối đã được mở rộng đáy để giảm áp lực nền.' : '')
     ));
-  } else if (results.bedPile1) {
+  } else if (!base && results.bedPile1) {
     const bp1 = results.bedPile1;
     pushPile('BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0', bp1.utilization_H,
       `Th = ${((results.bedCableTh_kN ?? 0) * bedShare).toFixed(1)} kN / cọc${group(anchor.bedPilesPerPoint)}, H_all = ${bp1.H_allow.toFixed(1)} kN`);

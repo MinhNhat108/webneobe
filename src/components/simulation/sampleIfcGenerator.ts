@@ -73,7 +73,7 @@ export function generateHuoiVanhSampleIfc(): string {
   lines.push(`${idSitePlacement}=IFCLOCALPLACEMENT($,${idPlacement3D});`);
   lines.push(`${idSite}=IFCSITE('2N5l0H1rY0Rw7Y3Q5q1B2c',${idOwnerHistory},'HoChua_HuoiVanh','Reservoir Water Surface and Mooring Grid',.ELEMENT.,${idSitePlacement},$,$,.USERDEFINED.,$,$,384.5,$,$);`);
 
-  // Rafts as Element Assemblies (sample 12 rafts)
+  // Rafts as Element Assemblies (the 9 rafts of the plan)
   idCounter = 18;
   RAFT_POLYGONS_V2.forEach((raft, idx) => {
     const raftName = `BE_${raft.id}`;
@@ -89,20 +89,22 @@ export function generateHuoiVanhSampleIfc(): string {
     lines.push(`${assyId}=IFCELEMENTASSEMBLY('${guid('3O6m1I2sZ1Sx8Z4R6r2', idx)}',${idOwnerHistory},'${raftName}','FPV Solar Raft Cluster - Area: ${raft.area_m2}m2',$,${plcId},$,$,.NOTDEFINED.);`);
   });
 
-  // The 304 square RC piles and their mooring lines. Elevations are in the
+  // The anchor points (shore bored piles, lake-bed anchors) and their mooring lines. Elevations are in the
   // project datum: the pile stands on the IFC terrain (converted), its head at
   // the design stick-up above the ground.
-  const pileByLine = new Map(buildPileModels().map((p) => [p.line, p]));
-  MOORING_LINES_V2.forEach((line, idx) => {
-    const pile = pileByLine.get(line.code)!;
-    const ptRaft = nextId();
+  // One IFCPILE per anchor POINT (a lake-bed base shared by two facing rafts is one point), one IFCMEMBER per line.
+  const piles = buildPileModels();
+  piles.forEach((pile, idx) => {
     const ptAnchor = nextId();
     const pileId = nextId();
-    const lineId = nextId();
-
-    lines.push(`${ptRaft}=IFCCARTESIANPOINT((${line.xRaft.toFixed(3)},${line.yRaft.toFixed(3)},384.5));`);
+    const line = { type: pile.type };
     lines.push(`${ptAnchor}=IFCCARTESIANPOINT((${pile.x.toFixed(3)},${pile.y.toFixed(3)},${pile.head_m.toFixed(3)}));`);
-    lines.push(`${pileId}=IFCPILE('${guid('4P7n2J3tA2Ty9A5S7s3', idx)}',${idOwnerHistory},'COC_${pile.code}','${line.type === 'SHORE' ? 'Shore' : 'Bed'} square RC pile ${Math.round(pile.side_m * 1000)}x${Math.round(pile.side_m * 1000)}mm, L_tk ${pile.embed_m}m',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptAnchor},${idAxisZ},${idAxisX})),$,$,.USERDEFINED.);`);
+    lines.push(`${pileId}=IFCPILE('${guid('4P7n2J3tA2Ty9A5S7s3', idx)}',${idOwnerHistory},'COC_${pile.code}','${line.type === 'SHORE' ? `Shore bored pile D${Math.round(pile.side_m * 1000)}mm, L_tk ${pile.embed_m}m` : `Lake-bed anchor point (RC base with screw piles by default, see the project option)${pile.lines.length > 1 ? `, shared by lines ${pile.lines.join(' and ')}` : ''}`}',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptAnchor},${idAxisZ},${idAxisX})),$,$,.USERDEFINED.);`);
+  });
+  MOORING_LINES_V2.forEach((line, idx) => {
+    const ptRaft = nextId();
+    const lineId = nextId();
+    lines.push(`${ptRaft}=IFCCARTESIANPOINT((${line.xRaft.toFixed(3)},${line.yRaft.toFixed(3)},384.5));`);
     lines.push(`${lineId}=IFCMEMBER('${guid('5Q8o3K4uB3Uz0B6T8t4', idx)}',${idOwnerHistory},'CAP_${line.code}','Mooring Line Span: ${line.span}m Azimuth: ${line.azimuth}deg',$,IFCLOCALPLACEMENT(${idSitePlacement},IFCAXIS2PLACEMENT3D(${ptRaft},${idAxisZ},${idAxisX})),$,$);`);
   });
 

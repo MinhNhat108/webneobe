@@ -122,7 +122,9 @@ export interface AnchorInput {
    * by Broms BP-3..BP-5. PA2: gravity blocks on the bed, checked by DW-1..DW-4.
    * Shore anchors are piles (BP-1, BP-2) in both.
    */
-  bedAnchorOption?: 'PA1_PILE' | 'PA2_DEADWEIGHT';
+  bedAnchorOption?: 'PA1_PILE' | 'PA2_DEADWEIGHT' | 'PA3_SCREW_BASE';
+  /** PA3 parameters: RC base on the lake bed held by screw piles (owner's workbook, sheet 6.DE_NEO_VIT). */
+  screwBase?: Partial<import('./screwAnchorBed').ScrewBaseParams>;
   /** PA2 block parameters (friction, safety factors, allowable mud pressure, concrete density). */
   deadweight?: Partial<import('./deadweight').DeadweightParams>;
   pileBedType?: 'method1' | 'method2';
@@ -493,6 +495,8 @@ export interface CalcResults {
   bedPileTension_kN?: number;
   /** PA2 only: the gravity block sized for this raft's lake-bed anchors. */
   bedBlock?: import('./deadweight').DeadweightResult;
+  /** PA3 only: the RC base + screw piles designed for this raft's lake-bed anchors. */
+  bedScrewBase?: import('./screwAnchorBed').ScrewBaseResult;
 
   // C8 / C9 geometry
   /** Clearance between raft draft and the lake bed, m (C8). */

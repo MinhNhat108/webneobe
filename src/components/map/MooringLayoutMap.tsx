@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
+import { MOORING_LINES_V2, LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
 import { useProjectStore } from '../../store/useProjectStore';
 import {
@@ -17,10 +17,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { buildPileSchedule } from '../../lib/io/pileSchedule';
-import { exportPileScheduleToExcel } from '../../lib/io/excelExport';
-import { exportMooringPileDxf } from '../../lib/io/dxfExport';
-import { exportMooringDeadweightDxf } from '../../lib/io/deadweightDxf';
-import { exportDeadweightScheduleToExcel } from '../../lib/io/deadweightExcel';
+import { exportAnchorSchedule, exportMooringCad, mooringOptionOf, MOORING_OPTION_LABEL } from '../../lib/io/mooringExports';
 
 /** Heatmap colour by cable-tension utilization: Xanh < 0.7, Vàng 0.7–1.0, Đỏ > 1.0. */
 function utilizationColor(u: number | null | undefined): string {
@@ -132,18 +129,14 @@ export const MooringLayoutMap: React.FC = () => {
   }, [pileSchedule, filterRaft, searchQuery]);
 
   // Exports follow the selected lake-bed option (PA1 piles / PA2 gravity blocks).
-  const isPa2 = currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT';
+  const optionLabel = MOORING_OPTION_LABEL[mooringOptionOf(currentProject)];
 
   const handleExportPileSchedule = () => {
-    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    if (isPa2) exportDeadweightScheduleToExcel(currentProject, results, batch);
-    else exportPileScheduleToExcel(currentProject, results, batch);
+    exportAnchorSchedule(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
   };
 
   const handleExportCad = () => {
-    const batch = batchResults.length > 0 ? batchResults : calculateAllRafts();
-    if (isPa2) exportMooringDeadweightDxf(currentProject, results, batch);
-    else exportMooringPileDxf(currentProject, results, batch);
+    exportMooringCad(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
   };
 
   // Unique rafts
@@ -178,7 +171,7 @@ export const MooringLayoutMap: React.FC = () => {
           </div>
           <div>
             <h3 className="card-title">
-              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo 12 Bè (Huổi Vanh)
+              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo {uniqueRafts.length} Bè (Huổi Vanh)
             </h3>
             <p className="card-subtitle">
               Biểu diễn {coordinates.length} tuyến cáp neo, cọc neo bờ (xanh lá) và cọc neo đáy hồ (cam)
@@ -202,7 +195,7 @@ export const MooringLayoutMap: React.FC = () => {
               }}
               className="bg-transparent font-medium text-slate-700 outline-none cursor-pointer"
             >
-              <option value="ALL">Toàn bộ 12 Bè</option>
+              <option value="ALL">Toàn bộ {uniqueRafts.length} Bè</option>
               {uniqueRafts.map(r => (
                 <option key={r} value={r}>{r}</option>
               ))}
@@ -269,9 +262,17 @@ export const MooringLayoutMap: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 text-[11px] pt-1 border-t border-slate-700/60">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-            <span>Cọc Bờ</span>
+            <span>Cọc bờ ({LAYOUT_COUNTS.shorePoints})</span>
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block ml-2"></span>
-            <span>Cọc Đáy</span>
+            <span>Neo đáy đơn ({LAYOUT_COUNTS.bedBases - LAYOUT_COUNTS.sharedBases})</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px]">
+            <span className="w-2.5 h-2.5 rounded-full bg-fuchsia-500 ring-1 ring-fuchsia-400 ring-offset-1 ring-offset-slate-900 inline-block"></span>
+            <span>Đế dùng chung hai bè ({LAYOUT_COUNTS.sharedBases})</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px]">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border border-yellow-300 inline-block"></span>
+            <span>Cọc bờ chuyển từ neo đáy ({LAYOUT_COUNTS.convertedShorePoints})</span>
           </div>
           <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-700/60">
             Click vào tên bè hoặc dây neo để chọn bè tính toán
@@ -284,7 +285,7 @@ export const MooringLayoutMap: React.FC = () => {
             <div className="flex items-center justify-between font-bold text-sky-400 border-b border-slate-700 pb-1 mb-1.5">
               <span>{selectedAnchor.raft} — {selectedAnchor.code}</span>
               <span className={`text-[10px] px-1.5 py-0.5 rounded ${selectedAnchor.type === 'SHORE' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                {selectedAnchor.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY'}
+                {selectedAnchor.type === 'SHORE' ? 'NEO BỜ' : selectedAnchor.sharedWith ? 'ĐẾ DÙNG CHUNG' : 'NEO ĐÁY'}
               </span>
             </div>
             <div className="space-y-0.5 text-slate-300 font-mono text-[11px]">
@@ -293,6 +294,13 @@ export const MooringLayoutMap: React.FC = () => {
               <div>Cao trình Z: {selectedAnchor.zAnchor} m</div>
               <div>Chiều dài nhịp cáp: <strong className="text-white">{selectedAnchor.span} m</strong></div>
               <div>Góc phương vị: <strong className="text-white">{selectedAnchor.azimuth}°</strong></div>
+              {selectedAnchor.anchorId && <div>Mã điểm neo đáy: <strong className="text-white">{selectedAnchor.anchorId}</strong></div>}
+              {selectedAnchor.sharedWith && (
+                <div className="text-fuchsia-300 font-sans">Đế dùng chung với dây <strong>{selectedAnchor.sharedWith}</strong> của bè đối diện (một đế, hai tai neo).</div>
+              )}
+              {selectedAnchor.converted && (
+                <div className="text-emerald-300 font-sans">Chuyển từ neo đáy sang cọc khoan nhồi theo quy tắc ven bờ (vị trí theo địa hình IFC, chưa khảo sát).</div>
+              )}
             </div>
           </div>
         )}
@@ -350,10 +358,12 @@ export const MooringLayoutMap: React.FC = () => {
                     cx={x2}
                     cy={y2}
                     r="3.5"
-                    fill={isShore ? '#10b981' : '#f59e0b'}
-                    stroke="#ffffff"
-                    strokeWidth="0.8"
+                    fill={isShore ? '#10b981' : c.sharedWith ? '#d946ef' : '#f59e0b'}
+                    stroke={c.converted ? '#fde047' : '#ffffff'}
+                    strokeWidth={c.converted ? 1.4 : 0.8}
                   />
+                  {/* A base shared by two facing rafts: ringed, both cables end on it */}
+                  {c.sharedWith && <circle cx={x2} cy={y2} r="6" fill="none" stroke="#d946ef" strokeWidth="1.2" />}
                   {/* Fairlead Raft Point */}
                   <circle
                     cx={x1}
@@ -447,7 +457,7 @@ export const MooringLayoutMap: React.FC = () => {
 
             {/* Quick Summary Pill */}
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-200/80 text-slate-700">
-              {viewMode === 'schedule' ? displayedSchedule.length : displayedCoords.length} / {coordinates.length} cọc
+              {viewMode === 'schedule' ? displayedSchedule.length : displayedCoords.length} / {coordinates.length} tuyến cáp
             </span>
             <span className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
               <CheckCircle2 className="w-3 h-3 text-emerald-600" />
@@ -461,23 +471,19 @@ export const MooringLayoutMap: React.FC = () => {
               type="button"
               onClick={handleExportPileSchedule}
               className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
-              title={isPa2
-                ? 'Xuất Bảng thống kê PA2: 129 cọc neo bờ + 175 khối bê tông neo đáy ra Excel (.xlsx)'
-                : 'Xuất riêng Bảng Thống Kê Cọc Neo (304 điểm neo, L_opt, P_max) ra file Excel (.xlsx)'}
+              title={`Xuất Bảng thống kê neo ra Excel (.xlsx): cọc khoan nhồi bờ + neo đáy (${optionLabel})`}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>{isPa2 ? 'Xuất Excel Bảng Neo PA2' : 'Xuất Excel Bảng Cọc'}</span>
+              <span>Xuất Excel Bảng Neo</span>
             </button>
             <button
               type="button"
               onClick={handleExportCad}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
-              title={isPa2
-                ? 'Xuất bản vẽ CAD PA2: Khối bê tông neo đáy hồ & Cọc neo bờ (.DXF)'
-                : 'Xuất bản vẽ mặt bằng đóng cọc neo ra CAD (.DXF) — kèm bảng thống kê cọc'}
+              title={`Xuất bản vẽ mặt bằng hệ neo ra CAD (.DXF): cọc khoan nhồi bờ + neo đáy (${optionLabel})`}
             >
               <DraftingCompass className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isPa2 ? 'Xuất CAD PA2' : 'Xuất CAD'}</span>
+              <span>Xuất CAD</span>
             </button>
           </div>
         </div>
@@ -622,7 +628,7 @@ export const MooringLayoutMap: React.FC = () => {
                             : 'bg-amber-100 text-amber-800'
                         }`}
                       >
-                        {c.type === 'SHORE' ? 'NEO BỜ' : 'NEO ĐÁY'}
+                        {c.type === 'SHORE' ? (c.converted ? 'NEO BỜ (mới)' : 'NEO BỜ') : c.sharedWith ? `ĐẾ CHUNG ${c.anchorId} (với ${c.sharedWith})` : 'NEO ĐÁY'}
                       </span>
                     </td>
                     <td className="px-3 py-1.5">{c.xRaft}</td>

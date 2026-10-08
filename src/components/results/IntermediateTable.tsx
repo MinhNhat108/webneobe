@@ -373,8 +373,49 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
               </div>
             </div>
 
-            {/* Lake Bed Pile Summary */}
-            {results.bedPile1 && (
+            {/* Lake-bed anchor: RC base with screw piles (option 3) */}
+            {results.bedScrewBase && (
+              <div className="bg-white p-3.5 rounded-lg border border-sky-200 space-y-2">
+                <div className="font-sans font-bold text-sky-900 border-b border-slate-100 pb-1 flex items-center justify-between">
+                  <span>
+                    Đế Neo ĐÁY HỒ: BTCT {results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.thickness_m.toFixed(2)} m + {results.bedScrewBase.params.screwCount} vít xoắn
+                  </span>
+                  <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-sky-50 text-sky-700">Sheet 6.DE_NEO_VIT</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600 font-sans">Lực dính bùn (cu) — giả định:</span>
+                  <span>{results.bedScrewBase.params.cuSurface_kPa} kPa</span>
+                </div>
+                <div className="flex justify-between text-amber-700 font-bold">
+                  <span className="text-slate-600 font-sans">Góc cáp MN thấp / MN cao:</span>
+                  <span>{results.bedScrewBase.cases[0].angle_deg.toFixed(1)}° / {results.bedScrewBase.cases[1].angle_deg.toFixed(1)}°</span>
+                </div>
+                <div className="flex justify-between text-amber-900 font-bold">
+                  <span className="text-slate-600 font-sans">Th lớn nhất (MN thấp) / Tv lớn nhất (MN cao):</span>
+                  <span>{results.bedScrewBase.cases[0].Th_kN.toFixed(1)} kN / {results.bedScrewBase.cases[1].Tv_kN.toFixed(1)} kN</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600 font-sans">Một vít: nhổ cho phép Q_a / ngang cực hạn H_u:</span>
+                  <span className="font-bold text-emerald-600">{results.bedScrewBase.screwQa_kN.toFixed(1)} kN / {results.bedScrewBase.screwHu_kN.toFixed(1)} kN</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600 font-sans">Hệ số sử dụng trượt / nhổ / lật / một vít:</span>
+                  <span className="font-bold text-emerald-600">
+                    {results.bedScrewBase.slideUtil.toFixed(2)} / {results.bedScrewBase.upliftUtil.toFixed(2)} / {results.bedScrewBase.overturnUtil.toFixed(2)} / {results.bedScrewBase.screwUtil.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between border-t border-slate-100 pt-1">
+                  <span className="text-slate-600 font-sans">Bê tông 1 đế / khối lượng cẩu:</span>
+                  <span className="font-bold text-indigo-700">{results.bedScrewBase.concrete_m3.toFixed(2)} m³ / {results.bedScrewBase.liftMass_t.toFixed(1)} tấn</span>
+                </div>
+                {results.bedScrewBase.enlarged && (
+                  <div className="text-[11px] font-sans text-amber-700">Đế đã được tăng kích thước so với đế mẫu 2,5 × 2,5 × 0,4 m để đạt mọi kiểm tra.</div>
+                )}
+              </div>
+            )}
+
+            {/* Lake Bed Pile Summary (option 1 only) */}
+            {results.bedPile1 && !results.bedScrewBase && !results.bedBlock && (
               <div className="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2">
                 <div className="font-sans font-bold text-indigo-900 border-b border-slate-100 pb-1 flex items-center justify-between">
                   <span>Cọc Neo ĐÁY LÒNG HỒ ({state.anchor.bed1D_m}m, Ngàm {state.anchor.bed1L_m}m)</span>
@@ -425,7 +466,7 @@ export const IntermediateTable: React.FC<IntermediateTableProps> = ({ state, res
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                 <PileOptimizationCard title="Cọc Neo BỜ" opt={results.shorePileOpt} />
-                <PileOptimizationCard title="Cọc Neo ĐÁY LÒNG HỒ" opt={results.bedPileOpt} />
+                {!results.bedScrewBase && !results.bedBlock && <PileOptimizationCard title="Cọc Neo ĐÁY LÒNG HỒ" opt={results.bedPileOpt} />}
               </div>
               <p className="text-[11px] text-slate-500 font-sans leading-relaxed">
                 L_opt là chiều sâu ngàm nhỏ nhất (đã làm tròn lên theo bước thi công) thỏa mãn đồng thời

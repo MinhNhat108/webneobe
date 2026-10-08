@@ -24,16 +24,16 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(ws).toBeDefined();
 
     const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
-    expect(data.length).toBeGreaterThan(304);
+    expect(data.length).toBeGreaterThan(292);
 
     // Row 1: Title
     expect(data[0][0]).toContain('BẢNG THỐNG KÊ CỌC NEO');
     // Row 2: Project name
     expect(data[1][0]).toContain('Dự án:');
     // Row 3: Description
-    // No 12-raft batch is passed here, so every point takes the active project's single pile.
-    // (With the batch, the 39 points of the twin-pile raft count double: 343 — see auditVerification.test.ts.)
-    expect(data[2][0]).toContain('Tổng số điểm neo: 304, tổng số cọc: 304');
+    // No batch of the 9 rafts is passed here, so every point takes the active project's single pile.
+    // (With the batch, the points of the twin / triple-pile rafts count more: 431 — see auditVerification.test.ts.)
+    expect(data[2][0]).toContain('Tổng số điểm neo: 292, tổng số cọc: 292');
 
     // Row 5: Column headers (15 columns matching the AutoCAD table, with both depths and the pile count)
     const headers = data[4];
@@ -85,26 +85,30 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(firstRow[10]).toBeGreaterThan(firstRow[9] as number);
     expect(firstRow[13]).toBeGreaterThan((firstRow[12] as number) * 1.15);
 
-    // Check 304th pile row
-    const lastPileRow = data[5 + 304 - 1];
-    expect(lastPileRow[0]).toBe('HV-P304');
-    expect(lastPileRow[1]).toBe(coordinates[303].code);
+    // Check the last (292nd) pile row
+    const lastPileRow = data[5 + 292 - 1];
+    expect(lastPileRow[0]).toBe('HV-P292');
+    expect(lastPileRow[1]).toBe(coordinates[291].code);
 
     // Summary section exists below pile rows
     const summaryHeader = data.find((r) => r[0] === 'TỔNG HỢP & THỐNG KÊ CỌC NEO TOÀN DỰ ÁN');
     expect(summaryHeader).toBeDefined();
 
     const totalRow = data.find((r) => r[0] === 'Tổng số điểm neo');
-    expect(totalRow?.[1]).toBe(304);
+    expect(totalRow?.[1]).toBe(292);
 
     const shoreRow = data.find((r) => r[0] === 'Số điểm neo bờ (BỜ)');
-    expect(shoreRow?.[1]).toBe(129);
+    expect(shoreRow?.[1]).toBe(214);
+
+    // the layout is laid out for shared screw-pile bases: the pile option says where two piles would coincide
+    const warn = data.find((r) => String(r[0]).startsWith('CẢNH BÁO: số vị trí đáy hồ có HAI dây'));
+    expect(warn?.[1]).toBe(27);
 
     const bedRow = data.find((r) => r[0] === 'Số điểm neo lòng hồ (ĐÁY HỒ)');
-    expect(bedRow?.[1]).toBe(175);
+    expect(bedRow?.[1]).toBe(78);
 
     const passedRow = data.find((r) => r[0] === 'Số điểm neo ĐẠT sức chịu tải (P_req ≤ P_max, tính cho một cọc)');
-    expect(passedRow?.[1]).toBe(304);
+    expect(passedRow?.[1]).toBe(292);
   });
 
   it('generates proper filename pattern', () => {

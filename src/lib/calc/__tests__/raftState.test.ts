@@ -9,7 +9,8 @@ const anchor = () => dflt().anchor;
 describe('resolveRaftState — one rule for every multi-raft view', () => {
   it('the bare default project is NOT BÈ 1 as designed (so it must never be shown as BÈ 1 unmapped)', () => {
     const labels = raftDesignDeviations(dflt(), HUOI_VANH_RAFTS[0], anchor()).map((d) => d.label);
-    expect(labels).toContain('Loại cáp');
+    expect(labels).toContain('Số dây neo');
+    expect(labels.length).toBeGreaterThan(3);
   });
 
   it('BÈ 1 mapped from the catalogue has no deviation', () => {

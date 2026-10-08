@@ -24,6 +24,7 @@ export const DEFAULT_PILE_GROUP_EFFICIENCY = 0.9;
 import { optimizePileEmbedment, pileAllowableTension } from './pileOptimizer';
 import { runChecks } from './checks';
 import { sizeDeadweightBlock, DEADWEIGHT_DEFAULTS, type DeadweightResult } from './deadweight';
+import { designScrewBase, type ScrewBaseResult } from './screwAnchorBed';
 import { round, roundOrNull } from './constants';
 
 export * from './types';
@@ -264,6 +265,24 @@ export function calculateProject(state: ProjectState): CalcResults {
     });
   }
 
+  // ---- PA3: RC base + screw piles at the lake-bed anchors. Two water levels:
+  // the lowest the raft may float at (flattest cable, sliding) and the highest
+  // (steepest cable, uplift). The span is the raft's SHORTEST bed line.
+  let bedScrewBase: ScrewBaseResult | undefined;
+  if (state.anchor.bedAnchorOption === 'PA3_SCREW_BASE' && bedCableAngle_deg !== undefined) {
+    const depthNormal = state.env.waterDepth_m ?? 6.0;
+    const rise = Math.max(0, (state.env.mncn_m ?? 0) - (state.env.mndbt_m ?? 0));
+    bedScrewBase = designScrewBase({
+      tension_kN: loads.t_max_intact_kN,
+      span_m: state.raft.bedCableSpan_m ?? (state.raft.westDist_m ? state.raft.westDist_m / 2.0 : 13.5),
+      depthLow_m: Math.min(depthNormal, state.env.minWaterDepthUnderRaft_m ?? 1.5),
+      depthHigh_m: depthNormal + rise,
+      cuSurface_kPa: state.anchor.cuBed_kPa,
+      cuAverage_kPa: state.anchor.cuBed_kPa,
+      ...(state.anchor.screwBase ?? {})
+    });
+  }
+
   // ---- C8 / C9 geometry: bed clearance and average line spacing ---------
   // P_bè: the measured outline perimeter when the raft catalogue supplies it
   // (C9 as specified: s_avg = P_bè / N_dây), else the bounding rectangle.
@@ -297,6 +316,7 @@ export function calculateProject(state: ProjectState): CalcResults {
     shorePileTension_kN,
     bedPileTension_kN,
     bedBlock,
+    bedScrewBase,
     bedClearance_m,
     avgLineSpacing_m
   };

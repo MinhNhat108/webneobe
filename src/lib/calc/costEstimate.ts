@@ -1,5 +1,6 @@
 /**
- * Construction quotation: bored shore piles + driven lake-bed piles.
+ * Construction quotation: bored shore piles + the lake-bed anchors — driven
+ * piles (PA1) or RC bases with screw piles (PA3, the design since 2026-10-08).
  *
  * Quantities are taken from the pile schedule (every pile of every anchor
  * point, full length = L_tk + stick-up), so the quotation can never disagree
@@ -43,6 +44,17 @@ export interface CostParams {
   /** Extra per metre for reinforcement heavier than the reference pile (default 0). */
   bedRebarSurcharge_VND_m: number;
 
+  // RC bases with screw piles (PA3). NO reference price was supplied for these:
+  // they default to 0 and the quotation lists them as "chưa có đơn giá" until entered.
+  /** Reinforced concrete of the base, cast and cured (concrete + formwork + labour), per m³. */
+  baseConcreteRate_VND_m3: number;
+  /** Slab reinforcement, supplied and fixed, per kg. */
+  baseRebarRate_VND_kg: number;
+  /** Screw pile Ø89×5 with thread, galvanised, supplied, per metre. */
+  screwRate_VND_m: number;
+  /** Lowering one base to the bed and screwing its piles in (barge crane, divers), per base. */
+  baseInstallRate_VND_each: number;
+
   contingencyPercent: number;
   vatPercent: number;
   includeVat: boolean;
@@ -85,10 +97,19 @@ export const DEFAULT_COST_PARAMS: CostParams = {
   bedBargeSetup_VND: mid(COST_REFERENCE.bedBargeSetup), // 50 000 000
   bedLogisticsPercent: 7,
   bedRebarSurcharge_VND_m: 0,
+  baseConcreteRate_VND_m3: 0,
+  baseRebarRate_VND_kg: 0,
+  screwRate_VND_m: 0,
+  baseInstallRate_VND_each: 0,
   contingencyPercent: 5,
   vatPercent: 8,
   includeVat: true
 };
+
+/** Quantities of the screw-pile bases per raft, from the anchor schedule (a base shared by two rafts counts half for each). */
+export interface ScrewBaseQuantities {
+  rows: Array<{ name: string; bases: number; concrete_m3: number; rebar_kg: number; screwLength_m: number }>;
+}
 
 export interface RaftCostBreakdown {
   raftName: string;
@@ -137,6 +158,16 @@ export interface CostEstimateSummary {
   vat_VND: number;
   grandTotal_VND: number;
 
+  /** What the lake-bed anchors are in this quotation. */
+  bedAnchorKind: 'pile' | 'screwBase';
+  /** Screw-pile bases (0 when the lake-bed anchors are piles). */
+  totalBases: number;
+  baseConcrete_m3: number;
+  baseRebar_kg: number;
+  screwLength_m: number;
+  /** Items with a quantity but no unit price yet — the total does NOT include them. */
+  unpriced: string[];
+
   /** Main reinforcement actually designed, kg per metre of pile (for the caveat on the reference prices). */
   shoreMainSteel_kg_m: number;
   bedMainSteel_kg_m: number;
@@ -145,7 +176,13 @@ export interface CostEstimateSummary {
   raftBreakdowns: RaftCostBreakdown[];
 }
 
-export function calculateCostEstimate(params: CostParams, scheduleRows: PileScheduleRow[]): CostEstimateSummary {
+/**
+ * @param screw when given, the lake-bed anchors are RC bases with screw piles:
+ *   the lake-bed PILE rows of the schedule are ignored and these quantities are priced instead.
+ */
+export function calculateCostEstimate(rawParams: CostParams, scheduleRows: PileScheduleRow[], screw?: ScrewBaseQuantities): CostEstimateSummary {
+  // A quotation saved before the screw-base prices existed has no such keys.
+  const params: CostParams = { ...DEFAULT_COST_PARAMS, ...rawParams };
   const shoreRate =
     (params.shoreBoredCostMode === 'turnkey'
       ? params.shoreTurnkeyRate_VND_m
@@ -164,24 +201,40 @@ export function calculateCostEstimate(params: CostParams, scheduleRows: PileSche
     if (r.type === 'SHORE') {
       shoreN += n; shoreM += metres; shoreSteel += n * r.cage.mainSteel_kg;
       b.shorePiles += n; b.shoreMeters += metres;
-    } else {
+    } else if (!screw) {
       bedN += n; bedM += metres; bedSteel += n * r.cage.mainSteel_kg;
       b.bedPiles += n; b.bedMeters += metres;
     }
   }
+  const sq = screw?.rows ?? [];
+  const sum = (f: (x: ScrewBaseQuantities['rows'][number]) => number) => sq.reduce((s, x) => s + f(x), 0);
+  const bases = sum((x) => x.bases), baseConc = sum((x) => x.concrete_m3), baseSteel = sum((x) => x.rebar_kg), screwM = sum((x) => x.screwLength_m);
+  const baseCostOf = (x: ScrewBaseQuantities['rows'][number]) =>
+    x.concrete_m3 * params.baseConcreteRate_VND_m3 + x.rebar_kg * params.baseRebarRate_VND_kg +
+    x.screwLength_m * params.screwRate_VND_m + x.bases * params.baseInstallRate_VND_each;
 
   const shoreTotal = shoreM * shoreRate;
   const bedMaterial = bedM * bedMaterialRate;
   const bedDriving = bedM * params.bedDrivingRate_VND_m;
   const bedLogistics = bedMaterial * logistics;
-  const bargeSetup = bedN > 0 ? params.bedBargeSetup_VND : 0;
-  const bedTotal = bedMaterial + bedDriving + bedLogistics + bargeSetup;
+  const bargeSetup = bedN > 0 || bases > 0 ? params.bedBargeSetup_VND : 0;
+  const baseTotal = sum(baseCostOf);
+  const bedTotal = (screw ? baseTotal : bedMaterial + bedDriving + bedLogistics) + bargeSetup;
 
-  // The barge set-up is a campaign cost: share it by metres of lake-bed pile.
+  // The barge set-up is a campaign cost: share it by metres of lake-bed pile, or by number of bases.
+  for (const x of sq) {
+    if (!byRaft.has(x.name)) byRaft.set(x.name, { raftName: x.name, shorePiles: 0, shoreMeters: 0, shoreCost_VND: 0, bedPiles: 0, bedMeters: 0, bedCost_VND: 0, totalCost_VND: 0 });
+  }
   for (const b of byRaft.values()) {
     b.shoreCost_VND = b.shoreMeters * shoreRate;
-    b.bedCost_VND =
-      b.bedMeters * bedMaterialRate * (1 + logistics) + b.bedMeters * params.bedDrivingRate_VND_m + (bedM > 0 ? (bargeSetup * b.bedMeters) / bedM : 0);
+    const own = sq.find((x) => x.name === b.raftName);
+    if (screw) {
+      b.bedPiles = own?.bases ?? 0;
+      b.bedCost_VND = (own ? baseCostOf(own) : 0) + (bases > 0 ? (bargeSetup * (own?.bases ?? 0)) / bases : 0);
+    } else {
+      b.bedCost_VND =
+        b.bedMeters * bedMaterialRate * (1 + logistics) + b.bedMeters * params.bedDrivingRate_VND_m + (bedM > 0 ? (bargeSetup * b.bedMeters) / bedM : 0);
+    }
     b.totalCost_VND = b.shoreCost_VND + b.bedCost_VND;
   }
 
@@ -190,7 +243,19 @@ export function calculateCostEstimate(params: CostParams, scheduleRows: PileSche
   const beforeVat = direct + contingency;
   const vat = params.includeVat ? (beforeVat * params.vatPercent) / 100 : 0;
 
-  const lines: CostLine[] = [
+  const NO_PRICE = 'CHƯA CÓ ĐƠN GIÁ — nhập để tính';
+  const baseLines: CostLine[] = [
+    { no: 'B.1', item: 'Đế BTCT neo đáy: bê tông B25 đúc sẵn (gồm ván khuôn, lỗ chờ, gờ chống trượt)', unit: 'm³', quantity: baseConc, rate: params.baseConcreteRate_VND_m3, amount_VND: baseConc * params.baseConcreteRate_VND_m3, note: params.baseConcreteRate_VND_m3 > 0 ? `${bases} đế` : NO_PRICE },
+    { no: 'B.2', item: 'Đế BTCT neo đáy: cốt thép lưới 2 lớp', unit: 'kg', quantity: baseSteel, rate: params.baseRebarRate_VND_kg, amount_VND: baseSteel * params.baseRebarRate_VND_kg, note: params.baseRebarRate_VND_kg > 0 ? 'Khối lượng ước tính theo lưới thép thiết kế' : NO_PRICE },
+    { no: 'B.3', item: 'Vít xoắn ống thép Ø89×5, ren Ø105, mạ kẽm nhúng nóng', unit: 'md', quantity: screwM, rate: params.screwRate_VND_m, amount_VND: screwM * params.screwRate_VND_m, note: params.screwRate_VND_m > 0 ? 'Gồm đoạn xuyên đế và đầu khóa' : NO_PRICE },
+    { no: 'B.4', item: 'Hạ đế xuống đáy hồ, vặn vít, khóa đầu vít (cẩu trên sà lan, thợ lặn)', unit: 'đế', quantity: bases, rate: params.baseInstallRate_VND_each, amount_VND: bases * params.baseInstallRate_VND_each, note: params.baseInstallRate_VND_each > 0 ? '' : NO_PRICE },
+    { no: 'B.5', item: 'Khấu hao lắp đặt sàn đạo nổi / sà lan', unit: 'chiến dịch', quantity: bases > 0 ? 1 : 0, rate: params.bedBargeSetup_VND, amount_VND: bargeSetup, note: 'Cho cả chiến dịch lắp đế neo đáy' }
+  ];
+  const unpriced = screw
+    ? baseLines.filter((l) => l.quantity > 0 && l.rate <= 0).map((l) => `${l.no} ${l.item}`)
+    : [];
+
+  const pileLines: CostLine[] = [
     {
       no: 'A', item: 'Cọc khoan nhồi trên bờ (đổ bê tông tại chỗ)', unit: 'md', quantity: shoreM, rate: shoreRate, amount_VND: shoreTotal,
       note: (params.shoreBoredCostMode === 'turnkey'
@@ -207,6 +272,7 @@ export function calculateCostEstimate(params: CostParams, scheduleRows: PileSche
     { no: 'B.3', item: 'Vận chuyển, cẩu bốc xếp hai đầu', unit: '%', quantity: params.bedLogisticsPercent, rate: bedMaterial, amount_VND: bedLogistics, note: '% trên tiền mua cọc (B.1)' },
     { no: 'B.4', item: 'Khấu hao lắp đặt sàn đạo nổi / sà lan', unit: 'chiến dịch', quantity: bedN > 0 ? 1 : 0, rate: params.bedBargeSetup_VND, amount_VND: bargeSetup, note: 'Cho cả chiến dịch đóng cọc lòng hồ' }
   ];
+  const lines = screw ? [pileLines[0], ...baseLines] : pileLines;
 
   return {
     totalShorePiles: shoreN,
@@ -227,6 +293,12 @@ export function calculateCostEstimate(params: CostParams, scheduleRows: PileSche
     beforeVat_VND: beforeVat,
     vat_VND: vat,
     grandTotal_VND: beforeVat + vat,
+    bedAnchorKind: screw ? 'screwBase' : 'pile',
+    totalBases: bases,
+    baseConcrete_m3: baseConc,
+    baseRebar_kg: baseSteel,
+    screwLength_m: screwM,
+    unpriced,
     shoreMainSteel_kg_m: shoreM > 0 ? shoreSteel / shoreM : 0,
     bedMainSteel_kg_m: bedM > 0 ? bedSteel / bedM : 0,
     lines,

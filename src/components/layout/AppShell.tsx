@@ -19,6 +19,7 @@ import { ReportView } from '../report/ReportView';
 import { GuideView } from '../guide/GuideView';
 import { SimulationView } from '../simulation/SimulationView';
 import { OptionComparisonView } from '../results/OptionComparisonView';
+import { ScrewBasePanel } from '../results/ScrewBasePanel';
 import { CostEstimateView } from '../cost/CostEstimateView';
 import { ShorePileHeadDetail } from '../results/ShorePileHeadDetail';
 import { useProjectStore } from '../../store/useProjectStore';
@@ -125,9 +126,10 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
             </div>
           )}
 
-          {/* Section 9: PA1 piles vs PA2 gravity blocks */}
+          {/* Section 9: lake-bed anchors — the screw-pile base (the design), then PA1 piles vs PA2 gravity blocks */}
           {activeSection === 'compare' && (
             <div className="section-stack">
+              <ScrewBasePanel />
               <OptionComparisonView />
             </div>
           )}

@@ -6,6 +6,7 @@ import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, RaftSummaryItem } from '../
 import { buildRaftProjectState, resolveRaftState, RaftDeviation } from '../lib/calc/raftState';
 import type { MooringOption } from '../lib/calc/technicalComparison';
 import type { DeadweightParams } from '../lib/calc/deadweight';
+import type { ScrewBaseParams } from '../lib/calc/screwAnchorBed';
 import { CostParams, DEFAULT_COST_PARAMS } from '../lib/calc/costEstimate';
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
@@ -36,7 +37,7 @@ export interface ProjectStore {
   // All projects list (for multi-project management)
   projectList: Array<{ id: string; name: string; code: string; location: string; date: string; systemType: SystemType }>;
 
-  // For multi-raft projects (Huổi Vanh: 12 cụm bè, BÈ 1 đến BÈ 12)
+  // For multi-raft projects (Huổi Vanh: 9 cụm bè, BÈ 1 đến BÈ 9)
   activeRaftId: number;
   raftsSummary: RaftSummaryItem[];
 
@@ -52,6 +53,7 @@ export interface ProjectStore {
   resetCostParams: () => void;
   setMooringOption: (option: MooringOption) => void;
   updateDeadweightParams: (params: Partial<DeadweightParams>) => void;
+  updateScrewBaseParams: (params: Partial<ScrewBaseParams>) => void;
 
   // Batch calculation across all rafts in raftsSummary — populated by
   // calculateAllRafts(), consumed by RaftsOverviewTable and the Master Excel export.
@@ -114,6 +116,8 @@ export const useProjectStore = create<ProjectStore>()(
       setMooringOption: (option) => get().updateAnchor({ bedAnchorOption: option }),
       updateDeadweightParams: (params) =>
         get().updateAnchor({ deadweight: { ...(get().currentProject.anchor.deadweight ?? {}), ...params } }),
+      updateScrewBaseParams: (params) =>
+        get().updateAnchor({ screwBase: { ...(get().currentProject.anchor.screwBase ?? {}), ...params } }),
 
       updateMeta: (meta) => {
         const current = get().currentProject;
@@ -380,7 +384,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: 'mooring-calc-storage',
-      version: 15,
+      version: 18,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -434,7 +438,7 @@ export const useProjectStore = create<ProjectStore>()(
           // recognised by its raft names and never touched.
           const isHuoiVanhList = Array.isArray(persistedState.raftsSummary)
             && persistedState.raftsSummary.length > 0
-            && persistedState.raftsSummary.every((r: any) => /^BÈ \d+$/.test(r?.name ?? ''));
+            && persistedState.raftsSummary.every((r: any) => /^BÈ \d+A?$/.test(r?.name ?? ''));
           const cachedArea = isHuoiVanhList
             ? persistedState.raftsSummary.reduce((s: number, r: any) => s + (r?.area_m2 ?? 0), 0)
             : 0;
@@ -452,7 +456,8 @@ export const useProjectStore = create<ProjectStore>()(
           if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
             const hasDxf = persistedState.currentProject.attachments?.some((a: any) => a.kind === 'dxf');
             const hasOldPdfName = persistedState.currentProject.attachments?.some((a: any) => a.name?.includes('bố trí bè pin'));
-            const hasDocx = persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_docx');
+            const hasDocx = persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_docx')
+              && persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_screw_img');
             if (!hasDxf || hasOldPdfName || !hasDocx) {
               persistedState.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
@@ -497,6 +502,35 @@ export const useProjectStore = create<ProjectStore>()(
             persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
           }
 
+          // v16 (2026-10-08): 9-raft plan (3A = 4 + 5, 5A = 6 + 7, 8 = 10 + 11),
+          // lake-bed anchors on RC bases with screw piles. Raft ids and names
+          // changed meaning, so a cached Huổi Vanh project restarts from the
+          // new design; the quotation prices and a user's own project are kept.
+          if (version < 16 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            persistedState.activeRaftId = HUOI_VANH_RAFTS[0].id;
+            persistedState.currentProject = HUOI_VANH_START;
+          }
+
+          // v17 (2026-10-08): client instruction default wind speed 20 m/s (down from 30 m/s)
+          if (version < 17 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            if (persistedState.currentProject.env) {
+              persistedState.currentProject.env.windSpeed_ms = 20.0;
+            }
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId) ?? HUOI_VANH_RAFTS[0];
+            persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
+          }
+
+          // v18 (2026-10-08): enforce 9-raft layout, default PA3 screw base, 20 m/s wind
+          if (version < 18 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            // HUOI_VANH_START already carries PA3 and the 20 m/s default; it is a shared
+            // constant and must not be written to.
+            persistedState.raftsSummary = HUOI_VANH_RAFTS;
+            persistedState.activeRaftId = HUOI_VANH_RAFTS[0].id;
+            persistedState.currentProject = HUOI_VANH_START;
+          }
+
           // Whatever the history, never leave the app pointing at a raft that
           // is not in the list: the selector would render nothing selected.
           if (Array.isArray(persistedState.raftsSummary)
@@ -511,9 +545,28 @@ export const useProjectStore = create<ProjectStore>()(
         if (state && state.currentProject) {
           state.currentProject.systemType = 'solar_fpv';
           if (state.currentProject.id === 'huoi-vanh-fpv') {
+            // The raft list of the Huổi Vanh project is design data shipped with the app,
+            // never something the browser may keep an older copy of. Whatever the stored
+            // version says:
+            //  - other raft NAMES (12-raft cache, renumbering) or no anchor option -> restart
+            //    from the design, because raft ids changed meaning;
+            //  - same rafts, other values (catalogue regenerated) -> take the shipped list
+            //    and keep the user's Tab 2 inputs (they show as a trial against the design).
+            const sameRafts = Array.isArray(state.raftsSummary)
+              && state.raftsSummary.length === HUOI_VANH_RAFTS.length
+              && state.raftsSummary.every((r, i) => r?.id === HUOI_VANH_RAFTS[i].id && r?.name === HUOI_VANH_RAFTS[i].name);
+            if (!sameRafts || !state.currentProject.anchor?.bedAnchorOption
+              || !HUOI_VANH_RAFTS.some((r) => r.id === state.activeRaftId)) {
+              state.raftsSummary = HUOI_VANH_RAFTS;
+              state.activeRaftId = HUOI_VANH_RAFTS[0].id;
+              state.currentProject = HUOI_VANH_START;
+            } else if (JSON.stringify(state.raftsSummary) !== JSON.stringify(HUOI_VANH_RAFTS)) {
+              state.raftsSummary = HUOI_VANH_RAFTS;
+            }
             const hasDxf = state.currentProject.attachments?.some(a => a.kind === 'dxf');
             const hasOldPdfName = state.currentProject.attachments?.some(a => a.name?.includes('bố trí bè pin'));
-            const hasDocx = state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_docx');
+            const hasDocx = state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_docx')
+              && state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_screw_img');
             if (!hasDxf || hasOldPdfName || !hasDocx) {
               state.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }

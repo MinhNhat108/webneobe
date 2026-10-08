@@ -3,3344 +3,4559 @@
     "index": 1,
     "code": "CS-001",
     "line": "B1-D01",
+    "lines": [
+      "B1-D01"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -134.99,
     "y": 90.48,
-    "z": 403.6
+    "z": 384.29
   },
   {
     "index": 2,
     "code": "CS-002",
     "line": "B1-D02",
+    "lines": [
+      "B1-D02"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -140.05,
     "y": 95.47,
-    "z": 403.6
+    "z": 384.37
   },
   {
     "index": 3,
     "code": "CS-003",
     "line": "B1-D03",
+    "lines": [
+      "B1-D03"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -141.23,
     "y": 99.78,
-    "z": 403.6
+    "z": 384.33
   },
   {
     "index": 4,
     "code": "CS-004",
     "line": "B1-D04",
+    "lines": [
+      "B1-D04"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -162.49,
     "y": 134.77,
-    "z": 401.7
+    "z": 384.41
   },
   {
     "index": 5,
     "code": "CS-005",
     "line": "B1-D05",
+    "lines": [
+      "B1-D05"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -170.74,
     "y": 140.52,
-    "z": 405.8
+    "z": 384.59
   },
   {
     "index": 6,
     "code": "CS-006",
     "line": "B1-D06",
+    "lines": [
+      "B1-D06"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -177.5,
     "y": 146.69,
-    "z": 401.6
+    "z": 384.63
   },
   {
     "index": 7,
     "code": "CS-007",
-    "line": "B1-D11",
+    "line": "B1-D07",
+    "lines": [
+      "B1-D07"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -224.88,
     "y": 67.52,
-    "z": 399.6
+    "z": 384.25
   },
   {
     "index": 8,
     "code": "CS-008",
-    "line": "B1-D12",
+    "line": "B1-D08",
+    "lines": [
+      "B1-D08"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -216.19,
     "y": 59.89,
-    "z": 403.9
+    "z": 384.47
   },
   {
     "index": 9,
     "code": "CS-009",
-    "line": "B1-D13",
+    "line": "B1-D09",
+    "lines": [
+      "B1-D09"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -195.7,
     "y": 50.34,
-    "z": 404.9
+    "z": 384.17
   },
   {
     "index": 10,
     "code": "CS-010",
-    "line": "B1-D14",
+    "line": "B1-D10",
+    "lines": [
+      "B1-D10"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -185.52,
     "y": 45.22,
-    "z": 401.1
+    "z": 384.69
   },
   {
     "index": 11,
     "code": "CS-011",
-    "line": "B1-D15",
+    "line": "B1-D11",
+    "lines": [
+      "B1-D11"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -174.02,
     "y": 38.02,
-    "z": 405.5
+    "z": 384.44
   },
   {
     "index": 12,
     "code": "CS-012",
-    "line": "B1-D16",
+    "line": "B1-D12",
+    "lines": [
+      "B1-D12"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -161.95,
     "y": 30.54,
-    "z": 402
+    "z": 383.76
   },
   {
     "index": 13,
     "code": "CS-013",
-    "line": "B1-D17",
+    "line": "B1-D13",
+    "lines": [
+      "B1-D13"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -236.81,
     "y": 75.64,
-    "z": 404.6
+    "z": 384.58
   },
   {
     "index": 14,
     "code": "CS-014",
-    "line": "B1-D18",
+    "line": "B1-D14",
+    "lines": [
+      "B1-D14"
+    ],
     "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
+    "shape": "circular",
     "x": -242.11,
     "y": 141.14,
-    "z": 400.3
+    "z": 384.18
   },
   {
     "index": 15,
     "code": "CS-015",
-    "line": "B2-D01",
-    "raft": "BÈ 2",
+    "line": "B1-D16",
+    "lines": [
+      "B1-D16"
+    ],
+    "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -101.87,
-    "y": 64.92,
-    "z": 403.2
+    "shape": "circular",
+    "x": -249.1,
+    "y": 132.21,
+    "z": 384.06
   },
   {
     "index": 16,
     "code": "CS-016",
-    "line": "B2-D02",
-    "raft": "BÈ 2",
+    "line": "B1-D17",
+    "lines": [
+      "B1-D17"
+    ],
+    "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -20.75,
-    "y": 30.29,
-    "z": 402
+    "shape": "circular",
+    "x": -143.06,
+    "y": 104.76,
+    "z": 384.07
   },
   {
     "index": 17,
     "code": "CS-017",
-    "line": "B2-D03",
-    "raft": "BÈ 2",
+    "line": "B1-D18",
+    "lines": [
+      "B1-D18"
+    ],
+    "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -25.24,
-    "y": 36.13,
-    "z": 402
+    "shape": "circular",
+    "x": -126.11,
+    "y": 82.01,
+    "z": 384.07
   },
   {
     "index": 18,
     "code": "CS-018",
-    "line": "B2-D04",
+    "line": "B2-D01",
+    "lines": [
+      "B2-D01"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -44.58,
-    "y": 56.23,
-    "z": 401.3
+    "shape": "circular",
+    "x": -101.87,
+    "y": 64.92,
+    "z": 384.65
   },
   {
     "index": 19,
     "code": "CS-019",
-    "line": "B2-D05",
+    "line": "B2-D02",
+    "lines": [
+      "B2-D02"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -86.21,
-    "y": 65.61,
-    "z": 406.9
+    "shape": "circular",
+    "x": -20.75,
+    "y": 30.29,
+    "z": 384.47
   },
   {
     "index": 20,
     "code": "CS-020",
-    "line": "B2-D06",
+    "line": "B2-D03",
+    "lines": [
+      "B2-D03"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -90.73,
-    "y": 64.76,
-    "z": 406.9
+    "shape": "circular",
+    "x": -25.24,
+    "y": 36.13,
+    "z": 384.71
   },
   {
     "index": 21,
     "code": "CS-021",
-    "line": "B2-D12",
+    "line": "B2-D04",
+    "lines": [
+      "B2-D04"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -92.95,
-    "y": -26.7,
-    "z": 404.8
+    "shape": "circular",
+    "x": -44.58,
+    "y": 56.23,
+    "z": 384.51
   },
   {
     "index": 22,
     "code": "CS-022",
-    "line": "B2-D13",
+    "line": "B2-D05",
+    "lines": [
+      "B2-D05"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -86.78,
-    "y": -32.68,
-    "z": 404.8
+    "shape": "circular",
+    "x": -86.21,
+    "y": 65.61,
+    "z": 384.73
   },
   {
     "index": 23,
     "code": "CS-023",
-    "line": "B2-D14",
+    "line": "B2-D06",
+    "lines": [
+      "B2-D06"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -75.9,
-    "y": -40.38,
-    "z": 403.7
+    "shape": "circular",
+    "x": -90.73,
+    "y": 64.76,
+    "z": 384.84
   },
   {
     "index": 24,
     "code": "CS-024",
-    "line": "B2-D18",
+    "line": "B2-D07",
+    "lines": [
+      "B2-D07"
+    ],
     "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -154.43,
-    "y": 14.11,
-    "z": 400
+    "shape": "circular",
+    "x": -92.95,
+    "y": -26.7,
+    "z": 384.13
   },
   {
     "index": 25,
     "code": "CS-025",
-    "line": "B3-D01",
-    "raft": "BÈ 3",
+    "line": "B2-D08",
+    "lines": [
+      "B2-D08"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 24.14,
-    "y": -13.54,
-    "z": 401.2
+    "shape": "circular",
+    "x": -86.78,
+    "y": -32.68,
+    "z": 384.44
   },
   {
     "index": 26,
     "code": "CS-026",
-    "line": "B3-D02",
-    "raft": "BÈ 3",
+    "line": "B2-D09",
+    "lines": [
+      "B2-D09"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 50.13,
-    "y": -84.42,
-    "z": 402.3
+    "shape": "circular",
+    "x": -75.9,
+    "y": -40.38,
+    "z": 383.96
   },
   {
     "index": 27,
     "code": "CS-027",
-    "line": "B3-D03",
-    "raft": "BÈ 3",
+    "line": "B2-D10",
+    "lines": [
+      "B2-D10"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 45.42,
-    "y": -70.66,
-    "z": 403.8
+    "shape": "circular",
+    "x": -154.43,
+    "y": 14.11,
+    "z": 384.49
   },
   {
     "index": 28,
     "code": "CS-028",
-    "line": "B3-D04",
-    "raft": "BÈ 3",
+    "line": "B2-D11",
+    "lines": [
+      "B2-D11"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 40.02,
-    "y": -55.97,
-    "z": 400.2
+    "shape": "circular",
+    "x": -110.01,
+    "y": -25.18,
+    "z": 384.08
   },
   {
     "index": 29,
     "code": "CS-029",
-    "line": "B3-D05",
-    "raft": "BÈ 3",
+    "line": "B2-D14",
+    "lines": [
+      "B2-D14"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 36.15,
-    "y": -40.8,
-    "z": 401.6
+    "shape": "circular",
+    "x": -81.11,
+    "y": 65.62,
+    "z": 384.09
   },
   {
     "index": 30,
     "code": "CS-030",
-    "line": "B3-D06",
-    "raft": "BÈ 3",
+    "line": "B2-D15",
+    "lines": [
+      "B2-D15"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 36.91,
-    "y": -43.91,
-    "z": 401.6
+    "shape": "circular",
+    "x": -102.01,
+    "y": -21.55,
+    "z": 384.14
   },
   {
     "index": 31,
     "code": "CS-031",
-    "line": "B3-D14",
-    "raft": "BÈ 3",
+    "line": "B2-D16",
+    "lines": [
+      "B2-D16"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -67.33,
-    "y": -58.38,
-    "z": 400.4
+    "shape": "circular",
+    "x": -161.76,
+    "y": -2.49,
+    "z": 384.08
   },
   {
     "index": 32,
     "code": "CS-032",
-    "line": "B3-D15",
-    "raft": "BÈ 3",
+    "line": "B2-D19",
+    "lines": [
+      "B2-D19"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -59.73,
-    "y": -83.89,
-    "z": 402.6
+    "shape": "circular",
+    "x": -35.07,
+    "y": 46.08,
+    "z": 384.02
   },
   {
     "index": 33,
     "code": "CS-033",
-    "line": "B3-D16",
+    "line": "B3-D01",
+    "lines": [
+      "B3-D01"
+    ],
     "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -56.16,
-    "y": -93.27,
-    "z": 400.5
+    "shape": "circular",
+    "x": 24.14,
+    "y": -13.54,
+    "z": 385.04
   },
   {
     "index": 34,
     "code": "CS-034",
-    "line": "B3-D17",
+    "line": "B3-D02",
+    "lines": [
+      "B3-D02"
+    ],
     "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -54.6,
-    "y": -100.83,
-    "z": 400.5
+    "shape": "circular",
+    "x": 50.13,
+    "y": -84.42,
+    "z": 384.55
   },
   {
     "index": 35,
     "code": "CS-035",
-    "line": "B3-D18",
+    "line": "B3-D03",
+    "lines": [
+      "B3-D03"
+    ],
     "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -46.25,
-    "y": -122.46,
-    "z": 402.5
+    "shape": "circular",
+    "x": 45.42,
+    "y": -70.66,
+    "z": 384.5
   },
   {
     "index": 36,
     "code": "CS-036",
-    "line": "B4-D01",
-    "raft": "BÈ 4",
+    "line": "B3-D04",
+    "lines": [
+      "B3-D04"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 71.3,
-    "y": -113.98,
-    "z": 402.7
+    "shape": "circular",
+    "x": 40.02,
+    "y": -55.97,
+    "z": 384.95
   },
   {
     "index": 37,
     "code": "CS-037",
-    "line": "B4-D02",
-    "raft": "BÈ 4",
+    "line": "B3-D05",
+    "lines": [
+      "B3-D05"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 67.1,
-    "y": -112.47,
-    "z": 402.7
+    "shape": "circular",
+    "x": 36.15,
+    "y": -40.8,
+    "z": 384.24
   },
   {
     "index": 38,
     "code": "CS-038",
-    "line": "B4-D18",
-    "raft": "BÈ 4",
+    "line": "B3-D06",
+    "lines": [
+      "B3-D06"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -1.29,
-    "y": -216.94,
-    "z": 406.5
+    "shape": "circular",
+    "x": 36.91,
+    "y": -43.91,
+    "z": 384.49
   },
   {
     "index": 39,
     "code": "CS-039",
-    "line": "B4-D19",
-    "raft": "BÈ 4",
+    "line": "B3-D07",
+    "lines": [
+      "B3-D07"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -11.5,
-    "y": -205.54,
-    "z": 401.8
+    "shape": "circular",
+    "x": -67.33,
+    "y": -58.38,
+    "z": 384.3
   },
   {
     "index": 40,
     "code": "CS-040",
-    "line": "B4-D20",
-    "raft": "BÈ 4",
+    "line": "B3-D08",
+    "lines": [
+      "B3-D08"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 31.09,
-    "y": -239.68,
-    "z": 400.4
+    "shape": "circular",
+    "x": -59.73,
+    "y": -83.89,
+    "z": 384.38
   },
   {
     "index": 41,
     "code": "CS-041",
-    "line": "B4-D21",
-    "raft": "BÈ 4",
+    "line": "B3-D09",
+    "lines": [
+      "B3-D09"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": -16.15,
-    "y": -195.46,
-    "z": 404
+    "shape": "circular",
+    "x": -56.16,
+    "y": -93.27,
+    "z": 384.45
   },
   {
     "index": 42,
     "code": "CS-042",
-    "line": "B5-D16",
-    "raft": "BÈ 5",
+    "line": "B3-D10",
+    "lines": [
+      "B3-D10"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 109.27,
-    "y": -287.5,
-    "z": 401.7
+    "shape": "circular",
+    "x": -54.6,
+    "y": -100.83,
+    "z": 384.29
   },
   {
     "index": 43,
     "code": "CS-043",
-    "line": "B5-D17",
-    "raft": "BÈ 5",
+    "line": "B3-D11",
+    "lines": [
+      "B3-D11"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 120.26,
-    "y": -287.94,
-    "z": 402
+    "shape": "circular",
+    "x": -46.25,
+    "y": -122.46,
+    "z": 384.47
   },
   {
     "index": 44,
     "code": "CS-044",
-    "line": "B5-D18",
-    "raft": "BÈ 5",
+    "line": "B3-D16",
+    "lines": [
+      "B3-D16"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 132.99,
-    "y": -288.76,
-    "z": 401.3
+    "shape": "circular",
+    "x": 21.83,
+    "y": -16.49,
+    "z": 384.06
   },
   {
     "index": 45,
     "code": "CS-045",
-    "line": "B5-D19",
-    "raft": "BÈ 5",
+    "line": "B3-D18",
+    "lines": [
+      "B3-D18"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 142.42,
-    "y": -288.94,
-    "z": 401.3
+    "shape": "circular",
+    "x": -65.16,
+    "y": -69.51,
+    "z": 384.03
   },
   {
     "index": 46,
     "code": "CS-046",
-    "line": "B5-D20",
-    "raft": "BÈ 5",
+    "line": "B3-D19",
+    "lines": [
+      "B3-D19"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 152.41,
-    "y": -289.34,
-    "z": 401.1
+    "shape": "circular",
+    "x": 54.04,
+    "y": -95.87,
+    "z": 384.05
   },
   {
     "index": 47,
     "code": "CS-047",
-    "line": "B5-D21",
-    "raft": "BÈ 5",
+    "line": "B3A-D01",
+    "lines": [
+      "B3A-D01"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 164.26,
-    "y": -289.8,
-    "z": 401.7
+    "shape": "circular",
+    "x": 71.3,
+    "y": -113.98,
+    "z": 384.26
   },
   {
     "index": 48,
     "code": "CS-048",
-    "line": "B5-D22",
-    "raft": "BÈ 5",
+    "line": "B3A-D02",
+    "lines": [
+      "B3A-D02"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 177.85,
-    "y": -290.39,
-    "z": 401.6
+    "shape": "circular",
+    "x": 67.1,
+    "y": -112.47,
+    "z": 383.79
   },
   {
     "index": 49,
     "code": "CS-049",
-    "line": "B5-D23",
-    "raft": "BÈ 5",
+    "line": "B3A-D03",
+    "lines": [
+      "B3A-D03"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 186.56,
-    "y": -290.82,
-    "z": 400.7
+    "shape": "circular",
+    "x": -1.29,
+    "y": -216.94,
+    "z": 384.85
   },
   {
     "index": 50,
     "code": "CS-050",
-    "line": "B5-D24",
-    "raft": "BÈ 5",
+    "line": "B3A-D04",
+    "lines": [
+      "B3A-D04"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 197.5,
-    "y": -291.25,
-    "z": 400.7
+    "shape": "circular",
+    "x": -11.5,
+    "y": -205.54,
+    "z": 384.6
   },
   {
     "index": 51,
     "code": "CS-051",
-    "line": "B5-D25",
-    "raft": "BÈ 5",
+    "line": "B3A-D05",
+    "lines": [
+      "B3A-D05"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 219.74,
-    "y": -292.14,
-    "z": 402.9
+    "shape": "circular",
+    "x": 31.09,
+    "y": -239.68,
+    "z": 384.15
   },
   {
     "index": 52,
     "code": "CS-052",
-    "line": "B5-D27",
-    "raft": "BÈ 5",
+    "line": "B3A-D06",
+    "lines": [
+      "B3A-D06"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 82.12,
-    "y": -101.35,
-    "z": 402.4
+    "shape": "circular",
+    "x": -16.15,
+    "y": -195.46,
+    "z": 384.43
   },
   {
     "index": 53,
     "code": "CS-053",
-    "line": "B5-D28",
-    "raft": "BÈ 5",
+    "line": "B3A-D07",
+    "lines": [
+      "B3A-D07"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 82.15,
-    "y": -106.44,
-    "z": 402.6
+    "shape": "circular",
+    "x": 109.27,
+    "y": -287.5,
+    "z": 384.5
   },
   {
     "index": 54,
     "code": "CS-054",
-    "line": "B6-D06",
-    "raft": "BÈ 6",
+    "line": "B3A-D08",
+    "lines": [
+      "B3A-D08"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 405.89,
-    "y": -230.56,
-    "z": 402.5
+    "shape": "circular",
+    "x": 120.26,
+    "y": -287.94,
+    "z": 384.44
   },
   {
     "index": 55,
     "code": "CS-055",
-    "line": "B6-D09",
-    "raft": "BÈ 6",
+    "line": "B3A-D09",
+    "lines": [
+      "B3A-D09"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 392.37,
-    "y": -246.48,
-    "z": 401.5
+    "shape": "circular",
+    "x": 132.99,
+    "y": -288.76,
+    "z": 384.5
   },
   {
     "index": 56,
     "code": "CS-056",
-    "line": "B6-D10",
-    "raft": "BÈ 6",
+    "line": "B3A-D10",
+    "lines": [
+      "B3A-D10"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 385.01,
-    "y": -253.64,
-    "z": 398.8
+    "shape": "circular",
+    "x": 142.42,
+    "y": -288.94,
+    "z": 384.49
   },
   {
     "index": 57,
     "code": "CS-057",
-    "line": "B6-D11",
-    "raft": "BÈ 6",
+    "line": "B3A-D11",
+    "lines": [
+      "B3A-D11"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 379.04,
-    "y": -259.57,
-    "z": 402
+    "shape": "circular",
+    "x": 152.41,
+    "y": -289.34,
+    "z": 384.39
   },
   {
     "index": 58,
     "code": "CS-058",
-    "line": "B7-D06",
-    "raft": "BÈ 7",
+    "line": "B3A-D12",
+    "lines": [
+      "B3A-D12"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 421.97,
-    "y": -132.72,
-    "z": 402
+    "shape": "circular",
+    "x": 164.26,
+    "y": -289.8,
+    "z": 384.45
   },
   {
     "index": 59,
     "code": "CS-059",
-    "line": "B7-D07",
-    "raft": "BÈ 7",
+    "line": "B3A-D13",
+    "lines": [
+      "B3A-D13"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 419.64,
-    "y": -119,
-    "z": 402.2
+    "shape": "circular",
+    "x": 177.85,
+    "y": -290.39,
+    "z": 384.45
   },
   {
     "index": 60,
     "code": "CS-060",
-    "line": "B7-D08",
-    "raft": "BÈ 7",
+    "line": "B3A-D14",
+    "lines": [
+      "B3A-D14"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 419.97,
-    "y": -145.88,
-    "z": 401.9
+    "shape": "circular",
+    "x": 186.56,
+    "y": -290.82,
+    "z": 384.49
   },
   {
     "index": 61,
     "code": "CS-061",
-    "line": "B7-D09",
-    "raft": "BÈ 7",
+    "line": "B3A-D15",
+    "lines": [
+      "B3A-D15"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 417.4,
-    "y": -166.67,
-    "z": 405.5
+    "shape": "circular",
+    "x": 197.5,
+    "y": -291.25,
+    "z": 384.33
   },
   {
     "index": 62,
     "code": "CS-062",
-    "line": "B8-D01",
-    "raft": "BÈ 8",
+    "line": "B3A-D16",
+    "lines": [
+      "B3A-D16"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 449.49,
-    "y": 23.16,
-    "z": 401.8
+    "shape": "circular",
+    "x": 82.12,
+    "y": -101.35,
+    "z": 384.37
   },
   {
     "index": 63,
     "code": "CS-063",
-    "line": "B8-D02",
-    "raft": "BÈ 8",
+    "line": "B3A-D17",
+    "lines": [
+      "B3A-D17"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 410.55,
-    "y": 48.58,
-    "z": 401.8
+    "shape": "circular",
+    "x": 82.15,
+    "y": -106.44,
+    "z": 384.35
   },
   {
     "index": 64,
     "code": "CS-064",
-    "line": "B8-D03",
-    "raft": "BÈ 8",
+    "line": "B3A-D18",
+    "lines": [
+      "B3A-D18"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 409.94,
-    "y": 60.97,
-    "z": 402
+    "shape": "circular",
+    "x": 81.83,
+    "y": -110.16,
+    "z": 384.07
   },
   {
     "index": 65,
     "code": "CS-065",
-    "line": "B8-D04",
-    "raft": "BÈ 8",
+    "line": "B3A-D19",
+    "lines": [
+      "B3A-D19"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 462.77,
-    "y": -25.58,
-    "z": 401
+    "shape": "circular",
+    "x": 77.16,
+    "y": -111.41,
+    "z": 384.46
   },
   {
     "index": 66,
     "code": "CS-066",
-    "line": "B8-D05",
-    "raft": "BÈ 8",
+    "line": "B3A-D20",
+    "lines": [
+      "B3A-D20"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 462.26,
-    "y": -9.7,
-    "z": 401.4
+    "shape": "circular",
+    "x": 79.69,
+    "y": -113.64,
+    "z": 384.01
   },
   {
     "index": 67,
     "code": "CS-067",
-    "line": "B8-D08",
-    "raft": "BÈ 8",
+    "line": "B3A-D25",
+    "lines": [
+      "B3A-D25"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 430.99,
-    "y": -60.94,
-    "z": 402.3
+    "shape": "circular",
+    "x": -33.69,
+    "y": -177.07,
+    "z": 384.04
   },
   {
     "index": 68,
     "code": "CS-068",
-    "line": "B8-D09",
-    "raft": "BÈ 8",
+    "line": "B3A-D26",
+    "lines": [
+      "B3A-D26"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 445.56,
-    "y": -49.66,
-    "z": 402.8
+    "shape": "circular",
+    "x": -19.89,
+    "y": -190.28,
+    "z": 384.07
   },
   {
     "index": 69,
     "code": "CS-069",
-    "line": "B8-D10",
-    "raft": "BÈ 8",
+    "line": "B3A-D27",
+    "lines": [
+      "B3A-D27"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 453.96,
-    "y": -39.87,
-    "z": 402.8
+    "shape": "circular",
+    "x": -19.53,
+    "y": -195.07,
+    "z": 385.25
   },
   {
     "index": 70,
     "code": "CS-070",
-    "line": "B8-D15",
-    "raft": "BÈ 8",
+    "line": "B3A-D28",
+    "lines": [
+      "B3A-D28"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 321.97,
-    "y": 33.99,
-    "z": 402
+    "shape": "circular",
+    "x": 4.62,
+    "y": -217.31,
+    "z": 384.14
   },
   {
     "index": 71,
     "code": "CS-071",
-    "line": "B8-D16",
-    "raft": "BÈ 8",
+    "line": "B3A-D29",
+    "lines": [
+      "B3A-D29"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 325.58,
-    "y": 20.84,
-    "z": 402.7
+    "shape": "circular",
+    "x": 14.16,
+    "y": -225.47,
+    "z": 384.11
   },
   {
     "index": 72,
     "code": "CS-072",
-    "line": "B8-D17",
-    "raft": "BÈ 8",
+    "line": "B3A-D30",
+    "lines": [
+      "B3A-D30"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 325.22,
-    "y": 10.06,
-    "z": 401.9
+    "shape": "circular",
+    "x": 25.36,
+    "y": -234.26,
+    "z": 384.03
   },
   {
     "index": 73,
     "code": "CS-073",
-    "line": "B8-D22",
-    "raft": "BÈ 8",
+    "line": "B3A-D31",
+    "lines": [
+      "B3A-D31"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 382.71,
-    "y": 78.03,
-    "z": 402.2
+    "shape": "circular",
+    "x": 28.19,
+    "y": -236.49,
+    "z": 384.12
   },
   {
     "index": 74,
     "code": "CS-074",
-    "line": "B8-D23",
-    "raft": "BÈ 8",
+    "line": "B3A-D34",
+    "lines": [
+      "B3A-D34"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 366.78,
-    "y": 76.56,
-    "z": 402.7
+    "shape": "circular",
+    "x": 80.44,
+    "y": -284.54,
+    "z": 384.08
   },
   {
     "index": 75,
     "code": "CS-075",
-    "line": "B8-D24",
-    "raft": "BÈ 8",
+    "line": "B3A-D35",
+    "lines": [
+      "B3A-D35"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 361.96,
-    "y": 76.91,
-    "z": 402.7
+    "shape": "circular",
+    "x": 94.94,
+    "y": -285.54,
+    "z": 384.12
   },
   {
     "index": 76,
     "code": "CS-076",
-    "line": "B8-D25",
-    "raft": "BÈ 8",
+    "line": "B5A-D01",
+    "lines": [
+      "B5A-D01"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 346.78,
-    "y": 77.8,
-    "z": 402.6
+    "shape": "circular",
+    "x": 219.74,
+    "y": -292.14,
+    "z": 384.42
   },
   {
     "index": 77,
     "code": "CS-077",
-    "line": "B8-D29",
-    "raft": "BÈ 8",
+    "line": "B5A-D02",
+    "lines": [
+      "B5A-D02"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 446.63,
-    "y": 24.6,
-    "z": 401.8
+    "shape": "circular",
+    "x": 405.89,
+    "y": -230.56,
+    "z": 384.04
   },
   {
     "index": 78,
     "code": "CS-078",
-    "line": "B9-D03",
-    "raft": "BÈ 9",
+    "line": "B5A-D03",
+    "lines": [
+      "B5A-D03"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 216.14,
-    "y": -40.06,
-    "z": 401.9
+    "shape": "circular",
+    "x": 392.37,
+    "y": -246.48,
+    "z": 384.59
   },
   {
     "index": 79,
     "code": "CS-079",
-    "line": "B9-D04",
-    "raft": "BÈ 9",
+    "line": "B5A-D04",
+    "lines": [
+      "B5A-D04"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 194.79,
-    "y": 14.05,
-    "z": 401.7
+    "shape": "circular",
+    "x": 385.01,
+    "y": -253.64,
+    "z": 384.53
   },
   {
     "index": 80,
     "code": "CS-080",
-    "line": "B9-D05",
-    "raft": "BÈ 9",
+    "line": "B5A-D05",
+    "lines": [
+      "B5A-D05"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 193.88,
-    "y": 17.89,
-    "z": 401.7
+    "shape": "circular",
+    "x": 379.04,
+    "y": -259.57,
+    "z": 384.48
   },
   {
     "index": 81,
     "code": "CS-081",
-    "line": "B9-D06",
-    "raft": "BÈ 9",
+    "line": "B5A-D06",
+    "lines": [
+      "B5A-D06"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 186.66,
-    "y": 36.14,
-    "z": 402.1
+    "shape": "circular",
+    "x": 421.97,
+    "y": -132.72,
+    "z": 385.12
   },
   {
     "index": 82,
     "code": "CS-082",
-    "line": "B9-D07",
-    "raft": "BÈ 9",
+    "line": "B5A-D07",
+    "lines": [
+      "B5A-D07"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 186.22,
-    "y": 40.23,
-    "z": 403.1
+    "shape": "circular",
+    "x": 419.64,
+    "y": -119,
+    "z": 384.26
   },
   {
     "index": 83,
     "code": "CS-083",
-    "line": "B9-D08",
-    "raft": "BÈ 9",
+    "line": "B5A-D08",
+    "lines": [
+      "B5A-D08"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 185.37,
-    "y": 48.63,
-    "z": 399.8
+    "shape": "circular",
+    "x": 419.97,
+    "y": -145.88,
+    "z": 384.22
   },
   {
     "index": 84,
     "code": "CS-084",
-    "line": "B9-D09",
-    "raft": "BÈ 9",
+    "line": "B5A-D09",
+    "lines": [
+      "B5A-D09"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 185.32,
-    "y": 58.42,
-    "z": 400.3
+    "shape": "circular",
+    "x": 417.4,
+    "y": -166.67,
+    "z": 384.3
   },
   {
     "index": 85,
     "code": "CS-085",
-    "line": "B9-D10",
-    "raft": "BÈ 9",
+    "line": "B5A-D10",
+    "lines": [
+      "B5A-D10"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 187.02,
-    "y": 74.62,
-    "z": 404.5
+    "shape": "circular",
+    "x": 415.42,
+    "y": -101.73,
+    "z": 384.02
   },
   {
     "index": 86,
     "code": "CS-086",
-    "line": "B9-D20",
-    "raft": "BÈ 9",
+    "line": "B5A-D11",
+    "lines": [
+      "B5A-D11"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 73.39,
-    "y": -67.7,
-    "z": 399.2
+    "shape": "circular",
+    "x": 412.34,
+    "y": -78.29,
+    "z": 384.06
   },
   {
     "index": 87,
     "code": "CS-087",
-    "line": "B9-D21",
-    "raft": "BÈ 9",
+    "line": "B5A-D16",
+    "lines": [
+      "B5A-D16"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 49,
-    "y": 55.35,
-    "z": 401.6
+    "shape": "circular",
+    "x": 287.57,
+    "y": -50.09,
+    "z": 384
   },
   {
     "index": 88,
     "code": "CS-088",
-    "line": "B9-D22",
-    "raft": "BÈ 9",
+    "line": "B5A-D17",
+    "lines": [
+      "B5A-D17"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 58.4,
-    "y": 40.67,
-    "z": 400.5
+    "shape": "circular",
+    "x": 280.43,
+    "y": -60,
+    "z": 384.02
   },
   {
     "index": 89,
     "code": "CS-089",
-    "line": "B9-D23",
-    "raft": "BÈ 9",
+    "line": "B5A-D18",
+    "lines": [
+      "B5A-D18"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 59.95,
-    "y": 37.88,
-    "z": 400.9
+    "shape": "circular",
+    "x": 273.29,
+    "y": -69.92,
+    "z": 384.06
   },
   {
     "index": 90,
     "code": "CS-090",
-    "line": "B9-D24",
-    "raft": "BÈ 9",
+    "line": "B5A-D19",
+    "lines": [
+      "B5A-D19"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 59.97,
-    "y": 29.37,
-    "z": 400.9
+    "shape": "circular",
+    "x": 270.6,
+    "y": -68.35,
+    "z": 384.18
   },
   {
     "index": 91,
     "code": "CS-091",
-    "line": "B9-D25",
-    "raft": "BÈ 9",
+    "line": "B5A-D20",
+    "lines": [
+      "B5A-D20"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 60.4,
-    "y": -0.42,
-    "z": 401
+    "shape": "circular",
+    "x": 262.97,
+    "y": -68.91,
+    "z": 384.02
   },
   {
     "index": 92,
     "code": "CS-092",
-    "line": "B9-D26",
-    "raft": "BÈ 9",
+    "line": "B5A-D21",
+    "lines": [
+      "B5A-D21"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 63.67,
-    "y": -9.27,
-    "z": 401
+    "shape": "circular",
+    "x": 253.08,
+    "y": -67.34,
+    "z": 384.01
   },
   {
     "index": 93,
     "code": "CS-093",
-    "line": "B9-D27",
-    "raft": "BÈ 9",
+    "line": "B5A-D22",
+    "lines": [
+      "B5A-D22"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 65.17,
-    "y": -17.76,
-    "z": 402.4
+    "shape": "circular",
+    "x": 247.84,
+    "y": -64.1,
+    "z": 384.04
   },
   {
     "index": 94,
     "code": "CS-094",
-    "line": "B9-D28",
-    "raft": "BÈ 9",
+    "line": "B5A-D33",
+    "lines": [
+      "B5A-D33"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 66.21,
-    "y": -38.89,
-    "z": 402.7
+    "shape": "circular",
+    "x": 229.29,
+    "y": -291.23,
+    "z": 384.05
   },
   {
     "index": 95,
     "code": "CS-095",
-    "line": "B9-D29",
-    "raft": "BÈ 9",
+    "line": "B5A-D34",
+    "lines": [
+      "B5A-D34"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 69.88,
-    "y": -53.98,
-    "z": 405.1
+    "shape": "circular",
+    "x": 248.02,
+    "y": -291.91,
+    "z": 384.04
   },
   {
     "index": 96,
     "code": "CS-096",
-    "line": "B10-D09",
-    "raft": "BÈ 10",
+    "line": "B5A-D35",
+    "lines": [
+      "B5A-D35"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 179.81,
-    "y": 141.58,
-    "z": 401.3
+    "shape": "circular",
+    "x": 262.52,
+    "y": -292.41,
+    "z": 384.08
   },
   {
     "index": 97,
     "code": "CS-097",
-    "line": "B10-D11",
-    "raft": "BÈ 10",
+    "line": "B5A-D36",
+    "lines": [
+      "B5A-D36"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 178.74,
-    "y": 123.28,
-    "z": 401.5
+    "shape": "circular",
+    "x": 277.27,
+    "y": -292.91,
+    "z": 384.04
   },
   {
     "index": 98,
     "code": "CS-098",
-    "line": "B10-D12",
-    "raft": "BÈ 10",
+    "line": "B5A-D37",
+    "lines": [
+      "B5A-D37"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 177,
-    "y": 134.34,
-    "z": 402.2
+    "shape": "circular",
+    "x": 291.77,
+    "y": -293.41,
+    "z": 384.13
   },
   {
     "index": 99,
     "code": "CS-099",
-    "line": "B10-D13",
-    "raft": "BÈ 10",
+    "line": "B5A-D38",
+    "lines": [
+      "B5A-D38"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 176.1,
-    "y": 130.11,
-    "z": 402.2
+    "shape": "circular",
+    "x": 306.52,
+    "y": -293.41,
+    "z": 384.01
   },
   {
     "index": 100,
     "code": "CS-100",
-    "line": "B10-D22",
-    "raft": "BÈ 10",
+    "line": "B5A-D39",
+    "lines": [
+      "B5A-D39"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 43.71,
-    "y": 192.12,
-    "z": 400.6
+    "shape": "circular",
+    "x": 321.02,
+    "y": -293.91,
+    "z": 384.08
   },
   {
     "index": 101,
     "code": "CS-101",
-    "line": "B10-D23",
-    "raft": "BÈ 10",
+    "line": "B5A-D40",
+    "lines": [
+      "B5A-D40"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 43.03,
-    "y": 184.71,
-    "z": 400.5
+    "shape": "circular",
+    "x": 361.34,
+    "y": -276.23,
+    "z": 384.15
   },
   {
     "index": 102,
     "code": "CS-102",
-    "line": "B10-D24",
-    "raft": "BÈ 10",
+    "line": "B5A-D41",
+    "lines": [
+      "B5A-D41"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 38.63,
-    "y": 162.4,
-    "z": 402.1
+    "shape": "circular",
+    "x": 372.19,
+    "y": -264.83,
+    "z": 384.02
   },
   {
     "index": 103,
     "code": "CS-103",
-    "line": "B10-D25",
-    "raft": "BÈ 10",
+    "line": "B5A-D42",
+    "lines": [
+      "B5A-D42"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 37.72,
-    "y": 148.99,
-    "z": 402.3
+    "shape": "circular",
+    "x": 408.31,
+    "y": -224.21,
+    "z": 384.01
   },
   {
     "index": 104,
     "code": "CS-104",
-    "line": "B10-D26",
-    "raft": "BÈ 10",
+    "line": "B5A-D43",
+    "lines": [
+      "B5A-D43"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 37.02,
-    "y": 135.54,
-    "z": 402.1
+    "shape": "circular",
+    "x": 412.31,
+    "y": -206.08,
+    "z": 384.08
   },
   {
     "index": 105,
     "code": "CS-105",
-    "line": "B10-D27",
-    "raft": "BÈ 10",
+    "line": "B5A-D44",
+    "lines": [
+      "B5A-D44"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 38.08,
-    "y": 114.48,
-    "z": 401.5
+    "shape": "circular",
+    "x": 414.5,
+    "y": -187.56,
+    "z": 384.12
   },
   {
     "index": 106,
     "code": "CS-106",
-    "line": "B10-D28",
-    "raft": "BÈ 10",
+    "line": "B5A-D45",
+    "lines": [
+      "B5A-D45"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 38.52,
-    "y": 111.31,
-    "z": 401.9
+    "shape": "circular",
+    "x": 416,
+    "y": -173.06,
+    "z": 384.05
   },
   {
     "index": 107,
     "code": "CS-107",
-    "line": "B11-D01",
-    "raft": "BÈ 11",
+    "line": "B5A-D46",
+    "lines": [
+      "B5A-D46"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 62.02,
-    "y": 302.94,
-    "z": 401.1
+    "shape": "circular",
+    "x": 419.63,
+    "y": -168.71,
+    "z": 385.93
   },
   {
     "index": 108,
     "code": "CS-108",
-    "line": "B11-D05",
-    "raft": "BÈ 11",
+    "line": "B6-D01",
+    "lines": [
+      "B6-D01"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 149.97,
-    "y": 284.17,
-    "z": 401.8
+    "shape": "circular",
+    "x": 449.49,
+    "y": 23.16,
+    "z": 384.39
   },
   {
     "index": 109,
     "code": "CS-109",
-    "line": "B11-D06",
-    "raft": "BÈ 11",
+    "line": "B6-D02",
+    "lines": [
+      "B6-D02"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 161.85,
-    "y": 246.16,
-    "z": 402.4
+    "shape": "circular",
+    "x": 410.55,
+    "y": 48.58,
+    "z": 384.33
   },
   {
     "index": 110,
     "code": "CS-110",
-    "line": "B11-D07",
-    "raft": "BÈ 11",
+    "line": "B6-D03",
+    "lines": [
+      "B6-D03"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 157.94,
-    "y": 269.34,
-    "z": 404.1
+    "shape": "circular",
+    "x": 409.94,
+    "y": 60.97,
+    "z": 384.47
   },
   {
     "index": 111,
     "code": "CS-111",
-    "line": "B11-D13",
-    "raft": "BÈ 11",
+    "line": "B6-D04",
+    "lines": [
+      "B6-D04"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 35.3,
-    "y": 256.25,
-    "z": 401.9
+    "shape": "circular",
+    "x": 462.77,
+    "y": -25.58,
+    "z": 384.87
   },
   {
     "index": 112,
     "code": "CS-112",
-    "line": "B11-D14",
-    "raft": "BÈ 11",
+    "line": "B6-D05",
+    "lines": [
+      "B6-D05"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 36.05,
-    "y": 238.18,
-    "z": 401.8
+    "shape": "circular",
+    "x": 462.26,
+    "y": -9.7,
+    "z": 384.38
   },
   {
     "index": 113,
     "code": "CS-113",
-    "line": "B11-D16",
-    "raft": "BÈ 11",
+    "line": "B6-D06",
+    "lines": [
+      "B6-D06"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 49.56,
-    "y": 290.47,
-    "z": 401
+    "shape": "circular",
+    "x": 430.99,
+    "y": -60.94,
+    "z": 384.22
   },
   {
     "index": 114,
     "code": "CS-114",
-    "line": "B11-D17",
-    "raft": "BÈ 11",
+    "line": "B6-D07",
+    "lines": [
+      "B6-D07"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 51.82,
-    "y": 292.73,
-    "z": 402.4
+    "shape": "circular",
+    "x": 445.56,
+    "y": -49.66,
+    "z": 384.57
   },
   {
     "index": 115,
     "code": "CS-115",
-    "line": "B11-D18",
-    "raft": "BÈ 11",
+    "line": "B6-D08",
+    "lines": [
+      "B6-D08"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 59.49,
-    "y": 300.62,
-    "z": 401.1
+    "shape": "circular",
+    "x": 453.96,
+    "y": -39.87,
+    "z": 384.76
   },
   {
     "index": 116,
     "code": "CS-116",
-    "line": "B12-D03",
-    "raft": "BÈ 12",
+    "line": "B6-D09",
+    "lines": [
+      "B6-D09"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 154.76,
-    "y": 294.59,
-    "z": 401.2
+    "shape": "circular",
+    "x": 321.97,
+    "y": 33.99,
+    "z": 384.5
   },
   {
     "index": 117,
     "code": "CS-117",
-    "line": "B12-D04",
-    "raft": "BÈ 12",
+    "line": "B6-D10",
+    "lines": [
+      "B6-D10"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 163.82,
-    "y": 305.4,
-    "z": 401.6
+    "shape": "circular",
+    "x": 325.58,
+    "y": 20.84,
+    "z": 384.38
   },
   {
     "index": 118,
     "code": "CS-118",
-    "line": "B12-D05",
-    "raft": "BÈ 12",
+    "line": "B6-D11",
+    "lines": [
+      "B6-D11"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 172.67,
-    "y": 319.13,
-    "z": 402.9
+    "shape": "circular",
+    "x": 325.22,
+    "y": 10.06,
+    "z": 384.24
   },
   {
     "index": 119,
     "code": "CS-119",
-    "line": "B12-D06",
-    "raft": "BÈ 12",
+    "line": "B6-D12",
+    "lines": [
+      "B6-D12"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 177.51,
-    "y": 337.51,
-    "z": 401.8
+    "shape": "circular",
+    "x": 382.71,
+    "y": 78.03,
+    "z": 384.52
   },
   {
     "index": 120,
     "code": "CS-120",
-    "line": "B12-D07",
-    "raft": "BÈ 12",
+    "line": "B6-D13",
+    "lines": [
+      "B6-D13"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 183.01,
-    "y": 352.13,
-    "z": 401.5
+    "shape": "circular",
+    "x": 366.78,
+    "y": 76.56,
+    "z": 384.44
   },
   {
     "index": 121,
     "code": "CS-121",
-    "line": "B12-D08",
-    "raft": "BÈ 12",
+    "line": "B6-D14",
+    "lines": [
+      "B6-D14"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 189.63,
-    "y": 364.57,
-    "z": 402.6
+    "shape": "circular",
+    "x": 361.96,
+    "y": 76.91,
+    "z": 384.52
   },
   {
     "index": 122,
     "code": "CS-122",
-    "line": "B12-D09",
-    "raft": "BÈ 12",
+    "line": "B6-D15",
+    "lines": [
+      "B6-D15"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 193.87,
-    "y": 373.92,
-    "z": 401.8
+    "shape": "circular",
+    "x": 346.78,
+    "y": 77.8,
+    "z": 384.51
   },
   {
     "index": 123,
     "code": "CS-123",
-    "line": "B12-D12",
-    "raft": "BÈ 12",
+    "line": "B6-D16",
+    "lines": [
+      "B6-D16"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 135.11,
-    "y": 400.65,
-    "z": 401.8
+    "shape": "circular",
+    "x": 446.63,
+    "y": 24.6,
+    "z": 384.39
   },
   {
     "index": 124,
     "code": "CS-124",
-    "line": "B12-D13",
-    "raft": "BÈ 12",
+    "line": "B6-D18",
+    "lines": [
+      "B6-D18"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 118.37,
-    "y": 379.9,
-    "z": 401.1
+    "shape": "circular",
+    "x": 430.87,
+    "y": 29.84,
+    "z": 384.01
   },
   {
     "index": 125,
     "code": "CS-125",
-    "line": "B12-D14",
-    "raft": "BÈ 12",
+    "line": "B6-D19",
+    "lines": [
+      "B6-D19"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 119.2,
-    "y": 382.99,
-    "z": 401.7
+    "shape": "circular",
+    "x": 413.63,
+    "y": -75.32,
+    "z": 384.08
   },
   {
     "index": 126,
     "code": "CS-126",
-    "line": "B12-D15",
-    "raft": "BÈ 12",
+    "line": "B6-D20",
+    "lines": [
+      "B6-D20"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 101.46,
-    "y": 358.5,
-    "z": 401.3
+    "shape": "circular",
+    "x": 309.1,
+    "y": -1.49,
+    "z": 384.02
   },
   {
     "index": 127,
     "code": "CS-127",
-    "line": "B12-D16",
-    "raft": "BÈ 12",
+    "line": "B6-D21",
+    "lines": [
+      "B6-D21"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 97.02,
-    "y": 345.33,
-    "z": 404.1
+    "shape": "circular",
+    "x": 323.68,
+    "y": 56.43,
+    "z": 384.04
   },
   {
     "index": 128,
     "code": "CS-128",
-    "line": "B12-D17",
-    "raft": "BÈ 12",
+    "line": "B6-D22",
+    "lines": [
+      "B6-D22"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 94.13,
-    "y": 337.48,
-    "z": 401.8
+    "shape": "circular",
+    "x": 441.86,
+    "y": 19.84,
+    "z": 384.01
   },
   {
     "index": 129,
     "code": "CS-129",
-    "line": "B12-D18",
-    "raft": "BÈ 12",
+    "line": "B6-D23",
+    "lines": [
+      "B6-D23"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "SHORE",
-    "shape": "square",
-    "x": 84.31,
-    "y": 324.22,
-    "z": 402.6
+    "shape": "circular",
+    "x": 414.35,
+    "y": 34.2,
+    "z": 384.01
   },
   {
     "index": 130,
-    "code": "CB-001",
-    "line": "B1-D07",
-    "raft": "BÈ 1",
-    "type": "BED",
-    "shape": "square",
-    "x": -118.52,
-    "y": 84.3,
-    "z": 378.5
+    "code": "CS-130",
+    "line": "B6-D24",
+    "lines": [
+      "B6-D24"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 427.84,
+    "y": -62.97,
+    "z": 384.01
   },
   {
     "index": 131,
-    "code": "CB-002",
-    "line": "B1-D08",
-    "raft": "BÈ 1",
-    "type": "BED",
-    "shape": "square",
-    "x": -140.76,
-    "y": 29.85,
-    "z": 378.5
+    "code": "CS-131",
+    "line": "B6-D25",
+    "lines": [
+      "B6-D25"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 326.88,
+    "y": 3.2,
+    "z": 384.01
   },
   {
     "index": 132,
-    "code": "CB-003",
-    "line": "B1-D09",
-    "raft": "BÈ 1",
-    "type": "BED",
-    "shape": "square",
-    "x": -132.21,
-    "y": 40.94,
-    "z": 378.5
+    "code": "CS-132",
+    "line": "B6-D26",
+    "lines": [
+      "B6-D26"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 297.95,
+    "y": -30.81,
+    "z": 384.05
   },
   {
     "index": 133,
-    "code": "CB-004",
-    "line": "B1-D10",
-    "raft": "BÈ 1",
-    "type": "BED",
-    "shape": "square",
-    "x": -123.52,
-    "y": 52.2,
-    "z": 378.5
+    "code": "CS-133",
+    "line": "B6-D28",
+    "lines": [
+      "B6-D28"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 458.99,
+    "y": 1.92,
+    "z": 384
   },
   {
     "index": 134,
-    "code": "CB-005",
-    "line": "B1-D19",
-    "raft": "BÈ 1",
-    "type": "BED",
-    "shape": "square",
-    "x": -232.52,
-    "y": 112.51,
-    "z": 378.5
+    "code": "CS-134",
+    "line": "B6-D29",
+    "lines": [
+      "B6-D29"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 399.47,
+    "y": 71.05,
+    "z": 384.14
   },
   {
     "index": 135,
-    "code": "CB-006",
-    "line": "B2-D07",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -25.31,
-    "y": 9.02,
-    "z": 378.3
+    "code": "CS-135",
+    "line": "B6-D30",
+    "lines": [
+      "B6-D30"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 337.99,
+    "y": 69.52,
+    "z": 384.01
   },
   {
     "index": 136,
-    "code": "CB-007",
-    "line": "B2-D08",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -50.18,
-    "y": -33.83,
-    "z": 378.3
+    "code": "CS-136",
+    "line": "B7-D01",
+    "lines": [
+      "B7-D01"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 216.14,
+    "y": -40.06,
+    "z": 384.38
   },
   {
     "index": 137,
-    "code": "CB-008",
-    "line": "B2-D09",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -32.25,
-    "y": -21.12,
-    "z": 378.3
+    "code": "CS-137",
+    "line": "B7-D02",
+    "lines": [
+      "B7-D02"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 194.79,
+    "y": 14.05,
+    "z": 384.36
   },
   {
     "index": 138,
-    "code": "CB-009",
-    "line": "B2-D10",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -47.19,
-    "y": -33.49,
-    "z": 378.3
+    "code": "CS-138",
+    "line": "B7-D03",
+    "lines": [
+      "B7-D03"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 193.88,
+    "y": 17.89,
+    "z": 384.48
   },
   {
     "index": 139,
-    "code": "CB-010",
-    "line": "B2-D11",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -113.8,
-    "y": -19.37,
-    "z": 378.3
+    "code": "CS-139",
+    "line": "B7-D04",
+    "lines": [
+      "B7-D04"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 186.66,
+    "y": 36.14,
+    "z": 384.44
   },
   {
     "index": 140,
-    "code": "CB-011",
-    "line": "B2-D15",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -94.09,
-    "y": -17.42,
-    "z": 378.3
+    "code": "CS-140",
+    "line": "B7-D05",
+    "lines": [
+      "B7-D05"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 186.22,
+    "y": 40.23,
+    "z": 384.46
   },
   {
     "index": 141,
-    "code": "CB-012",
-    "line": "B2-D16",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -125.12,
-    "y": -26.9,
-    "z": 378.3
+    "code": "CS-141",
+    "line": "B7-D06",
+    "lines": [
+      "B7-D06"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 185.37,
+    "y": 48.63,
+    "z": 384.51
   },
   {
     "index": 142,
-    "code": "CB-013",
-    "line": "B2-D17",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -139.06,
-    "y": -15.5,
-    "z": 378.3
+    "code": "CS-142",
+    "line": "B7-D07",
+    "lines": [
+      "B7-D07"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 185.32,
+    "y": 58.42,
+    "z": 384.46
   },
   {
     "index": 143,
-    "code": "CB-014",
-    "line": "B2-D19",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -125.46,
-    "y": 49.65,
-    "z": 378.3
+    "code": "CS-143",
+    "line": "B7-D08",
+    "lines": [
+      "B7-D08"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 187.02,
+    "y": 74.62,
+    "z": 384.69
   },
   {
     "index": 144,
-    "code": "CB-015",
-    "line": "B2-D20",
-    "raft": "BÈ 2",
-    "type": "BED",
-    "shape": "square",
-    "x": -135.24,
-    "y": 36.98,
-    "z": 378.3
+    "code": "CS-144",
+    "line": "B7-D09",
+    "lines": [
+      "B7-D09"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 73.39,
+    "y": -67.7,
+    "z": 384.44
   },
   {
     "index": 145,
-    "code": "CB-016",
-    "line": "B3-D07",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 3.7,
-    "y": -22.05,
-    "z": 378.3
+    "code": "CS-145",
+    "line": "B7-D10",
+    "lines": [
+      "B7-D10"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 49,
+    "y": 55.35,
+    "z": 384.62
   },
   {
     "index": 146,
-    "code": "CB-017",
-    "line": "B3-D08",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": -5.81,
-    "y": -142.16,
-    "z": 378.3
+    "code": "CS-146",
+    "line": "B7-D11",
+    "lines": [
+      "B7-D11"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 58.4,
+    "y": 40.67,
+    "z": 384.34
   },
   {
     "index": 147,
-    "code": "CB-018",
-    "line": "B3-D09",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 10.79,
-    "y": -123.06,
-    "z": 378.3
+    "code": "CS-147",
+    "line": "B7-D12",
+    "lines": [
+      "B7-D12"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 59.95,
+    "y": 37.88,
+    "z": 384.31
   },
   {
     "index": 148,
-    "code": "CB-019",
-    "line": "B3-D10",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 22.87,
-    "y": -120.51,
-    "z": 378.3
+    "code": "CS-148",
+    "line": "B7-D13",
+    "lines": [
+      "B7-D13"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 59.97,
+    "y": 29.37,
+    "z": 384.23
   },
   {
     "index": 149,
-    "code": "CB-020",
-    "line": "B3-D11",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 34.96,
-    "y": -117.97,
-    "z": 378.3
+    "code": "CS-149",
+    "line": "B7-D14",
+    "lines": [
+      "B7-D14"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 60.4,
+    "y": -0.42,
+    "z": 384.37
   },
   {
     "index": 150,
-    "code": "CB-021",
-    "line": "B3-D12",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 26.03,
-    "y": -120.94,
-    "z": 378.3
+    "code": "CS-150",
+    "line": "B7-D15",
+    "lines": [
+      "B7-D15"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 63.67,
+    "y": -9.27,
+    "z": 384.26
   },
   {
     "index": 151,
-    "code": "CB-022",
-    "line": "B3-D13",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": 13.98,
-    "y": -123.28,
-    "z": 378.3
+    "code": "CS-151",
+    "line": "B7-D16",
+    "lines": [
+      "B7-D16"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 65.17,
+    "y": -17.76,
+    "z": 384.22
   },
   {
     "index": 152,
-    "code": "CB-023",
-    "line": "B3-D19",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": -35.09,
-    "y": -132.85,
-    "z": 378.3
+    "code": "CS-152",
+    "line": "B7-D17",
+    "lines": [
+      "B7-D17"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 66.21,
+    "y": -38.89,
+    "z": 384.61
   },
   {
     "index": 153,
-    "code": "CB-024",
-    "line": "B3-D20",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": -61.66,
-    "y": -70.25,
-    "z": 378.3
+    "code": "CS-153",
+    "line": "B7-D18",
+    "lines": [
+      "B7-D18"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 69.88,
+    "y": -53.98,
+    "z": 384.19
   },
   {
     "index": 154,
-    "code": "CB-025",
-    "line": "B3-D21",
-    "raft": "BÈ 3",
-    "type": "BED",
-    "shape": "square",
-    "x": -33.8,
-    "y": -23.77,
-    "z": 378.3
+    "code": "CS-154",
+    "line": "B7-D21",
+    "lines": [
+      "B7-D21"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 192.06,
+    "y": 9.39,
+    "z": 384.01
   },
   {
     "index": 155,
-    "code": "CB-026",
-    "line": "B4-D03",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 75.98,
-    "y": -112.95,
-    "z": 378.3
+    "code": "CS-155",
+    "line": "B7-D26",
+    "lines": [
+      "B7-D26"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 211.34,
+    "y": -38.54,
+    "z": 384.01
   },
   {
     "index": 156,
-    "code": "CB-027",
-    "line": "B4-D04",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 38.07,
-    "y": -118.59,
-    "z": 378.3
+    "code": "CS-156",
+    "line": "B7-D27",
+    "lines": [
+      "B7-D27"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 191.07,
+    "y": 13.22,
+    "z": 384.02
   },
   {
     "index": 157,
-    "code": "CB-028",
-    "line": "B4-D05",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 86.49,
-    "y": -117.34,
-    "z": 378.3
+    "code": "CS-157",
+    "line": "B7-D28",
+    "lines": [
+      "B7-D28"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 214.1,
+    "y": -42.36,
+    "z": 384.02
   },
   {
     "index": 158,
-    "code": "CB-029",
-    "line": "B4-D06",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 86.49,
-    "y": -125.34,
-    "z": 378.3
+    "code": "CS-158",
+    "line": "B7-D29",
+    "lines": [
+      "B7-D29"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 58.77,
+    "y": 12.03,
+    "z": 384.02
   },
   {
     "index": 159,
-    "code": "CB-030",
-    "line": "B4-D07",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -233.34,
-    "z": 378.3
+    "code": "CS-159",
+    "line": "B8-D01",
+    "lines": [
+      "B8-D01"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 179.81,
+    "y": 141.58,
+    "z": 384.45
   },
   {
     "index": 160,
-    "code": "CB-031",
-    "line": "B4-D08",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -215.34,
-    "z": 378.3
+    "code": "CS-160",
+    "line": "B8-D02",
+    "lines": [
+      "B8-D02"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 178.74,
+    "y": 123.28,
+    "z": 384.45
   },
   {
     "index": 161,
-    "code": "CB-032",
-    "line": "B4-D09",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -205.34,
-    "z": 378.3
+    "code": "CS-161",
+    "line": "B8-D03",
+    "lines": [
+      "B8-D03"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 177,
+    "y": 134.34,
+    "z": 384.48
   },
   {
     "index": 162,
-    "code": "CB-033",
-    "line": "B4-D10",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -195.85,
-    "z": 378.3
+    "code": "CS-162",
+    "line": "B8-D04",
+    "lines": [
+      "B8-D04"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 176.1,
+    "y": 130.11,
+    "z": 384.33
   },
   {
     "index": 163,
-    "code": "CB-034",
-    "line": "B4-D11",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -187.34,
-    "z": 378.3
+    "code": "CS-163",
+    "line": "B8-D05",
+    "lines": [
+      "B8-D05"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 43.71,
+    "y": 192.12,
+    "z": 384.31
   },
   {
     "index": 164,
-    "code": "CB-035",
-    "line": "B4-D12",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -180.25,
-    "z": 378.3
+    "code": "CS-164",
+    "line": "B8-D06",
+    "lines": [
+      "B8-D06"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 43.03,
+    "y": 184.71,
+    "z": 384.31
   },
   {
     "index": 165,
-    "code": "CB-036",
-    "line": "B4-D13",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -169.34,
-    "z": 378.3
+    "code": "CS-165",
+    "line": "B8-D07",
+    "lines": [
+      "B8-D07"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 38.63,
+    "y": 162.4,
+    "z": 384.62
   },
   {
     "index": 166,
-    "code": "CB-037",
-    "line": "B4-D14",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -161.34,
-    "z": 378.3
+    "code": "CS-166",
+    "line": "B8-D08",
+    "lines": [
+      "B8-D08"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 37.72,
+    "y": 148.99,
+    "z": 384.6
   },
   {
     "index": 167,
-    "code": "CB-038",
-    "line": "B4-D15",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.98,
-    "y": -221.05,
-    "z": 378.3
+    "code": "CS-167",
+    "line": "B8-D09",
+    "lines": [
+      "B8-D09"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 37.02,
+    "y": 135.54,
+    "z": 384.55
   },
   {
     "index": 168,
-    "code": "CB-039",
-    "line": "B4-D16",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 63.39,
-    "y": -259.96,
-    "z": 378.3
+    "code": "CS-168",
+    "line": "B8-D10",
+    "lines": [
+      "B8-D10"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 38.08,
+    "y": 114.48,
+    "z": 383.87
   },
   {
     "index": 169,
-    "code": "CB-040",
-    "line": "B4-D17",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 30.71,
-    "y": -233.96,
-    "z": 378.3
+    "code": "CS-169",
+    "line": "B8-D11",
+    "lines": [
+      "B8-D11"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 38.52,
+    "y": 111.31,
+    "z": 383.78
   },
   {
     "index": 170,
-    "code": "CB-041",
-    "line": "B4-D22",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": 11.77,
-    "y": -208.89,
-    "z": 378.3
+    "code": "CS-170",
+    "line": "B8-D12",
+    "lines": [
+      "B8-D12"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 62.02,
+    "y": 302.94,
+    "z": 384.47
   },
   {
     "index": 171,
-    "code": "CB-042",
-    "line": "B4-D23",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": -5.81,
-    "y": -166.16,
-    "z": 378.3
+    "code": "CS-171",
+    "line": "B8-D13",
+    "lines": [
+      "B8-D13"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 149.97,
+    "y": 284.17,
+    "z": 384.4
   },
   {
     "index": 172,
-    "code": "CB-043",
-    "line": "B4-D24",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": -5.81,
-    "y": -154.16,
-    "z": 378.3
+    "code": "CS-172",
+    "line": "B8-D14",
+    "lines": [
+      "B8-D14"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 161.85,
+    "y": 246.16,
+    "z": 384.29
   },
   {
     "index": 173,
-    "code": "CB-044",
-    "line": "B4-D25",
-    "raft": "BÈ 4",
-    "type": "BED",
-    "shape": "square",
-    "x": -2.47,
-    "y": -140.82,
-    "z": 378.3
+    "code": "CS-173",
+    "line": "B8-D15",
+    "lines": [
+      "B8-D15"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 157.94,
+    "y": 269.34,
+    "z": 384.88
   },
   {
     "index": 174,
-    "code": "CB-045",
-    "line": "B5-D01",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 205.25,
-    "y": -260.54,
-    "z": 378.3
+    "code": "CS-174",
+    "line": "B8-D16",
+    "lines": [
+      "B8-D16"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 35.3,
+    "y": 256.25,
+    "z": 384.42
   },
   {
     "index": 175,
-    "code": "CB-046",
-    "line": "B5-D02",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -228.04,
-    "z": 378.3
+    "code": "CS-175",
+    "line": "B8-D17",
+    "lines": [
+      "B8-D17"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 36.05,
+    "y": 238.18,
+    "z": 384.37
   },
   {
     "index": 176,
-    "code": "CB-047",
-    "line": "B5-D03",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -213.04,
-    "z": 378.3
+    "code": "CS-176",
+    "line": "B8-D18",
+    "lines": [
+      "B8-D18"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 49.56,
+    "y": 290.47,
+    "z": 384.18
   },
   {
     "index": 177,
-    "code": "CB-048",
-    "line": "B5-D04",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -198.29,
-    "z": 378.3
+    "code": "CS-177",
+    "line": "B8-D19",
+    "lines": [
+      "B8-D19"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 51.82,
+    "y": 292.73,
+    "z": 384.32
   },
   {
     "index": 178,
-    "code": "CB-049",
-    "line": "B5-D05",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -183.29,
-    "z": 378.3
+    "code": "CS-178",
+    "line": "B8-D20",
+    "lines": [
+      "B8-D20"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 59.49,
+    "y": 300.62,
+    "z": 384.49
   },
   {
     "index": 179,
-    "code": "CB-050",
-    "line": "B5-D06",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -168.54,
-    "z": 378.3
+    "code": "CS-179",
+    "line": "B8-D21",
+    "lines": [
+      "B8-D21"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 38.78,
+    "y": 273.12,
+    "z": 384.08
   },
   {
     "index": 180,
-    "code": "CB-051",
-    "line": "B5-D07",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -153.54,
-    "z": 378.3
+    "code": "CS-180",
+    "line": "B8-D22",
+    "lines": [
+      "B8-D22"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 36.92,
+    "y": 247.25,
+    "z": 384.01
   },
   {
     "index": 181,
-    "code": "CB-052",
-    "line": "B5-D08",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -138.79,
-    "z": 378.3
+    "code": "CS-181",
+    "line": "B8-D23",
+    "lines": [
+      "B8-D23"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 38.42,
+    "y": 226.68,
+    "z": 384.07
   },
   {
     "index": 182,
-    "code": "CB-053",
-    "line": "B5-D09",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -123.79,
-    "z": 378.3
+    "code": "CS-182",
+    "line": "B8-D24",
+    "lines": [
+      "B8-D24"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 40.75,
+    "y": 211.45,
+    "z": 384.1
   },
   {
     "index": 183,
-    "code": "CB-054",
-    "line": "B5-D10",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -109.04,
-    "z": 378.3
+    "code": "CS-183",
+    "line": "B8-D25",
+    "lines": [
+      "B8-D25"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 43.7,
+    "y": 200.47,
+    "z": 384.02
   },
   {
     "index": 184,
-    "code": "CB-055",
-    "line": "B5-D11",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 230.51,
-    "y": -94.04,
-    "z": 378.3
+    "code": "CS-184",
+    "line": "B8-D26",
+    "lines": [
+      "B8-D26"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 42,
+    "y": 175.2,
+    "z": 384.04
   },
   {
     "index": 185,
-    "code": "CB-056",
-    "line": "B5-D12",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 199.26,
-    "y": -75.54,
-    "z": 378.3
+    "code": "CS-185",
+    "line": "B8-D27",
+    "lines": [
+      "B8-D27"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 37.77,
+    "y": 131.51,
+    "z": 384.06
   },
   {
     "index": 186,
-    "code": "CB-057",
-    "line": "B5-D13",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 184.26,
-    "y": -75.54,
-    "z": 378.3
+    "code": "CS-186",
+    "line": "B8-D33",
+    "lines": [
+      "B8-D33"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 178.32,
+    "y": 120.11,
+    "z": 384.03
   },
   {
     "index": 187,
-    "code": "CB-058",
-    "line": "B5-D14",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 169.51,
-    "y": -79.04,
-    "z": 378.3
+    "code": "CS-187",
+    "line": "B8-D34",
+    "lines": [
+      "B8-D34"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 175.51,
+    "y": 125.33,
+    "z": 384.03
   },
   {
     "index": 188,
-    "code": "CB-059",
-    "line": "B5-D15",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 154.51,
-    "y": -79.04,
-    "z": 378.3
+    "code": "CS-188",
+    "line": "B8-D40",
+    "lines": [
+      "B8-D40"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 192.05,
+    "y": 158.45,
+    "z": 384.06
   },
   {
     "index": 189,
-    "code": "CB-060",
-    "line": "B5-D26",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 139.76,
-    "y": -79.04,
-    "z": 378.3
+    "code": "CS-189",
+    "line": "B8-D41",
+    "lines": [
+      "B8-D41"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 200.19,
+    "y": 164.56,
+    "z": 384.03
   },
   {
     "index": 190,
-    "code": "CB-061",
-    "line": "B5-D29",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 124.76,
-    "y": -79.04,
-    "z": 378.3
+    "code": "CS-190",
+    "line": "B8-D42",
+    "lines": [
+      "B8-D42"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 219.02,
+    "y": 186.57,
+    "z": 384.11
   },
   {
     "index": 191,
-    "code": "CB-062",
-    "line": "B5-D30",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 110.01,
-    "y": -79.04,
-    "z": 378.3
+    "code": "CS-191",
+    "line": "B8-D43",
+    "lines": [
+      "B8-D43"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 173.26,
+    "y": 237.19,
+    "z": 384.01
   },
   {
     "index": 192,
-    "code": "CB-063",
-    "line": "B5-D31",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 85.95,
-    "y": -121.45,
-    "z": 378.3
+    "code": "CS-192",
+    "line": "B8-D44",
+    "lines": [
+      "B8-D44"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 163.13,
+    "y": 242.61,
+    "z": 384.08
   },
   {
     "index": 193,
-    "code": "CB-064",
-    "line": "B5-D32",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.19,
-    "y": -134.94,
-    "z": 378.3
+    "code": "CS-193",
+    "line": "B8-D45",
+    "lines": [
+      "B8-D45"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 164.26,
+    "y": 248.07,
+    "z": 385.08
   },
   {
     "index": 194,
-    "code": "CB-065",
-    "line": "B5-D33",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.19,
-    "y": -149.19,
-    "z": 378.3
+    "code": "CS-194",
+    "line": "B8-D47",
+    "lines": [
+      "B8-D47"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 157.15,
+    "y": 257.66,
+    "z": 384.01
   },
   {
     "index": 195,
-    "code": "CB-066",
-    "line": "B5-D34",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.02,
-    "y": -164.68,
-    "z": 378.3
+    "code": "CS-195",
+    "line": "B8-D51",
+    "lines": [
+      "B8-D51"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 62.59,
+    "y": 299.64,
+    "z": 384.02
   },
   {
     "index": 196,
-    "code": "CB-067",
-    "line": "B5-D35",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.97,
-    "y": -176.86,
-    "z": 378.3
+    "code": "CS-196",
+    "line": "B9-D01",
+    "lines": [
+      "B9-D01"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 154.76,
+    "y": 294.59,
+    "z": 384.48
   },
   {
     "index": 197,
-    "code": "CB-068",
-    "line": "B5-D36",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.19,
-    "y": -191.94,
-    "z": 378.3
+    "code": "CS-197",
+    "line": "B9-D02",
+    "lines": [
+      "B9-D02"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 163.82,
+    "y": 305.4,
+    "z": 384.6
   },
   {
     "index": 198,
-    "code": "CB-069",
-    "line": "B5-D37",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.02,
-    "y": -208.71,
-    "z": 378.3
+    "code": "CS-198",
+    "line": "B9-D03",
+    "lines": [
+      "B9-D03"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 172.67,
+    "y": 319.13,
+    "z": 384.77
   },
   {
     "index": 199,
-    "code": "CB-070",
-    "line": "B5-D38",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 93.97,
-    "y": -224.36,
-    "z": 378.3
+    "code": "CS-199",
+    "line": "B9-D04",
+    "lines": [
+      "B9-D04"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 177.51,
+    "y": 337.51,
+    "z": 384.4
   },
   {
     "index": 200,
-    "code": "CB-071",
-    "line": "B5-D39",
-    "raft": "BÈ 5",
-    "type": "BED",
-    "shape": "square",
-    "x": 94.08,
-    "y": -236.34,
-    "z": 378.3
+    "code": "CS-200",
+    "line": "B9-D05",
+    "lines": [
+      "B9-D05"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 183.01,
+    "y": 352.13,
+    "z": 384.54
   },
   {
     "index": 201,
-    "code": "CB-072",
-    "line": "B6-D01",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 357.1,
-    "y": -155.32,
-    "z": 378.3
+    "code": "CS-201",
+    "line": "B9-D06",
+    "lines": [
+      "B9-D06"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 189.63,
+    "y": 364.57,
+    "z": 384.49
   },
   {
     "index": 202,
-    "code": "CB-073",
-    "line": "B6-D02",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 308.7,
-    "y": -155.32,
-    "z": 378.3
+    "code": "CS-202",
+    "line": "B9-D07",
+    "lines": [
+      "B9-D07"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 193.87,
+    "y": 373.92,
+    "z": 384.6
   },
   {
     "index": 203,
-    "code": "CB-074",
-    "line": "B6-D03",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 286.28,
-    "y": -155.32,
-    "z": 378.3
+    "code": "CS-203",
+    "line": "B9-D08",
+    "lines": [
+      "B9-D08"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 135.11,
+    "y": 400.65,
+    "z": 384.29
   },
   {
     "index": 204,
-    "code": "CB-075",
-    "line": "B6-D04",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 264.28,
-    "y": -155.32,
-    "z": 378.3
+    "code": "CS-204",
+    "line": "B9-D09",
+    "lines": [
+      "B9-D09"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 118.37,
+    "y": 379.9,
+    "z": 384.16
   },
   {
     "index": 205,
-    "code": "CB-076",
-    "line": "B6-D05",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 257.9,
-    "y": -155.32,
-    "z": 378.3
+    "code": "CS-205",
+    "line": "B9-D10",
+    "lines": [
+      "B9-D10"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 119.2,
+    "y": 382.99,
+    "z": 384.34
   },
   {
     "index": 206,
-    "code": "CB-077",
-    "line": "B6-D07",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 383.4,
-    "y": -175.3,
-    "z": 378.3
+    "code": "CS-206",
+    "line": "B9-D11",
+    "lines": [
+      "B9-D11"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 101.46,
+    "y": 358.5,
+    "z": 384.74
   },
   {
     "index": 207,
-    "code": "CB-078",
-    "line": "B6-D08",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 383.4,
-    "y": -197.3,
-    "z": 378.3
+    "code": "CS-207",
+    "line": "B9-D12",
+    "lines": [
+      "B9-D12"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 97.02,
+    "y": 345.33,
+    "z": 384.67
   },
   {
     "index": 208,
-    "code": "CB-079",
-    "line": "B6-D12",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 338.06,
-    "y": -260.96,
-    "z": 378.3
+    "code": "CS-208",
+    "line": "B9-D13",
+    "lines": [
+      "B9-D13"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 94.13,
+    "y": 337.48,
+    "z": 384.23
   },
   {
     "index": 209,
-    "code": "CB-080",
-    "line": "B6-D13",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 316.06,
-    "y": -260.96,
-    "z": 378.3
+    "code": "CS-209",
+    "line": "B9-D14",
+    "lines": [
+      "B9-D14"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 84.31,
+    "y": 324.22,
+    "z": 384.51
   },
   {
     "index": 210,
-    "code": "CB-081",
-    "line": "B6-D14",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 294.06,
-    "y": -260.96,
-    "z": 378.3
+    "code": "CS-210",
+    "line": "B9-D15",
+    "lines": [
+      "B9-D15"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 205.06,
+    "y": 416.32,
+    "z": 384.02
   },
   {
     "index": 211,
-    "code": "CB-082",
-    "line": "B6-D15",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 272.06,
-    "y": -260.96,
-    "z": 378.3
+    "code": "CS-211",
+    "line": "B9-D17",
+    "lines": [
+      "B9-D17"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 204.22,
+    "y": 402.57,
+    "z": 384.06
   },
   {
     "index": 212,
-    "code": "CB-083",
-    "line": "B6-D16",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 238.13,
-    "y": -216.54,
-    "z": 378.3
+    "code": "CS-212",
+    "line": "B9-D18",
+    "lines": [
+      "B9-D18"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 145.02,
+    "y": 417.6,
+    "z": 384
   },
   {
     "index": 213,
-    "code": "CB-084",
-    "line": "B6-D17",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 238.13,
-    "y": -202.83,
-    "z": 378.3
+    "code": "CS-213",
+    "line": "B9-D19",
+    "lines": [
+      "B9-D19"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 115.09,
+    "y": 374.35,
+    "z": 384
   },
   {
     "index": 214,
-    "code": "CB-085",
-    "line": "B6-D18",
-    "raft": "BÈ 6",
-    "type": "BED",
-    "shape": "square",
-    "x": 238.13,
-    "y": -194.54,
-    "z": 378.3
+    "code": "CS-214",
+    "line": "B9-D20",
+    "lines": [
+      "B9-D20"
+    ],
+    "raft": "BÈ 9",
+    "rafts": [
+      "BÈ 9"
+    ],
+    "type": "SHORE",
+    "shape": "circular",
+    "x": 130.67,
+    "y": 394.29,
+    "z": 384.02
   },
   {
     "index": 215,
-    "code": "CB-086",
-    "line": "B6-D19",
-    "raft": "BÈ 6",
+    "code": "CB-001",
+    "line": "B1-D15",
+    "lines": [
+      "B1-D15",
+      "B2-D13"
+    ],
+    "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1",
+      "BÈ 2"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -184.54,
+    "x": -128.58,
+    "y": 44.11,
     "z": 378.3
   },
   {
     "index": 216,
-    "code": "CB-087",
-    "line": "B6-D20",
-    "raft": "BÈ 6",
+    "code": "CB-002",
+    "line": "B1-D19",
+    "lines": [
+      "B1-D19",
+      "B2-D20"
+    ],
+    "raft": "BÈ 1",
+    "rafts": [
+      "BÈ 1",
+      "BÈ 2"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -174.54,
+    "x": -139.37,
+    "y": 30.03,
     "z": 378.3
   },
   {
     "index": 217,
-    "code": "CB-088",
-    "line": "B6-D21",
-    "raft": "BÈ 6",
+    "code": "CB-003",
+    "line": "B2-D12",
+    "lines": [
+      "B2-D12"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -170.03,
+    "x": -38.99,
+    "y": -26.62,
     "z": 378.3
   },
   {
     "index": 218,
-    "code": "CB-089",
-    "line": "B6-D22",
-    "raft": "BÈ 6",
+    "code": "CB-004",
+    "line": "B2-D17",
+    "lines": [
+      "B2-D17",
+      "B3-D17"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2",
+      "BÈ 3"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -188.03,
+    "x": -48.11,
+    "y": -33.37,
     "z": 378.3
   },
   {
     "index": 219,
-    "code": "CB-090",
-    "line": "B6-D23",
-    "raft": "BÈ 6",
+    "code": "CB-005",
+    "line": "B2-D18",
+    "lines": [
+      "B2-D18",
+      "B3-D13"
+    ],
+    "raft": "BÈ 2",
+    "rafts": [
+      "BÈ 2",
+      "BÈ 3"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -206.03,
+    "x": -25.86,
+    "y": -15.46,
     "z": 378.3
   },
   {
     "index": 220,
-    "code": "CB-091",
-    "line": "B6-D24",
-    "raft": "BÈ 6",
+    "code": "CB-006",
+    "line": "B3-D12",
+    "lines": [
+      "B3-D12",
+      "B3A-D23"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3",
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -224.03,
+    "x": 18.01,
+    "y": -122.77,
     "z": 378.3
   },
   {
     "index": 221,
-    "code": "CB-092",
-    "line": "B6-D25",
-    "raft": "BÈ 6",
+    "code": "CB-007",
+    "line": "B3-D14",
+    "lines": [
+      "B3-D14",
+      "B3A-D21"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3",
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.13,
-    "y": -234.03,
+    "x": 49.15,
+    "y": -116.18,
     "z": 378.3
   },
   {
     "index": 222,
-    "code": "CB-093",
-    "line": "B7-D01",
-    "raft": "BÈ 7",
+    "code": "CB-008",
+    "line": "B3-D15",
+    "lines": [
+      "B3-D15"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 263.67,
-    "y": -75.4,
+    "x": -4.91,
+    "y": -142.59,
     "z": 378.3
   },
   {
     "index": 223,
-    "code": "CB-094",
-    "line": "B7-D02",
-    "raft": "BÈ 7",
+    "code": "CB-009",
+    "line": "B3-D20",
+    "lines": [
+      "B3-D20",
+      "B3A-D22"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3",
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 285.67,
-    "y": -75.4,
+    "x": 33.69,
+    "y": -119.71,
     "z": 378.3
   },
   {
     "index": 224,
-    "code": "CB-095",
-    "line": "B7-D03",
-    "raft": "BÈ 7",
+    "code": "CB-010",
+    "line": "B3-D21",
+    "lines": [
+      "B3-D21",
+      "B3A-D24"
+    ],
+    "raft": "BÈ 3",
+    "rafts": [
+      "BÈ 3",
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 309.67,
-    "y": -75.4,
+    "x": 0.59,
+    "y": -131.46,
     "z": 378.3
   },
   {
     "index": 225,
-    "code": "CB-096",
-    "line": "B7-D04",
-    "raft": "BÈ 7",
+    "code": "CB-011",
+    "line": "B3A-D32",
+    "lines": [
+      "B3A-D32"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 331.67,
-    "y": -75.4,
+    "x": 61.64,
+    "y": -234.54,
     "z": 378.3
   },
   {
     "index": 226,
-    "code": "CB-097",
-    "line": "B7-D05",
-    "raft": "BÈ 7",
+    "code": "CB-012",
+    "line": "B3A-D33",
+    "lines": [
+      "B3A-D33"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 368.32,
-    "y": -85.23,
+    "x": 61.8,
+    "y": -225.63,
     "z": 378.3
   },
   {
     "index": 227,
-    "code": "CB-098",
-    "line": "B7-D10",
-    "raft": "BÈ 7",
+    "code": "CB-013",
+    "line": "B3A-D36",
+    "lines": [
+      "B3A-D36",
+      "B5A-D32"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 267.9,
-    "y": -155.32,
+    "x": 198.11,
+    "y": -227.76,
     "z": 378.3
   },
   {
     "index": 228,
-    "code": "CB-099",
-    "line": "B7-D11",
-    "raft": "BÈ 7",
+    "code": "CB-014",
+    "line": "B3A-D37",
+    "lines": [
+      "B3A-D37",
+      "B5A-D31"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 279.9,
-    "y": -155.32,
+    "x": 198.11,
+    "y": -213.26,
     "z": 378.3
   },
   {
     "index": 229,
-    "code": "CB-100",
-    "line": "B7-D12",
-    "raft": "BÈ 7",
+    "code": "CB-015",
+    "line": "B3A-D38",
+    "lines": [
+      "B3A-D38",
+      "B5A-D30"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 289.9,
-    "y": -155.32,
+    "x": 198.23,
+    "y": -198.38,
     "z": 378.3
   },
   {
     "index": 230,
-    "code": "CB-101",
-    "line": "B7-D13",
-    "raft": "BÈ 7",
+    "code": "CB-016",
+    "line": "B3A-D39",
+    "lines": [
+      "B3A-D39",
+      "B5A-D29"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 301.9,
-    "y": -155.32,
+    "x": 198.23,
+    "y": -183.88,
     "z": 378.3
   },
   {
     "index": 231,
-    "code": "CB-102",
-    "line": "B7-D14",
-    "raft": "BÈ 7",
+    "code": "CB-017",
+    "line": "B3A-D40",
+    "lines": [
+      "B3A-D40",
+      "B5A-D28"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 311.9,
-    "y": -155.32,
+    "x": 198.11,
+    "y": -169,
     "z": 378.3
   },
   {
     "index": 232,
-    "code": "CB-103",
-    "line": "B7-D15",
-    "raft": "BÈ 7",
+    "code": "CB-018",
+    "line": "B3A-D41",
+    "lines": [
+      "B3A-D41",
+      "B5A-D27"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 321.9,
-    "y": -155.32,
+    "x": 198.11,
+    "y": -154.5,
     "z": 378.3
   },
   {
     "index": 233,
-    "code": "CB-104",
-    "line": "B7-D16",
-    "raft": "BÈ 7",
+    "code": "CB-019",
+    "line": "B3A-D42",
+    "lines": [
+      "B3A-D42",
+      "B5A-D26"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 331.9,
-    "y": -155.32,
+    "x": 198.1,
+    "y": -140.38,
     "z": 378.3
   },
   {
     "index": 234,
-    "code": "CB-105",
-    "line": "B7-D17",
-    "raft": "BÈ 7",
+    "code": "CB-020",
+    "line": "B3A-D43",
+    "lines": [
+      "B3A-D43",
+      "B5A-D25"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 343.9,
-    "y": -155.32,
+    "x": 198.1,
+    "y": -125.88,
     "z": 378.3
   },
   {
     "index": 235,
-    "code": "CB-106",
-    "line": "B7-D18",
-    "raft": "BÈ 7",
+    "code": "CB-021",
+    "line": "B3A-D44",
+    "lines": [
+      "B3A-D44",
+      "B5A-D24"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 353.9,
-    "y": -155.32,
+    "x": 198.1,
+    "y": -111.38,
     "z": 378.3
   },
   {
     "index": 236,
-    "code": "CB-107",
-    "line": "B7-D19",
-    "raft": "BÈ 7",
+    "code": "CB-022",
+    "line": "B3A-D45",
+    "lines": [
+      "B3A-D45",
+      "B5A-D23"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 363.9,
-    "y": -155.32,
+    "x": 198.1,
+    "y": -96.88,
     "z": 378.3
   },
   {
     "index": 237,
-    "code": "CB-108",
-    "line": "B7-D20",
-    "raft": "BÈ 7",
+    "code": "CB-023",
+    "line": "B3A-D46",
+    "lines": [
+      "B3A-D46",
+      "B7-D23"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.78,
-    "y": -152.03,
+    "x": 172.09,
+    "y": -80.6,
     "z": 378.3
   },
   {
     "index": 238,
-    "code": "CB-109",
-    "line": "B7-D21",
-    "raft": "BÈ 7",
+    "code": "CB-024",
+    "line": "B3A-D47",
+    "lines": [
+      "B3A-D47",
+      "B7-D32"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -130.34,
+    "x": 157.75,
+    "y": -78.99,
     "z": 378.3
   },
   {
     "index": 239,
-    "code": "CB-110",
-    "line": "B7-D22",
-    "raft": "BÈ 7",
+    "code": "CB-025",
+    "line": "B3A-D48",
+    "lines": [
+      "B3A-D48",
+      "B7-D19"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -109.23,
+    "x": 143.31,
+    "y": -78.94,
     "z": 378.3
   },
   {
     "index": 240,
-    "code": "CB-111",
-    "line": "B7-D23",
-    "raft": "BÈ 7",
+    "code": "CB-026",
+    "line": "B3A-D49",
+    "lines": [
+      "B3A-D49",
+      "B7-D31"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -106.03,
+    "x": 128.93,
+    "y": -79.36,
     "z": 378.3
   },
   {
     "index": 241,
-    "code": "CB-112",
-    "line": "B7-D24",
-    "raft": "BÈ 7",
+    "code": "CB-027",
+    "line": "B3A-D50",
+    "lines": [
+      "B3A-D50",
+      "B7-D22"
+    ],
+    "raft": "BÈ 3A",
+    "rafts": [
+      "BÈ 3A",
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -116.03,
+    "x": 114.44,
+    "y": -78.94,
     "z": 378.3
   },
   {
     "index": 242,
-    "code": "CB-113",
-    "line": "B7-D25",
-    "raft": "BÈ 7",
+    "code": "CB-028",
+    "line": "B5A-D12",
+    "lines": [
+      "B5A-D12"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -134.03,
+    "x": 380.97,
+    "y": -77.42,
     "z": 378.3
   },
   {
     "index": 243,
-    "code": "CB-114",
-    "line": "B7-D26",
-    "raft": "BÈ 7",
+    "code": "CB-029",
+    "line": "B5A-D13",
+    "lines": [
+      "B5A-D13",
+      "B6-D27"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A",
+      "BÈ 6"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 238.2,
-    "y": -96.03,
+    "x": 371.71,
+    "y": -73.49,
     "z": 378.3
   },
   {
     "index": 244,
-    "code": "CB-115",
-    "line": "B8-D06",
-    "raft": "BÈ 8",
+    "code": "CB-030",
+    "line": "B5A-D14",
+    "lines": [
+      "B5A-D14"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 423.99,
-    "y": 33.36,
+    "x": 351.47,
+    "y": -77.42,
     "z": 378.3
   },
   {
     "index": 245,
-    "code": "CB-116",
-    "line": "B8-D07",
-    "raft": "BÈ 8",
+    "code": "CB-031",
+    "line": "B5A-D15",
+    "lines": [
+      "B5A-D15"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 418.95,
-    "y": 25.07,
+    "x": 336.72,
+    "y": -77.42,
     "z": 378.3
   },
   {
     "index": 246,
-    "code": "CB-117",
-    "line": "B8-D11",
-    "raft": "BÈ 8",
+    "code": "CB-032",
+    "line": "B5A-D47",
+    "lines": [
+      "B5A-D47"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 406.33,
-    "y": -61.21,
+    "x": 381,
+    "y": -144.31,
     "z": 378.3
   },
   {
     "index": 247,
-    "code": "CB-118",
-    "line": "B8-D12",
-    "raft": "BÈ 8",
+    "code": "CB-033",
+    "line": "B5A-D48",
+    "lines": [
+      "B5A-D48"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 390.95,
-    "y": -65.62,
+    "x": 387.51,
+    "y": -147.66,
     "z": 378.3
   },
   {
     "index": 248,
-    "code": "CB-119",
-    "line": "B8-D13",
-    "raft": "BÈ 8",
+    "code": "CB-034",
+    "line": "B5A-D49",
+    "lines": [
+      "B5A-D49"
+    ],
+    "raft": "BÈ 5A",
+    "rafts": [
+      "BÈ 5A"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 375.57,
-    "y": -70.03,
+    "x": 388.38,
+    "y": -156.35,
     "z": 378.3
   },
   {
     "index": 249,
-    "code": "CB-120",
-    "line": "B8-D14",
-    "raft": "BÈ 8",
+    "code": "CB-035",
+    "line": "B6-D17",
+    "lines": [
+      "B6-D17"
+    ],
+    "raft": "BÈ 6",
+    "rafts": [
+      "BÈ 6"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 355.67,
-    "y": -75.4,
+    "x": 338.93,
+    "y": -61.29,
     "z": 378.3
   },
   {
     "index": 250,
-    "code": "CB-121",
-    "line": "B8-D18",
-    "raft": "BÈ 8",
+    "code": "CB-036",
+    "line": "B7-D20",
+    "lines": [
+      "B7-D20",
+      "B8-D31"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7",
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 340.19,
-    "y": -60.92,
+    "x": 111.96,
+    "y": 89.82,
     "z": 378.3
   },
   {
     "index": 251,
-    "code": "CB-122",
-    "line": "B8-D19",
-    "raft": "BÈ 8",
+    "code": "CB-037",
+    "line": "B7-D24",
+    "lines": [
+      "B7-D24"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 335.78,
-    "y": -45.54,
+    "x": 138.85,
+    "y": 96.69,
     "z": 378.3
   },
   {
     "index": 252,
-    "code": "CB-123",
-    "line": "B8-D20",
-    "raft": "BÈ 8",
+    "code": "CB-038",
+    "line": "B7-D25",
+    "lines": [
+      "B7-D25",
+      "B8-D29"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7",
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 331.37,
-    "y": -30.16,
+    "x": 83.63,
+    "y": 87.37,
     "z": 378.3
   },
   {
     "index": 253,
-    "code": "CB-124",
-    "line": "B8-D21",
-    "raft": "BÈ 8",
+    "code": "CB-039",
+    "line": "B7-D30",
+    "lines": [
+      "B7-D30"
+    ],
+    "raft": "BÈ 7",
+    "rafts": [
+      "BÈ 7"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 326.96,
-    "y": -14.78,
+    "x": 100.48,
+    "y": -82.31,
     "z": 378.3
   },
   {
     "index": 254,
-    "code": "CB-125",
-    "line": "B8-D26",
+    "code": "CB-040",
+    "line": "B8-D28",
+    "lines": [
+      "B8-D28"
+    ],
     "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 325.59,
-    "y": 64.4,
+    "x": 66.4,
+    "y": 84.29,
     "z": 378.3
   },
   {
     "index": 255,
-    "code": "CB-126",
-    "line": "B8-D27",
+    "code": "CB-041",
+    "line": "B8-D30",
+    "lines": [
+      "B8-D30"
+    ],
     "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 390.95,
-    "y": 83.14,
+    "x": 94.4,
+    "y": 90.54,
     "z": 378.3
   },
   {
     "index": 256,
-    "code": "CB-127",
-    "line": "B8-D28",
+    "code": "CB-042",
+    "line": "B8-D32",
+    "lines": [
+      "B8-D32"
+    ],
     "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 424.83,
-    "y": 30.44,
+    "x": 122.4,
+    "y": 90.54,
     "z": 378.3
   },
   {
     "index": 257,
-    "code": "CB-128",
-    "line": "B8-D30",
+    "code": "CB-043",
+    "line": "B8-D35",
+    "lines": [
+      "B8-D35"
+    ],
     "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 421.98,
-    "y": 25.36,
+    "x": 151.65,
+    "y": 132.04,
     "z": 378.3
   },
   {
     "index": 258,
-    "code": "CB-129",
-    "line": "B9-D01",
-    "raft": "BÈ 9",
+    "code": "CB-044",
+    "line": "B8-D36",
+    "lines": [
+      "B8-D36"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 146.02,
-    "y": 90.1,
+    "x": 151.65,
+    "y": 146.04,
     "z": 378.3
   },
   {
     "index": 259,
-    "code": "CB-130",
-    "line": "B9-D02",
-    "raft": "BÈ 9",
+    "code": "CB-045",
+    "line": "B8-D37",
+    "lines": [
+      "B8-D37"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 194.98,
-    "y": -23.71,
+    "x": 151.65,
+    "y": 160.04,
     "z": 378.3
   },
   {
     "index": 260,
-    "code": "CB-131",
-    "line": "B9-D11",
-    "raft": "BÈ 9",
+    "code": "CB-046",
+    "line": "B8-D38",
+    "lines": [
+      "B8-D38"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 182.47,
-    "y": 21.77,
+    "x": 157.91,
+    "y": 156.64,
     "z": 378.3
   },
   {
     "index": 261,
-    "code": "CB-132",
-    "line": "B9-D12",
-    "raft": "BÈ 9",
+    "code": "CB-047",
+    "line": "B8-D39",
+    "lines": [
+      "B8-D39"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 185.36,
-    "y": -10.94,
+    "x": 164.06,
+    "y": 153.02,
     "z": 378.3
   },
   {
     "index": 262,
-    "code": "CB-133",
-    "line": "B9-D13",
-    "raft": "BÈ 9",
+    "code": "CB-048",
+    "line": "B8-D46",
+    "lines": [
+      "B8-D46"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 172.57,
-    "y": 0.87,
+    "x": 140.15,
+    "y": 231.96,
     "z": 378.3
   },
   {
     "index": 263,
-    "code": "CB-134",
-    "line": "B9-D14",
-    "raft": "BÈ 9",
+    "code": "CB-049",
+    "line": "B8-D48",
+    "lines": [
+      "B8-D48",
+      "B9-D16"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8",
+      "BÈ 9"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 194.98,
-    "y": -51.71,
+    "x": 115.24,
+    "y": 293.32,
     "z": 378.3
   },
   {
     "index": 264,
-    "code": "CB-135",
-    "line": "B9-D15",
-    "raft": "BÈ 9",
+    "code": "CB-050",
+    "line": "B8-D49",
+    "lines": [
+      "B8-D49"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 191.28,
-    "y": -65.14,
+    "x": 104.79,
+    "y": 299.29,
     "z": 378.3
   },
   {
     "index": 265,
-    "code": "CB-136",
-    "line": "B9-D16",
-    "raft": "BÈ 9",
+    "code": "CB-051",
+    "line": "B8-D50",
+    "lines": [
+      "B8-D50"
+    ],
+    "raft": "BÈ 8",
+    "rafts": [
+      "BÈ 8"
+    ],
     "type": "BED",
     "shape": "square",
-    "x": 183.28,
-    "y": -65.14,
-    "z": 378.3
-  },
-  {
-    "index": 266,
-    "code": "CB-137",
-    "line": "B9-D17",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 176.8,
-    "y": -73.83,
-    "z": 378.3
-  },
-  {
-    "index": 267,
-    "code": "CB-138",
-    "line": "B9-D18",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 160.08,
-    "y": -73.83,
-    "z": 378.3
-  },
-  {
-    "index": 268,
-    "code": "CB-139",
-    "line": "B9-D19",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 148.48,
-    "y": -73.83,
-    "z": 378.3
-  },
-  {
-    "index": 269,
-    "code": "CB-140",
-    "line": "B9-D30",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 80.02,
-    "y": 83.26,
-    "z": 378.3
-  },
-  {
-    "index": 270,
-    "code": "CB-141",
-    "line": "B9-D31",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 117.23,
-    "y": -78.81,
-    "z": 378.3
-  },
-  {
-    "index": 271,
-    "code": "CB-142",
-    "line": "B9-D32",
-    "raft": "BÈ 9",
-    "type": "BED",
-    "shape": "square",
-    "x": 115.39,
-    "y": 89.9,
-    "z": 378.3
-  },
-  {
-    "index": 272,
-    "code": "CB-143",
-    "line": "B10-D01",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 122.97,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 273,
-    "code": "CB-144",
-    "line": "B10-D02",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 108.97,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 274,
-    "code": "CB-145",
-    "line": "B10-D03",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 96.97,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 275,
-    "code": "CB-146",
-    "line": "B10-D04",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 82.97,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 276,
-    "code": "CB-147",
-    "line": "B10-D05",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 154.13,
-    "y": 226.48,
-    "z": 378.3
-  },
-  {
-    "index": 277,
-    "code": "CB-148",
-    "line": "B10-D06",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 190.62,
-    "y": 191.82,
-    "z": 378.3
-  },
-  {
-    "index": 278,
-    "code": "CB-149",
-    "line": "B10-D07",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 190.62,
-    "y": 169.82,
-    "z": 378.3
-  },
-  {
-    "index": 279,
-    "code": "CB-150",
-    "line": "B10-D08",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 173.12,
-    "y": 143.26,
-    "z": 378.3
-  },
-  {
-    "index": 280,
-    "code": "CB-151",
-    "line": "B10-D10",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 140.55,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 281,
-    "code": "CB-152",
-    "line": "B10-D14",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 163.82,
-    "y": 138.47,
-    "z": 378.3
-  },
-  {
-    "index": 282,
-    "code": "CB-153",
-    "line": "B10-D15",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 134.02,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 283,
-    "code": "CB-154",
-    "line": "B10-D16",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 122.02,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 284,
-    "code": "CB-155",
-    "line": "B10-D17",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 112.02,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 285,
-    "code": "CB-156",
-    "line": "B10-D18",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 100.02,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 286,
-    "code": "CB-157",
-    "line": "B10-D19",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 90.02,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 287,
-    "code": "CB-158",
-    "line": "B10-D20",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 96.55,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 288,
-    "code": "CB-159",
-    "line": "B10-D21",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 118.55,
-    "y": 90.1,
-    "z": 378.3
-  },
-  {
-    "index": 289,
-    "code": "CB-160",
-    "line": "B10-D29",
-    "raft": "BÈ 10",
-    "type": "BED",
-    "shape": "square",
-    "x": 155.48,
-    "y": 143.19,
-    "z": 378.3
-  },
-  {
-    "index": 290,
-    "code": "CB-161",
-    "line": "B11-D02",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 123.75,
-    "y": 294.28,
-    "z": 378.3
-  },
-  {
-    "index": 291,
-    "code": "CB-162",
-    "line": "B11-D03",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 112.84,
-    "y": 296.35,
-    "z": 378.3
-  },
-  {
-    "index": 292,
-    "code": "CB-163",
-    "line": "B11-D04",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 92.57,
-    "y": 303.53,
-    "z": 378.3
-  },
-  {
-    "index": 293,
-    "code": "CB-164",
-    "line": "B11-D08",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 73.33,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 294,
-    "code": "CB-165",
-    "line": "B11-D09",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 70.13,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 295,
-    "code": "CB-166",
-    "line": "B11-D10",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 90.13,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 296,
-    "code": "CB-167",
-    "line": "B11-D11",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 112.13,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 297,
-    "code": "CB-168",
-    "line": "B11-D12",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 132.13,
-    "y": 217.41,
-    "z": 378.3
-  },
-  {
-    "index": 298,
-    "code": "CB-169",
-    "line": "B11-D15",
-    "raft": "BÈ 11",
-    "type": "BED",
-    "shape": "square",
-    "x": 43.37,
-    "y": 227.73,
-    "z": 378.3
-  },
-  {
-    "index": 299,
-    "code": "CB-170",
-    "line": "B12-D01",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 173.39,
-    "y": 415.45,
-    "z": 378.3
-  },
-  {
-    "index": 300,
-    "code": "CB-171",
-    "line": "B12-D02",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 187.77,
-    "y": 408.44,
-    "z": 378.3
-  },
-  {
-    "index": 301,
-    "code": "CB-172",
-    "line": "B12-D10",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 110.57,
-    "y": 298.47,
-    "z": 378.3
-  },
-  {
-    "index": 302,
-    "code": "CB-173",
-    "line": "B12-D11",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 128.57,
-    "y": 294.08,
-    "z": 378.3
-  },
-  {
-    "index": 303,
-    "code": "CB-174",
-    "line": "B12-D19",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 135.73,
-    "y": 414.07,
-    "z": 378.3
-  },
-  {
-    "index": 304,
-    "code": "CB-175",
-    "line": "B12-D20",
-    "raft": "BÈ 12",
-    "type": "BED",
-    "shape": "square",
-    "x": 113.83,
-    "y": 367.75,
+    "x": 90.54,
+    "y": 299.29,
     "z": 378.3
   }
 ]

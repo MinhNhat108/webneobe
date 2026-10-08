@@ -304,7 +304,7 @@ export function buildMooringDeadweightDxf(
       [
         `BANG THONG KE COC NEO BO BTCT (${schedule.shorePiles.length} COC) - PHUONG AN 2 - ${code}`,
         'Coc bo: D = duong kinh coc khoan nhoi tron (hoac a = canh coc vuong) | L_opt: chieu sau ngam toi thieu (Broms) | L_tk: chieu sau dong coc thiet ke | P_max: suc chiu tai cho phep tai L_tk',
-        'Ma coc giu nguyen theo bang thong ke Phuong an 1 (danh so tren ca 304 diem neo).'
+        `Ma coc giu nguyen theo bang thong ke Phuong an 1 (danh so tren ca ${schedule.shorePiles.length + schedule.blocks.length} diem neo).`
       ],
       SHORE_COLUMNS, schedule.shorePiles, { x: cursorX, y: top }, h
     );

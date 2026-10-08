@@ -102,12 +102,12 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
         <Scale className="w-5 h-5 text-brand-600 shrink-0 mt-0.5" />
         <div>
           <h2 className="text-sm font-bold text-slate-900">
-            So Sánh Kỹ Thuật Hai Phương Án Neo Đáy Hồ: PA1 (Cọc Đóng BTCT) & PA2 (Khối Bê Tông Neo Đáy)
+            Hai Phương Án Neo Đáy Thay Thế: Cọc Đóng BTCT 350×350 & Khối Bê Tông Trọng Lực
           </h2>
           <p className="text-slate-500 mt-0.5">
             {cmp.shorePileCount} cọc bờ ({cmp.shoreCount} điểm neo) giống nhau ở cả hai phương án (bờ dốc, không đặt được khối). Khác nhau ở {cmp.bedCount} điểm
             neo đáy hồ. Cả hai tính từ cùng lực căng thiết kế T_max và góc cáp đáy của từng bè. Đang chọn:{' '}
-            <strong>{option === 'PA2_DEADWEIGHT' ? 'Phương án 2' : 'Phương án 1'}</strong>.
+            <strong>{option === 'PA3_SCREW_BASE' ? 'đế BTCT + vít xoắn (xem bảng phía trên)' : option === 'PA2_DEADWEIGHT' ? 'khối bê tông trọng lực' : 'cọc đóng BTCT'}</strong>.
           </p>
         </div>
       </div>
@@ -125,8 +125,8 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
 
       {clashes.length > 0 && (
         <div className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-rose-900">
-          <strong>❌ {clashes.length} cặp khối bê tông chồng lấn nhau trên mặt bằng.</strong> 175 điểm neo đáy được bố trí cho cọc
-          (có điểm chỉ cách nhau khoảng 3 m trên tim khe hẹp giữa hai bè), trong khi đáy khối rộng {rng(cmp.blockSide_m, 2)} m. Muốn dùng
+          <strong>❌ {clashes.length} cặp khối bê tông chồng lấn nhau trên mặt bằng.</strong> Các điểm neo đáy hiện được bố trí cho đế vít xoắn (tâm cách nhau từ 7 m)
+          , trong khi đáy khối rộng {rng(cmp.blockSide_m, 2)} m. Muốn dùng
           Phương án 2 phải bố trí lại các điểm neo đáy; bảng thống kê và bản vẽ CAD PA2 đánh dấu từng khối bị chồng lấn.
         </div>
       )}

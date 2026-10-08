@@ -78,7 +78,7 @@ export function exportProjectToExcel(
     'Số dây (Bờ/Đáy)', 'Cáp chọn', 'MBL cáp (kN)', 'Độ sâu (m)',
     'F_env (kN)', 'T_max nguyên vẹn (kN)', 'T_max đứt 1 dây (kN)',
     'η cáp (MBL_req/MBL)', 'η cọc bờ ngang', 'η cọc bờ uốn',
-    'η cọc đáy ngang', 'η cọc đáy nhổ', 'Hạng mục chi phối', 'Kết luận'
+    'η neo đáy ngang / trượt', 'η neo đáy nhổ', 'Neo đáy', 'Hạng mục chi phối', 'Kết luận'
   ];
   const masterRows: any[][] = [
     [`BẢNG TỔNG HỢP ${rafts ? rafts.length : 1} CỤM BÈ PIN HỒ HUỔI VANH — MASTER SHEET`],
@@ -103,7 +103,11 @@ export function exportProjectToExcel(
         c.f_env_total_kN, c.t_max_intact_kN, c.t_max_damaged_kN,
         c.cableUtilization ?? '-',
         c.shorePile?.utilization_H ?? '-', c.shorePile?.utilization_M ?? '-',
-        c.bedPile1?.utilization_H ?? '-', c.bedPile1?.utilization_Uplift ?? '-',
+        c.bedScrewBase ? c.bedScrewBase.slideUtil : c.bedBlock ? '-' : c.bedPile1?.utilization_H ?? '-',
+        c.bedScrewBase ? c.bedScrewBase.upliftUtil : c.bedBlock ? '-' : c.bedPile1?.utilization_Uplift ?? '-',
+        c.bedScrewBase
+          ? `Đế BTCT ${c.bedScrewBase.side_m.toFixed(2)}×${c.bedScrewBase.side_m.toFixed(2)}×${c.bedScrewBase.thickness_m.toFixed(2)} m + ${c.bedScrewBase.params.screwCount} vít xoắn`
+          : c.bedBlock ? `Khối bê tông ${c.bedBlock.mass_t.toFixed(1)} T` : 'Cọc đóng BTCT',
         c.governingCheck ? `${c.governingCheck.id} — ${c.governingCheck.label}` : '-',
         c.overallVerdict === 'PASS' ? 'ĐẠT' : c.overallVerdict === 'FAIL' ? 'KHÔNG ĐẠT' : 'KHÔNG TÍNH ĐƯỢC'
       ]);
@@ -114,7 +118,7 @@ export function exportProjectToExcel(
         r.name, r.area_m2, r.perimeter_m, r.length_m, r.width_m,
         r.solarPanelCount || Math.round(r.area_m2 * 0.22),
         `${r.shoreAnchors}/${r.bedAnchors}`, r.selectedCable,
-        '-', r.waterDepth_m, '-', '-', '-', '-', '-', '-', '-', '-', '-', '(chưa tính hàng loạt)'
+        '-', r.waterDepth_m, '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '(chưa tính hàng loạt)'
       ]);
     }
   }
@@ -220,7 +224,26 @@ export function exportProjectToExcel(
     );
   }
 
-  if (results.bedPile1) {
+  if (results.bedScrewBase) {
+    const b = results.bedScrewBase;
+    detailRows.push(
+      [''],
+      ['ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (theo sheet 6.DE_NEO_VIT)', '', '', '', ''],
+      ['Cạnh đế', 'B', b.side_m, 'm', b.enlarged ? 'Đã tăng so với đế mẫu 2,5 m' : ''],
+      ['Chiều dày đế', 't', b.thickness_m, 'm', ''],
+      ['Trọng lượng đẩy nổi của đế', "W'", b.weightSub_kN, 'kN', ''],
+      ['Lực ngang lớn nhất (mực nước thấp)', 'Th', b.cases[0].Th_kN, 'kN', `Góc cáp ${b.cases[0].angle_deg.toFixed(1)} độ`],
+      ['Lực nhổ lớn nhất (mực nước cao)', 'Tv', b.cases[1].Tv_kN, 'kN', `Góc cáp ${b.cases[1].angle_deg.toFixed(1)} độ`],
+      ['Sức chịu nhổ cho phép một vít', 'Q_a', b.screwQa_kN, 'kN', `FS = ${b.params.sfScrewUplift}`],
+      ['Sức chịu ngang cực hạn một vít', 'H_u', b.screwHu_kN, 'kN', 'Broms, đầu tự do'],
+      ['Hệ số sử dụng chống nhổ', 'SV-1', b.upliftUtil, '-', ''],
+      ['Hệ số sử dụng chống trượt', 'SV-2', b.slideUtil, '-', `c_u = ${b.params.cuSurface_kPa} kPa (giả định)`],
+      ['Hệ số sử dụng chống lật', 'SV-3', b.overturnUtil, '-', ''],
+      ['Hệ số sử dụng một vít', 'SV-4', b.screwUtil, '-', ''],
+      ['Hệ số sử dụng nền bùn', 'SV-5', b.bearingUtil, '-', ''],
+      ['Hệ số sử dụng thép bản đế', 'SV-6', b.rebarUtil, '-', `Lưới Ø${b.rebarDia_mm} a${Math.round(b.rebarSpacing_m * 1000)}`]
+    );
+  } else if (results.bedPile1 && !results.bedBlock) {
     detailRows.push(
       [''],
       ['CỌC NEO LÒNG HỒ (BROMS — ' + (results.bedPile1.soilModel === 'sand' ? 'đất rời' : 'đất dính') + ')', '', '', '', ''],
@@ -492,6 +515,18 @@ export function buildPileScheduleWorkbook(
     'điểm',
     `${((bedPiles.length / schedule.length) * 100).toFixed(1)}%`
   ]);
+  // The layout is laid out for shared screw-pile bases: two lake-bed lines may end on the same point.
+  const seen = new Map<string, number>();
+  for (const r of bedPiles) { const k = `${r.x.toFixed(2)},${r.y.toFixed(2)}`; seen.set(k, (seen.get(k) ?? 0) + 1); }
+  const coincident = [...seen.values()].filter((n) => n > 1).length;
+  if (coincident > 0) {
+    rows.push([
+      'CẢNH BÁO: số vị trí đáy hồ có HAI dây cùng neo vào một điểm',
+      coincident,
+      'vị trí',
+      'Mặt bằng được bố trí cho ĐẾ VÍT XOẮN DÙNG CHUNG (phương án thiết kế). Bảng này tính mỗi dây một cọc, nên ở các vị trí đó hai cọc trùng nhau: phương án cọc đóng KHÔNG thi công được trên mặt bằng này nếu chưa bố trí lại.'
+    ]);
+  }
   rows.push([
     'Số điểm neo ĐẠT sức chịu tải (P_req ≤ P_max, tính cho một cọc)',
     passedPiles.length,

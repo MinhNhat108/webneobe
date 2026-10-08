@@ -115,7 +115,7 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Mô hình 3D của 12 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: cọc vuông BTCT 350×350 tại 304 điểm neo (BÈ 5 dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm) đóng vào nền đúng chiều sâu thiết kế, 304 tuyến cáp neo nối từ bích bè tới đỉnh cọc, lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
+              Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 214 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 51 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, 27 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 292 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
             </p>
           </div>
 
@@ -155,13 +155,13 @@ export const SimulationView: React.FC = () => {
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>
-              12 cụm bè (90.724 m²) theo bản vẽ DXF
+              9 cụm bè (95.873 m²) theo bản vẽ DXF
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400" />
             <span>
-              304 tuyến cáp · 304 điểm neo (129 bờ + 175 đáy) · 343 cọc
+              292 tuyến cáp · 265 điểm neo (214 bờ + 51 đáy, 27 đế dùng chung)
             </span>
           </div>
           <div className="flex items-center gap-1.5">

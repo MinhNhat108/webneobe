@@ -107,7 +107,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   const passCount = states.filter((st) => st.verdict === 'PASS').length;
   // The cards describe the raft picked in the "Cụm" selector; the 12-raft
   // extremes stay as a secondary line so the governing raft is not lost.
-  const focusName = `BÈ ${selectedFocusRaft}`;
+  const focusName = RAFT_MODELS.find((r) => r.id === selectedFocusRaft)?.name ?? RAFT_MODELS[0].name;
   const focusState = mooringStates.get(focusName) ?? null;
   // The raft being edited in Tab 2, when its inputs depart from the frozen design.
   const trialState = states.find((st) => st.isActive && st.deviations.length > 0) ?? null;
@@ -117,15 +117,20 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   useEffect(() => {
     if (!selectedElement) return;
     const raftName = selectedElement.type === 'raft' ? selectedElement.id : selectedElement.data['Thuộc cụm bè'];
-    const m = typeof raftName === 'string' ? /^BÈ (\d+)$/.exec(raftName) : null;
-    if (m) setSelectedFocusRaft(Number(m[1]));
+    const hit = typeof raftName === 'string' ? RAFT_MODELS.find((r) => r.name === raftName) : undefined;
+    if (hit) setSelectedFocusRaft(hit.id);
   }, [selectedElement]);
 
   // What the chosen reservoir level does to the mooring system.
   const shoreArm = useProjectStore((s) => s.currentProject.anchor.shoreArm_e_m);
   const bedStickup = useProjectStore((s) => s.currentProject.anchor.bed1Stickup_m);
   const piles = useMemo(() => buildPileModels({ shoreArm_e_m: shoreArm, bed1Stickup_m: bedStickup }), [shoreArm, bedStickup]);
-  const isPa2 = useProjectStore((s) => s.currentProject.anchor.bedAnchorOption) === 'PA2_DEADWEIGHT';
+  const bedOption = useProjectStore((s) => s.currentProject.anchor.bedAnchorOption) ?? 'PA1_PILE';
+  const isPa2 = bedOption === 'PA2_DEADWEIGHT';
+  const bedAnchorWord = bedOption === 'PA3_SCREW_BASE' ? 'đế BTCT + vít xoắn' : isPa2 ? 'khối bê tông neo đáy' : 'cọc đáy hồ 350×350';
+  const shoreCount = piles.filter((p) => p.type === 'SHORE').length;
+  const bedCount = piles.length - shoreCount;
+  const totalArea_m2 = RAFT_MODELS.reduce((s, r) => s + r.polygon.area_m2, 0);
   const floodedShoreHeads = piles.filter((p) => p.type === 'SHORE' && p.head_m < waterLevel_m).length;
   const dryBedPiles = piles.filter((p) => p.type === 'BED' && p.ground_m >= waterLevel_m).map((p) => p.code);
   const agroundRafts = RAFT_MODELS.filter((r) => raftWaterline(r, waterLevel_m).aground).map((r) => r.name);
@@ -242,9 +247,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
       <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
         <span className="text-slate-500 font-bold uppercase text-[11px] tracking-wider">Mặt bằng thiết kế:</span>
         <span className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-600 text-white shadow-sm">
-          {isPa2
-            ? '12 cụm bè · 90.724 m² · PA2: 129 cọc bờ + 175 khối bê tông neo đáy'
-            : '12 cụm bè · 90.724 m² · 304 điểm neo (129 bờ + 175 đáy) · 343 cọc 350×350 (BÈ 5 cọc đôi)'}
+          {`${RAFT_MODELS.length} cụm bè · ${totalArea_m2.toLocaleString('vi-VN')} m² · ${piles.length} điểm neo: ${shoreCount} cọc khoan nhồi bờ + ${bedCount} ${bedAnchorWord}`}
         </span>
       </div>
 
@@ -284,9 +287,9 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               }}
               className="px-2 py-0.5 rounded bg-white text-slate-800 border border-slate-200 font-bold"
             >
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
-                <option key={num} value={num}>
-                  BÈ {num}
+              {RAFT_MODELS.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
                 </option>
               ))}
             </select>
@@ -311,7 +314,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 ))}
               </ul>
               <div className="mt-1 text-[11px] text-amber-800">
-                11 bè còn lại theo thiết kế chốt. Vị trí 304 cọc / tuyến cáp giữ nguyên theo mặt bằng CAD
+                Các bè còn lại theo thiết kế chốt. Vị trí điểm neo / tuyến cáp giữ nguyên theo mặt bằng CAD
                 {trialState.deviations.some((d) => d.label.startsWith('Số dây'))
                   ? ': số dây mới chỉ đưa vào tính toán, hình vẽ không thêm / bớt dây'
                   : ''}.
@@ -337,7 +340,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 {focusState ? `${focusState.envForce_kN.toFixed(1)} kN` : '—'}
               </div>
               <div className="text-[11px] text-emerald-700">{focusName}{focusState?.isActive && focusState.deviations.length > 0 ? ' ⚠️ thử nghiệm' : ''} (gió + dòng + sóng)</div>
-              <div className="text-[10px] text-slate-500 mt-0.5">Cả 12 cụm: {envTotal_kN.toFixed(0)} kN</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Cả {states.length} cụm: {envTotal_kN.toFixed(0)} kN</div>
             </div>
 
             <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3">
@@ -362,14 +365,14 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 {focusState ? `${focusName} · ${focusState.safetyFactor >= sfCriterion ? '✅' : '⚠️'} tiêu chí ≥ ${sfCriterion}` : ''}
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">
-                {worstSf ? `Nhỏ nhất: ${worstSf.safetyFactor.toFixed(2)} (${worstSf.name}) · ${passCount}/12 bè ĐẠT` : ''}
+                {worstSf ? `Nhỏ nhất: ${worstSf.safetyFactor.toFixed(2)} (${worstSf.name}) · ${passCount}/${states.length} bè ĐẠT` : ''}
               </div>
             </div>
           </div>
           <p className="text-[11px] text-slate-500 leading-relaxed -mt-2">
             Số liệu của cụm bè đang chọn (ô "Cụm" phía trên, hoặc bấm vào bè / cáp / cọc trên mô hình 3D), tính trực tiếp
             bằng bộ tính toán của dự án tại vận tốc gió đang chọn; dòng nhỏ bên dưới là giá trị tổng / bất lợi nhất của cả
-            12 cụm. Lực căng là giá trị thiết kế bất lợi nhất của bè (không phụ thuộc hướng gió); màu cáp và cọc trên mô
+            các cụm bè. Lực căng là giá trị thiết kế bất lợi nhất của bè (không phụ thuộc hướng gió); màu cáp và cọc trên mô
             hình 3D theo hệ số sử dụng của chính bè đó.
           </p>
 
@@ -524,8 +527,8 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               </div>
               <div className="text-[11px] leading-relaxed">
                 Bè mắc cạn: <strong>{agroundRafts.length ? agroundRafts.join(', ') : 'không'}</strong>
-                {' · '}Đỉnh cọc bờ bị ngập: <strong>{floodedShoreHeads}/129</strong>
-                {' · '}{isPa2 ? 'Khối neo đáy' : 'Cọc đáy'} nằm trên mặt nước: <strong>{dryBedPiles.length}/175</strong>
+                {' · '}Đỉnh cọc bờ bị ngập: <strong>{floodedShoreHeads}/{shoreCount}</strong>
+                {' · '}{bedOption === 'PA3_SCREW_BASE' ? 'Đế neo đáy' : isPa2 ? 'Khối neo đáy' : 'Cọc đáy'} nằm trên mặt nước: <strong>{dryBedPiles.length}/{bedCount}</strong>
               </div>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
@@ -624,7 +627,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, rafts: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">☀️ 12 Cụm Bè Pin Nổi</span>
+                <span className="font-medium text-slate-700">☀️ 9 Cụm Bè Pin Nổi</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -644,7 +647,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, mooringLines: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">⚓ 304 tuyến cáp neo (cáp căng thẳng)</span>
+                <span className="font-medium text-slate-700">⚓ {piles.length} tuyến cáp neo (cáp căng thẳng)</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -654,7 +657,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, shorePiles: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">📍 129 cọc neo bờ (vuông BTCT)</span>
+                <span className="font-medium text-slate-700">📍 {shoreCount} điểm neo bờ (cọc khoan nhồi D350)</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">
@@ -665,7 +668,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span className="font-medium text-slate-700">
-                  {isPa2 ? '🧱 175 khối bê tông neo đáy (PA2)' : '📍 175 cọc đáy hồ (vuông BTCT)'}
+                  {bedOption === 'PA3_SCREW_BASE' ? '🔩' : isPa2 ? '🧱' : '📍'} {bedCount} {bedAnchorWord}
                 </span>
               </label>
 

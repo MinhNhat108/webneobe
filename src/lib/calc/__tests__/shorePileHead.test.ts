@@ -68,8 +68,8 @@ describe('Shore pile head and cable connection', () => {
     expect(h.pileDia_mm).toBe(350);
     expect(h.pinAboveGround_mm).toBe(100);
     expect(h.checks.every((c) => c.ok)).toBe(true);
-    // twin piles of BÈ 5 share their line, so the single pile of another raft governs
-    expect(maxPerPile).toBeLessThan(Math.max(...batch.map((b) => b.results.t_max_intact_kN)));
+    // one pile per point at the 20 m/s default: the most loaded pile carries the largest line tension
+    expect(maxPerPile).toBeLessThanOrEqual(Math.max(...batch.map((b) => b.results.t_max_intact_kN)));
     // not applicable to a square precast shore pile
     const sq: ProjectState = { ...state, anchor: { ...state.anchor, shorePileShape: 'square' } };
     expect(buildShorePileHead(sq, buildPileSchedule(sq, calculateProject(sq)), undefined)).toBeUndefined();

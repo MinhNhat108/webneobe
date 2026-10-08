@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * planMooringLayoutV2.mjs — design pass over the V2 mooring network (12 rafts).
+ * planMooringLayoutV2.mjs — design pass over the mooring network (9 rafts since 2026-10-08;
+ * after a new client plan run scripts/importRaftLayout9.mjs first).
  *
  *   node scripts/planMooringLayoutV2.mjs          # rewrite the two JSON files
  *   node scripts/planMooringLayoutV2.mjs --dry    # report only
@@ -22,8 +23,20 @@
  *        mid-line (equal clearance to both rafts)
  *   G3   no two lines cross; no line passes over a raft other than its own;
  *        no line runs back across its own raft
- *   G4   any two piles >= 3.0 m apart
- * Shore piles are never moved. Every pile is a square RC pile (cọc vuông BTCT).
+ *   G4   any two anchors >= 3.0 m apart; two lake-bed anchors >= 7.0 m apart
+ *        (room for the screw-pile bases)
+ *   R1   (owner, 2026-10-08) near the shore the anchor is a BORED PILE, also at
+ *        the water's edge: a lake-bed line with no raft facing it within 45 m
+ *        is turned into a shore line when the IFC terrain reaches 384.0 m
+ *        (MNDB - 0.5 m) within 60 m of its cleat. Such a line is marked
+ *        `converted: true` (design output, re-planned by a new import).
+ *   R2   (owner, 2026-10-08) lake-bed bases only between two rafts, and one
+ *        base is SHARED by two facing lines (same `anchorId`, same position:
+ *        the mid-point of the two anchors) when their cleats are within 12 m
+ *        of each other along the gap.
+ * Shore piles are never moved; they are round bored piles ('circular'). A lake-bed
+ * anchor point is marked 'square' (an RC base with screw piles, or a square pile
+ * under option PA1 — the option is chosen in the project, not here).
  * The script is idempotent: a second run changes nothing.
  */
 import fs from 'node:fs';
@@ -39,7 +52,11 @@ const dryRun = process.argv.includes('--dry');
 const MAX_SPACING = 15.0;    // m, C9
 const MIN_STANDOFF = 5.0;    // m, G1
 const OPEN_STANDOFF = 17.5;  // m, preferred pile offset in open water
-const MIN_PILE_GAP = 3.0;    // m, G4
+const MIN_PILE_GAP = 3.0;    // m, G4 (when a shore pile is involved)
+// Two LAKE-BED anchors: the screw-pile bases are up to 4.75 m square (diagonal
+// 6.7 m), so their centres are kept 7 m apart and no two bases can overlap
+// whatever their orientation.
+const MIN_BED_GAP = 7.0;     // m, G4 between two lake-bed anchors
 const MIN_CLEAT_GAP = 6.0;   // m, spacing of fittings on the pontoon edge
 const MNDB = 384.5;          // m, normal water level
 // Lake-bed level under each raft = MNDB - design water depth (same depth the
@@ -47,6 +64,28 @@ const MNDB = 384.5;          // m, normal water level
 // under the rafts, i.e. above the water surface.
 const WATER_DEPTH = { 'BÈ 1': 6.0 };
 const DEFAULT_DEPTH = 6.2;
+
+const SHORE_LEVEL = 384.0;   // m, R1: ground at / above this is "shore or water's edge"
+const MAX_SHORE_SPAN = 60.0; // m, R1: longest cable to a new shore pile
+const GAP_LIMIT = 45.0;      // m, R1/R2: another raft within this distance of the cleat = "between two rafts"
+const PAIR_OFFSET = 12.0;    // m, R2: two facing cleats this close along the gap share a base
+
+// IFC terrain (Toposolid), converted to the project datum: IFC = project + (IFC water surface - MNDB).
+const TERRAIN = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/huoiVanhTerrainMesh.json'), 'utf8'));
+const T_DX = (TERRAIN.bounds.maxX - TERRAIN.bounds.minX) / (TERRAIN.nx - 1);
+const T_DY = (TERRAIN.bounds.maxY - TERRAIN.bounds.minY) / (TERRAIN.ny - 1);
+const T_OFFSET = TERRAIN.ifcWaterSurface_m - MNDB;
+/** Ground level at a plan point, project datum (same interpolation as sceneModel.groundAt); null outside the model. */
+function groundAt(x, y) {
+  const fx = (x - TERRAIN.bounds.minX) / T_DX, fy = (y - TERRAIN.bounds.minY) / T_DY;
+  if (fx < 0 || fy < 0 || fx > TERRAIN.nx - 1 || fy > TERRAIN.ny - 1) return null;
+  const col = Math.min(TERRAIN.nx - 2, Math.floor(fx)), row = Math.min(TERRAIN.ny - 2, Math.floor(fy));
+  const tx = fx - col, ty = fy - row;
+  const z = (r, c) => { const v = TERRAIN.elevations[r]?.[c]; return v === null || v === undefined ? null : v - T_OFFSET; };
+  const p00 = z(row, col), p01 = z(row, col + 1), p10 = z(row + 1, col), p11 = z(row + 1, col + 1);
+  if (p00 === null || p01 === null || p10 === null || p11 === null) return null;
+  return tx >= ty ? p00 + tx * (p01 - p00) + ty * (p11 - p01) : p00 + ty * (p10 - p00) + tx * (p11 - p10);
+}
 
 const polygons = JSON.parse(fs.readFileSync(POLYS, 'utf8'));
 const coords = JSON.parse(fs.readFileSync(COORDS, 'utf8'));
@@ -149,7 +188,7 @@ function lineFeasible(cleat, pile, raftName, ignore) {
   if (minClearanceAll(pile) < MIN_STANDOFF) return false;
   for (const c of coords) {
     if (c === ignore) continue;
-    if (dist(anchorOf(c), pile) < MIN_PILE_GAP) return false;
+    if (dist(anchorOf(c), pile) < (c.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP)) return false;
     if (segCross(cleat, pile, cleatOf(c), anchorOf(c))) return false;
   }
   for (const q of polygons) {
@@ -272,7 +311,7 @@ for (const c of coords) {
 // listed here, no two consecutive cleats along the perimeter may be more than
 // MAX_CLEAT_STEP apart. Applied to BÈ 5 on its 2026-09-27 re-plan.
 const MAX_CLEAT_STEP = 15.0; // m
-const GAP_LIMITED = new Set(['BÈ 5']);
+const GAP_LIMITED = new Set(['BÈ 3A', 'BÈ 5A', 'BÈ 8']); // the merged rafts of the 9-raft plan (2026-10-08)
 const codeNum = (code) => Number(code.split('-D')[1]);
 
 function addBedLine(raftName, cleat, pile, note) {
@@ -413,8 +452,166 @@ for (const poly of polygons) {
   }
 }
 
-// ---- Step 3: bed level (all bed piles: MNDB - design depth) ---------------
-for (const c of coords) if (c.type === 'BED') c.zAnchor = bedZ(c.raft);
+// ---- Step 2c (R1): near the shore the anchor is a bored pile ---------------
+/** The raft facing a cleat within GAP_LIMIT along its cable (±30°), if any. */
+function facingRaft(c) {
+  const cleat = cleatOf(c), a = anchorOf(c), L = dist(cleat, a) || 1;
+  const dir = { x: (a.x - cleat.x) / L, y: (a.y - cleat.y) / L };
+  let best = { gap: Infinity, name: null };
+  for (const deg of [0, -15, 15, -30, 30]) {
+    const r = (deg * Math.PI) / 180;
+    const d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
+    for (const p of polygons) {
+      if (p.name === c.raft) continue;
+      const far = { x: cleat.x + d.x * 1000, y: cleat.y + d.y * 1000 };
+      for (let i = 0; i < p.points.length; i++) {
+        const e1 = p.points[i], e2 = p.points[(i + 1) % p.points.length];
+        const den = (far.x - cleat.x) * (e2.y - e1.y) - (far.y - cleat.y) * (e2.x - e1.x);
+        if (Math.abs(den) < 1e-12) continue;
+        const t = ((e1.x - cleat.x) * (e2.y - e1.y) - (e1.y - cleat.y) * (e2.x - e1.x)) / den;
+        const u = ((e1.x - cleat.x) * (far.y - cleat.y) - (e1.y - cleat.y) * (far.x - cleat.x)) / den;
+        if (t > 1e-9 && u >= 0 && u <= 1 && t * 1000 < best.gap) best = { gap: t * 1000, name: p.name };
+      }
+    }
+  }
+  return best.gap <= GAP_LIMIT ? best : null;
+}
+/** A shore line cleat->pile is acceptable: clear of every raft, of every other line and of every other anchor. */
+function shoreLineFeasible(cleat, pile, c) {
+  for (const q of polygons) {
+    if (inRing(pile, q.points)) return false;
+    if (q.name !== c.raft && (clearance(pile, q.points) < MIN_STANDOFF || segOverRing(cleat, pile, q.points))) return false;
+    if (q.name === c.raft && inRing({ x: (cleat.x + pile.x) / 2, y: (cleat.y + pile.y) / 2 }, q.points)) return false;
+  }
+  for (const o of coords) {
+    if (o === c) continue;
+    if (dist(anchorOf(o), pile) < MIN_PILE_GAP) return false;
+    if (segCross(cleat, pile, cleatOf(o), anchorOf(o))) return false;
+  }
+  return true;
+}
+// Repeated until nothing changes: a line blocked by a neighbour's old lake-bed line may pass once that neighbour has moved.
+for (let pass = 0, changed = true; changed && pass < 10; pass++) {
+ changed = false;
+ for (const c of coords) {
+  if (c.type !== 'BED' || facingRaft(c)) continue;
+  const cleat = cleatOf(c), a = anchorOf(c), L = dist(cleat, a) || 1;
+  const dir = { x: (a.x - cleat.x) / L, y: (a.y - cleat.y) / L };
+  let best = null;
+  for (const deg of [0, -5, 5, -10, 10, -15, 15, -20, 20, -25, 25, -30, 30, -37.5, 37.5, -45, 45]) {
+    const r = (deg * Math.PI) / 180;
+    const d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
+    for (let s = 3; s <= MAX_SHORE_SPAN; s += 0.5) {
+      const q = { x: cleat.x + d.x * s, y: cleat.y + d.y * s };
+      const g = groundAt(q.x, q.y);
+      if (g === null) break;
+      if (g < SHORE_LEVEL) continue;
+      // the first FEASIBLE point at shore level along this bearing (a little further inland is still the shore)
+      if (shoreLineFeasible(cleat, q, c)) { if (!best || s < best.s) best = { s, q, g }; break; }
+    }
+  }
+  if (!best) continue;
+  changed = true;
+  const before = c.span;
+  c.type = 'SHORE';
+  c.converted = true;
+  delete c.anchorId;
+  delete c.sharedWith;
+  setAnchor(c, best.q);
+  report.moved.push(`${c.code}: lake-bed line -> bored shore pile (R1), ground ${best.g.toFixed(2)} m, span ${before} -> ${c.span} m`);
+ }
+}
+
+if (process.argv.includes('--explain')) {
+  for (const c of coords) {
+    if (c.type !== 'BED' || facingRaft(c)) continue;
+    const cleat = cleatOf(c), a = anchorOf(c), L = dist(cleat, a) || 1, dir = { x: (a.x - cleat.x) / L, y: (a.y - cleat.y) / L };
+    let reason = 'no ground at shore level within reach';
+    for (let sp = 3; sp <= MAX_SHORE_SPAN; sp += 0.5) {
+      const q = { x: cleat.x + dir.x * sp, y: cleat.y + dir.y * sp };
+      const g = groundAt(q.x, q.y);
+      if (g === null) { reason = 'leaves the terrain model'; break; }
+      if (g < SHORE_LEVEL) continue;
+      const why = [];
+      for (const q2 of polygons) { if (inRing(q, q2.points)) why.push('inside ' + q2.name); else if (q2.name !== c.raft && clearance(q, q2.points) < MIN_STANDOFF) why.push('<5 m from ' + q2.name); else if (q2.name !== c.raft && segOverRing(cleat, q, q2.points)) why.push('over ' + q2.name); }
+      for (const o of coords) { if (o === c) continue; if (dist(anchorOf(o), q) < MIN_PILE_GAP) why.push('<3 m from ' + o.code); if (segCross(cleat, q, cleatOf(o), anchorOf(o))) why.push('crosses ' + o.code + '(' + o.type + ')'); }
+      reason = `shore level at ${sp} m: ${why.join(', ') || 'feasible?'}`; break;
+    }
+    console.log('EXPLAIN R1', c.code, c.raft, 'span', c.span, '-', reason);
+  }
+}
+
+// ---- Step 2d (R2): one base shared by two facing lines ---------------------
+for (const c of coords) { if (c.type === 'BED') { delete c.anchorId; delete c.sharedWith; } }
+// Repeated until nothing changes: a pair blocked by a neighbouring single anchor may pass once that neighbour is paired.
+for (let pass = 0, paired = true; paired && pass < 10; pass++) {
+  paired = false;
+  const groups = new Map();
+  for (const c of coords) {
+    if (c.type !== 'BED' || c.sharedWith) continue;
+    const f = facingRaft(c);
+    if (!f) continue;
+    const key = [c.raft, f.name].sort().join('|');
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(c);
+  }
+  for (const [key, ls] of groups) {
+    const [ra, rb] = key.split('|');
+    const A = ls.filter((l) => l.raft === ra), B = ls.filter((l) => l.raft === rb);
+    if (!A.length || !B.length) continue;
+    // axis of the gap: principal direction of the ANCHORS of the two rafts in it (they lie along the gap,
+    // whereas the cleats of two facing edges also spread across it)
+    const all = coords.filter((o) => o.type === 'BED' && (o.raft === ra || o.raft === rb) && facingRaft(o) && [ra, rb].includes(facingRaft(o).name));
+    const cx = all.reduce((s, l) => s + l.xAnchor, 0) / all.length, cy = all.reduce((s, l) => s + l.yAnchor, 0) / all.length;
+    let sxx = 0, sxy = 0, syy = 0;
+    for (const l of all) { const dx = l.xAnchor - cx, dy = l.yAnchor - cy; sxx += dx * dx; sxy += dx * dy; syy += dy * dy; }
+    const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), ax = { x: Math.cos(th), y: Math.sin(th) };
+    const along = (l) => (l.xRaft - cx) * ax.x + (l.yRaft - cy) * ax.y;
+    A.sort((p, q) => along(p) - along(q) || p.code.localeCompare(q.code));
+    const used = new Set();
+    for (const a of A) {
+      let pick = null, bestD = PAIR_OFFSET;
+      for (const b of B) { if (used.has(b)) continue; const d = Math.abs(along(a) - along(b)); if (d < bestD - 1e-9) { bestD = d; pick = b; } }
+      if (!pick) continue;
+      const mid = { x: r2((a.xAnchor + pick.xAnchor) / 2), y: r2((a.yAnchor + pick.yAnchor) / 2) };
+      // the shared position must respect every rule the two single anchors did
+      const others = coords.filter((o) => o !== a && o !== pick);
+      const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+        && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
+        && [a, pick].every((l) => others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
+          && polygons.every((q) => q.name === l.raft || !segOverRing(cleatOf(l), mid, q.points)));
+      if (!ok) { if (process.argv.includes('--explain') && pass === 0) console.log('EXPLAIN R2', a.code, '+', pick.code, 'standoff', minClearanceAll(mid).toFixed(1), 'near', others.filter((o) => dist(anchorOf(o), mid) < (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6).map((o) => o.code).join(','), 'cross', [a, pick].flatMap((l) => others.filter((o) => segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o))).map((o) => o.code)).join(',')); continue; }
+      paired = true;
+      used.add(pick);
+      setAnchor(a, mid); setAnchor(pick, mid);
+      a.sharedWith = pick.code; pick.sharedWith = a.code;
+      report.moved.push(`${a.code} + ${pick.code}: one shared lake-bed base (R2), spans ${a.span} / ${pick.span} m`);
+    }
+  }
+}
+// One id per lake-bed base: shared lines carry the same id.
+{
+  let n = 0;
+  for (const c of coords) {
+    if (c.type !== 'BED' || c.anchorId) continue;
+    c.anchorId = `DV-${String(++n).padStart(3, '0')}`;
+    if (c.sharedWith) coords.find((o) => o.code === c.sharedWith).anchorId = c.anchorId;
+  }
+}
+
+// ---- Step 3: levels --------------------------------------------------------
+// Lake-bed base: the DESIGN lake bed (MNDB - design depth). Shore pile: the IFC
+// terrain at the pile, project datum (the older files carried IFC-datum values).
+for (const c of coords) {
+  if (c.type === 'BED') c.zAnchor = bedZ(c.raft);
+  else { const g = groundAt(c.xAnchor, c.yAnchor); if (g !== null) c.zAnchor = r2(g); }
+}
+// A base shared by two rafts has ONE level: the deeper of the two design beds (steeper cables, more uplift).
+for (const c of coords) {
+  if (c.type !== 'BED' || !c.sharedWith) continue;
+  const o = coords.find((q) => q.code === c.sharedWith);
+  c.zAnchor = Math.min(bedZ(c.raft), bedZ(o.raft));
+}
 
 // ------------------------------------------------------------------ verify
 const errors = [...report.unresolved];
@@ -431,7 +628,9 @@ for (let i = 0; i < coords.length; i++) {
   for (let j = i + 1; j < coords.length; j++) {
     const a = coords[i], b = coords[j];
     if (segCross(cleatOf(a), anchorOf(a), cleatOf(b), anchorOf(b))) errors.push(`G3 ${a.code} x ${b.code}`);
-    if (dist(anchorOf(a), anchorOf(b)) < MIN_PILE_GAP - 1e-6) errors.push(`G4 ${a.code}/${b.code}`);
+    if (a.anchorId && a.anchorId === b.anchorId) continue; // two lines on ONE shared base
+    const gap = a.type === 'BED' && b.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP;
+    if (dist(anchorOf(a), anchorOf(b)) < gap - 1e-6) errors.push(`G4 ${a.code}/${b.code}`);
   }
 }
 if (new Set(coords.map((c) => c.code)).size !== coords.length) errors.push('duplicate line code');
@@ -447,16 +646,22 @@ for (const c of coords) {
   if (distToRing(cleatOf(c), ringOf[c.raft]) > CLEAT_TOL) errors.push(`cleat off edge ${c.code}`);
 }
 
-// ---- Pile schedule, derived from the lines (square RC piles only) --------
+// ---- Anchor schedule, derived from the lines -----------------------------
 let iS = 0, iB = 0;
 const shore = coords.filter((c) => c.type === 'SHORE');
 const bed = coords.filter((c) => c.type === 'BED');
+// One row per ANCHOR: a shared lake-bed base appears once, with both of its lines.
+const bedAnchors = [...new Set(bed.map((c) => c.anchorId))].map((id) => bed.filter((c) => c.anchorId === id));
 const piles = [
-  ...shore.map((c) => ({ code: `CS-${String(++iS).padStart(3, '0')}`, line: c.code, raft: c.raft, type: 'SHORE', shape: 'square', x: c.xAnchor, y: c.yAnchor, z: c.zAnchor })),
-  ...bed.map((c) => ({ code: `CB-${String(++iB).padStart(3, '0')}`, line: c.code, raft: c.raft, type: 'BED', shape: 'square', x: c.xAnchor, y: c.yAnchor, z: c.zAnchor }))
+  ...shore.map((c) => ({ code: `CS-${String(++iS).padStart(3, '0')}`, line: c.code, lines: [c.code], raft: c.raft, rafts: [c.raft], type: 'SHORE', shape: 'circular', x: c.xAnchor, y: c.yAnchor, z: c.zAnchor })),
+  ...bedAnchors.map((ls) => ({ code: `CB-${String(++iB).padStart(3, '0')}`, line: ls[0].code, lines: ls.map((c) => c.code), raft: ls[0].raft, rafts: ls.map((c) => c.raft), type: 'BED', shape: 'square', x: ls[0].xAnchor, y: ls[0].yAnchor, z: ls[0].zAnchor }))
 ].map((p, i) => ({ index: i + 1, ...p }));
+for (const ls of bedAnchors) {
+  if (ls.length > 2) errors.push(`more than two lines on base ${ls[0].anchorId}`);
+  if (ls.some((c) => c.xAnchor !== ls[0].xAnchor || c.yAnchor !== ls[0].yAnchor)) errors.push(`lines of ${ls[0].anchorId} do not meet`);
+}
 
-console.log(`lines ${coords.length} (shore ${shore.length}, bed ${bed.length})`);
+console.log(`lines ${coords.length} (shore ${shore.length} of which ${shore.filter((c) => c.converted).length} converted from the lake bed; bed ${bed.length} on ${bedAnchors.length} bases, ${bedAnchors.filter((l) => l.length === 2).length} shared)`);
 console.log(`moved ${report.moved.length}:\n  ${report.moved.join('\n  ')}`);
 console.log(`added ${report.added.length}:\n  ${report.added.join('\n  ')}`);
 if (errors.length) {

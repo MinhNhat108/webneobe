@@ -85,7 +85,7 @@ export const AttachmentPanel: React.FC = () => {
               Tài Liệu Đính Kèm & Bản Vẽ Kỹ Thuật
             </h3>
             <p className="card-subtitle">
-              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf) 12 bè, thuyết minh PDF và xem trước trực tiếp trên web
+              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf) 9 bè, thuyết minh PDF và xem trước trực tiếp trên web
             </p>
           </div>
         </div>
@@ -134,7 +134,7 @@ export const AttachmentPanel: React.FC = () => {
             </p>
             <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
               <li>
-                <strong>HỒ HUỔI VANH.dxf</strong>: Mặt bằng CAD 12 cụm bè (20.721 đối tượng)
+                <strong>HỒ HUỔI VANH.dxf</strong>: Mặt bằng CAD 9 cụm bè (bản 08/10/2026)
               </li>
               <li>
                 <strong>HOHUOIVANH.Bố trí sơ bộ bè pin.pdf</strong>: Bản vẽ thuyết minh layout
@@ -242,7 +242,7 @@ export const AttachmentPanel: React.FC = () => {
                   <FileSpreadsheet className="w-14 h-14 text-emerald-600 mb-3" />
                   <div className="text-base font-semibold text-slate-800">{currentAttachment.name}</div>
                   <p className="text-xs text-slate-500 max-w-md mt-2 leading-relaxed">
-                    File bảng tính Excel rút gọn 12 bè hồ Huổi Vanh. Bạn có thể tải file về máy hoặc dùng chức năng nhập bảng tính để đối chiếu.
+                    File bảng tính Excel của Chủ đầu tư (gồm sheet 6.DE_NEO_VIT: đế BTCT + vít xoắn). Bạn có thể tải file về máy hoặc dùng chức năng nhập bảng tính để đối chiếu.
                   </p>
                   {(currentAttachment.remoteUrl || currentAttachment.blobUrl) && (
                     <a

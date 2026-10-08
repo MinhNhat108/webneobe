@@ -38,6 +38,8 @@ import { calculateProject } from '../../lib/calc';
 import { resolveRaftState, type RaftDeviation } from '../../lib/calc/raftState';
 import { compareMooringOptions } from '../../lib/calc/technicalComparison';
 import { evaluateDeadweightBlock, type DeadweightResult } from '../../lib/calc/deadweight';
+import type { ScrewBaseResult } from '../../lib/calc/screwAnchorBed';
+import { buildScrewBaseSchedule } from '../../lib/io/screwBaseSchedule';
 import type { ProjectState } from '../../lib/calc/types';
 
 // ------------------------------------------------------------------ levels
@@ -272,9 +274,13 @@ export function raftWaterline(raft: RaftModel, level: number): { waterline_m: nu
 export interface PileModel {
   /** Pile code (CS-001 … / CD-…). */
   code: string;
-  /** Mooring line code of the pile (B1-D01 …). */
+  /** Mooring line code of the pile (B1-D01 …); the first one when a lake-bed base is shared by two lines. */
   line: string;
+  /** Every line tied to this anchor: one, or two for a lake-bed base shared by two facing rafts. */
+  lines: string[];
   raft: string;
+  /** The raft(s) of those lines. */
+  rafts: string[];
   type: 'SHORE' | 'BED';
   x: number;
   y: number;
@@ -291,12 +297,29 @@ export interface PileModel {
   pilesAtPoint: number;
   /** PA2 only: this lake-bed anchor is a gravity block resting on the bed (side_m = plan side, stickup_m = height, embed_m = 0). */
   block?: BlockAnchor;
+  /** PA3 only: this lake-bed anchor is an RC base with screw piles (side_m = base side, stickup_m = thickness, embed_m = 0; the screws are not drawn). */
+  screwBase?: ScrewBaseResult;
 }
 
 /** The PA2 gravity block of one raft, sized at the design wind. */
 export interface BlockAnchor {
   block: DeadweightResult;
   cableAngle_deg: number;
+}
+
+/**
+ * PA3 bases, keyed by every line code tied to them: the bases of the anchor
+ * schedule (each designed for its own line or pair of lines), so the 3D view,
+ * the drawing and the Excel sheet show the same bases.
+ */
+export function buildScrewBaseAnchors(base: ProjectState, activeRaftId: number): Map<string, ScrewBaseResult> {
+  const defaultAnchor = HUOI_VANH_DEFAULT_PROJECT.anchor as ProjectState['anchor'];
+  const batch = HUOI_VANH_RAFTS.map((raft) => {
+    const r = resolveRaftState(base, activeRaftId, raft, defaultAnchor);
+    return { raft, state: r.state, results: calculateProject(r.state) };
+  });
+  const schedule = buildScrewBaseSchedule(base, calculateProject(base), batch);
+  return new Map(schedule.bases.flatMap((b) => b.lines.map((l) => [l.code, b.design] as const)));
 }
 
 /** PA2 blocks per raft name, from the same comparison the technical table uses. */
@@ -316,7 +339,7 @@ export function blockUtilisation(b: BlockAnchor, tension_kN: number): number {
   return Math.max(sf(p.sfSlide, e.sfSlide), sf(p.sfUplift, e.sfUplift), sf(p.sfOverturn, e.sfOverturn), e.qContact_kPa / p.qAllow_kPa);
 }
 
-interface PileFileRow { code: string; line: string; raft: string; type: 'SHORE' | 'BED'; shape: string; x: number; y: number }
+interface PileFileRow { code: string; line: string; lines?: string[]; raft: string; rafts?: string[]; type: 'SHORE' | 'BED'; shape: string; x: number; y: number }
 const PILE_ROWS = pilesV2 as PileFileRow[];
 const raftItem = (name: string): RaftSummaryItem => {
   const r = HUOI_VANH_RAFTS.find((q) => q.name === name);
@@ -336,7 +359,9 @@ export function buildPileModels(
   anchor: Partial<ProjectState['anchor']> = {},
   activeRaft?: string,
   /** PA2: when given, every lake-bed anchor is the gravity block of its raft instead of a pile. */
-  blocks?: Map<string, BlockAnchor>
+  blocks?: Map<string, BlockAnchor>,
+  /** PA3: when given, every lake-bed anchor is the RC base of its raft instead of a pile. */
+  screwBases?: Map<string, ScrewBaseResult>
 ): PileModel[] {
   const base = HUOI_VANH_DEFAULT_PROJECT.anchor;
   const shoreStickup = anchor.shoreArm_e_m ?? base.shoreArm_e_m ?? 0.5;
@@ -354,15 +379,25 @@ export function buildPileModels(
     const blk = isShore ? undefined : blocks?.get(p.raft);
     if (blk) {
       return {
-        code: p.code, line: p.line, raft: p.raft, type: p.type, x: p.x, y: p.y,
+        code: p.code, line: p.line, lines: p.lines ?? [p.line], raft: p.raft, rafts: p.rafts ?? [p.raft], type: p.type, x: p.x, y: p.y,
         side_m: blk.block.L_m, embed_m: 0, stickup_m: blk.block.H_m,
         ground_m: ground, head_m: ground + blk.block.H_m, toe_m: ground, pilesAtPoint: 1, block: blk
+      };
+    }
+    const sb = isShore ? undefined : screwBases?.get(p.line);
+    if (sb) {
+      return {
+        code: p.code, line: p.line, lines: p.lines ?? [p.line], raft: p.raft, rafts: p.rafts ?? [p.raft], type: p.type, x: p.x, y: p.y,
+        side_m: sb.side_m, embed_m: 0, stickup_m: sb.thickness_m,
+        ground_m: ground, head_m: ground + sb.thickness_m, toe_m: ground, pilesAtPoint: 1, screwBase: sb
       };
     }
     const stickup = isShore ? shoreStickup : bedStickup;
     return {
       code: p.code,
       line: p.line,
+      lines: p.lines ?? [p.line],
+      rafts: p.rafts ?? [p.raft],
       raft: p.raft,
       type: p.type,
       x: p.x,
@@ -393,7 +428,8 @@ export interface CableModel {
 }
 
 export function buildCableModels(piles: PileModel[]): CableModel[] {
-  const byLine = new Map(piles.map((p) => [p.line, p]));
+  // a shared lake-bed base is one anchor for two lines
+  const byLine = new Map(piles.flatMap((p) => p.lines.map((code) => [code, p] as const)));
   return MOORING_LINES_V2.map((l: MooringCoordinate) => {
     const pile = byLine.get(l.code);
     if (!pile) throw new Error(`No pile for mooring line ${l.code}`);
@@ -456,7 +492,7 @@ export function computeRaftMooringStates(
       safetyFactor: s.line.mbl_kN / r.t_max_intact_kN,
       shorePileUtil: sp ? Math.max(sp.utilization_H, sp.utilization_M) : 0,
       // PA2: the lake-bed anchor is a block; its piles are not checked.
-      bedPileUtil: r.bedBlock ? 0 : bp ? Math.max(bp.utilization_H, bp.utilization_M, bp.utilization_Uplift ?? 0) : 0,
+      bedPileUtil: r.bedBlock || r.bedScrewBase ? 0 : bp ? Math.max(bp.utilization_H, bp.utilization_M, bp.utilization_Uplift ?? 0) : 0,
       verdict: r.overallVerdict,
       isActive: resolved.isActive,
       deviations: resolved.deviations

@@ -26,9 +26,9 @@ describe('Anchor-by-anchor calculation', () => {
   const { state, results, batch } = setup();
   const s = buildAnchorPointSchedule(state, results, batch);
 
-  it('has one row for each of the 265 anchor points: 214 shore piles and 51 lake-bed bases (27 shared) holding the 292 lines', () => {
-    expect([s.totals.points, s.shore.length, s.bed.length]).toEqual([265, 214, 51]);
-    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([292, 78, 27, 85]);
+  it('has one row for each of the 263 anchor points: 231 shore piles and 32 lake-bed bases (29 shared) holding the 292 lines', () => {
+    expect([s.totals.points, s.shore.length, s.bed.length]).toEqual([263, 231, 32]);
+    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([292, 61, 29, 102]);
     expect(new Set([...s.shore.map((p) => p.code), ...s.bed.flatMap((b) => b.base.lines.map((l) => l.code))]).size).toBe(292);
     expect(s.shore.filter((p) => p.converted).every((p) => p.note.includes('Chuyển từ neo đáy'))).toBe(true);
     expect(s.levels).toEqual({ mnc_m: 380, mndb_m: 384.5, mnlkt_m: 386 });
@@ -56,7 +56,7 @@ describe('Anchor-by-anchor calculation', () => {
 
   it('a base under ONE line is exactly the base of the single-line design rule', () => {
     const single = s.bed.filter((r) => !r.base.shared);
-    expect(single).toHaveLength(24);
+    expect(single).toHaveLength(3);
     for (const row of single) {
       const b = row.base, l = b.lines[0];
       const raft = batch.find((x) => x.raft.name === l.raft)!;
@@ -72,7 +72,7 @@ describe('Anchor-by-anchor calculation', () => {
 
   it('a SHARED base is checked for one line taut + the other at the pretension, and for both taut; uplifts add, horizontal pulls add as vectors', () => {
     const shared = s.bed.filter((r) => r.base.shared);
-    expect(shared).toHaveLength(27);
+    expect(shared).toHaveLength(29);
     for (const row of shared) {
       const b = row.base, [l1, l2] = b.lines;
       expect(l1.raft, b.baseId).not.toBe(l2.raft);
@@ -105,9 +105,9 @@ describe('Anchor-by-anchor calculation', () => {
   it('never reports a failing base as passing, and adds the bases up', () => {
     expect(s.totals.bedOk).toBe(s.bed.filter((b) => b.base.ok).length);
     for (const b of s.bed) expect(b.base.ok ? b.util <= 1 + 1e-9 : true, b.base.baseId).toBe(true);
-    expect(s.totals.bedOk).toBe(51); // at the 20 m/s default every base passes
-    expect(s.totals.basesBySide).toEqual({ '2.50': 25, '2.75': 21, '3.00': 3, '3.25': 2 });
-    expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(51);
+    expect(s.totals.bedOk).toBe(32); // at the 20 m/s default every base passes
+    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 17, '3.00': 2, '3.25': 2 });
+    expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(32);
     expect(s.totals.bedConcrete_m3).toBeCloseTo(s.bed.reduce((a, b) => a + b.base.concrete_m3, 0), 9);
   });
 
@@ -155,12 +155,12 @@ describe('Anchor-by-anchor calculation', () => {
     const bed = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoDay, { header: 1 });
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoBo, { header: 1 });
     const bedRows = bed.filter((r) => /^HV-DV\d{3}$/.test(String(r[1])));
-    expect(bedRows).toHaveLength(51);
-    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(27);
+    expect(bedRows).toHaveLength(32);
+    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(29);
     expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG').every((r) => /^B\w+-D\d+$/.test(String(r[7])))).toBe(true); // the second line is named
     const shoreRows = shore.filter((r) => /^HV-P\d{3}$/.test(String(r[1])));
-    expect(shoreRows).toHaveLength(214);
-    expect(shoreRows.filter((r) => r[4] === 'Chuyển từ neo đáy')).toHaveLength(85);
+    expect(shoreRows).toHaveLength(231);
+    expect(shoreRows.filter((r) => r[4] === 'Chuyển từ neo đáy')).toHaveLength(102);
     const head = bed[5];
     for (const col of ['Tổ hợp chi phối', 'Lực nhổ (kN)', 'SV-1 nhổ', 'SV-2 trượt', 'SV-3 lật', 'SV-4 một vít', 'SV-5 nền', 'SV-6 thép bản', 'Cao độ đáy thiết kế (m)', 'Địa hình IFC (m)', 'Sâu nước MNC (m)', 'Sâu nước MNLKT (m)']) {
       expect(head, col).toContain(col);

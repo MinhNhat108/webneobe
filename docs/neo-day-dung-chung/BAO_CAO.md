@@ -1,6 +1,8 @@
 # Nghiên cứu: ưu tiên cọc khoan nhồi ven bờ và đế neo đáy dùng chung giữa hai bè
 
-> **KẾT QUẢ TRIỂN KHAI (2026-10-08, sau khi Chủ đầu tư duyệt):** mặt bằng chính thức do `scripts/planMooringLayoutV2.mjs` sinh ra có **214 cọc bờ (85 điểm chuyển từ neo đáy) và 51 đế (27 đế dùng chung + 24 đế đơn)**, không phải 225 / 40 như ước tính dưới đây. Lý do: nghiên cứu này chưa xét điều kiện khả thi của cọc bờ (dây không cắt dây khác, cọc cách nhau ≥ 3 m, có đất ≥ 384,0 m trong 60 m) — 12 dây ven bờ không chuyển được nên giữ đế đơn. Bê tông đế thực tế 144,4 m³. Các số dưới đây giữ nguyên để tham khảo.
+> **CẬP NHẬT LẦN 2 (2026-10-08, sau chỉ đạo "chuyển triệt để, ghép tối đa"):** mặt bằng chính thức hiện có **231 cọc bờ (102 cọc mới) và 32 đế (29 đế dùng chung + 3 đế đơn trong khe)**; bê tông đế 94,0 m³. Để đạt được, dây được xoay tới ±75° và cáp của 5 nhóm dây bờ được móc lại sang cọc khác (không dời cọc cũ).
+>
+> **KẾT QUẢ TRIỂN KHAI LẦN 1 (2026-10-08, sau khi Chủ đầu tư duyệt):** mặt bằng chính thức do `scripts/planMooringLayoutV2.mjs` sinh ra có **214 cọc bờ (85 điểm chuyển từ neo đáy) và 51 đế (27 đế dùng chung + 24 đế đơn)**, không phải 225 / 40 như ước tính dưới đây. Lý do: nghiên cứu này chưa xét điều kiện khả thi của cọc bờ (dây không cắt dây khác, cọc cách nhau ≥ 3 m, có đất ≥ 384,0 m trong 60 m) — 12 dây ven bờ không chuyển được nên giữ đế đơn. Bê tông đế thực tế 144,4 m³. Các số dưới đây giữ nguyên để tham khảo.
 
 Sinh bởi `scripts/studySharedBedAnchors.ts`. **Đây là nghiên cứu: chưa thay đổi mặt bằng neo, web hay bản vẽ.**
 Gió tính toán V = 20 m/s. Gió tính toán V = 20 m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (V ≈ 29,7 m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng 45% mức tiêu chuẩn. Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = 30 m/s ở Tab 2 để kiểm tra.

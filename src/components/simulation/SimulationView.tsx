@@ -115,7 +115,7 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 214 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 51 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, 27 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 292 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
+              Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 231 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 32 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, 29 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 292 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export const SimulationView: React.FC = () => {
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400" />
             <span>
-              292 tuyến cáp · 265 điểm neo (214 bờ + 51 đáy, 27 đế dùng chung)
+              292 tuyến cáp · 263 điểm neo (231 bờ + 32 đáy, 29 đế dùng chung)
             </span>
           </div>
           <div className="flex items-center gap-1.5">

@@ -123,14 +123,14 @@ describe('Rafts float, or ground when the water is too low', () => {
   });
 });
 
-describe('Piles — 265 anchor points for 292 lines, piles embedded by the design L_tk', () => {
+describe('Piles — 263 anchor points for 292 lines, piles embedded by the design L_tk', () => {
   const piles = buildPileModels();
 
-  it('has 214 shore + 51 lake-bed points; 27 lake-bed points hold two lines (shared bases)', () => {
-    expect(piles).toHaveLength(265);
-    expect(piles.filter((p) => p.type === 'SHORE')).toHaveLength(214);
-    expect(piles.filter((p) => p.type === 'BED')).toHaveLength(51);
-    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(27);
+  it('has 231 shore + 32 lake-bed points; 29 lake-bed points hold two lines (shared bases)', () => {
+    expect(piles).toHaveLength(263);
+    expect(piles.filter((p) => p.type === 'SHORE')).toHaveLength(231);
+    expect(piles.filter((p) => p.type === 'BED')).toHaveLength(32);
+    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(29);
     expect(new Set(piles.flatMap((p) => p.lines)).size).toBe(292);
   });
 
@@ -251,7 +251,7 @@ describe('The raft being edited in Tab 2 is simulated with its Tab 2 inputs', ()
   it('draws the piles of the active raft with the side and L_tk entered in Tab 2, at the same CAD positions', () => {
     const design = buildPileModels();
     const edited = buildPileModels({ shoreD_m: 0.5, shoreL_m: 9.0, bed1D_m: 0.55, bed1L_m: 13.0 }, 'BÈ 1');
-    expect(edited).toHaveLength(265);
+    expect(edited).toHaveLength(263);
     edited.forEach((p, i) => {
       expect([p.x, p.y], p.code).toEqual([design[i].x, design[i].y]);
       if (p.raft === 'BÈ 1') {

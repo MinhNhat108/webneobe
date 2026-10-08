@@ -84,23 +84,23 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(s.anchor.sfPile).toBeGreaterThanOrEqual(2.0);
     }
 
-    // Shore piles: 214 points, 214 piles — at the 20 m/s default no raft needs twin piles.
+    // Shore piles: 231 points, 231 piles — at the 20 m/s default no raft needs twin piles.
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildScrewBaseSchedule(baseState, baseResults, batchResults, coordinates as any);
-    expect(schedule.shorePiles).toHaveLength(214);
-    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(214);
+    expect(schedule.shorePiles).toHaveLength(231);
+    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(231);
     for (const p of schedule.shorePiles) {
       expect(p.pileCount, p.pileId).toBe(1);
       expect(p.Lopt_m, p.pileId).not.toBeNull();
       expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
-    // Lake bed: 51 bases (27 shared by two rafts), all passing, none overlapping a neighbour.
-    expect(schedule.bases).toHaveLength(51);
-    expect(schedule.totals.okBases).toBe(51);
+    // Lake bed: 32 bases (29 shared by two rafts), all passing, none overlapping a neighbour.
+    expect(schedule.bases).toHaveLength(32);
+    expect(schedule.totals.okBases).toBe(32);
     expect(schedule.clashes).toEqual([]);
-    expect(schedule.totals.screws).toBe(51 * 4);
+    expect(schedule.totals.screws).toBe(32 * 4);
   });
 
   it('the alternative PA1 (driven 350 x 350 lake-bed piles) also passes on all 9 rafts', () => {
@@ -131,8 +131,8 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
     const piles = (type: string) => schedule.filter((p) => p.type === type).reduce((s, p) => s + p.pileCount, 0);
-    expect(piles('SHORE')).toBe(214);
-    expect(piles('BED')).toBe(78); // one pile per point everywhere at the 20 m/s default
+    expect(piles('SHORE')).toBe(231);
+    expect(piles('BED')).toBe(61); // one pile per point everywhere at the 20 m/s default
 
     const wb = buildPileScheduleWorkbook(baseState, baseResults, batchResults, coordinates as any);
     expect(wb.SheetNames).toContain('BangThongKeCoc');

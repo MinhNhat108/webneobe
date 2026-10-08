@@ -24,11 +24,11 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(EXPECTED);
   });
 
-  it('the 292 mooring lines (214 shore, of which 85 converted from the lake bed; 78 bed) cover the same 9 rafts', () => {
+  it('the 292 mooring lines (231 shore, of which 102 converted from the lake bed; 61 bed) cover the same 9 rafts', () => {
     expect(coords).toHaveLength(292);
-    expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(214);
-    expect(coords.filter((c) => c.type === 'SHORE' && (c as any).converted)).toHaveLength(85);
-    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(78);
+    expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(231);
+    expect(coords.filter((c) => c.type === 'SHORE' && (c as any).converted)).toHaveLength(102);
+    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(61);
     expect(new Set(coords.map((c) => c.code)).size).toBe(292);
     const names = [...new Set(coords.map((c) => c.raft))];
     expect(names.sort()).toEqual([...EXPECTED].sort());
@@ -73,12 +73,12 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     }
   });
 
-  it('the anchor file is derived from the lines: one row per anchor POINT (214 shore piles + 51 lake-bed bases, 27 of them shared by two lines)', () => {
+  it('the anchor file is derived from the lines: one row per anchor POINT (231 shore piles + 32 lake-bed bases, 29 of them shared by two lines)', () => {
     const list = piles as Array<{ code: string; line: string; lines: string[]; rafts: string[]; type: string; shape: string; x: number; y: number }>;
-    expect(list).toHaveLength(265);
-    expect(new Set(list.map((p) => p.code)).size).toBe(265);
-    expect([list.filter((p) => p.type === 'SHORE').length, list.filter((p) => p.type === 'BED').length]).toEqual([214, 51]);
-    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(27);
+    expect(list).toHaveLength(263);
+    expect(new Set(list.map((p) => p.code)).size).toBe(263);
+    expect([list.filter((p) => p.type === 'SHORE').length, list.filter((p) => p.type === 'BED').length]).toEqual([231, 32]);
+    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(29);
     // every line is tied to exactly one anchor
     expect(list.flatMap((p) => p.lines).sort()).toEqual(coords.map((c) => c.code).sort());
     for (const p of list) {
@@ -99,7 +99,7 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
 
   it('owner rule of 2026-10-08: a shared base ties two FACING lines, each naming the other; a converted shore pile stands on ground at or above 384.0 m within 60 m', () => {
     const shared = coords.filter((c) => (c as any).sharedWith) as any[];
-    expect(shared).toHaveLength(54);
+    expect(shared).toHaveLength(58);
     for (const c of shared) {
       const o = coords.find((q) => q.code === c.sharedWith) as any;
       expect(o, c.code).toBeDefined();
@@ -173,7 +173,7 @@ describe('Mooring layout is buildable', () => {
   it('two different lake-bed bases are at least 7 m apart, so two screw-pile bases never overlap', () => {
     // one point per base: the two lines of a shared base end on the same point
     const bed = coords.filter((c) => c.type === 'BED').filter((c, i, a) => a.findIndex((q) => (q as any).anchorId === (c as any).anchorId) === i);
-    expect(bed).toHaveLength(51);
+    expect(bed).toHaveLength(32);
     let worst = { d: Infinity, pair: '' };
     for (let i = 0; i < bed.length; i++)
       for (let j = i + 1; j < bed.length; j++) {

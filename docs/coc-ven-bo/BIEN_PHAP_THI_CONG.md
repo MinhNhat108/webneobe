@@ -8,14 +8,14 @@ Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_b
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | BÈ 1 | 17 | 1 | 17 | 6,5 | 4Φ25 | CB400-V | 30,2 | 36,3 | 0,63 | 0,63 | 118 | 30 |
 | BÈ 2 | 15 | 1 | 15 | 6,5 | 4Φ25 | CB400-V | 27,8 | 33,3 | 0,57 | 0,63 | 118 | 30 |
-| BÈ 3 | 14 | 1 | 14 | 6,5 | 4Φ25 | CB400-V | 40,1 | 48,2 | 0,88 | 0,63 | 118 | 30 |
-| BÈ 3A | 29 | 1 | 29 | 6,5 | 6Φ28 | CB400-V | 73,7 | 88,4 | 0,87 | 0,63 | 208 | 28 |
-| BÈ 5A | 32 | 1 | 32 | 6,5 | 6Φ32 | CB400-V | 87,3 | 104,8 | 0,83 | 0,63 | 266 | 26 |
+| BÈ 3 | 15 | 1 | 15 | 6,5 | 4Φ25 | CB400-V | 40,1 | 48,2 | 0,88 | 0,63 | 118 | 30 |
+| BÈ 3A | 31 | 1 | 31 | 6,5 | 6Φ28 | CB400-V | 73,7 | 88,4 | 0,87 | 0,63 | 208 | 28 |
+| BÈ 5A | 36 | 1 | 36 | 6,5 | 6Φ32 | CB400-V | 87,3 | 104,8 | 0,83 | 0,63 | 266 | 26 |
 | BÈ 6 | 28 | 1 | 28 | 6,5 | 4Φ25 | CB400-V | 41,9 | 50,3 | 0,93 | 0,63 | 118 | 30 |
-| BÈ 7 | 23 | 1 | 23 | 6,5 | 4Φ28 | CB400-V | 45,6 | 54,7 | 0,82 | 0,63 | 144 | 28 |
-| BÈ 8 | 37 | 1 | 37 | 6,5 | 6Φ25 | CB400-V | 59,1 | 71,0 | 0,82 | 0,63 | 169 | 30 |
+| BÈ 7 | 24 | 1 | 24 | 6,5 | 4Φ28 | CB400-V | 45,6 | 54,7 | 0,82 | 0,63 | 144 | 28 |
+| BÈ 8 | 46 | 1 | 46 | 6,5 | 6Φ25 | CB400-V | 59,1 | 71,0 | 0,82 | 0,63 | 169 | 30 |
 | BÈ 9 | 19 | 1 | 19 | 6,5 | 4Φ25 | CB400-V | 30,9 | 37,0 | 0,65 | 0,63 | 118 | 30 |
-| **Tổng** | 214 | | 214 | 1412,4 m | | | | | | 135,9 m³ | 35,1 tấn | |
+| **Tổng** | 231 | | 231 | 1524,6 m | | | | | | 146,7 m³ | 38,3 tấn | |
 
 ## Trình tự thi công
 
@@ -62,7 +62,7 @@ Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_b
 ## Ghi chú
 
 **1. PHẠM VI VÀ SỐ LIỆU THIẾT KẾ**
-- Cọc khoan nhồi tròn D350 đổ tại chỗ, 214 cọc tại 214 điểm neo ven bờ, tổng chiều dài 1412,4 m, bê tông 135,9 m³, thép khoảng 35,1 tấn.
+- Cọc khoan nhồi tròn D350 đổ tại chỗ, 231 cọc tại 231 điểm neo ven bờ, tổng chiều dài 1524,6 m, bê tông 146,7 m³, thép khoảng 38,3 tấn.
 - Tải trọng: gió tính toán V = 20 m/s, giàn pin nghiêng 12°. Lực căng dây và số thép từng bè theo bảng E. Hệ số tải trọng uốn cọc γ = 1,2.
 - CHÚ Ý: Gió tính toán V = 20 m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (V ≈ 29,7 m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng 45% mức tiêu chuẩn. Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = 30 m/s ở Tab 2 để kiểm tra.
 - Sức chịu tải ngang theo Broms với đất sét dẻo cứng φ = 28°, c = 12 kPa, γ = 18 kN/m³: GIẢ ĐỊNH, chưa có khoan khảo sát địa chất tại vị trí cọc.

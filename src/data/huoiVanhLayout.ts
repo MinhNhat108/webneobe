@@ -7,7 +7,7 @@
  *  - `MOORING_LINES_V2`: the mooring network, a DESIGN OUTPUT of
  *    `scripts/planMooringLayoutV2.mjs` (the pile objects in the Revit DXF are
  *    placeholders and are never read). 292 lines, so every raft meets C9
- *    (P / N <= 15 m): 214 to bored shore piles and 78 to 51 lake-bed bases, 27
+ *    (P / N <= 15 m): 231 to bored shore piles and 61 to 32 lake-bed bases, 29
  *    of them shared by two facing rafts (owner's rule of 2026-10-08: bored
  *    piles near the shore, lake-bed bases only between two rafts).
  *

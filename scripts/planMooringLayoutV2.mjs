@@ -68,6 +68,10 @@ const DEFAULT_DEPTH = 6.2;
 const SHORE_LEVEL = 384.0;   // m, R1: ground at / above this is "shore or water's edge"
 const MAX_SHORE_SPAN = 60.0; // m, R1: longest cable to a new shore pile
 const GAP_LIMIT = 45.0;      // m, R1/R2: another raft within this distance of the cleat = "between two rafts"
+const SHORE_FAN_STEPS = [0, ...Array.from({ length: 15 }, (_, i) => [-(i + 1) * 5, (i + 1) * 5]).flat()]; // deg, R1: swing of the cable, 0 … ±75
+const PAIR_REACH = 30.0;     // m, R2 second stage: two lake-bed anchors of two rafts this close may be merged into one base
+const MAX_SHARED_SPAN = 40.0; // m, R2 second stage: longest cable to a merged base
+const MAX_SWING = 60.0;      // deg, R2 second stage: how far a cable may be swung from its bearing to reach a merged base
 const PAIR_OFFSET = 12.0;    // m, R2: two facing cleats this close along the gap share a base
 
 // IFC terrain (Toposolid), converted to the project datum: IFC = project + (IFC water surface - MNDB).
@@ -490,15 +494,31 @@ function shoreLineFeasible(cleat, pile, c) {
   }
   return true;
 }
-// Repeated until nothing changes: a line blocked by a neighbour's old lake-bed line may pass once that neighbour has moved.
-for (let pass = 0, changed = true; changed && pass < 10; pass++) {
+/** The cable cleat->p runs over its own raft (sampled along its length). */
+function overOwnRaft(cleat, p, c) {
+  const own = polygons.find((q) => q.name === c.raft).points;
+  const L = dist(cleat, p);
+  for (const t of [0.5 / L, 0.1, 0.25, 0.5, 0.75]) {
+    if (inRing({ x: cleat.x + (p.x - cleat.x) * t, y: cleat.y + (p.y - cleat.y) * t }, own)) return true;
+  }
+  return false;
+}
+/**
+ * Turns lake-bed lines into bored shore piles. The cable is swung up to 75
+ * degrees either side of its bearing (owner, 2026-10-08: "chỉ cần chỉnh lại
+ * góc nghiêng dây ... né cọc cũ"); of all the bearings the SHORTEST feasible
+ * cable wins. Repeated until nothing changes: a line blocked by a neighbour's
+ * old lake-bed line may pass once that neighbour has moved.
+ */
+function convertToShore(eligible) {
+ for (let pass = 0, changed = true; changed && pass < 10; pass++) {
  changed = false;
  for (const c of coords) {
-  if (c.type !== 'BED' || facingRaft(c)) continue;
+  if (c.type !== 'BED' || !eligible(c)) continue;
   const cleat = cleatOf(c), a = anchorOf(c), L = dist(cleat, a) || 1;
   const dir = { x: (a.x - cleat.x) / L, y: (a.y - cleat.y) / L };
   let best = null;
-  for (const deg of [0, -5, 5, -10, 10, -15, 15, -20, 20, -25, 25, -30, 30, -37.5, 37.5, -45, 45]) {
+  for (const deg of SHORE_FAN_STEPS) {
     const r = (deg * Math.PI) / 180;
     const d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
     for (let s = 3; s <= MAX_SHORE_SPAN; s += 0.5) {
@@ -507,7 +527,7 @@ for (let pass = 0, changed = true; changed && pass < 10; pass++) {
       if (g === null) break;
       if (g < SHORE_LEVEL) continue;
       // the first FEASIBLE point at shore level along this bearing (a little further inland is still the shore)
-      if (shoreLineFeasible(cleat, q, c)) { if (!best || s < best.s) best = { s, q, g }; break; }
+      if (shoreLineFeasible(cleat, q, c) && !overOwnRaft(cleat, q, c)) { if (!best || s < best.s) best = { s, q, g }; break; }
     }
   }
   if (!best) continue;
@@ -520,7 +540,9 @@ for (let pass = 0, changed = true; changed && pass < 10; pass++) {
   setAnchor(c, best.q);
   report.moved.push(`${c.code}: lake-bed line -> bored shore pile (R1), ground ${best.g.toFixed(2)} m, span ${before} -> ${c.span} m`);
  }
+ }
 }
+convertToShore((c) => !facingRaft(c));
 
 if (process.argv.includes('--explain')) {
   for (const c of coords) {
@@ -543,6 +565,12 @@ if (process.argv.includes('--explain')) {
 
 // ---- Step 2d (R2): one base shared by two facing lines ---------------------
 for (const c of coords) { if (c.type === 'BED') { delete c.anchorId; delete c.sharedWith; } }
+// Two lines of two rafts already ending on the same point ARE a shared base (a re-run keeps what it made).
+for (const a of coords) {
+  if (a.type !== 'BED' || a.sharedWith) continue;
+  const b = coords.find((o) => o !== a && o.type === 'BED' && !o.sharedWith && o.raft !== a.raft && dist(anchorOf(o), anchorOf(a)) < 0.011);
+  if (b) { a.sharedWith = b.code; b.sharedWith = a.code; }
+}
 // Repeated until nothing changes: a pair blocked by a neighbouring single anchor may pass once that neighbour is paired.
 for (let pass = 0, paired = true; paired && pass < 10; pass++) {
   paired = false;
@@ -587,6 +615,228 @@ for (let pass = 0, paired = true; paired && pass < 10; pass++) {
       a.sharedWith = pick.code; pick.sharedWith = a.code;
       report.moved.push(`${a.code} + ${pick.code}: one shared lake-bed base (R2), spans ${a.span} / ${pick.span} m`);
     }
+  }
+}
+// Second stage (owner, 2026-10-08: "đoạn nào neo đế giữa 2 đáy dùng chung được thì cứ cho dùng chung"): any two
+// still-single lake-bed anchors of two DIFFERENT rafts within PAIR_REACH are merged into one base, the two cables
+// swung towards it, nearest pairs first. The merged position is tried at several points between the two anchors.
+for (let pass = 0, paired = true; paired && pass < 10; pass++) {
+  paired = false;
+  const free = coords.filter((c) => c.type === 'BED' && !c.sharedWith);
+  const cands = [];
+  for (let i = 0; i < free.length; i++) {
+    for (let j = i + 1; j < free.length; j++) {
+      if (free[i].raft === free[j].raft) continue;
+      const d = dist(anchorOf(free[i]), anchorOf(free[j]));
+      if (d <= PAIR_REACH) cands.push({ a: free[i], b: free[j], d });
+    }
+  }
+  cands.sort((p, q) => p.d - q.d || p.a.code.localeCompare(q.a.code) || p.b.code.localeCompare(q.b.code));
+  for (const { a, b } of cands) {
+    if (a.sharedWith || b.sharedWith) continue;
+    const pa = anchorOf(a), pb = anchorOf(b), others = coords.filter((o) => o !== a && o !== b);
+    const swing = (l, p) => {
+      const c0 = cleatOf(l), o = anchorOf(l);
+      const u = { x: o.x - c0.x, y: o.y - c0.y }, v = { x: p.x - c0.x, y: p.y - c0.y };
+      return (Math.acos(Math.max(-1, Math.min(1, (u.x * v.x + u.y * v.y) / ((Math.hypot(u.x, u.y) || 1) * (Math.hypot(v.x, v.y) || 1))))) * 180) / Math.PI;
+    };
+    let found = null;
+    for (const t of [0.5, 0.4, 0.6, 0.3, 0.7, 0.2, 0.8, 0.1, 0.9, 0, 1]) {
+      const mid = { x: r2(pa.x + (pb.x - pa.x) * t), y: r2(pa.y + (pb.y - pa.y) * t) };
+      const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+        && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
+        && [a, b].every((l) => dist(cleatOf(l), mid) <= MAX_SHARED_SPAN && swing(l, mid) <= MAX_SWING && !overOwnRaft(cleatOf(l), mid, l)
+          && others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
+          && polygons.every((q) => q.name === l.raft || !segOverRing(cleatOf(l), mid, q.points)));
+      if (ok) { found = mid; break; }
+    }
+    if (!found) continue;
+    paired = true;
+    setAnchor(a, found); setAnchor(b, found);
+    a.sharedWith = b.code; b.sharedWith = a.code;
+    report.moved.push(`${a.code} + ${b.code}: one shared lake-bed base (R2, cables swung), spans ${a.span} / ${b.span} m`);
+  }
+}
+// What is still a single base goes to the shore if a bored pile can be reached at all.
+convertToShore((c) => !c.sharedWith);
+
+/**
+ * R1, last resort. A single base beside the bank whose cable cannot reach the
+ * shore because it would CROSS the shore lines of its own raft: add one new
+ * pile on the bank and re-hook the cables of that small group (the blocked
+ * cleat and the cleats of the crossed lines) to the group's piles so that
+ * nothing crosses — the assignment of least total cable length, which cannot
+ * cross itself. No existing pile moves; only which cleat a pile is tied to.
+ * The `converted` mark follows the PILE (the new one), not the line.
+ */
+function untangleToShore() {
+  const permutations = (n) => { const out = []; const go = (p, rest) => { if (!rest.length) out.push(p); for (let i = 0; i < rest.length; i++) go([...p, rest[i]], [...rest.slice(0, i), ...rest.slice(i + 1)]); }; go([], Array.from({ length: n }, (_, i) => i)); return out; };
+  for (let pass = 0, changed = true; changed && pass < 10; pass++) {
+    changed = false;
+    for (const c of coords) {
+      if (c.type !== 'BED' || c.sharedWith) continue;
+      const cleat = cleatOf(c), a0 = anchorOf(c), L0 = dist(cleat, a0) || 1, dir = { x: (a0.x - cleat.x) / L0, y: (a0.y - cleat.y) / L0 };
+      // new-pile candidates: shore level, clear of the rafts and of every existing anchor; crossings are dealt with below
+      const cands = [];
+      for (const deg of SHORE_FAN_STEPS) {
+        const r = (deg * Math.PI) / 180, d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
+        for (let sp = 3; sp <= MAX_SHORE_SPAN; sp += 1) {
+          const q = { x: r2(cleat.x + d.x * sp), y: r2(cleat.y + d.y * sp) }, g = groundAt(q.x, q.y);
+          if (g === null) break;
+          if (g < SHORE_LEVEL) continue;
+          if (polygons.some((p) => inRing(q, p.points) || (p.name !== c.raft && clearance(q, p.points) < MIN_STANDOFF))) continue;
+          if (coords.some((o) => o !== c && dist(anchorOf(o), q) < MIN_PILE_GAP)) continue;
+          cands.push({ q, g, sp }); // every valid point on this bearing: the nearest one may be hemmed in
+        }
+      }
+      cands.sort((p, q) => p.sp - q.sp);
+      let done = null;
+      for (const cand of cands) {
+        // other single bases of the same raft are waiting for their own turn: their old cables do not count
+        const waiting = (o) => o.type === 'BED' && !o.sharedWith && o.raft === c.raft;
+        const crossed = coords.filter((o) => o !== c && !waiting(o) && segCross(cleat, cand.q, cleatOf(o), anchorOf(o)));
+        if (!crossed.length || crossed.length > 6) continue;
+        if (crossed.some((o) => o.type !== 'SHORE' || o.raft !== c.raft)) continue;
+        const group = [c, ...crossed];
+        const piles = [{ ...cand.q, isNew: true }, ...crossed.map((o) => ({ ...anchorOf(o), isNew: !!o.converted }))];
+        const outside = coords.filter((o) => !group.includes(o) && !waiting(o));
+        const lineOk = (l, p) => {
+          const cl = cleatOf(l);
+          if (dist(cl, p) > MAX_SHORE_SPAN || overOwnRaft(cl, p, l)) return false;
+          if (polygons.some((q) => q.name !== l.raft && segOverRing(cl, p, q.points))) return false;
+          return outside.every((o) => !segCross(cl, p, cleatOf(o), anchorOf(o)));
+        };
+        let best = null;
+        for (const perm of permutations(group.length)) {
+          if (!group.every((l, i) => lineOk(l, piles[perm[i]]))) continue;
+          let cross = false;
+          for (let i = 0; i < group.length && !cross; i++) for (let j = i + 1; j < group.length; j++) {
+            if (segCross(cleatOf(group[i]), piles[perm[i]], cleatOf(group[j]), piles[perm[j]])) { cross = true; break; }
+          }
+          if (cross) continue;
+          const total = group.reduce((t, l, i) => t + dist(cleatOf(l), piles[perm[i]]), 0);
+          if (!best || total < best.total - 1e-9) best = { perm, total };
+        }
+        if (!best) continue;
+        group.forEach((l, i) => {
+          const p = piles[best.perm[i]];
+          l.type = 'SHORE';
+          delete l.anchorId; delete l.sharedWith;
+          if (p.isNew) l.converted = true; else delete l.converted;
+          setAnchor(l, { x: p.x, y: p.y });
+        });
+        done = `${c.code}: lake-bed line -> shore (R1, re-hooked with ${crossed.map((o) => o.code).join(', ')}; one new pile at ground ${cand.g.toFixed(2)} m), spans ${group.map((l) => l.span).join(' / ')} m`;
+        break;
+      }
+      if (done) { report.moved.push(done); changed = true; }
+    }
+  }
+}
+untangleToShore();
+convertToShore((c) => !c.sharedWith);
+
+/**
+ * R1, for a knot the small re-hook above cannot open (several cables of one
+ * raft fanning from one corner across a notch). One new pile on the bank for
+ * the blocked cleat, then the cables of the whole knot are uncrossed two by
+ * two: whenever two of them cross, their piles are exchanged (each exchange
+ * shortens the total cable length, so it ends). Any line of the same raft
+ * that a re-hooked cable would now cross joins the knot. Refused, leaving
+ * everything as it was, if a cable of another raft or a shared base is in the
+ * way, or if a cable would end up longer than MAX_SHORE_SPAN.
+ */
+function untangleKnots() {
+  for (let pass = 0, changed = true; changed && pass < 10; pass++) {
+    changed = false;
+    for (const c of coords) {
+      if (c.type !== 'BED' || c.sharedWith) continue;
+      const cleat = cleatOf(c), a0 = anchorOf(c), L0 = dist(cleat, a0) || 1, dir = { x: (a0.x - cleat.x) / L0, y: (a0.y - cleat.y) / L0 };
+      const waiting = (o) => o.type === 'BED' && !o.sharedWith && o.raft === c.raft;
+      const cands = [];
+      for (const deg of SHORE_FAN_STEPS) {
+        const r = (deg * Math.PI) / 180, d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
+        for (let sp = 3; sp <= MAX_SHORE_SPAN; sp += 1) {
+          const q = { x: r2(cleat.x + d.x * sp), y: r2(cleat.y + d.y * sp) }, g = groundAt(q.x, q.y);
+          if (g === null) break;
+          if (g < SHORE_LEVEL) continue;
+          if (polygons.some((p) => inRing(q, p.points) || (p.name !== c.raft && clearance(q, p.points) < MIN_STANDOFF))) continue;
+          if (coords.some((o) => o !== c && dist(anchorOf(o), q) < MIN_PILE_GAP)) continue;
+          cands.push({ q, g, sp });
+        }
+      }
+      cands.sort((p, q) => p.sp - q.sp);
+      let done = null;
+      for (const cand of cands.slice(0, 120)) {
+        // the knot: line -> pile, starting with the blocked line on the new pile
+        const knot = new Map([[c, { ...cand.q, isNew: true }]]);
+        const seg = (l) => [cleatOf(l), knot.get(l) ?? anchorOf(l)];
+        let ok = true;
+        for (let round = 0; round < 60 && ok; round++) {
+          // 1. pull in whatever a knot cable crosses
+          let grew = false;
+          for (const l of [...knot.keys()]) {
+            for (const o of coords) {
+              if (knot.has(o) || waiting(o)) continue;
+              if (!segCross(...seg(l), cleatOf(o), anchorOf(o))) continue;
+              if (o.type !== 'SHORE' || o.raft !== c.raft || knot.size >= 14) { ok = false; break; }
+              knot.set(o, { ...anchorOf(o), isNew: !!o.converted });
+              grew = true;
+            }
+            if (!ok) break;
+          }
+          if (!ok) break;
+          // 2. exchange the piles of two crossing knot cables
+          let swapped = false;
+          const ls = [...knot.keys()];
+          for (let i = 0; i < ls.length && !swapped; i++) for (let j = i + 1; j < ls.length; j++) {
+            if (segCross(...seg(ls[i]), ...seg(ls[j]))) { const t = knot.get(ls[i]); knot.set(ls[i], knot.get(ls[j])); knot.set(ls[j], t); swapped = true; break; }
+          }
+          if (!grew && !swapped) break;
+          if (round === 59) ok = false;
+        }
+        if (!ok) continue;
+        const good = [...knot.entries()].every(([l, p]) => {
+          const cl = cleatOf(l);
+          return dist(cl, p) <= MAX_SHORE_SPAN && dist(cl, p) >= 3 && !overOwnRaft(cl, p, l)
+            && polygons.every((q) => q.name === l.raft || !segOverRing(cl, p, q.points))
+            && coords.every((o) => knot.has(o) || waiting(o) || !segCross(cl, p, cleatOf(o), anchorOf(o)));
+        });
+        if (!good) continue;
+        for (const [l, p] of knot) {
+          l.type = 'SHORE';
+          delete l.anchorId; delete l.sharedWith;
+          if (p.isNew) l.converted = true; else delete l.converted;
+          setAnchor(l, { x: p.x, y: p.y });
+        }
+        done = `${c.code}: lake-bed line -> shore (R1, knot of ${knot.size} cables re-hooked: ${[...knot.keys()].map((l) => l.code).join(', ')}; one new pile at ground ${cand.g.toFixed(2)} m), longest ${Math.max(...[...knot.keys()].map((l) => l.span))} m`;
+        break;
+      }
+      if (done) { report.moved.push(done); changed = true; }
+    }
+  }
+}
+untangleKnots();
+convertToShore((c) => !c.sharedWith);
+if (process.argv.includes('--explain')) console.log('SINGLE BASES LEFT', coords.filter((c) => c.type === 'BED' && !c.sharedWith).map((c) => `${c.code}(${c.span} m, ${facingRaft(c) ? 'facing ' + facingRaft(c).name : 'not facing a raft'})`).join('; '));
+if (process.argv.includes('--explain')) {
+  for (const c of coords.filter((q) => q.type === 'BED' && !q.sharedWith)) {
+    const cleat = cleatOf(c), a = anchorOf(c), L = dist(cleat, a) || 1, dir = { x: (a.x - cleat.x) / L, y: (a.y - cleat.y) / L };
+    const tally = new Map(); let pts = 0;
+    for (const deg of SHORE_FAN_STEPS) {
+      const r = (deg * Math.PI) / 180, d = { x: dir.x * Math.cos(r) - dir.y * Math.sin(r), y: dir.x * Math.sin(r) + dir.y * Math.cos(r) };
+      for (let sp = 3; sp <= MAX_SHORE_SPAN; sp += 0.5) {
+        const q = { x: cleat.x + d.x * sp, y: cleat.y + d.y * sp }, g = groundAt(q.x, q.y);
+        if (g === null) break;
+        if (g < SHORE_LEVEL) continue;
+        pts++;
+        const why = new Set();
+        if (overOwnRaft(cleat, q, c)) why.add('over own raft');
+        for (const q2 of polygons) { if (inRing(q, q2.points)) why.add('inside ' + q2.name); else if (q2.name !== c.raft && (clearance(q, q2.points) < MIN_STANDOFF || segOverRing(cleat, q, q2.points))) why.add('raft ' + q2.name); }
+        for (const o of coords) { if (o === c) continue; if (dist(anchorOf(o), q) < MIN_PILE_GAP) why.add('near ' + o.code); if (segCross(cleat, q, cleatOf(o), anchorOf(o))) why.add('x ' + o.code + (o.type === 'BED' ? '(bed)' : o.converted ? '(new)' : '')); }
+        for (const w of why) tally.set(w, (tally.get(w) ?? 0) + 1);
+      }
+    }
+    console.log('WHY', c.code, 'cleat', cleat.x.toFixed(0), cleat.y.toFixed(0), 'shore-level points in fan:', pts, [...tally.entries()].sort((p, q) => q[1] - p[1]).slice(0, 9).map(([k, v]) => k + ':' + v).join(', '));
   }
 }
 // One id per lake-bed base: shared lines carry the same id.

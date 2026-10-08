@@ -98,14 +98,14 @@ describe('Standalone Pile Schedule Excel Export', () => {
     expect(totalRow?.[1]).toBe(292);
 
     const shoreRow = data.find((r) => r[0] === 'Số điểm neo bờ (BỜ)');
-    expect(shoreRow?.[1]).toBe(214);
+    expect(shoreRow?.[1]).toBe(231);
 
     // the layout is laid out for shared screw-pile bases: the pile option says where two piles would coincide
     const warn = data.find((r) => String(r[0]).startsWith('CẢNH BÁO: số vị trí đáy hồ có HAI dây'));
-    expect(warn?.[1]).toBe(27);
+    expect(warn?.[1]).toBe(29);
 
     const bedRow = data.find((r) => r[0] === 'Số điểm neo lòng hồ (ĐÁY HỒ)');
-    expect(bedRow?.[1]).toBe(78);
+    expect(bedRow?.[1]).toBe(61);
 
     const passedRow = data.find((r) => r[0] === 'Số điểm neo ĐẠT sức chịu tải (P_req ≤ P_max, tính cho một cọc)');
     expect(passedRow?.[1]).toBe(292);

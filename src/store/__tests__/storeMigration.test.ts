@@ -9,7 +9,7 @@ import { mooringOptionOf } from '../../lib/io/mooringExports';
 /**
  * A browser that used the app before 2026-10-08 holds the 12-raft project in
  * localStorage. Whatever it holds, the app must come up on the 9-raft design
- * and its export buttons must write 265 anchor points (214 shore piles + 51 lake-bed bases) for 292 lines.
+ * and its export buttons must write 263 anchor points (231 shore piles + 32 lake-bed bases) for 292 lines.
  */
 // zustand only attaches its persist API when a storage exists: give the node test run one.
 // vi.hoisted runs before every import, including the modules that pull the store in.
@@ -105,14 +105,14 @@ describe('What the export buttons write after that migration', () => {
     expect([...new Set(MOORING_LINES_V2.map((l) => l.raft))].sort()).toEqual([...NINE].sort());
   });
 
-  it('"Bảng Neo" and "Xuất CAD": 214 shore piles + 51 lake-bed bases for 292 lines, every anchor on one of the 9 rafts', () => {
+  it('"Bảng Neo" and "Xuất CAD": 231 shore piles + 32 lake-bed bases for 292 lines, every anchor on one of the 9 rafts', () => {
     const schedule = buildScrewBaseSchedule(currentProject, results, batch);
-    expect([schedule.shorePiles.length, schedule.bases.length]).toEqual([214, 51]);
+    expect([schedule.shorePiles.length, schedule.bases.length]).toEqual([231, 32]);
     const piles = buildPileSchedule(currentProject, results, batch);
     expect(piles).toHaveLength(292);
     for (const p of piles) expect(NINE, p.pileId).toContain(p.raft);
     const dxf = buildMooringScrewBaseDxf(currentProject, results, batch);
-    expect([dxf.raftCount, dxf.shorePileCount, dxf.baseCount]).toEqual([9, 214, 51]);
+    expect([dxf.raftCount, dxf.shorePileCount, dxf.baseCount]).toEqual([9, 231, 32]);
     for (const gone of ['B\\U+00C8 10', 'B\\U+00C8 11', 'B\\U+00C8 12']) expect(dxf.dxf).not.toContain(gone); // "BÈ 10" … as escaped in the file
     expect(dxf.dxf).toContain('B\\U+00C8 3A');
   });

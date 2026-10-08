@@ -242,7 +242,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     3. Mặt Bằng &amp; Tọa Độ Neo
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Bản đồ số hóa 292 tuyến cáp tại 265 điểm neo (214 cọc khoan nhồi bờ &amp; 51 đế vít xoắn đáy hồ, trong đó 27 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
+                    Bản đồ số hóa 292 tuyến cáp tại 263 điểm neo (231 cọc khoan nhồi bờ &amp; 32 đế vít xoắn đáy hồ, trong đó 29 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -542,7 +542,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Bước 3 / 6
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
-                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 265 Điểm Neo (292 Tuyến Cáp)
+                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 263 Điểm Neo (292 Tuyến Cáp)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Trực quan hóa vị trí thực địa của 9 cụm bè và hệ thống neo hồ Huổi Vanh

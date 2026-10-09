@@ -155,7 +155,7 @@ describe('Anchor-by-anchor calculation', () => {
 
   it('the anchor workbook carries one row per point on the two per-point sheets', () => {
     const wb = buildScrewBaseScheduleWorkbook(state, results, batch);
-    expect(wb.SheetNames).toEqual(['ThongKeCocBo', 'ThongKeDeNeoVit', 'DeTheoBe', 'TungDiemNeoDay', 'TungDiemNeoBo']);
+    expect(wb.SheetNames).toEqual(['ThongKeCocBo', 'ThongKeDeNeoVit', 'DeTheoBe', 'TungDiemNeoDay', 'TungDiemNeoBo', 'ChieuDaiCatCap']);
     const bed = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoDay, { header: 1 });
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoBo, { header: 1 });
     const bedRows = bed.filter((r) => /^HV-DV\d{3}$/.test(String(r[1])));

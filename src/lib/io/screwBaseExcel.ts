@@ -5,6 +5,7 @@ import type { PileScheduleBatchLike } from './pileSchedule';
 import { buildScrewBaseSchedule } from './screwBaseSchedule';
 import { pileSectionLabel } from './excelExport';
 import { buildAnchorPointSchedule, appendAnchorPointSheets } from './anchorPointSchedule';
+import { buildCableCuttingSchedule, appendCableCuttingSheet } from './cableCuttingSchedule';
 
 const num = (v: number, d: number): number | string => (Number.isFinite(v) ? Number(v.toFixed(d)) : '∞');
 
@@ -12,7 +13,8 @@ const num = (v: number, d: number): number | string => (Number.isFinite(v) ? Num
  * Option 3 schedule workbook — the same rows as the tables of the option 3
  * CAD sheet: `ThongKeCocBo` (shore piles), `ThongKeDeNeoVit` (lake-bed bases)
  * `DeTheoBe` (the base designed for each raft), and the anchor-by-anchor
- * sheets `TungDiemNeoDay` / `TungDiemNeoBo`. Pure builder, no DOM.
+ * sheets `TungDiemNeoDay` / `TungDiemNeoBo`, then `ChieuDaiCatCap` (cutting
+ * length of every cable). Pure builder, no DOM.
  */
 export function buildScrewBaseScheduleWorkbook(
   state: ProjectState,
@@ -100,6 +102,7 @@ export function buildScrewBaseScheduleWorkbook(
   XLSX.utils.book_append_sheet(wb, wsPer, 'DeTheoBe');
   // Anchor-by-anchor calculation at the real position of every point (span, ground level, MNC / MNLKT).
   appendAnchorPointSheets(wb, buildAnchorPointSchedule(state, results, batchResults, coordinates), state);
+  appendCableCuttingSheet(wb, buildCableCuttingSchedule(state, coordinates), state);
   return wb;
 }
 

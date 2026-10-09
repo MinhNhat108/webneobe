@@ -228,7 +228,7 @@ describe('Option 3 schedule workbook', () => {
   it('has the three schedule sheets with the same rows as the drawing tables, then the two per-point sheets', () => {
     const { state, results, batch } = setup();
     const wb = buildScrewBaseScheduleWorkbook(state, results, batch);
-    expect(wb.SheetNames).toEqual(['ThongKeCocBo', 'ThongKeDeNeoVit', 'DeTheoBe', 'TungDiemNeoDay', 'TungDiemNeoBo']);
+    expect(wb.SheetNames).toEqual(['ThongKeCocBo', 'ThongKeDeNeoVit', 'DeTheoBe', 'TungDiemNeoDay', 'TungDiemNeoBo', 'ChieuDaiCatCap']);
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeCocBo, { header: 1 });
     const bases = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeDeNeoVit, { header: 1 });
     const per = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.DeTheoBe, { header: 1 });

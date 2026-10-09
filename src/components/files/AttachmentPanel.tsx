@@ -242,7 +242,11 @@ export const AttachmentPanel: React.FC = () => {
                   <FileSpreadsheet className="w-14 h-14 text-emerald-600 mb-3" />
                   <div className="text-base font-semibold text-slate-800">{currentAttachment.name}</div>
                   <p className="text-xs text-slate-500 max-w-md mt-2 leading-relaxed">
-                    File bảng tính Excel của Chủ đầu tư (gồm sheet 6.DE_NEO_VIT: đế BTCT + vít xoắn). Bạn có thể tải file về máy hoặc dùng chức năng nhập bảng tính để đối chiếu.
+                    {currentAttachment.name.endsWith('.dwg')
+                      ? 'Bản vẽ kỹ thuật AutoCAD (.dwg). Bạn có thể tải file về máy để mở trực tiếp trên AutoCAD 2018 trở lên.'
+                      : currentAttachment.name.endsWith('.xlsx')
+                      ? 'Bảng tính Excel (.xlsx). Bạn có thể tải file về máy để xem bảng thống kê khối lượng và chi tiết các tuyến cáp.'
+                      : 'Tài liệu kỹ thuật của dự án. Bạn có thể tải file về máy tính để tra cứu chi tiết.'}
                   </p>
                   {(currentAttachment.remoteUrl || currentAttachment.blobUrl) && (
                     <a
@@ -251,7 +255,7 @@ export const AttachmentPanel: React.FC = () => {
                       className="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
                     >
                       <Download className="w-4 h-4" />
-                      Tải xuống file Excel (.xlsx)
+                      Tải xuống tài liệu ({((currentAttachment.size || 0) / 1024).toFixed(0)} KB)
                     </a>
                   )}
                 </div>

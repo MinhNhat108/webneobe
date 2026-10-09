@@ -142,8 +142,8 @@ export const ReportView: React.FC = () => {
               <div>- Lực căng trước: {currentProject.line.pretension_kN} kN | k_tập trung: {currentProject.line.focusFactor}</div>
               {currentProject.anchor.mode === 'pile' ? (
                 <>
-                  <div>- Cọc bờ: BTCT vuông {currentProject.anchor.shoreD_m}m, ngàm {currentProject.anchor.shoreL_m}m</div>
-                  <div>- Cọc lòng hồ: BTCT vuông {currentProject.anchor.bed1D_m}m, ngàm {currentProject.anchor.bed1L_m}m</div>
+                  <div>- Cọc bờ: {currentProject.anchor.shorePileShape === 'circular' ? `Cọc khoan nhồi tròn D${Math.round((currentProject.anchor.shoreD_m ?? 0.35) * 1000)} mm` : `BTCT vuông ${currentProject.anchor.shoreD_m}m`}, ngàm {currentProject.anchor.shoreL_m}m (cổ cọc nhô ≤ {currentProject.anchor.shoreArm_e_m ?? 0.1}m)</div>
+                  <div>- Neo đáy hồ: {currentProject.anchor.bedAnchorOption === 'PA3_SCREW_BASE' ? 'Đế BTCT + 4 đinh vít xoắn Ø89×5 (PA3 dùng chung 100%)' : currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT' ? 'Khối bê tông trọng lực (PA2)' : `Cọc BTCT vuông ${currentProject.anchor.bed1D_m}m ngàm ${currentProject.anchor.bed1L_m}m`}</div>
                 </>
               ) : (
                 <div>- Mỏ neo: {currentProject.anchor.anchorType} ({currentProject.anchor.weight_t} tấn, HC = {currentProject.anchor.holdingCoef})</div>
@@ -203,13 +203,48 @@ export const ReportView: React.FC = () => {
                     <td className="p-2 border-r border-slate-200 text-right">{results.shorePile.Mmax} / {results.shorePile.Mrd}</td>
                     <td className="p-2 border-r border-slate-200">kNm</td>
                     <td className="p-2">
-                      TCVN 5574:2018: M_rd = Rs·As·(a − 2a_s), {currentProject.anchor.shoreRebarFaceCount ?? 0}Φ{currentProject.anchor.shoreRebarDia_mm ?? 0} mặt
-                      chịu kéo, Rs = {currentProject.anchor.pileRebarRs_MPa ?? 350} MPa; kiểm tra γ·M_max ≤ M_rd với γ = {currentProject.anchor.pileBendingLoadFactor ?? 1.2}
+                      {currentProject.anchor.shorePileShape === 'circular'
+                        ? `TCVN 5574:2018 (cọc tròn D350): lồng thép ${currentProject.anchor.shoreRebarCount ?? 6}Φ${currentProject.anchor.shoreRebarDia_mm ?? 25} CB400-V; kiểm tra uốn γ·M_max ≤ M_rd (γ = ${currentProject.anchor.pileBendingLoadFactor ?? 1.2})`
+                        : `TCVN 5574:2018: M_rd = Rs·As·(a − 2a_s), ${currentProject.anchor.shoreRebarFaceCount ?? 0}Φ${currentProject.anchor.shoreRebarDia_mm ?? 0} mặt chịu kéo, Rs = ${currentProject.anchor.pileRebarRs_MPa ?? 350} MPa; kiểm tra γ·M_max ≤ M_rd với γ = ${currentProject.anchor.pileBendingLoadFactor ?? 1.2}`}
                     </td>
                   </tr>
                 </>
               )}
-              {results.bedBlock && (
+              {currentProject.anchor.bedAnchorOption === 'PA3_SCREW_BASE' && results.bedScrewBase && (
+                <>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Neo đáy hồ: đế BTCT B × B × t</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.thickness_m.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">m</td>
+                    <td className="p-2">Bê tông {results.bedScrewBase.concrete_m3.toFixed(1)} m³, khối lượng cẩu {results.bedScrewBase.liftMass_t.toFixed(1)} tấn, W' = {results.bedScrewBase.weightSub_kN.toFixed(1)} kN{results.bedScrewBase.enlarged ? ' — đế đã TĂNG so với đế mẫu 2,5 × 2,5 × 0,4 m' : ''} (đế dùng chung hai bè)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Vít xoắn: Q_a nhổ / H_u ngang (một vít)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwQa_kN.toFixed(1)} / {results.bedScrewBase.screwHu_kN.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">{results.bedScrewBase.params.screwCount} vít Ø{Math.round(results.bedScrewBase.params.tubeDia_m * 1000)}×{Math.round(results.bedScrewBase.params.tubeThk_m * 1000)}, ren Ø{Math.round(results.bedScrewBase.params.threadDia_m * 1000)}, ngập bùn {results.bedScrewBase.params.screwLength_m} m; c_u = {results.bedScrewBase.params.cuAverage_kPa} kPa (giả định)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">Lực dây: Th (MN thấp) / Tv (MN cao)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.cases[0].Th_kN.toFixed(1)} / {results.bedScrewBase.cases[1].Tv_kN.toFixed(1)}</td>
+                    <td className="p-2 border-r border-slate-200">kN</td>
+                    <td className="p-2">Góc cáp {results.bedScrewBase.cases[0].angle_deg.toFixed(1)}° khi nước thấp, {results.bedScrewBase.cases[1].angle_deg.toFixed(1)}° khi nước cao (tuyến cáp đáy ngắn nhất, {results.bedScrewBase.load.span_m} m)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">SV-1 nhổ / SV-2 trượt / SV-3 lật (hệ số sử dụng)</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.upliftUtil.toFixed(2)} / {results.bedScrewBase.slideUtil.toFixed(2)} / {results.bedScrewBase.overturnUtil.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">≤ 1,00 là đạt; FS trượt {results.bedScrewBase.params.sfSlide}, lật {results.bedScrewBase.params.sfOverturn}; lấy trường hợp bất lợi hơn trong hai mực nước</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2 border-r border-slate-200 font-sans">SV-4 một vít / SV-5 nền / SV-6 thép bản</td>
+                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwUtil.toFixed(2)} / {results.bedScrewBase.bearingUtil.toFixed(2)} / {results.bedScrewBase.rebarUtil.toFixed(2)}</td>
+                    <td className="p-2 border-r border-slate-200">-</td>
+                    <td className="p-2">Lưới 2 lớp Ø{results.bedScrewBase.rebarDia_mm} a{Math.round(results.bedScrewBase.rebarSpacing_m * 1000)} hai phương; theo bảng tính 6.DE_NEO_VIT của Chủ đầu tư</td>
+                  </tr>
+                </>
+              )}
+              {currentProject.anchor.bedAnchorOption === 'PA2_DEADWEIGHT' && results.bedBlock && (
                 <>
                   <tr>
                     <td className="p-2 border-r border-slate-200 font-sans">Neo đáy hồ PA2: lực ngang H / lực đứng V tại khối</td>
@@ -252,40 +287,6 @@ export const ReportView: React.FC = () => {
                     <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedBlock.qContact_kPa.toFixed(1)}</td>
                     <td className="p-2 border-r border-slate-200">kPa</td>
                     <td className="p-2">Nước lặng {results.bedBlock.qStatic_kPa.toFixed(1)} / mép khi chịu tải {results.bedBlock.qEdge_kPa.toFixed(1)}; cho phép ≤ {results.bedBlock.params.qAllow_kPa} kPa (giả định)</td>
-                  </tr>
-                </>
-              )}
-              {results.bedScrewBase && (
-                <>
-                  <tr>
-                    <td className="p-2 border-r border-slate-200 font-sans">Neo đáy hồ: đế BTCT B × B × t</td>
-                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.side_m.toFixed(2)} × {results.bedScrewBase.thickness_m.toFixed(2)}</td>
-                    <td className="p-2 border-r border-slate-200">m</td>
-                    <td className="p-2">Bê tông {results.bedScrewBase.concrete_m3.toFixed(1)} m³, khối lượng cẩu {results.bedScrewBase.liftMass_t.toFixed(1)} tấn, W' = {results.bedScrewBase.weightSub_kN.toFixed(1)} kN{results.bedScrewBase.enlarged ? ' — đế đã TĂNG so với đế mẫu 2,5 × 2,5 × 0,4 m' : ''}</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 border-r border-slate-200 font-sans">Vít xoắn: Q_a nhổ / H_u ngang (một vít)</td>
-                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwQa_kN.toFixed(1)} / {results.bedScrewBase.screwHu_kN.toFixed(1)}</td>
-                    <td className="p-2 border-r border-slate-200">kN</td>
-                    <td className="p-2">{results.bedScrewBase.params.screwCount} vít Ø{Math.round(results.bedScrewBase.params.tubeDia_m * 1000)}×{Math.round(results.bedScrewBase.params.tubeThk_m * 1000)}, ren Ø{Math.round(results.bedScrewBase.params.threadDia_m * 1000)}, ngập bùn {results.bedScrewBase.params.screwLength_m} m; c_u = {results.bedScrewBase.params.cuAverage_kPa} kPa (giả định)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 border-r border-slate-200 font-sans">Lực dây: Th (MN thấp) / Tv (MN cao)</td>
-                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.cases[0].Th_kN.toFixed(1)} / {results.bedScrewBase.cases[1].Tv_kN.toFixed(1)}</td>
-                    <td className="p-2 border-r border-slate-200">kN</td>
-                    <td className="p-2">Góc cáp {results.bedScrewBase.cases[0].angle_deg.toFixed(1)}° khi nước thấp, {results.bedScrewBase.cases[1].angle_deg.toFixed(1)}° khi nước cao (tuyến cáp đáy ngắn nhất, {results.bedScrewBase.load.span_m} m)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 border-r border-slate-200 font-sans">SV-1 nhổ / SV-2 trượt / SV-3 lật (hệ số sử dụng)</td>
-                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.upliftUtil.toFixed(2)} / {results.bedScrewBase.slideUtil.toFixed(2)} / {results.bedScrewBase.overturnUtil.toFixed(2)}</td>
-                    <td className="p-2 border-r border-slate-200">-</td>
-                    <td className="p-2">≤ 1,00 là đạt; FS trượt {results.bedScrewBase.params.sfSlide}, lật {results.bedScrewBase.params.sfOverturn}; lấy trường hợp bất lợi hơn trong hai mực nước</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 border-r border-slate-200 font-sans">SV-4 một vít / SV-5 nền / SV-6 thép bản</td>
-                    <td className="p-2 border-r border-slate-200 text-right font-bold">{results.bedScrewBase.screwUtil.toFixed(2)} / {results.bedScrewBase.bearingUtil.toFixed(2)} / {results.bedScrewBase.rebarUtil.toFixed(2)}</td>
-                    <td className="p-2 border-r border-slate-200">-</td>
-                    <td className="p-2">Lưới 2 lớp Ø{results.bedScrewBase.rebarDia_mm} a{Math.round(results.bedScrewBase.rebarSpacing_m * 1000)} hai phương; theo bảng tính 6.DE_NEO_VIT của Chủ đầu tư</td>
                   </tr>
                 </>
               )}

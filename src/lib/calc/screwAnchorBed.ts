@@ -367,6 +367,11 @@ export interface BaseForLinesInput extends Partial<ScrewBaseParams> {
   depthHigh_m: number;
   /** Tension of the slack line of a shared base, kN (the line pretension). */
   pretension_kN: number;
+  /**
+   * Also check both lines at their maximum together (default true). Switching it off is for
+   * sensitivity studies only: the design always keeps the envelope.
+   */
+  bothTaut?: boolean;
 }
 
 export interface BaseForLinesResult {
@@ -398,7 +403,7 @@ export interface BaseForLinesResult {
  * the equivalent single cable having the same horizontal and vertical components.
  */
 export function designScrewBaseForLines(input: BaseForLinesInput): BaseForLinesResult {
-  const { lines, depthLow_m, depthHigh_m, pretension_kN, ...rest } = input;
+  const { lines, depthLow_m, depthHigh_m, pretension_kN, bothTaut = true, ...rest } = input;
   if (lines.length < 1 || lines.length > 2) throw new Error('A screw-pile base holds one or two lines');
   const p = resolveScrewBaseParams(rest);
   const levels: Array<['low' | 'high', number, string]> = [['low', depthLow_m, 'MN thấp'], ['high', depthHigh_m, 'MN cao']];
@@ -423,7 +428,7 @@ export function designScrewBaseForLines(input: BaseForLinesInput): BaseForLinesR
         const [a, b] = lines;
         out.push({ name: `${a.label} căng, ${b.label} chùng (${levelName})`, level, ...sum([comp(a, a.tension_kN), comp(b, Math.min(pretension_kN, b.tension_kN))]) });
         out.push({ name: `${b.label} căng, ${a.label} chùng (${levelName})`, level, ...sum([comp(b, b.tension_kN), comp(a, Math.min(pretension_kN, a.tension_kN))]) });
-        out.push({ name: `cả hai dây căng (${levelName})`, level, ...sum([comp(a, a.tension_kN), comp(b, b.tension_kN)]) });
+        if (bothTaut) out.push({ name: `cả hai dây căng (${levelName})`, level, ...sum([comp(a, a.tension_kN), comp(b, b.tension_kN)]) });
       }
     }
     return out;

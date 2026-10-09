@@ -119,6 +119,43 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     expect(coords.filter((c) => c.type === 'BED').every((c) => /^DV-\d{3}$/.test((c as any).anchorId))).toBe(true);
   });
 
+  /** Angle in plan between a cable and the outward normal of the raft edge its cleat is on (0 inside the wedge of a corner), degrees. */
+  const obliquity = (l: MooringCoordinate) => {
+    const ring = RAFT_POLYGONS_V2.find((p) => p.name === l.raft)!.points;
+    const area = ring.reduce((s, a, i) => { const b = ring[(i + 1) % ring.length]; return s + a.x * b.y - b.x * a.y; }, 0);
+    const L = Math.hypot(l.xAnchor - l.xRaft, l.yAnchor - l.yRaft);
+    const d = { x: (l.xAnchor - l.xRaft) / L, y: (l.yAnchor - l.yRaft) / L };
+    const dots: number[] = [];
+    ring.forEach((a, i) => {
+      const b = ring[(i + 1) % ring.length], len = Math.hypot(b.x - a.x, b.y - a.y), ux = (b.x - a.x) / len, uy = (b.y - a.y) / len;
+      const u = Math.max(0, Math.min(len, (l.xRaft - a.x) * ux + (l.yRaft - a.y) * uy));
+      if (Math.hypot(l.xRaft - a.x - ux * u, l.yRaft - a.y - uy * u) < 0.05) dots.push(area > 0 ? d.x * uy - d.y * ux : -d.x * uy + d.y * ux);
+    });
+    if (dots.length > 1 && dots.every((v) => v >= 0)) return 0;
+    return (Math.acos(Math.max(-1, Math.min(1, Math.max(...dots)))) * 180) / Math.PI;
+  };
+
+  it('no NEW shore pile leaves its cable more than 60° off the normal of the raft edge (review of 2026-10-09)', () => {
+    const fresh = coords.filter((c) => c.type === 'SHORE' && (c as any).converted);
+    expect(fresh).toHaveLength(102);
+    for (const c of fresh) expect(obliquity(c), c.code).toBeLessThanOrEqual(60.05);
+    // the five cables that were 65–75° off before the review
+    for (const code of ['B3-D15', 'B5A-D48', 'B5A-D49', 'B7-D30', 'B8-D28']) expect(obliquity(coords.find((c) => c.code === code)!), code).toBeLessThanOrEqual(60.05);
+    // staked piles are never moved: three of them still hold a very oblique cable, and that is reported, not hidden
+    const staked = coords.filter((c) => c.type === 'SHORE' && !(c as any).converted && obliquity(c) > 60).map((c) => c.code);
+    expect(staked).toEqual(['B7-D01', 'B7-D09', 'B8-D13']);
+    // lake-bed cables are all well inside the limit
+    for (const c of coords.filter((q) => q.type === 'BED')) expect(obliquity(c), c.code).toBeLessThan(50);
+  });
+
+  it('a shared base stands midway between its two cleats wherever the layout rules allow it', () => {
+    const pairs = coords.filter((c) => c.type === 'BED' && c.code < (c as any).sharedWith);
+    expect(pairs).toHaveLength(32);
+    const uneven = pairs.filter((a) => Math.abs(a.span - coords.find((o) => o.code === (a as any).sharedWith)!.span) > 0.05).map((a) => a.code);
+    expect(uneven).toEqual(['B3A-D38', 'B3A-D39']); // already within 0.5 m of the midpoint: not worth moving
+    for (const a of pairs) expect(Math.abs(a.span - coords.find((o) => o.code === (a as any).sharedWith)!.span), a.code).toBeLessThan(0.3);
+  });
+
   it('the panels of the plan (18.354) are shared between the rafts by area', () => {
     expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(18354);
     for (const r of HUOI_VANH_RAFTS) {

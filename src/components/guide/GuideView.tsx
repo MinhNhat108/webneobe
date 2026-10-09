@@ -46,7 +46,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
   const faqList = [
     {
       q: 'Khi bảng kết quả báo "KHÔNG ĐẠT" (Màu đỏ), tôi cần điều chỉnh thông số nào trước?',
-      a: 'Hãy nhìn vào dòng "Hạng mục vi phạm" trên thanh kết luận:\n• Nếu vi phạm sức bền kéo cáp (C2 hoặc C6): Vào mục "2. Thông Số Đầu Vào" -> Tab Dây Cáp -> Chọn mã cáp lớn hơn (ví dụ nâng từ PES-24 lên PES-28, PES-32 hoặc PES-36) hoặc tăng thêm số lượng dây neo.\n• Nếu vi phạm sức chịu cọc bờ (C1 hoặc C7): Vào tab Cọc & Mỏ Neo -> Tăng kích thước cạnh cọc D (từ 0.40m lên 0.45m/0.50m) hoặc tăng chiều sâu ngàm cọc L trong đất.\n• Nếu vi phạm cọc lòng hồ bị nhổ (C5): Tăng chiều sâu cọc đáy L hoặc kéo dài khoảng cách từ mép bè tới cọc để giảm góc dốc của cáp (θ nhỏ hơn).'
+      a: 'Hãy nhìn vào dòng "Hạng mục vi phạm" trên thanh kết luận:\n• Nếu vi phạm sức bền kéo cáp (C2 hoặc C6): Vào mục "2. Thông Số Đầu Vào" -> Tab Dây Cáp -> Chọn mã cáp lớn hơn (ví dụ nâng từ PES-28 lên PES-32 hoặc PES-36) hoặc tăng thêm số lượng dây neo.\n• Nếu vi phạm sức chịu cọc bờ (C1 hoặc C7): Vào tab Cọc & Mỏ Neo -> Tăng chiều sâu ngàm cọc L hoặc tăng số lượng thép chủ trong lồng cọc D350.\n• Nếu vi phạm neo đáy lòng hồ: Với phương án đế vít xoắn (PA3), hệ thống tự động tăng kích thước cạnh đế B và chiều dài vít L để đạt 100%; với phương án cọc đóng (PA1), tăng chiều sâu cọc ngàm L trong đất.'
     },
     {
       q: 'Dữ liệu tôi nhập có bị mất khi đóng trình duyệt hay tải lại trang web không?',
@@ -54,7 +54,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
     },
     {
       q: 'Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của Dự án Hồ Huổi Vanh?',
-      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 9 cụm bè (BÈ 1 đến BÈ 12 theo bản vẽ CAD của khách hàng) theo đúng hồ sơ thiết kế mới nhất.'
+      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 9 cụm bè (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; gộp từ 12 bè cũ theo bản vẽ CAD và PDF hồ sơ mới nhất).'
     },
     {
       q: 'Làm sao để xuất hoặc in báo cáo thuyết minh tính toán sang file PDF đẹp mắt?',

@@ -274,6 +274,46 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       size: 15955,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/THUYET_MINH_TINH_TOAN_KET_QUA_VA_KIEM_TRA_NEO_BE.docx'
+    },
+    {
+      id: 'doc_mb_neo_dwg',
+      name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg (Bản vẽ AutoCAD DWG 2018 - 32 đế dùng chung)',
+      mime: 'application/acad',
+      size: 177030,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg'
+    },
+    {
+      id: 'doc_mb_neo_dxf',
+      name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf (Bản vẽ CAD DXF mặt bằng neo 9 bè)',
+      mime: 'application/dxf',
+      size: 517002,
+      kind: 'dxf' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
+    },
+    {
+      id: 'doc_tk_neo_xlsx',
+      name: 'HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx (Bảng thống kê Excel 5 sheet, 295 dây cáp)',
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 513510,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx'
+    },
+    {
+      id: 'doc_coc_bo_dwg',
+      name: 'HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg (Bản vẽ AutoCAD DWG 2018 chi tiết cọc bờ D350)',
+      mime: 'application/acad',
+      size: 50302,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg'
+    },
+    {
+      id: 'doc_coc_bo_dxf',
+      name: 'HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf (Bản vẽ CAD DXF chi tiết cọc bờ D350)',
+      mime: 'application/dxf',
+      size: 78315,
+      kind: 'dxf' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf'
     }
   ],
   raftsSummary: HUOI_VANH_RAFTS

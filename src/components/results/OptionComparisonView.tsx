@@ -82,7 +82,6 @@ const Row: React.FC<{ label: string; a: React.ReactNode; b: React.ReactNode }> =
 export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
   const cmp = useOptionComparison();
   const updateDeadweightParams = useProjectStore((s) => s.updateDeadweightParams);
-  const option = useProjectStore((s) => s.currentProject.anchor.bedAnchorOption) ?? 'PA1_PILE';
   const p = cmp.params;
   const hasTrial = cmp.rows.some((r) => r.isTrial);
   const widened = cmp.rows.filter((r) => r.block.bearingGovernsShape).map((r) => r.name);
@@ -102,12 +101,10 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
         <Scale className="w-5 h-5 text-brand-600 shrink-0 mt-0.5" />
         <div>
           <h2 className="text-sm font-bold text-slate-900">
-            Hai Phương Án Neo Đáy Thay Thế: Cọc Đóng BTCT 350×350 & Khối Bê Tông Trọng Lực
+            So Sánh Phương Án Neo Đáy Đối Chứng: Cọc Đóng BTCT 350×350 (PA1) & Khối Bê Tông Trọng Lực (PA2)
           </h2>
           <p className="text-slate-500 mt-0.5">
-            {cmp.shorePileCount} cọc bờ ({cmp.shoreCount} điểm neo) giống nhau ở cả hai phương án (bờ dốc, không đặt được khối). Khác nhau ở {cmp.bedCount} điểm
-            neo đáy hồ. Cả hai tính từ cùng lực căng thiết kế T_max và góc cáp đáy của từng bè. Đang chọn:{' '}
-            <strong>{option === 'PA3_SCREW_BASE' ? 'đế BTCT + vít xoắn (xem bảng phía trên)' : option === 'PA2_DEADWEIGHT' ? 'khối bê tông trọng lực' : 'cọc đóng BTCT'}</strong>.
+            Phương án thiết kế chính thức được phê duyệt là <strong>PA3: Đế BTCT + Vít Xoắn Dùng Chung (32 đế cho 64 dây đáy, 100% dùng chung)</strong>. Bảng dưới đây so sánh đối chứng kỹ thuật với 2 phương án truyền thống là PA1 (Cọc đóng BTCT) và PA2 (Khối bê tông trọng lực) trên cùng lực căng thiết kế T_max và góc cáp của từng bè.
           </p>
         </div>
       </div>

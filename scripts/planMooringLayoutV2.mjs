@@ -69,6 +69,7 @@ const SHORE_LEVEL = 384.0;   // m, R1: ground at / above this is "shore or water
 const MAX_SHORE_SPAN = 60.0; // m, R1: longest cable to a new shore pile
 const GAP_LIMIT = 45.0;      // m, R1/R2: another raft within this distance of the cleat = "between two rafts"
 const SHORE_FAN_STEPS = [0, ...Array.from({ length: 15 }, (_, i) => [-(i + 1) * 5, (i + 1) * 5]).flat()]; // deg, R1: swing of the cable, 0 … ±75
+const MAX_OBLIQUITY = 60.0;   // deg, a new shore cable further than this off the normal of its edge is straightened if the bank allows
 const PAIR_REACH = 30.0;     // m, R2 second stage: two lake-bed anchors of two rafts this close may be merged into one base
 const MAX_SHARED_SPAN = 40.0; // m, R2 second stage: longest cable to a merged base
 const MAX_SWING = 60.0;      // deg, R2 second stage: how far a cable may be swung from its bearing to reach a merged base
@@ -818,6 +819,63 @@ function untangleKnots() {
 untangleKnots();
 convertToShore((c) => !c.sharedWith);
 
+// ---- Step 2c' : straighten the oblique new shore cables --------------------
+/** Outward normals of the raft edge(s) the cleat sits on (two at a corner). */
+function cleatNormals(c) {
+  const ring = ringOf[c.raft], p = cleatOf(c), out = [];
+  let area = 0;
+  for (let i = 0; i < ring.length; i++) { const a = ring[i], b = ring[(i + 1) % ring.length]; area += a.x * b.y - b.x * a.y; }
+  for (let i = 0; i < ring.length; i++) {
+    const a = ring[i], b = ring[(i + 1) % ring.length], L = dist(a, b);
+    const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L;
+    const u = Math.max(0, Math.min(L, (p.x - a.x) * ux + (p.y - a.y) * uy));
+    if (Math.hypot(p.x - a.x - ux * u, p.y - a.y - uy * u) < 0.05) out.push(area > 0 ? { x: uy, y: -ux } : { x: -uy, y: ux });
+  }
+  return out;
+}
+/** Angle in plan between the cable cleat->p and the outward normal of the edge, degrees (0 inside the wedge of a corner). */
+function obliquity(c, p) {
+  const cl = cleatOf(c), L = dist(cl, p) || 1, d = { x: (p.x - cl.x) / L, y: (p.y - cl.y) / L };
+  const ns = cleatNormals(c);
+  if (!ns.length) return 0;
+  const dots = ns.map((n) => d.x * n.x + d.y * n.y);
+  if (ns.length > 1 && dots.every((v) => v >= 0)) return 0;
+  return (Math.acos(Math.max(-1, Math.min(1, Math.max(...dots)))) * 180) / Math.PI;
+}
+// A cable far off the normal of its edge holds the raft poorly across that edge. Every NEW shore pile whose
+// cable is more than MAX_OBLIQUITY off the normal is moved, if the bank allows it, to the feasible position
+// within MAX_OBLIQUITY that restrains the raft best across the edge: the largest cos^2(obliquity) / length
+// (stiffness of a cable across the edge, per unit EA). Staked piles are never moved.
+for (let pass = 0, changed = true; changed && pass < 5; pass++) {
+  changed = false;
+  for (const c of coords) {
+    if (c.type !== 'SHORE' || !c.converted) continue;
+    const now = obliquity(c, anchorOf(c));
+    if (now <= MAX_OBLIQUITY + 0.05) continue;
+    const cleat = cleatOf(c);
+    let best = null;
+    for (const n of cleatNormals(c)) {
+      for (let deg = -MAX_OBLIQUITY; deg <= MAX_OBLIQUITY; deg += 2.5) {
+        const r = (deg * Math.PI) / 180, d = { x: n.x * Math.cos(r) - n.y * Math.sin(r), y: n.x * Math.sin(r) + n.y * Math.cos(r) };
+        for (let sp = 3; sp <= MAX_SHORE_SPAN; sp += 0.5) {
+          const q = { x: r2(cleat.x + d.x * sp), y: r2(cleat.y + d.y * sp) }, g = groundAt(q.x, q.y);
+          if (g === null) break;
+          if (g < SHORE_LEVEL) continue;
+          if (!shoreLineFeasible(cleat, q, c) || overOwnRaft(cleat, q, c)) continue;
+          // restraint across the edge per unit of cable stretch: cos^2(obliquity) / length
+          const ob = obliquity(c, q), k = Math.cos((ob * Math.PI) / 180) ** 2 / sp;
+          if (ob <= MAX_OBLIQUITY + 1e-9 && (!best || k > best.k + 1e-12)) best = { k, ob, sp, q, g };
+        }
+      }
+    }
+    if (!best) { report.moved.push(`${c.code}: cable ${now.toFixed(0)}° off the edge normal — no pile position on the bank within ${MAX_OBLIQUITY}° (kept)`); continue; }
+    const before = c.span;
+    setAnchor(c, best.q);
+    changed = true;
+    report.moved.push(`${c.code}: new shore pile moved to straighten the cable, ${now.toFixed(0)}° -> ${best.ob.toFixed(0)}° off the edge normal, span ${before} -> ${c.span} m, restraint index x${(best.k / (Math.cos((now * Math.PI) / 180) ** 2 / before)).toFixed(1)}, ground ${best.g.toFixed(2)} m`);
+  }
+}
+
 // ---- Step 2e (R3): no single base left in a gap ----------------------------
 // Owner, 2026-10-09: "sao không nối luôn vào bè còn lại mà để neo 1 bè thôi ... dùng chung được thì cứ cho
 // dùng chung". A base still holding ONE line although it faces another raft (that raft has no free line left
@@ -876,6 +934,25 @@ if (process.argv.includes('--explain')) {
     }
     console.log('WHY', c.code, 'cleat', cleat.x.toFixed(0), cleat.y.toFixed(0), 'shore-level points in fan:', pts, [...tally.entries()].sort((p, q) => q[1] - p[1]).slice(0, 9).map(([k, v]) => k + ':' + v).join(', '));
   }
+}
+// ---- Step 2f: a shared base stands midway between its two cleats -----------
+// Two cables of equal length pull the base alike from both sides, and neither is steeper than it has to be
+// (the steeper cable is the one that lifts the base). Moved only when the midpoint keeps every rule.
+for (const a of coords) {
+  if (a.type !== 'BED' || !a.sharedWith || a.code > a.sharedWith) continue;
+  const b = coords.find((o) => o.code === a.sharedWith);
+  const mid = { x: r2((a.xRaft + b.xRaft) / 2), y: r2((a.yRaft + b.yRaft) / 2) };
+  if (dist(mid, anchorOf(a)) < 0.5) continue;
+  const others = coords.filter((o) => o !== a && o !== b);
+  const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+    && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
+    && [a, b].every((l) => !overOwnRaft(cleatOf(l), mid, l)
+      && others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
+      && polygons.every((q) => q.name === l.raft || !segOverRing(cleatOf(l), mid, q.points)));
+  if (!ok) continue;
+  const before = `${a.span} / ${b.span}`;
+  setAnchor(a, mid); setAnchor(b, mid);
+  report.moved.push(`${a.code} + ${b.code}: shared base centred between its two cleats, spans ${before} -> ${a.span} / ${b.span} m`);
 }
 // One id per lake-bed base: shared lines carry the same id.
 {

@@ -91,7 +91,7 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared 
     expect(T.maxLiftMass_t).toBeCloseTo(sum.maxLiftMass_t, 9);
     // At the 20 m/s default 11 bases are the workbook base 2.5 m; the others need 2.75–3.25 m, up to 10.8 t to lift.
     // The largest ones are the shared bases of the narrow gap BÈ 3 – BÈ 3A, governed by BOTH lines taut.
-    expect(sum.basesBySide).toEqual({ '2.50': 11, '2.75': 18, '3.00': 1, '3.25': 2 });
+    expect(sum.basesBySide).toEqual({ '2.50': 11, '2.75': 19, '3.00': 1, '3.25': 1 });
     expect(sum.enlargedRafts).toEqual(['BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7']);
     expect(sum.side_m).toEqual([2.5, 3.25]);
     expect(sum.maxLiftMass_t).toBeGreaterThan(10.5);

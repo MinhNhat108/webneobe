@@ -293,7 +293,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     },
     {
       id: 'doc_tk_neo_xlsx',
-      name: 'HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx (Bảng thống kê Excel 5 sheet, 295 dây cáp)',
+      name: 'HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx (Bảng thống kê Excel 6 sheet, gồm Chiều Dài Cắt Cáp 295 dây)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       size: 513510,
       kind: 'other' as const,

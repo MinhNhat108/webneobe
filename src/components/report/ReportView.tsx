@@ -397,7 +397,7 @@ export const ReportView: React.FC = () => {
                 <span className="font-bold text-blue-900">• 64 Dây đáy (32 đế dùng chung):</span> Dài nhất ở mùa lũ <strong>MNLKT 386,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNLKT</em>. Mùa cạn MNC 380,0 m dây chùng 1,2 &ndash; 2,6 m nằm tiếp đáy. Gắn phao nổi 15&ndash;20 kg cách đế 3 m để chống chôn vùi trong bùn và chống quấn chéo dây.
               </div>
               <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
-                <span className="font-bold text-emerald-900">• 231 Dây cọc bờ (D350):</span> Chốt cọc trên sườn đồi cao, dài nhất ở mùa cạn <strong>MNC 380,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNC</em>. Mùa lũ dây chùng nhẹ 0,1 &ndash; 0,3 m. Lắp cụm tăng đơ 10&ndash;12T hành trình &plusmn;300 mm tại đầu cọc bờ.
+                <span className="font-bold text-emerald-900">• 231 Dây cọc bờ (D350):</span> Chốt cọc trên sườn đồi (+384,0 ~ +386,5 m), dài nhất ở mùa cạn <strong>MNC 380,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNC</em>. Mùa lũ dây chùng nhẹ 0,1 &ndash; 0,3 m. Lắp cụm tăng đơ 10&ndash;12T hành trình &plusmn;300 mm tại đầu cọc bờ.
               </div>
             </div>
             <p className="text-[10px] text-slate-600 italic">

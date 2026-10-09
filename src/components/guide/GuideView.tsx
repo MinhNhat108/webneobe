@@ -50,7 +50,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
   const faqList = [
     {
       q: 'Khi căng cáp thì cho cáp căng hay chùng dây như thế nào theo các mùa nước hồ?',
-      a: '• NGUYÊN TẮC CỐT TỬ: Tuyệt đối không kéo căng cứng đét (như dây đàn) và KHÔNG lắp đặt bằng cách đo lực kéo T0 ở mùa nước bình thường MNDB. Bắt buộc phải CẮT CÁP ĐÚNG CHIỀU DÀI TÍNH TOÁN THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY.\n• DÂY ĐÁY (64 dây / 32 đế chung): Dài nhất ở mùa lũ MNLKT (386,0m) -> BẮT BUỘC CẮT THEO MNLKT. Vào mùa cạn MNC (380,0m), nước tụt sâu làm dây chùng 1,2 ~ 2,6m nằm tiếp đáy. (Nếu cắt căng ở mùa cạn, khi lũ dâng lực đẩy nổi bè sẽ giật đứt tung cáp hoặc nhổ đế).\n• DÂY BỜ (231 dây cọc bờ D350): Do cọc bờ nằm trên đồi cao (+384 ~ +390m), khi nước rút về mùa cạn MNC bè hạ thấp làm khoảng cách chéo xa nhất -> DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC -> CẮT THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 ~ 0,3m.\n• CƠ CHẾ BÙ TRỪ & CHỐNG VA ĐẬP: Ở mùa cạn MNC, dây bờ căng đét giữ bè không trôi; ở mùa lũ MNLKT, dây đáy căng giữ bè. Khe hở giữa 2 bè (10 ~ 13m) luôn giữ an toàn, độ dịch chuyển ngang tối đa < 0,8m.\n• BIỆN PHÁP THI CÔNG: Cắt cáp + vạch dấu sơn trước khi thả, đầu bích bè dùng xích/tăng đơ vi chỉnh, dây đáy buộc 1 phao nổi nhỏ (15-20 kg) cách đế 3m để nhấc nhẹ bụng cáp tránh vùi bùn khi mùa cạn.'
+      a: '• NGUYÊN TẮC CỐT TỬ: Tuyệt đối không kéo căng cứng đét (như dây đàn) và KHÔNG lắp đặt bằng cách đo lực kéo T0 ở mùa nước bình thường MNDB. Bắt buộc phải CẮT CÁP ĐÚNG CHIỀU DÀI TÍNH TOÁN THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY.\n• DÂY ĐÁY (64 dây / 32 đế chung): Dài nhất ở mùa lũ MNLKT (386,0m) -> BẮT BUỘC CẮT THEO MNLKT. Vào mùa cạn MNC (380,0m), nước tụt sâu làm dây chùng 1,2 ~ 2,6m nằm tiếp đáy. (Nếu cắt căng ở mùa cạn, khi lũ dâng lực đẩy nổi bè sẽ giật đứt tung cáp hoặc nhổ đế).\n• DÂY BỜ (231 dây cọc bờ D350): Do cọc bờ nằm trên đồi cao (+384,0 ~ +386,5 m), khi nước rút về mùa cạn MNC bè hạ thấp làm khoảng cách chéo xa nhất -> DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC -> CẮT THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 ~ 0,3m.\n• CƠ CHẾ BÙ TRỪ & CHỐNG VA ĐẬP: Ở mùa cạn MNC, dây bờ căng đét giữ bè không trôi; ở mùa lũ MNLKT, dây đáy căng giữ bè. Khe hở giữa 2 bè (10 ~ 13m) luôn giữ an toàn, độ dịch chuyển ngang tối đa < 0,8m.\n• BIỆN PHÁP THI CÔNG: Cắt cáp chốt-tới-chốt + đoạn phụ kiện theo quy định NCC và vạch dấu sơn trước khi thả, đầu bích bè dùng xích/tăng đơ vi chỉnh, dây đáy buộc 1 phao nổi nhỏ (15-20 kg) cách đế 3m để nhấc nhẹ bụng cáp tránh vùi bùn khi mùa cạn.'
     },
     {
       q: 'Khi bảng kết quả báo "KHÔNG ĐẠT" (Màu đỏ), tôi cần điều chỉnh thông số nào trước?',
@@ -1224,7 +1224,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     <span>231 DÂY CỌC BỜ (Cọc khoan nhồi D350):</span>
                   </div>
                   <p>
-                    Chốt cọc bờ nằm trên đồi cao (+384 ~ +390 m). Khi nước hồ rút về <strong>MNC (380,0 m)</strong>, bè tụt xuống thấp khiến khoảng cách chéo từ bờ xuống bè là xa nhất &rarr; <strong>DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC</strong>.
+                    Chốt cọc bờ nằm trên đồi (+384,0 ~ +386,5 m). Khi nước hồ rút về <strong>MNC (380,0 m)</strong>, bè tụt xuống thấp khiến khoảng cách chéo từ bờ xuống bè là xa nhất &rarr; <strong>DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC</strong>.
                   </p>
                   <p className="font-semibold text-emerald-900">
                     &rarr; BẮT BUỘC CẮT CÁP THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 &ndash; 0,3 m.
@@ -1344,11 +1344,11 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </div>
                   <h5 className="font-bold text-slate-900 text-xs">Cắt Cáp &amp; Đánh Dấu Vạch Sơn</h5>
                   <p className="text-[11px] text-slate-600 leading-relaxed">
-                    Đo sâu thực địa cao độ đáy từng đế. Cắt cáp theo chiều dài thiết kế (L_bất_lợi + 1,5m trừ hao khuyên lót bện/cóc cáp). Dùng sơn phản quang đánh dấu mốc khóa vị trí liên kết.
+                    Đo sâu thực địa cao độ đáy từng đế. Cắt cáp theo chiều dài thiết kế chốt-tới-chốt (L_bất_lợi) cộng thêm đoạn phụ kiện đầu dây do nhà cung cấp cáp quy định (ước tính sơ bộ ~ 1,0 &ndash; 1,5 m). Dùng sơn phản quang đánh dấu mốc khóa vị trí liên kết.
                   </p>
                 </div>
                 <div className="text-[10px] font-mono text-blue-700 bg-blue-100/60 p-1.5 rounded">
-                  L_cắt = L_tk + 1,5 m
+                  L_cắt = L_chốt + L_phụ_kiện
                 </div>
               </div>
 

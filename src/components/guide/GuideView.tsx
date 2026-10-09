@@ -26,17 +26,21 @@ import {
   Sparkles,
   FileText,
   Boxes,
-  Compass
+  Compass,
+  Wrench,
+  Waves,
+  CheckCircle2,
+  AlertOctagon
 } from 'lucide-react';
 
 interface GuideViewProps {
   onSelectSection: (section: ActiveSection) => void;
 }
 
-type GuideTab = 'overview' | 'steps' | 'diagram' | 'formulas' | 'troubleshooting' | 'faq';
+type GuideTab = 'overview' | 'steps' | 'diagram' | 'formulas' | 'installation' | 'troubleshooting' | 'faq';
 
 export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
-  const [activeTab, setActiveTab] = useState<GuideTab>('overview');
+  const [activeTab, setActiveTab] = useState<GuideTab>('installation');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [selectedStep, setSelectedStep] = useState<number>(1);
@@ -44,6 +48,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
 
   // FAQ list
   const faqList = [
+    {
+      q: 'Khi căng cáp thì cho cáp căng hay chùng dây như thế nào theo các mùa nước hồ?',
+      a: '• NGUYÊN TẮC CỐT TỬ: Tuyệt đối không kéo căng cứng đét (như dây đàn) và KHÔNG lắp đặt bằng cách đo lực kéo T0 ở mùa nước bình thường MNDB. Bắt buộc phải CẮT CÁP ĐÚNG CHIỀU DÀI TÍNH TOÁN THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY.\n• DÂY ĐÁY (64 dây / 32 đế chung): Dài nhất ở mùa lũ MNLKT (386,0m) -> BẮT BUỘC CẮT THEO MNLKT. Vào mùa cạn MNC (380,0m), nước tụt sâu làm dây chùng 1,2 ~ 2,6m nằm tiếp đáy. (Nếu cắt căng ở mùa cạn, khi lũ dâng lực đẩy nổi bè sẽ giật đứt tung cáp hoặc nhổ đế).\n• DÂY BỜ (231 dây cọc bờ D350): Do cọc bờ nằm trên đồi cao (+384 ~ +390m), khi nước rút về mùa cạn MNC bè hạ thấp làm khoảng cách chéo xa nhất -> DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC -> CẮT THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 ~ 0,3m.\n• CƠ CHẾ BÙ TRỪ & CHỐNG VA ĐẬP: Ở mùa cạn MNC, dây bờ căng đét giữ bè không trôi; ở mùa lũ MNLKT, dây đáy căng giữ bè. Khe hở giữa 2 bè (10 ~ 13m) luôn giữ an toàn, độ dịch chuyển ngang tối đa < 0,8m.\n• BIỆN PHÁP THI CÔNG: Cắt cáp + vạch dấu sơn trước khi thả, đầu bích bè dùng xích/tăng đơ vi chỉnh, dây đáy buộc 1 phao nổi nhỏ (15-20 kg) cách đế 3m để nhấc nhẹ bụng cáp tránh vùi bùn khi mùa cạn.'
+    },
     {
       q: 'Khi bảng kết quả báo "KHÔNG ĐẠT" (Màu đỏ), tôi cần điều chỉnh thông số nào trước?',
       a: 'Hãy nhìn vào dòng "Hạng mục vi phạm" trên thanh kết luận:\n• Nếu vi phạm sức bền kéo cáp (C2 hoặc C6): Vào mục "2. Thông Số Đầu Vào" -> Tab Dây Cáp -> Chọn mã cáp lớn hơn (ví dụ nâng từ PES-28 lên PES-32 hoặc PES-36) hoặc tăng thêm số lượng dây neo.\n• Nếu vi phạm sức chịu cọc bờ (C1 hoặc C7): Vào tab Cọc & Mỏ Neo -> Tăng chiều sâu ngàm cọc L hoặc tăng số lượng thép chủ trong lồng cọc D350.\n• Nếu vi phạm neo đáy lòng hồ: Với phương án đế vít xoắn (PA3), hệ thống tự động tăng kích thước cạnh đế B và chiều dài vít L để đạt 100%; với phương án cọc đóng (PA1), tăng chiều sâu cọc ngàm L trong đất.'
@@ -132,8 +140,9 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
             { id: 'steps' as GuideTab, label: '2. Quy Trình 6 Bước', icon: Layers },
             { id: 'diagram' as GuideTab, label: '3. Sơ Đồ Cơ Học Hệ Neo', icon: Compass },
             { id: 'formulas' as GuideTab, label: '4. Công Thức & Tiêu Chuẩn', icon: Scale },
-            { id: 'troubleshooting' as GuideTab, label: '5. Cẩm Nang Xử Lý Lỗi', icon: Lightbulb },
-            { id: 'faq' as GuideTab, label: '6. Câu Hỏi Thường Gặp', icon: HelpCircle },
+            { id: 'installation' as GuideTab, label: '5. Thi Công & Căng Cáp Hiện Trường', icon: Anchor },
+            { id: 'troubleshooting' as GuideTab, label: '6. Cẩm Nang Xử Lý Lỗi', icon: Lightbulb },
+            { id: 'faq' as GuideTab, label: '7. Câu Hỏi Thường Gặp', icon: HelpCircle },
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -1130,7 +1139,336 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 5: TROUBLESHOOTING & REMEDIATION MATRIX                               */}
+      {/* TAB 5: FIELD INSTALLATION & MOORING TENSIONING MANUAL                     */}
+      {/* ========================================================================= */}
+      {activeTab === 'installation' && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Header Banner */}
+          <div className="card card-pad bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 text-white border-brand-800/40 shadow-xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold">
+                  <Anchor className="w-3.5 h-3.5 text-brand-400" />
+                  <span>Quy Chuẩn Thi Công Ngoài Hiện Trường · Hồ Chứa Thủy Điện Huổi Vanh</span>
+                </div>
+                <h3 className="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                  <Wrench className="w-5 h-5 text-amber-400" />
+                  Chỉ Dẫn Thi Công Căng Cáp, Cắt Cáp &amp; Vận Hành Hệ Neo
+                </h3>
+                <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
+                  Nguyên lý cơ học căng / chùng cáp theo biên độ dao động mực nước hồ <strong>6,0 m</strong> (MNC 380,0 m &rarr; MNDB 384,5 m &rarr; MNLKT 386,0 m) và chỉ dẫn lắp đặt thực địa cho toàn bộ <strong>295 tuyến cáp</strong> (231 cọc bờ &amp; 32 đế neo đáy dùng chung).
+                </p>
+              </div>
+
+              <div className="shrink-0 flex items-center gap-2">
+                <div className="px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold flex items-center gap-2">
+                  <AlertOctagon className="w-4 h-4 text-amber-400" />
+                  <span>Quy Tắc: Cắt Cáp Theo Mực Nước Bất Lợi</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 1: Golden Rules */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Box 1: Nguyên tắc căng/chùng */}
+            <div className="card card-pad border-l-4 border-l-amber-500 space-y-4">
+              <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                <span>1. NGUYÊN TẮC CỐT TỬ: CĂNG HAY CHÙNG DÂY?</span>
+              </div>
+              <div className="text-xs text-slate-700 space-y-2.5 leading-relaxed">
+                <p className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 font-medium">
+                  <strong>Tuyệt đối KHÔNG căng cứng đét (như dây đàn)</strong> và <strong>KHÔNG lắp đặt bằng cách đo lực kéo T₀ ở mùa nước bình thường (MNDB)</strong>.
+                </p>
+                <p>
+                  <strong>Lý do cơ học nguy hiểm:</strong>
+                </p>
+                <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
+                  <li>
+                    Nếu căng cứng dây đáy ở mùa bình thường (MNDB): Khi lũ về (MNLKT 386,0 m), nước dâng thêm 1,5 m khiến dây thiếu hụt <strong>0,5 &ndash; 1,1 m</strong> chiều dài &rarr; Sức đẩy nổi hàng trăm tấn của bè sẽ <strong>kéo dìm mép bè hoặc giật nhổ đế neo đáy</strong>!
+                  </li>
+                  <li>
+                    Nếu kéo căng cứng dây bờ ngắn ở mùa bình thường (MNDB): Khi nước rút về mùa cạn (MNC 380,0 m), bè hạ thấp sẽ <strong>treo mép bè trên không</strong>, vặn xoắn khung giàn phao.
+                  </li>
+                </ul>
+                <p className="font-semibold text-slate-900 pt-1">
+                  &rArr; Giải pháp chuẩn: <strong>CẮT CÁP ĐỦ CHIỀU DÀI TÍNH TRƯỚC THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY</strong> và đánh dấu vạch sơn mốc khóa trên cáp.
+                </p>
+              </div>
+            </div>
+
+            {/* Box 2: Quy luật nghịch đảo 2 họ dây */}
+            <div className="card card-pad border-l-4 border-l-brand-600 space-y-4">
+              <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
+                <Waves className="w-4 h-4 text-brand-600" />
+                <span>2. QUY LUẬT NGHỊCH ĐẢO CỦA HAI HỌ DÂY NEO</span>
+              </div>
+              <div className="text-xs text-slate-700 space-y-2.5 leading-relaxed">
+                <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-950 space-y-1">
+                  <div className="font-bold flex items-center gap-1.5 text-blue-900">
+                    <Anchor className="w-3.5 h-3.5" />
+                    <span>64 DÂY ĐÁY (32 đế neo vít xoắn dùng chung):</span>
+                  </div>
+                  <p>
+                    Đế neo nằm sâu ở đáy hồ (~378,3 m). Khi nước dâng lên <strong>MNLKT (386,0 m)</strong> là lúc bè ở cao nhất &rarr; <strong>DÂY ĐÁY DÀI NHẤT Ở MÙA LŨ MNLKT</strong>.
+                  </p>
+                  <p className="font-semibold text-blue-900">
+                    &rarr; BẮT BUỘC CẮT CÁP THEO MNLKT. Vào mùa cạn MNC (380,0 m), dây đáy chấp nhận chùng tự nhiên 1,2 &ndash; 2,6 m nằm tiếp đáy.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1">
+                  <div className="font-bold flex items-center gap-1.5 text-emerald-900">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>231 DÂY CỌC BỜ (Cọc khoan nhồi D350):</span>
+                  </div>
+                  <p>
+                    Chốt cọc bờ nằm trên đồi cao (+384 ~ +390 m). Khi nước hồ rút về <strong>MNC (380,0 m)</strong>, bè tụt xuống thấp khiến khoảng cách chéo từ bờ xuống bè là xa nhất &rarr; <strong>DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC</strong>.
+                  </p>
+                  <p className="font-semibold text-emerald-900">
+                    &rarr; BẮT BUỘC CẮT CÁP THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 &ndash; 0,3 m.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Comprehensive Geometry Table */}
+          <div className="card card-pad space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+              <div>
+                <h4 className="card-title flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-brand-600" />
+                  Bảng Thông Số Hình Học &amp; Trạng Thái Dây Toàn Hồ (295 Tuyến Cáp)
+                </h4>
+                <p className="card-subtitle">
+                  Kết quả tính toán hình học 3D chuẩn xác theo cao độ thực tế (Bích bè +0,35 m, chốt cọc bờ +0,1 m, tai đế neo +0,55 m)
+                </p>
+              </div>
+              <span className="text-xs px-2.5 py-1 rounded bg-slate-100 font-mono text-slate-700 font-bold self-start sm:self-auto">
+                295 Cáp · 9 Bè · 263 Điểm Neo
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border border-slate-200 font-mono">
+                <thead className="bg-slate-100 text-slate-800 uppercase font-sans">
+                  <tr>
+                    <th className="p-2.5 border-r border-b border-slate-200">Đặc tính hình học &amp; Trạng thái làm việc</th>
+                    <th className="p-2.5 border-r border-b border-slate-200 text-blue-900 font-bold bg-blue-50/60">
+                      64 Tuyến Dây Đáy (32 Đế Dùng Chung)
+                    </th>
+                    <th className="p-2.5 border-b border-slate-200 text-emerald-900 font-bold bg-emerald-50/60">
+                      231 Tuyến Dây Bờ (Cọc Khoan Nhồi D350)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 text-slate-700">
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Tầm vươn ngang (mặt bằng)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-bold text-blue-800">9,0 &ndash; 21,5 m</td>
+                    <td className="p-2.5 font-bold text-emerald-800">2,1 &ndash; 58,5 m (Trung vị 24,5 m)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNC (380,0 m)</td>
+                    <td className="p-2.5 border-r border-slate-200">Trung vị 14,4 m (Ngắn nhất)</td>
+                    <td className="p-2.5 font-bold text-rose-700 bg-rose-50/40">Trung vị 25,2 m &rarr; DÀI NHẤT (Chi phối cắt cáp)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNDB (384,5 m)</td>
+                    <td className="p-2.5 border-r border-slate-200">Trung vị 15,5 m</td>
+                    <td className="p-2.5">Trung vị 24,8 m</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNLKT (386,0 m)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-bold text-rose-700 bg-rose-50/40">Trung vị 16,2 m &rarr; DÀI NHẤT (Chi phối cắt cáp)</td>
+                    <td className="p-2.5">Trung vị 24,9 m</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Độ biến thiên chiều dài (&Delta;L)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-bold text-purple-700">1,2 &ndash; 2,6 m (Chiếm 5% &ndash; 22% chiều dài cáp)</td>
+                    <td className="p-2.5">0,12 &ndash; 3,0 m (Trung vị 0,33 m; 13 dây ngắn &gt; 0,7 m)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa cạn (MNC 380,0 m)</td>
+                    <td className="p-2.5 border-r border-slate-200 text-amber-700">Chùng hẳn 1,2 &ndash; 2,6 m (Nằm tiếp đáy hồ)</td>
+                    <td className="p-2.5 font-bold text-emerald-700">CĂNG GIỮ BÈ (Độ rơ = 0, khống chế toàn bộ bè)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa thường (MNDB 384,5 m)</td>
+                    <td className="p-2.5 border-r border-slate-200 text-slate-600">Chùng nhẹ 0,5 &ndash; 1,1 m</td>
+                    <td className="p-2.5 text-slate-600">Chùng nhẹ 0,1 &ndash; 0,3 m (Hệ có độ rơ tự do ngang &lt; 0,8 m)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa lũ (MNLKT 386,0 m)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-bold text-emerald-700">CĂNG GIỮ BÈ (Độ rơ = 0, khống chế mép trong bè)</td>
+                    <td className="p-2.5 text-slate-600">Chùng nhẹ 0,1 &ndash; 0,25 m</td>
+                  </tr>
+                  <tr className="bg-slate-50 font-bold">
+                    <td className="p-2.5 border-r border-slate-200 font-sans">Mực nước quy chuẩn CẮT CÁP</td>
+                    <td className="p-2.5 border-r border-slate-200 text-blue-900">CẮT THEO MNLKT 386,0 m (+ đoạn bện khuyên)</td>
+                    <td className="p-2.5 text-emerald-900">CẮT THEO MNC 380,0 m (+ đoạn bện khuyên)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-3 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-950 space-y-1">
+              <div className="font-bold flex items-center gap-2 text-sky-900">
+                <ShieldCheck className="w-4 h-4 text-sky-600" />
+                <span>Khẳng định cơ học: Hai bè KHÔNG THỂ va đập nhau trong khe hẹp!</span>
+              </div>
+              <p className="leading-relaxed">
+                Khi nước cạn (MNC), dây đáy chùng nhưng 231 dây cọc bờ căng đét giữ chặt các phía &rarr; bè không thể trôi giạt. Ở mùa thường (MNDB), khi gió xô đẩy, 2 mép bè tiến lại gần nhau tối đa <strong>0,8 m</strong>. Khe hẹp nhất giữa BÈ 2 &ndash; BÈ 3 vẫn còn rộng <strong>9,9 m</strong> (thiết kế 10,75 m); khe 3 &ndash; 3A còn <strong>12,9 m</strong> (thiết kế 13,7 m). Khoảng cách an toàn luôn được duy trì tuyệt đối.
+              </p>
+            </div>
+          </div>
+
+          {/* Section 3: 4-Step Installation Method */}
+          <div className="card card-pad space-y-4">
+            <h4 className="card-title flex items-center gap-2">
+              <Layers className="w-4 h-4 text-brand-600" />
+              Quy Trình 4 Bước Thi Công Căng Cáp Ngoài Lòng Hồ
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Step 1 */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm">
+                      1
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase">Khảo Sát &amp; Cắt Cáp</span>
+                  </div>
+                  <h5 className="font-bold text-slate-900 text-xs">Cắt Cáp &amp; Đánh Dấu Vạch Sơn</h5>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Đo sâu thực địa cao độ đáy từng đế. Cắt cáp theo chiều dài thiết kế (L_bất_lợi + 1,5m trừ hao khuyên lót bện/cóc cáp). Dùng sơn phản quang đánh dấu mốc khóa vị trí liên kết.
+                  </p>
+                </div>
+                <div className="text-[10px] font-mono text-blue-700 bg-blue-100/60 p-1.5 rounded">
+                  L_cắt = L_tk + 1,5 m
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="w-7 h-7 rounded-lg bg-indigo-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm">
+                      2
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase">Đế Neo Đáy</span>
+                  </div>
+                  <h5 className="font-bold text-slate-900 text-xs">Hạ Đặt Đế &amp; Gắn Phao Treo</h5>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Hạ đặt đế BTCT vít xoắn xuống đáy hồ. Nối ma-nê tai neo đôi. <strong>Buộc 1 quả phao nổi nhỏ (15 &ndash; 20 kg) cách đế 3 m</strong> để nhấc nhẹ bụng cáp, chống vùi lấp bùn đáy và chống chéo dây khi nước cạn.
+                  </p>
+                </div>
+                <div className="text-[10px] font-mono text-indigo-700 bg-indigo-100/60 p-1.5 rounded">
+                  Phao nổi 15-20 kg / dây đáy
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm">
+                      3
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase">Cọc Neo Bờ</span>
+                  </div>
+                  <h5 className="font-bold text-slate-900 text-xs">Kéo Cáp Bờ &amp; Lắp Tăng Đơ</h5>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Dùng tời/pa-lăng xích kéo cáp bờ vừa căng tới tay (không căng cứng). Tại đầu cọc D350 lắp cụm <strong>tăng đơ 2 đầu ma-nê (WLL 10 &ndash; 12 tấn, hành trình &plusmn;300 mm)</strong> để tinh chỉnh theo mùa.
+                  </p>
+                </div>
+                <div className="text-[10px] font-mono text-emerald-700 bg-emerald-100/60 p-1.5 rounded">
+                  Tăng đơ WLL 10-12T (&plusmn;300mm)
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="w-7 h-7 rounded-lg bg-amber-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm">
+                      4
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase">Liên Kết Bè</span>
+                  </div>
+                  <h5 className="font-bold text-slate-900 text-xs">Đoạn Xích Vi Chỉnh Bích Bè</h5>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Tại bích mép bè, không buộc cố định cáp mà gắn qua <strong>1 đoạn xích neo ngắn (1 &ndash; 1,5 m)</strong> kèm ma-nê. Đội vận hành dễ dàng tăng/giảm từng mắt xích khi nghiệm thu vị trí bè nổi.
+                  </p>
+                </div>
+                <div className="text-[10px] font-mono text-amber-700 bg-amber-100/60 p-1.5 rounded">
+                  Xích vi chỉnh L = 1,0 - 1,5 m
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: 4 Critical On-Site Warnings */}
+          <div className="card card-pad border-l-4 border-l-rose-500 space-y-4">
+            <div className="flex items-center gap-2 text-rose-700 font-bold text-sm">
+              <AlertTriangle className="w-4 h-4 text-rose-600" />
+              <span>4 ĐIỂM CẢNH BÁO KỸ THUẬT QUAN TRỌNG CẦN CHỈ ĐẠO HIỆN TRƯỜNG</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-700">
+              {/* Warning 1 */}
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">1</span>
+                  <span>Đo sâu thực địa 32 vị trí đế trước khi cắt cáp đáy</span>
+                </div>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  Cao độ đáy hồ hiện tính theo khảo sát trung bình (~378,3 m). Nếu đáy hồ thực tế sâu hơn thiết kế 0,5 m thì ở mùa lũ dây đáy sẽ bị thiếu hụt ~0,3 m. <strong>Bắt buộc rà đo sâu tại tim từng đế trước khi cắt loạt cáp đáy.</strong>
+                </p>
+              </div>
+
+              {/* Warning 2 */}
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">2</span>
+                  <span>Xử lý 13 tuyến dây bờ ngắn dưới 10 m (BÈ 6 &amp; BÈ 1)</span>
+                </div>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  BÈ 6 có 9 dây bờ và BÈ 1 có 4 dây bờ rất ngắn (như B6-D04 chỉ dài 2,06 m, B6-D29 dài 3,0 m). Ở mùa cạn chúng chúc dốc 22&deg; &ndash; 66&deg;, ở mùa thường chùng 0,7 &ndash; 3,0 m nên kém hiệu quả. <strong>Khuyến nghị dời cọc lùi xa bờ &gt; 15 m</strong>.
+                </p>
+              </div>
+
+              {/* Warning 3 */}
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">3</span>
+                  <span>Kiểm tra sức nổi dự trữ mép bè ở mùa lũ MNLKT</span>
+                </div>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  Ở mùa lũ MNLKT, dây đáy dốc từ 19&deg; &ndash; 40&deg; (8 dây &gt; 35&deg;). Lực căng dây sinh ra thành phần lực kéo đứng dìm mép bè xuống đáy nước (~0,5 &ndash; 0,6 tấn/bích). Cần đảm bảo phao nổi mép bè có đủ sức nổi dự trữ để không bị ngập mép sàn.
+                </p>
+              </div>
+
+              {/* Warning 4 */}
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">4</span>
+                  <span>Tra cứu Bảng Thống Kê Cắt Cáp (Cutting Schedule)</span>
+                </div>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  Toàn bộ chiều dài cắt, mực nước chi phối và độ chùng của từng sợi cáp đã được tích hợp trong file <strong>Excel Thống Kê Neo 9 Bè</strong> (tải ở Tab 5: Tài Liệu Đính Kèm). Đội thợ công trường chỉ việc nhìn bảng để đo cắt chính xác từng mét.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 6: TROUBLESHOOTING & REMEDIATION MATRIX                               */}
       {/* ========================================================================= */}
       {activeTab === 'troubleshooting' && (
         <div className="space-y-6 animate-fade-in">

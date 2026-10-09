@@ -370,7 +370,7 @@ export const ReportView: React.FC = () => {
         {currentProject.attachments && currentProject.attachments.length > 0 && (
           <div className="space-y-1">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1">
-              4. Tài Liệu & Bản Vẽ Kèm Theo Hồ Sơ
+              4. Tài Liệu &amp; Bản Vẽ Kèm Theo Hồ Sơ
             </h2>
             <ul className="list-disc list-inside text-xs text-slate-700 font-mono space-y-0.5">
               {currentProject.attachments.map(a => (
@@ -379,6 +379,32 @@ export const ReportView: React.FC = () => {
             </ul>
           </div>
         )}
+
+        {/* Section 5: Field Installation & Mooring Tensioning Guidelines */}
+        <div className="space-y-2 border-t border-slate-200 pt-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1 flex items-center justify-between">
+            <span>5. Chỉ Dẫn Kỹ Thuật Thi Công Căng Cáp &amp; Vận Hành Hiện Trường</span>
+            <span className="text-[10px] font-normal text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              Quy chuẩn dâng hạ nước hồ &Delta;H = 6,0 m
+            </span>
+          </h2>
+          <div className="text-[11px] text-slate-700 space-y-2 leading-relaxed">
+            <p>
+              <strong>Nguyên tắc vàng:</strong> Tuyệt đối không kéo căng cứng đét và không căn theo lực kéo T₀ ở MNDB. <strong>Cắt cáp theo chiều dài tính trước ở mực nước bất lợi</strong> của từng loại dây:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
+              <div className="p-2.5 rounded bg-blue-50/60 border border-blue-200">
+                <span className="font-bold text-blue-900">• 64 Dây đáy (32 đế dùng chung):</span> Dài nhất ở mùa lũ <strong>MNLKT 386,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNLKT</em>. Mùa cạn MNC 380,0 m dây chùng 1,2 &ndash; 2,6 m nằm tiếp đáy. Gắn phao nổi 15&ndash;20 kg cách đế 3 m để chống chôn vùi trong bùn và chống quấn chéo dây.
+              </div>
+              <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
+                <span className="font-bold text-emerald-900">• 231 Dây cọc bờ (D350):</span> Chốt cọc trên sườn đồi cao, dài nhất ở mùa cạn <strong>MNC 380,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNC</em>. Mùa lũ dây chùng nhẹ 0,1 &ndash; 0,3 m. Lắp cụm tăng đơ 10&ndash;12T hành trình &plusmn;300 mm tại đầu cọc bờ.
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-600 italic">
+              * Khẳng định an toàn: Khe hẹp giữa 2 bè (10 &ndash; 13 m) không xảy ra va đập; độ dịch chuyển ngang khi gió thổi &lt; 0,8 m nhờ hệ dây bờ căng ở MNC và đế neo dùng chung chữ V ngược tự hãm ở MNDB/MNLKT.
+            </p>
+          </div>
+        </div>
 
         {/* Disclaimer */}
         <div className="p-3 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-600 italic">

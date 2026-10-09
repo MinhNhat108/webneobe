@@ -372,12 +372,13 @@
     "type": "BED",
     "xRaft": -47.31,
     "yRaft": -19.81,
-    "xAnchor": -38.99,
-    "yAnchor": -26.62,
+    "xAnchor": -42.64,
+    "yAnchor": -28.74,
     "zAnchor": 378.3,
-    "span": 10.75,
-    "azimuth": 129.3,
+    "span": 10.08,
+    "azimuth": 152.4,
     "code": "B2-D12",
+    "sharedWith": "B3-D22",
     "anchorId": "DV-003"
   },
   {
@@ -755,6 +756,20 @@
     "code": "B3-D21",
     "sharedWith": "B3A-D24",
     "anchorId": "DV-009"
+  },
+  {
+    "raft": "BÈ 3",
+    "type": "BED",
+    "xRaft": -37.98,
+    "yRaft": -37.67,
+    "xAnchor": -42.64,
+    "yAnchor": -28.74,
+    "zAnchor": 378.3,
+    "span": 10.07,
+    "azimuth": 332.4,
+    "code": "B3-D22",
+    "sharedWith": "B2-D12",
+    "anchorId": "DV-003"
   },
   {
     "raft": "BÈ 3A",
@@ -1575,12 +1590,13 @@
     "type": "BED",
     "xRaft": 351.47,
     "yRaft": -94.91,
-    "xAnchor": 351.47,
-    "yAnchor": -77.42,
+    "xAnchor": 354.71,
+    "yAnchor": -75.89,
     "zAnchor": 378.3,
-    "span": 17.49,
-    "azimuth": 0,
+    "span": 19.29,
+    "azimuth": 9.7,
     "code": "B5A-D14",
+    "sharedWith": "B6-D31",
     "anchorId": "DV-026"
   },
   {
@@ -2425,6 +2441,20 @@
     "converted": true
   },
   {
+    "raft": "BÈ 6",
+    "type": "BED",
+    "xRaft": 357.95,
+    "yRaft": -56.88,
+    "xAnchor": 354.71,
+    "yAnchor": -75.89,
+    "zAnchor": 378.3,
+    "span": 19.28,
+    "azimuth": 189.7,
+    "code": "B6-D31",
+    "sharedWith": "B5A-D14",
+    "anchorId": "DV-026"
+  },
+  {
     "raft": "BÈ 7",
     "type": "SHORE",
     "xRaft": 178.28,
@@ -2831,6 +2861,20 @@
     "anchorId": "DV-021"
   },
   {
+    "raft": "BÈ 7",
+    "type": "BED",
+    "xRaft": 94.35,
+    "yRaft": 79.19,
+    "xAnchor": 94.38,
+    "yAnchor": 90.49,
+    "zAnchor": 378.3,
+    "span": 11.3,
+    "azimuth": 0.2,
+    "code": "B7-D33",
+    "sharedWith": "B8-D30",
+    "anchorId": "DV-031"
+  },
+  {
     "raft": "BÈ 8",
     "type": "SHORE",
     "xRaft": 168.72,
@@ -3197,12 +3241,13 @@
     "type": "BED",
     "xRaft": 94.4,
     "yRaft": 101.79,
-    "xAnchor": 94.4,
-    "yAnchor": 90.54,
+    "xAnchor": 94.38,
+    "yAnchor": 90.49,
     "zAnchor": 378.3,
-    "span": 11.25,
-    "azimuth": 180,
+    "span": 11.3,
+    "azimuth": 180.1,
     "code": "B8-D30",
+    "sharedWith": "B7-D33",
     "anchorId": "DV-031"
   },
   {

@@ -123,15 +123,15 @@ describe('Rafts float, or ground when the water is too low', () => {
   });
 });
 
-describe('Piles — 263 anchor points for 292 lines, piles embedded by the design L_tk', () => {
+describe('Piles — 263 anchor points for 295 lines, piles embedded by the design L_tk', () => {
   const piles = buildPileModels();
 
-  it('has 231 shore + 32 lake-bed points; 29 lake-bed points hold two lines (shared bases)', () => {
+  it('has 231 shore + 32 lake-bed points; all 32 hold two lines (shared bases)', () => {
     expect(piles).toHaveLength(263);
     expect(piles.filter((p) => p.type === 'SHORE')).toHaveLength(231);
     expect(piles.filter((p) => p.type === 'BED')).toHaveLength(32);
-    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(29);
-    expect(new Set(piles.flatMap((p) => p.lines)).size).toBe(292);
+    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(32);
+    expect(new Set(piles.flatMap((p) => p.lines)).size).toBe(295);
   });
 
   it('uses each raft\'s design side a and embedment L_tk from the catalogue', () => {
@@ -160,7 +160,7 @@ describe('Piles — 263 anchor points for 292 lines, piles embedded by the desig
 
   it('cables run from the layout cleat to the head of their own pile', () => {
     const cables = buildCableModels(piles);
-    expect(cables).toHaveLength(292);
+    expect(cables).toHaveLength(295);
     for (const c of cables) {
       expect(c.pile.lines, c.code).toContain(c.code);
       expect(c.pile.rafts, c.code).toContain(c.raft);

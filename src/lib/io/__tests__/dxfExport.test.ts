@@ -52,10 +52,10 @@ describe('DXF document structure', () => {
     expect(/[^\x00-\x7F]/.test(dxf)).toBe(false);
   });
 
-  it('draws every one of the 292 anchor points at its design coordinate', () => {
+  it('draws every one of the 295 anchor points at its design coordinate', () => {
     const { dxf, pileCount, raftCount } = built();
     expect(pileCount).toBe(coordinates.length);
-    expect(pileCount).toBe(292);
+    expect(pileCount).toBe(295);
     expect(raftCount).toBe(9);
 
     const first = (coordinates as any[])[0];

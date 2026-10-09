@@ -26,10 +26,10 @@ describe('Anchor-by-anchor calculation', () => {
   const { state, results, batch } = setup();
   const s = buildAnchorPointSchedule(state, results, batch);
 
-  it('has one row for each of the 263 anchor points: 231 shore piles and 32 lake-bed bases (29 shared) holding the 292 lines', () => {
+  it('has one row for each of the 263 anchor points: 231 shore piles and 32 lake-bed bases (all shared) holding the 295 lines', () => {
     expect([s.totals.points, s.shore.length, s.bed.length]).toEqual([263, 231, 32]);
-    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([292, 61, 29, 102]);
-    expect(new Set([...s.shore.map((p) => p.code), ...s.bed.flatMap((b) => b.base.lines.map((l) => l.code))]).size).toBe(292);
+    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([295, 64, 32, 102]);
+    expect(new Set([...s.shore.map((p) => p.code), ...s.bed.flatMap((b) => b.base.lines.map((l) => l.code))]).size).toBe(295);
     expect(s.shore.filter((p) => p.converted).every((p) => p.note.includes('Chuyển từ neo đáy'))).toBe(true);
     expect(s.levels).toEqual({ mnc_m: 380, mndb_m: 384.5, mnlkt_m: 386 });
   });
@@ -55,8 +55,12 @@ describe('Anchor-by-anchor calculation', () => {
   });
 
   it('a base under ONE line is exactly the base of the single-line design rule', () => {
-    const single = s.bed.filter((r) => !r.base.shared);
-    expect(single).toHaveLength(3);
+    // every base of the layout is shared, so split the first two shared bases: their four lines get a base each
+    expect(s.bed.filter((r) => !r.base.shared)).toHaveLength(0);
+    const split = new Set(s.bed.slice(0, 2).flatMap((r) => r.base.lines.map((l) => l.code)));
+    const lone = MOORING_LINES_V2.map((l) => (split.has(l.code) ? { ...l, anchorId: undefined, sharedWith: undefined } : l));
+    const single = buildAnchorPointSchedule(state, results, batch, lone).bed.filter((r) => !r.base.shared);
+    expect(single).toHaveLength(4);
     for (const row of single) {
       const b = row.base, l = b.lines[0];
       const raft = batch.find((x) => x.raft.name === l.raft)!;
@@ -72,7 +76,7 @@ describe('Anchor-by-anchor calculation', () => {
 
   it('a SHARED base is checked for one line taut + the other at the pretension, and for both taut; uplifts add, horizontal pulls add as vectors', () => {
     const shared = s.bed.filter((r) => r.base.shared);
-    expect(shared).toHaveLength(29);
+    expect(shared).toHaveLength(32);
     for (const row of shared) {
       const b = row.base, [l1, l2] = b.lines;
       expect(l1.raft, b.baseId).not.toBe(l2.raft);
@@ -106,15 +110,15 @@ describe('Anchor-by-anchor calculation', () => {
     expect(s.totals.bedOk).toBe(s.bed.filter((b) => b.base.ok).length);
     for (const b of s.bed) expect(b.base.ok ? b.util <= 1 + 1e-9 : true, b.base.baseId).toBe(true);
     expect(s.totals.bedOk).toBe(32); // at the 20 m/s default every base passes
-    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 17, '3.00': 2, '3.25': 2 });
+    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 18, '3.00': 1, '3.25': 2 });
     expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(32);
     expect(s.totals.bedConcrete_m3).toBeCloseTo(s.bed.reduce((a, b) => a + b.base.concrete_m3, 0), 9);
   });
 
   it('a longer line at the same depth needs no bigger base (flatter cable, less uplift)', () => {
-    const b = s.bed.find((r) => !r.base.shared)!;
-    const short = designScrewBase({ ...b.base.design.load, span_m: 6 });
-    const long = designScrewBase({ ...b.base.design.load, span_m: 20 });
+    const load = { tension_kN: 60, depthLow_m: 1.7, depthHigh_m: 7.7 };
+    const short = designScrewBase({ ...load, span_m: 6 });
+    const long = designScrewBase({ ...load, span_m: 20 });
     expect(long.volume_m3).toBeLessThanOrEqual(short.volume_m3);
   });
 
@@ -156,7 +160,7 @@ describe('Anchor-by-anchor calculation', () => {
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoBo, { header: 1 });
     const bedRows = bed.filter((r) => /^HV-DV\d{3}$/.test(String(r[1])));
     expect(bedRows).toHaveLength(32);
-    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(29);
+    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(32);
     expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG').every((r) => /^B\w+-D\d+$/.test(String(r[7])))).toBe(true); // the second line is named
     const shoreRows = shore.filter((r) => /^HV-P\d{3}$/.test(String(r[1])));
     expect(shoreRows).toHaveLength(231);

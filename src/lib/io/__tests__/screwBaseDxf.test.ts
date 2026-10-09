@@ -28,13 +28,13 @@ const setup = (option: 'PA1_PILE' | 'PA3_SCREW_BASE' = 'PA3_SCREW_BASE') => {
 const parse = (dxf: string) => new DxfParser().parseSync(dxf)!;
 const decode = (t: string) => t.replace(/\\U\+([0-9A-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
 
-describe('Option 3 schedule (231 shore points + 32 screw-pile bases, 29 of them shared by two rafts)', () => {
+describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared by two rafts)', () => {
   it('has one row per anchor POINT, at the layout coordinates; a shared base lists its two lines', () => {
     const { state, results, batch } = setup();
     const s = buildScrewBaseSchedule(state, results, batch);
     expect(s.shorePiles).toHaveLength(231);
     expect(s.bases).toHaveLength(32);
-    expect(s.bases.filter((b) => b.shared)).toHaveLength(29);
+    expect(s.bases.filter((b) => b.shared)).toHaveLength(32);
     expect(s.bases[0].baseId).toBe('HV-DV001');
     expect(s.bases[31].baseId).toBe('HV-DV032');
     expect(s.bases.flatMap((b) => b.lines.map((l) => l.code)).sort()).toEqual(MOORING_LINES_V2.filter((l) => l.type === 'BED').map((l) => l.code).sort());
@@ -79,19 +79,19 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, 29 of them 
       .toEqual(buildPileSchedule(state, results, batch).filter((r) => r.type === 'SHORE'));
   });
 
-  it('totals: 32 bases for 61 lines, 128 screws, and the same quantities as the Tab 9 summary', () => {
+  it('totals: 32 bases for 64 lines, 128 screws, and the same quantities as the Tab 9 summary', () => {
     const { state, results, batch } = setup();
     const T = buildScrewBaseSchedule(state, results, batch).totals;
     const sum = summariseScrewBases(state, 1, HUOI_VANH_RAFTS, dflt().anchor);
-    expect([T.bases, T.sharedBases, T.lines, T.screws, T.okBases]).toEqual([32, 29, 61, 128, 32]);
-    expect([sum.bases, sum.sharedBases, sum.lines]).toEqual([32, 29, 61]);
+    expect([T.bases, T.sharedBases, T.lines, T.screws, T.okBases]).toEqual([32, 32, 64, 128, 32]);
+    expect([sum.bases, sum.sharedBases, sum.lines]).toEqual([32, 32, 64]);
     expect(T.concrete_m3).toBeCloseTo(sum.concrete_m3, 6);
     expect(T.rebar_kg).toBeCloseTo(sum.rebar_kg, 6);
     expect(T.screwLength_m).toBeCloseTo(sum.screwLength_m, 6);
     expect(T.maxLiftMass_t).toBeCloseTo(sum.maxLiftMass_t, 9);
     // At the 20 m/s default 11 bases are the workbook base 2.5 m; the others need 2.75–3.25 m, up to 10.8 t to lift.
     // The largest ones are the shared bases of the narrow gap BÈ 3 – BÈ 3A, governed by BOTH lines taut.
-    expect(sum.basesBySide).toEqual({ '2.50': 11, '2.75': 17, '3.00': 2, '3.25': 2 });
+    expect(sum.basesBySide).toEqual({ '2.50': 11, '2.75': 18, '3.00': 1, '3.25': 2 });
     expect(sum.enlargedRafts).toEqual(['BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7']);
     expect(sum.side_m).toEqual([2.5, 3.25]);
     expect(sum.maxLiftMass_t).toBeGreaterThan(10.5);
@@ -162,7 +162,7 @@ describe('Option 3 DXF drawing', () => {
     expect(out.dxf).toContain('arial.ttf');
     const texts = parse(out.dxf).entities.filter((e: any) => e.type === 'TEXT').map((e: any) => decode(e.text as string));
     expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (231 ĐIỂM NEO, 231 CỌC)'))).toBe(true);
-    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (32 ĐẾ, 29 ĐẾ DÙNG CHUNG, 61 TUYẾN CÁP)'))).toBe(true);
+    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (32 ĐẾ, 32 ĐẾ DÙNG CHUNG, 64 TUYẾN CÁP)'))).toBe(true);
     expect(texts.some((t) => t.includes('CHI TIẾT ĐẾ NEO ĐÁY HỒ'))).toBe(true);
     // every TEXT entity uses the Vietnamese style
     expect((out.dxf.match(/\n7\nVN\n/g) || []).length).toBe(texts.length);
@@ -176,8 +176,8 @@ describe('Option 3 DXF drawing', () => {
     expect(base.filter((e: any) => e.type === 'POINT')).toHaveLength(32);
     expect(base.filter((e: any) => e.type === 'CIRCLE')).toHaveLength(32 * 4);
     const lines = base.filter((e: any) => e.type === 'LINE') as any[];
-    // 4 edges per base, plus two 0.3 m padeye squares (4 edges each) on each of the 29 shared bases
-    expect(lines).toHaveLength(32 * 4 + 29 * 2 * 4);
+    // 4 edges per base, plus two 0.3 m padeye squares (4 edges each) on each of the 32 shared bases
+    expect(lines).toHaveLength(32 * 4 + 32 * 2 * 4);
     let k = 0;
     for (const b of out.schedule.bases) {
       const own = lines.slice(k, k + 4);
@@ -192,7 +192,7 @@ describe('Option 3 DXF drawing', () => {
     expect(onLayer(DXF_LAYERS_PA3.shoreLine.name)).toHaveLength(231);
     // one cable per lake-bed LINE: two of them end on each shared base
     const bedLines = onLayer(DXF_LAYERS_PA3.bedLine.name) as any[];
-    expect(bedLines).toHaveLength(61);
+    expect(bedLines).toHaveLength(64);
     const sharedBase = out.schedule.bases.find((b) => b.shared)!;
     expect(bedLines.filter((l) => Math.hypot(l.vertices[1].x - sharedBase.x, l.vertices[1].y - sharedBase.y) < 0.01)).toHaveLength(2);
     expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(231);
@@ -206,7 +206,7 @@ describe('Option 3 DXF drawing', () => {
     expect(text).toContain('GIẢ ĐỊNH, chưa có khảo sát đáy hồ');
     expect(text).toContain('CHƯA THIẾT KẾ: tai neo cáp');
     // the shared bases, how they are checked, and what is not designed for them
-    expect(text).toContain('0. ĐẾ DÙNG CHUNG (29 / 32 đế)');
+    expect(text).toContain('0. ĐẾ DÙNG CHUNG (32 / 32 đế)');
     expect(text).toContain('cả hai dây cùng căng');
     expect(text).toContain('Tai neo đôi CHƯA thiết kế');
     expect(text).toContain('Quy tắc của Chủ đầu tư (08/10/2026)');
@@ -235,13 +235,13 @@ describe('Option 3 schedule workbook', () => {
     expect(shore.filter((r) => /^HV-P\d{3}$/.test(String(r[0])))).toHaveLength(231);
     const rows = bases.filter((r) => /^HV-DV\d{3}$/.test(String(r[0])));
     expect(rows).toHaveLength(32);
-    expect(rows.filter((r) => r[3] === 'DÙNG CHUNG')).toHaveLength(29);
+    expect(rows.filter((r) => r[3] === 'DÙNG CHUNG')).toHaveLength(32);
     const s = buildScrewBaseSchedule(state, results, batch);
     expect(rows[0][1]).toBe(s.bases[0].code);
     expect(rows[0][9]).toBe(Number(s.bases[0].side_m.toFixed(2)));
     expect(rows.every((r) => r[22] === 'ĐẠT' && r[23] === '-')).toBe(true);
     expect(bases.find((r) => r[0] === 'Tổng số vít xoắn')![1]).toBe(128);
-    expect(bases.find((r) => r[0] === 'Số tuyến cáp neo vào đế')![1]).toBe(61);
+    expect(bases.find((r) => r[0] === 'Số tuyến cáp neo vào đế')![1]).toBe(64);
     expect(per.filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(9);
     expect(screwBaseScheduleExcelFileName(state, new Date(2026, 9, 8))).toBe(`bang-thong-ke-neo-de-vit-xoan_${state.meta.code}_20261008.xlsx`);
   });

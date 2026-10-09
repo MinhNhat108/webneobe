@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
     {
       id: 'map',
       label: '3. Mặt Bằng & Tọa Độ Neo',
-      description: 'Bản đồ 9 bè, 292 tuyến cáp, 263 điểm neo',
+      description: 'Bản đồ 9 bè, 295 tuyến cáp, 263 điểm neo',
       icon: Map
     },
     {

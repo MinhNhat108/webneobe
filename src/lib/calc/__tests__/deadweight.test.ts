@@ -186,7 +186,7 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     const c = compare();
     expect(c.rows).toHaveLength(9);
     expect(c.shoreCount).toBe(231);
-    expect(c.bedCount).toBe(61);
+    expect(c.bedCount).toBe(64);
     for (const row of c.rows) {
       const item = HUOI_VANH_RAFTS.find((r) => r.name === row.name)!;
       const r = calculateProject(buildRaftProjectState(dflt(), item, dflt().anchor));
@@ -206,12 +206,12 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     // shore piles are ROUND (bored D350): area = pi D^2 / 4
     const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + r.shoreAnchors * (r.shorePilesPerPoint ?? 1) * (Math.PI * r.shorePileD_m! ** 2 / 4) * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
     expect(c.shorePileCount).toBe(231);
-    expect(c.pa1BedPileCount).toBe(61);
+    expect(c.pa1BedPileCount).toBe(64);
     expect(c.pa1BedConcrete_m3).toBeCloseTo(bed, 6);
     expect(c.shoreConcrete_m3).toBeCloseTo(shore, 6);
   });
 
-  it('pins the computed quantities at the 20 m/s default: blocks 19–68 t against 350 mm piles of 2.6–3.1 t, ~1 170 m³ against ~70 m³ (61 lake-bed lines)', () => {
+  it('pins the computed quantities at the 20 m/s default: blocks 19–68 t against 350 mm piles of 2.6–3.1 t, ~1 205 m³ against ~73 m³ (64 lake-bed lines)', () => {
     const c = compare();
     expect(c.blockMass_t[0]).toBeGreaterThan(17);
     expect(c.blockMass_t[0]).toBeLessThan(22);
@@ -219,8 +219,8 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.blockMass_t[1]).toBeLessThan(74);
     expect(c.bedPileSide_m).toEqual([0.35, 0.35]);
     expect(c.bedPileMass_t[1]).toBeLessThan(3.5);
-    expect(c.pa1BedConcrete_m3).toBeCloseTo(69.6, 0);
-    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1050);
+    expect(c.pa1BedConcrete_m3).toBeCloseTo(72.9, 0);
+    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1100);
     expect(c.pa2BedConcrete_m3).toBeLessThan(1300);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
     expect(c.pa2BedFootprint_m2).toBeGreaterThan(50 * c.pa1BedFootprint_m2);
@@ -230,7 +230,7 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.failingRafts).toEqual([]);
   });
 
-  it('with shear keys the same 61 anchors need 4–15 t blocks instead of 19–68 t — if the surface mud has c_u = 10 kPa', () => {
+  it('with shear keys the same 64 anchors need 4–15 t blocks instead of 19–68 t — if the surface mud has c_u = 10 kPa', () => {
     const s = start();
     const keyed = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 10 } } });
     expect(keyed.allBlocksOk).toBe(true);
@@ -253,7 +253,7 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
 });
 
 describe('PA2 in the 3D scene', () => {
-  it('turns the 61 lake-bed anchors into blocks on the bed and leaves the 231 shore piles alone', () => {
+  it('turns the 64 lake-bed anchors into blocks on the bed and leaves the 231 shore piles alone', () => {
     const blocks = buildBlockAnchors(pa2(), 1);
     const p1 = buildPileModels();
     const p2 = buildPileModels({}, undefined, blocks);
@@ -270,7 +270,7 @@ describe('PA2 in the 3D scene', () => {
         expect(p.head_m - p.ground_m, p.code).toBeCloseTo(b.H_m, 9);
       }
     });
-    expect(p2.filter((p) => p.block)).toHaveLength(32); // one per lake-bed POINT; 29 points carry two lines
+    expect(p2.filter((p) => p.block)).toHaveLength(32); // one per lake-bed POINT; all carry two lines carry two lines
   });
 
   it('the 3D blocks are the blocks the engine checks', () => {

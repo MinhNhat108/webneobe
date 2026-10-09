@@ -42,7 +42,7 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     const be5a = raftsV2.find((r: any) => r.name === 'BÈ 5A');
     expect(be5a?.area_m2).toBe(23037); // old 6 + 7 merged: the largest raft
 
-    // 263 anchor points for 292 lines: 29 lake-bed bases are shared by two lines
+    // 263 anchor points for 295 lines: all 32 lake-bed bases are shared by two lines
     expect(pilesV2).toHaveLength(263);
     const shorePiles = pilesV2.filter((p: any) => p.type === 'SHORE');
     const bedPiles = pilesV2.filter((p: any) => p.type === 'BED');
@@ -50,8 +50,8 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(bedPiles).toHaveLength(32);
     expect(shorePiles.every((p: any) => p.shape === 'circular')).toBe(true);
 
-    // 292 mooring lines
-    expect(coordsV2).toHaveLength(292);
+    // 295 mooring lines
+    expect(coordsV2).toHaveLength(295);
 
     // 3D terrain height-field, extracted by scripts/extractTerrainFromIfc.mjs
     expect(terrain.rowOrder).toBe('south-to-north');
@@ -60,13 +60,13 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(terrain.elevations[0]).toHaveLength(terrain.nx);
   });
 
-  it('the sample IFC carries the 263 anchor points and the 292 lines of the 9-raft layout', () => {
+  it('the sample IFC carries the 263 anchor points and the 295 lines of the 9-raft layout', () => {
     const ifc = generateHuoiVanhSampleIfc();
     expect((ifc.match(/=IFCPILE\(/g) || []).length).toBe(263);
-    expect((ifc.match(/=IFCMEMBER\(/g) || []).length).toBe(292);
+    expect((ifc.match(/=IFCMEMBER\(/g) || []).length).toBe(295);
     expect((ifc.match(/Shore bored pile D350mm/g) || []).length).toBe(231);
     expect((ifc.match(/Lake-bed anchor point/g) || []).length).toBe(32);
-    expect((ifc.match(/, shared by lines /g) || []).length).toBe(29);
+    expect((ifc.match(/, shared by lines /g) || []).length).toBe(32);
     expect(ifc).not.toMatch(/Pile D0\.\d+m/); // the old round-pile wording
     // every GlobalId is exactly 22 characters
     for (const m of ifc.matchAll(/=IFC(?:PILE|MEMBER|ELEMENTASSEMBLY)\('([^']*)'/g)) expect(m[1]).toHaveLength(22);

@@ -817,6 +817,44 @@ function untangleKnots() {
 }
 untangleKnots();
 convertToShore((c) => !c.sharedWith);
+
+// ---- Step 2e (R3): no single base left in a gap ----------------------------
+// Owner, 2026-10-09: "sao không nối luôn vào bè còn lại mà để neo 1 bè thôi ... dùng chung được thì cứ cho
+// dùng chung". A base still holding ONE line although it faces another raft (that raft has no free line left
+// to pair with) gets a partner: ONE NEW line from the facing raft. The base moves to the middle of the two
+// cleats when that position is allowed, otherwise it stays. Of all the cleat positions on the facing edge the
+// one giving the shortest pair of cables wins.
+for (const c of coords.filter((q) => q.type === 'BED' && !q.sharedWith)) {
+  const f = facingRaft(c);
+  if (!f) continue;
+  const w = walker(ringOf[f.name]);
+  const cleat = cleatOf(c), base0 = anchorOf(c);
+  const others = coords.filter((o) => o !== c);
+  const cableOk = (from, to, raft) => !overOwnRaft(from, to, { raft })
+    && polygons.every((q) => q.name === raft || !segOverRing(from, to, q.points))
+    && others.every((o) => !segCross(from, to, cleatOf(o), anchorOf(o)));
+  let best = null;
+  for (let t = 0; t < w.total; t += 0.5) {
+    const p = w.at(t), pt = { x: r2(p.x), y: r2(p.y) };
+    if (dist(pt, base0) > MAX_SHARED_SPAN) continue;
+    // not on top of a cleat the raft already has
+    if (coords.some((o) => o.raft === f.name && dist(cleatOf(o), pt) < 2)) continue;
+    for (const base of [{ x: r2((cleat.x + pt.x) / 2), y: r2((cleat.y + pt.y) / 2) }, base0]) {
+      if (minClearanceAll(base) < MIN_STANDOFF - 1e-6) continue;
+      if (others.some((o) => dist(anchorOf(o), base) < (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)) continue;
+      const la = dist(cleat, base), lb = dist(pt, base);
+      if (la > MAX_SHARED_SPAN || lb > MAX_SHARED_SPAN || la < 3 || lb < 3) continue;
+      if (!cableOk(cleat, base, c.raft) || !cableOk(pt, base, f.name)) continue;
+      if (!best || la + lb < best.len - 1e-9) best = { len: la + lb, pt, base };
+      break; // the centred base is preferred for this cleat
+    }
+  }
+  if (!best) { report.unresolved.push(`R3 ${c.code}: no place on ${f.name} for a partner line`); continue; }
+  setAnchor(c, best.base);
+  const partner = addBedLine(f.name, best.pt, best.base, `partner of ${c.code} on its base (R3)`);
+  c.sharedWith = partner.code; partner.sharedWith = c.code;
+  report.moved.push(`${c.code} + ${partner.code} (new line on ${f.name}): one shared lake-bed base (R3), spans ${c.span} / ${partner.span} m`);
+}
 if (process.argv.includes('--explain')) console.log('SINGLE BASES LEFT', coords.filter((c) => c.type === 'BED' && !c.sharedWith).map((c) => `${c.code}(${c.span} m, ${facingRaft(c) ? 'facing ' + facingRaft(c).name : 'not facing a raft'})`).join('; '));
 if (process.argv.includes('--explain')) {
   for (const c of coords.filter((q) => q.type === 'BED' && !q.sharedWith)) {

@@ -242,7 +242,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     3. Mặt Bằng &amp; Tọa Độ Neo
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Bản đồ số hóa 292 tuyến cáp tại 263 điểm neo (231 cọc khoan nhồi bờ &amp; 32 đế vít xoắn đáy hồ, trong đó 29 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
+                    Bản đồ số hóa 295 tuyến cáp tại 263 điểm neo (231 cọc khoan nhồi bờ &amp; 32 đế vít xoắn đáy hồ, cả 32 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -542,7 +542,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Bước 3 / 6
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
-                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 263 Điểm Neo (292 Tuyến Cáp)
+                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 263 Điểm Neo (295 Tuyến Cáp)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Trực quan hóa vị trí thực địa của 9 cụm bè và hệ thống neo hồ Huổi Vanh
@@ -836,7 +836,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Xuất Bảng Thống Kê Cọc Neo (.xlsx)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Bảng Neo Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Neo"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 292 điểm neo (cọc bờ + neo đáy theo phương án đang chọn) neo vuông BTCT chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
+                    Bấm nút <strong>"Bảng Neo Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Neo"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 295 điểm neo (cọc bờ + neo đáy theo phương án đang chọn) neo vuông BTCT chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
                   </p>
                 </div>
 

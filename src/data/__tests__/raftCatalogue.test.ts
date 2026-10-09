@@ -24,12 +24,12 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(EXPECTED);
   });
 
-  it('the 292 mooring lines (231 shore, of which 102 converted from the lake bed; 61 bed) cover the same 9 rafts', () => {
-    expect(coords).toHaveLength(292);
+  it('the 295 mooring lines (231 shore, of which 102 converted from the lake bed; 64 bed) cover the same 9 rafts', () => {
+    expect(coords).toHaveLength(295);
     expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(231);
     expect(coords.filter((c) => c.type === 'SHORE' && (c as any).converted)).toHaveLength(102);
-    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(61);
-    expect(new Set(coords.map((c) => c.code)).size).toBe(292);
+    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(64);
+    expect(new Set(coords.map((c) => c.code)).size).toBe(295);
     const names = [...new Set(coords.map((c) => c.raft))];
     expect(names.sort()).toEqual([...EXPECTED].sort());
   });
@@ -73,12 +73,12 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     }
   });
 
-  it('the anchor file is derived from the lines: one row per anchor POINT (231 shore piles + 32 lake-bed bases, 29 of them shared by two lines)', () => {
+  it('the anchor file is derived from the lines: one row per anchor POINT (231 shore piles + 32 lake-bed bases, all 32 shared by two lines)', () => {
     const list = piles as Array<{ code: string; line: string; lines: string[]; rafts: string[]; type: string; shape: string; x: number; y: number }>;
     expect(list).toHaveLength(263);
     expect(new Set(list.map((p) => p.code)).size).toBe(263);
     expect([list.filter((p) => p.type === 'SHORE').length, list.filter((p) => p.type === 'BED').length]).toEqual([231, 32]);
-    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(29);
+    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(32);
     // every line is tied to exactly one anchor
     expect(list.flatMap((p) => p.lines).sort()).toEqual(coords.map((c) => c.code).sort());
     for (const p of list) {
@@ -99,7 +99,7 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
 
   it('owner rule of 2026-10-08: a shared base ties two FACING lines, each naming the other; a converted shore pile stands on ground at or above 384.0 m within 60 m', () => {
     const shared = coords.filter((c) => (c as any).sharedWith) as any[];
-    expect(shared).toHaveLength(58);
+    expect(shared).toHaveLength(64);
     for (const c of shared) {
       const o = coords.find((q) => q.code === c.sharedWith) as any;
       expect(o, c.code).toBeDefined();

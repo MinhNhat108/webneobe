@@ -100,21 +100,21 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(rows.find((r) => r.raft === 'BÈ 5A' && r.type === 'SHORE')!.pileCount).toBe(1);
   });
 
-  it('bill of materials at the 20 m/s default (shore piles + PA1 lake-bed piles): 292 piles (231 bored + 61 driven), 2 093.1 m, 216 m3, about 49.2 t of steel, and the steel adds up', () => {
+  it('bill of materials at the 20 m/s default (shore piles + PA1 lake-bed piles): 295 piles (231 bored + 64 driven), 2 120.1 m, 220 m3, about 49.6 t of steel, and the steel adds up', () => {
     const { state, results, batch } = setup();
     const rows = buildPileSchedule(state, results, batch);
     const m = summarisePileMaterials(rows);
-    expect([m.anchorPoints, m.piles, m.shorePiles, m.bedPiles]).toEqual([292, 292, 231, 61]);
-    expect(m.totalLength_m).toBeCloseTo(2093.1, 6);
-    expect(m.concrete_m3).toBeCloseTo(216.3, 1);
+    expect([m.anchorPoints, m.piles, m.shorePiles, m.bedPiles]).toEqual([295, 295, 231, 64]);
+    expect(m.totalLength_m).toBeCloseTo(2120.1, 6);
+    expect(m.concrete_m3).toBeCloseTo(219.6, 1);
     const main = Object.values(m.mainSteelByDia_kg).reduce((s, v) => s + v, 0);
     expect(m.steel_kg).toBeCloseTo(main + m.stirrupSteel_kg + m.hookSteel_kg, 6);
     expect(m.steel_kg).toBeCloseTo(rows.reduce((s, r) => s + r.pileCount * r.cage.steel_kg, 0), 6);
     expect(Object.keys(m.mainSteelByDia_kg).map(Number).sort((a, b) => a - b)).toEqual([20, 22, 25, 28, 32]);
     expect(m.steel_kg / 1000).toBeGreaterThan(48);
     expect(m.steel_kg / 1000).toBeLessThan(50);
-    // lifting hooks only on the 61 precast lake-bed piles
-    expect(m.hookSteel_kg).toBeCloseTo(61 * 3.8, 6);
+    // lifting hooks only on the 64 precast lake-bed piles
+    expect(m.hookSteel_kg).toBeCloseTo(64 * 3.8, 6);
   });
 
   it('the workbook lists the cage of every pile and the materials table', () => {
@@ -137,9 +137,9 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(first[col('KL THÉP 1 CỌC (kg)')]).toBe(Number(rows[0].cage.steel_kg.toFixed(1)));
     const find = (label: string) => data.find((r) => r[0] === label);
     expect(find('BẢNG TỔNG HỢP VẬT TƯ CỌC TOÀN HỒ')).toBeDefined();
-    expect(find('Tổng số cọc')![1]).toBe(292);
-    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(2093.1);
-    expect(find('Tổng bê tông B25')![1]).toBe(216.3);
+    expect(find('Tổng số cọc')![1]).toBe(295);
+    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(2120.1);
+    expect(find('Tổng bê tông B25')![1]).toBe(219.6);
     for (const d of [20, 22, 25, 28, 32]) expect(find(`Thép chủ Φ${d}`)![1]).toBeGreaterThan(0);
     expect(find('TỔNG THÉP')![1]).toBe(Number((summarisePileMaterials(rows).steel_kg / 1000).toFixed(2)));
   });
@@ -156,7 +156,7 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(table).toContain('6D32 CB400-V'); // BÈ 5A round shore pile
     expect(table).toContain('D350 KHOAN NHOI');
     expect(table).toContain('350x350 DUC SAN');
-    expect(table.filter((x) => x === '1 DOAN')).toHaveLength(61);
+    expect(table.filter((x) => x === '1 DOAN')).toHaveLength(64);
     expect(table.filter((x) => x === 'DO TAI CHO')).toHaveLength(231);
     const detail = texts(DXF_LAYERS.detail.name);
     expect(detail.filter((x) => x.includes('COC KHOAN NHOI TRON D350'))).toHaveLength(2); // 4 and 6 bars
@@ -166,7 +166,7 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(detail.some((x) => x.includes('NGUYEN MOT DOAN'))).toBe(true);
     // the condition the 4-bar design depends on is written on the sheet
     expect(detail.some((x) => x.includes('YEU CAU THI CONG: cap coc bo moc sat co coc, cach mat dat <= 0.1 m'))).toBe(true);
-    expect(detail.some((x) => x.includes('292 coc tai 292 diem neo'))).toBe(true);
+    expect(detail.some((x) => x.includes('295 coc tai 295 diem neo'))).toBe(true);
     // round sections: concrete + spiral circles and 4 + 6 bars; the square section: 4 bars
     const circles = doc.entities.filter((e: any) => e.layer === DXF_LAYERS.detail.name && e.type === 'CIRCLE');
     // + the shore pile head detail: pin hole, shackle, pile outline on plan, 4 anchor bars

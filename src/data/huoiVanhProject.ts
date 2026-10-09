@@ -92,7 +92,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
   designer: 'Kỹ sư Kết cấu Thủy công & Năng lượng tái tạo',
   date: '2026-08-19',
-  note: 'Tính toán hệ thống neo 9 cụm bè pin nổi (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; tổng 95.873 m², 18.354 tấm pin), 292 tuyến cáp neo Polyester PES-28/32/40/48: 231 điểm neo bờ bằng cọc khoan nhồi D350 và 32 đế BTCT + 4 vít xoắn dưới đáy hồ, đặt giữa hai bè (29 đế dùng chung cho hai bè đối diện); 9/9 bè đạt C9 (P/N ≤ 15 m).',
+  note: 'Tính toán hệ thống neo 9 cụm bè pin nổi (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; tổng 95.873 m², 18.354 tấm pin), 295 tuyến cáp neo Polyester PES-28/32/40/48: 231 điểm neo bờ bằng cọc khoan nhồi D350 và 32 đế BTCT + 4 vít xoắn dưới đáy hồ, đặt giữa hai bè (cả 32 đế dùng chung cho hai bè đối diện); 9/9 bè đạt C9 (P/N ≤ 15 m).',
   systemType: 'solar_fpv' as const,
   activeRaftId: 1,
   meta: {

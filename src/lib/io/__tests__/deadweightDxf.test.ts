@@ -30,14 +30,14 @@ const built = () => {
 };
 const parse = (dxf: string) => new DxfParser().parseSync(dxf)!;
 
-describe('Option 2 schedule (231 shore piles + 61 gravity blocks)', () => {
+describe('Option 2 schedule (231 shore piles + 64 gravity blocks)', () => {
   it('has one row per anchor point, at the layout coordinates', () => {
     const { state, results, batch } = setup('PA2_DEADWEIGHT');
     const s = buildDeadweightSchedule(state, results, batch);
     expect(s.shorePiles).toHaveLength(231);
-    expect(s.blocks).toHaveLength(61);
+    expect(s.blocks).toHaveLength(64);
     expect(s.blocks[0].blockId).toBe('HV-DW001');
-    expect(s.blocks[60].blockId).toBe('HV-DW061');
+    expect(s.blocks[63].blockId).toBe('HV-DW064');
     for (const b of s.blocks) {
       const c = MOORING_LINES_V2.find((l) => l.code === b.code)!;
       expect([b.x, b.y, b.z], b.blockId).toEqual([c.xAnchor, c.yAnchor, c.zAnchor]);
@@ -87,19 +87,19 @@ describe('Option 2 DXF drawing', () => {
     const doc = parse(out.dxf);
     expect(Object.keys(doc.tables.layer.layers)).toEqual(expect.arrayContaining(Object.values(DXF_LAYERS_PA2).map((l) => l.name)));
     expect(out.shorePileCount).toBe(231);
-    expect(out.blockCount).toBe(61);
+    expect(out.blockCount).toBe(64);
     expect(out.raftCount).toBe(9);
   });
 
-  it('draws the 61 blocks at their true plan size on their own layer, centred on the layout point', () => {
+  it('draws the 64 blocks at their true plan size on their own layer, centred on the layout point', () => {
     const { out } = built();
     const doc = parse(out.dxf);
     const onLayer = (name: string) => doc.entities.filter((e: any) => e.layer === name);
     const blk = onLayer(DXF_LAYERS_PA2.block.name);
     const pts = blk.filter((e: any) => e.type === 'POINT');
     const lines = blk.filter((e: any) => e.type === 'LINE');
-    expect(pts).toHaveLength(61);
-    expect(lines).toHaveLength(61 * 6); // 4 edges + 2 diagonals each
+    expect(pts).toHaveLength(64);
+    expect(lines).toHaveLength(64 * 6); // 4 edges + 2 diagonals each
     out.schedule.blocks.forEach((b, i) => {
       const own = lines.slice(i * 6, i * 6 + 4) as any[];
       const xs = own.flatMap((l) => l.vertices.map((v: any) => v.x));
@@ -112,7 +112,7 @@ describe('Option 2 DXF drawing', () => {
     });
     expect(onLayer(DXF_LAYERS_PA2.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(231);
     expect(onLayer(DXF_LAYERS_PA2.shoreLine.name)).toHaveLength(231);
-    expect(onLayer(DXF_LAYERS_PA2.bedLine.name)).toHaveLength(61);
+    expect(onLayer(DXF_LAYERS_PA2.bedLine.name)).toHaveLength(64);
     // no lake-bed PILE layer in the option 2 sheet
     expect(doc.entities.some((e: any) => e.layer === DXF_LAYERS.bedPile.name)).toBe(false);
   });
@@ -123,13 +123,13 @@ describe('Option 2 DXF drawing', () => {
     const texts = (layer: string) => doc.entities.filter((e: any) => e.layer === layer && e.type === 'TEXT').map((e: any) => e.text as string);
     const shore = texts(DXF_LAYERS_PA2.shoreTable.name), blocks = texts(DXF_LAYERS_PA2.blockTable.name), detail = texts(DXF_LAYERS_PA2.detail.name);
     expect(shore.some((t) => t.includes('BANG THONG KE COC NEO BO BTCT (231 COC)'))).toBe(true);
-    expect(blocks.some((t) => t.includes('BANG THONG KE KHOI BE TONG NEO DAY HO (61 KHOI)'))).toBe(true);
+    expect(blocks.some((t) => t.includes('BANG THONG KE KHOI BE TONG NEO DAY HO (64 KHOI)'))).toBe(true);
     for (const col of ['MA KHOI', 'L (m)', 'W (m)', 'H (m)', 'V (m3)', 'W_kk (T)', 'T_max (kN)', 'SF_truot', 'SF_nho', 'SF_lat', 'q_day (kPa)', 'KET LUAN']) {
       expect(blocks, col).toContain(col);
     }
     expect(blocks).toContain('HV-DW001');
-    expect(blocks).toContain('HV-DW061');
-    expect(blocks.filter((t) => t === 'DAT')).toHaveLength(61);
+    expect(blocks).toContain('HV-DW064');
+    expect(blocks.filter((t) => t === 'DAT')).toHaveLength(64);
     expect(shore.filter((t) => /^HV-P\d{3}$/.test(t))).toHaveLength(231);
     expect(detail.some((t) => t.includes('CHI TIET B'))).toBe(true);
     expect(detail.some((t) => t.includes('KHONG THEO TY LE'))).toBe(true);
@@ -152,7 +152,7 @@ describe('Option 2 DXF drawing', () => {
   it('leaves the option 1 drawing exactly as it is', () => {
     const pa1 = setup('PA1_PILE');
     const d = buildMooringPileDxf(pa1.state, pa1.results, pa1.batch);
-    expect(d.pileCount).toBe(292);
+    expect(d.pileCount).toBe(295);
     expect(d.dxf).not.toContain('KHOI');
     expect(d.dxf).toContain(DXF_LAYERS.bedPile.name);
   });
@@ -172,7 +172,7 @@ describe('Option 2 schedule workbook', () => {
     const blocks = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeKhoiBeTong, { header: 1 });
     expect(shore.filter((r) => /^HV-P\d{3}$/.test(String(r[0])))).toHaveLength(231);
     const rows = blocks.filter((r) => /^HV-DW\d{3}$/.test(String(r[0])));
-    expect(rows).toHaveLength(61);
+    expect(rows).toHaveLength(64);
     const s = buildDeadweightSchedule(state, results, batch);
     expect(rows[0][6]).toBe(Number(s.blocks[0].L_m.toFixed(2)));
     expect(rows[0][10]).toBe(Number(s.blocks[0].mass_t.toFixed(1)));
@@ -191,16 +191,16 @@ describe('Blocks that do not fit at the pile layout points', () => {
     expect(hit[0].required_m).toBe(3.5);
   });
 
-  it('the layout is laid out for SHARED screw-pile bases: option 2 puts two blocks on each of the 29 shared points, and says so', () => {
+  it('the layout is laid out for SHARED screw-pile bases: option 2 puts two blocks on each of the 32 shared points, and says so', () => {
     // One block per lake-bed LINE is what option 2 designs. The 27 shared points carry two lines, so
     // their two blocks coincide: the alternative is NOT buildable on this layout, and it must be flagged.
     const { state, results, batch } = setup('PA2_DEADWEIGHT');
     const s = buildDeadweightSchedule(state, results, batch);
-    expect(s.clashes).toHaveLength(29);
+    expect(s.clashes).toHaveLength(32);
     expect(s.clashes.every((c) => c.distance_m === 0)).toBe(true);
-    expect(s.blocks.filter((b) => b.clashWith.length > 0)).toHaveLength(58);
+    expect(s.blocks.filter((b) => b.clashWith.length > 0)).toHaveLength(64);
     const out = buildMooringDeadweightDxf(state, results, batch);
-    expect(out.dxf).toContain('CANH BAO: 29 cap khoi CHONG LAN nhau tren mat bang');
+    expect(out.dxf).toContain('CANH BAO: 32 cap khoi CHONG LAN nhau tren mat bang');
     expect(out.dxf).not.toContain('Khong co khoi nao chong lan nhau tren mat bang');
   });
 
@@ -251,11 +251,11 @@ describe('Option 2 with shear keys on the drawing', () => {
     const out = buildMooringDeadweightDxf(state, calculateProject(state), batch);
     expect(out.schedule.blocks.every((b) => b.ok)).toBe(true);
     expect(Math.max(...out.schedule.blocks.map((b) => b.mass_t))).toBeLessThan(34);
-    // smaller blocks do not help at the 29 shared points: the two blocks of a point still coincide
-    expect(out.schedule.clashes).toHaveLength(29);
+    // smaller blocks do not help at the 32 shared points: the two blocks of a point still coincide
+    expect(out.schedule.clashes).toHaveLength(32);
     expect(out.schedule.clashes.every((c) => c.distance_m === 0)).toBe(true);
     expect(out.dxf).toContain('GO CHONG TRUOT');
     expect(out.dxf).toContain('c_u bun mat = 20 kPa (GIA THIET)');
-    expect(out.dxf).toContain('CANH BAO: 29 cap khoi CHONG LAN');
+    expect(out.dxf).toContain('CANH BAO: 32 cap khoi CHONG LAN');
   });
 });

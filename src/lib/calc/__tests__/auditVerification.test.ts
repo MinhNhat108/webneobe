@@ -96,7 +96,7 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
-    // Lake bed: 32 bases (29 shared by two rafts), all passing, none overlapping a neighbour.
+    // Lake bed: 32 bases (all shared by two rafts), all passing, none overlapping a neighbour.
     expect(schedule.bases).toHaveLength(32);
     expect(schedule.totals.okBases).toBe(32);
     expect(schedule.clashes).toEqual([]);
@@ -123,7 +123,7 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildPileSchedule(baseState, baseResults, batchResults, coordinates as any);
-    expect(schedule).toHaveLength(292);
+    expect(schedule).toHaveLength(295);
     for (const p of schedule) {
       expect(p.Pmax_kN).toBeGreaterThan(0);
       expect(p.Lopt_m, p.pileId).not.toBeNull();
@@ -132,12 +132,12 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
     }
     const piles = (type: string) => schedule.filter((p) => p.type === type).reduce((s, p) => s + p.pileCount, 0);
     expect(piles('SHORE')).toBe(231);
-    expect(piles('BED')).toBe(61); // one pile per point everywhere at the 20 m/s default
+    expect(piles('BED')).toBe(64); // one pile per point everywhere at the 20 m/s default
 
     const wb = buildPileScheduleWorkbook(baseState, baseResults, batchResults, coordinates as any);
     expect(wb.SheetNames).toContain('BangThongKeCoc');
     const dxfResult = buildMooringPileDxf(baseState, baseResults, batchResults, coordinates as any);
     expect(dxfResult.dxf).toContain('SECTION');
-    expect(dxfResult.pileCount).toBe(292);
+    expect(dxfResult.pileCount).toBe(295);
   });
 });

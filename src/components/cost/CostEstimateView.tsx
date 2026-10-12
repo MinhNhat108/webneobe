@@ -7,6 +7,8 @@ import {
 } from '../../lib/calc/costEstimate';
 import { exportCostToExcel } from '../../lib/io/costExcelExport';
 import { useScrewBaseSummary } from '../results/ScrewBasePanel';
+import { FinalDesignExcelButton } from '../report/FinalDesignSection';
+import { FINAL_OPTION_DATE } from '../../lib/io/finalDesignWorkbook';
 
 const vnd = (v: number) => Math.round(v).toLocaleString('vi-VN');
 const ty = (v: number) => (v / 1e9).toLocaleString('vi-VN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
@@ -76,6 +78,9 @@ export const CostEstimateView: React.FC = () => {
               <h2 className="text-sm font-bold text-slate-900">
                 Báo Giá Thi Công: Cọc Khoan Nhồi Trên Bờ & {isScrew ? 'Đế BTCT + Vít Xoắn Dưới Lòng Hồ' : 'Cọc Đóng Dưới Lòng Hồ'}
               </h2>
+              {isScrew && (
+                <p className="mt-0.5 font-semibold text-emerald-700">Phương án Chủ đầu tư chốt ngày {FINAL_OPTION_DATE}.</p>
+              )}
               <p className="text-slate-500 mt-0.5">
                 Khối lượng lấy từ bảng thống kê của dự án. Đơn giá cọc là mức giữa của các bảng giá tham khảo do Chủ đầu tư cung cấp
                 {isScrew ? '; đế BTCT và vít xoắn CHƯA có bảng giá tham khảo nên phải nhập' : ''}; mọi đơn giá đều sửa được bên dưới.
@@ -83,6 +88,7 @@ export const CostEstimateView: React.FC = () => {
             </div>
           </div>
           <div className="no-print flex items-center gap-2">
+            {isScrew && <FinalDesignExcelButton label="Bảng Tính Excel" />}
             <button
               type="button"
               onClick={() => exportCostToExcel(currentProject, costParams, c)}
@@ -349,7 +355,7 @@ export const CostEstimateView: React.FC = () => {
           </table>
         </div>
         <p className="text-slate-500">
-          Chiều dài mỗi cọc = L_tk + đoạn nhô; điểm neo cọc đôi (BÈ 3A, BÈ 5A) tính 2 cọc. Tiền sàn đạo nổi / sà lan phân bổ theo số
+          Chiều dài mỗi cọc = L_tk + đoạn nhô; điểm neo cọc đôi (nếu có) tính 2 cọc. Tiền sàn đạo nổi / sà lan phân bổ theo số
           {isScrew ? ' đế' : ' mét cọc lòng hồ'} của từng bè{isScrew ? ' (đế dùng chung hai bè tính mỗi bè một nửa)' : ''}. Dự phòng phí và VAT tính trên tổng, không phân bổ.
         </p>
       </div>

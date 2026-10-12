@@ -279,7 +279,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       id: 'doc_mb_neo_dwg',
       name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg (Bản vẽ AutoCAD DWG 2018 - 32 đế dùng chung)',
       mime: 'application/acad',
-      size: 177030,
+      size: 176706,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg'
     },
@@ -287,7 +287,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       id: 'doc_mb_neo_dxf',
       name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf (Bản vẽ CAD DXF mặt bằng neo 9 bè)',
       mime: 'application/dxf',
-      size: 517002,
+      size: 517017,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
     },
@@ -295,9 +295,17 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       id: 'doc_tk_neo_xlsx',
       name: 'HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx (Bảng thống kê Excel 6 sheet, gồm Chiều Dài Cắt Cáp 295 dây)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 513510,
+      size: 715166,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx'
+    },
+    {
+      id: 'doc_bang_tinh_chot_xlsx',
+      name: 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx (Bảng tính phương án chốt 9 sheet: thuyết minh, lực dây, 231 cọc khoan nhồi, 32 đế BTCT, vít xoắn, khối lượng và báo giá)',
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 583333,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx'
     },
     {
       id: 'doc_coc_bo_dwg',

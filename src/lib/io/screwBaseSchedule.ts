@@ -188,6 +188,7 @@ export function buildScrewBaseSchedule(
     const d = designScrewBaseForLines({
       lines: lines.map((l) => ({ label: l.code, tension_kN: l.tension_kN, span_m: l.span_m, azimuth_deg: l.azimuth_deg })),
       depthLow_m: depthLow, depthHigh_m: depthHigh, pretension_kN: st.line.pretension_kN ?? 5,
+      cleatHeight_m: st.raft.freeboardHeight_m ?? 0.35,
       cuSurface_kPa: st.anchor.cuBed_kPa, cuAverage_kPa: st.anchor.cuBed_kPa,
       ...(st.anchor.screwBase ?? {})
     });

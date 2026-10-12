@@ -8,7 +8,7 @@
  * c_u = 20 kPa) is pinned by the tests.
  *
  * Two load cases, with the cable taken as a straight taut line from the padeye
- * to the raft edge at the water surface:
+ * to the cleat on the raft edge (`cleatHeight_m` above the water surface):
  *   LOW water  — flattest cable, largest horizontal pull  → sliding governs
  *   HIGH water — steepest cable, largest uplift           → uplift / overturning govern
  *
@@ -36,6 +36,12 @@ export interface ScrewBaseParams {
   autoSize: boolean;
   /** Height of the padeye above the top of the base, m. */
   padeyeHeight_m: number;
+  /**
+   * Height of the cable attachment on the raft above the water surface, m. The owner's workbook takes the
+   * cable to the water surface (0); the project passes the float freeboard, which makes the cable a little
+   * steeper and the uplift a few percent larger.
+   */
+  cleatHeight_m: number;
   gammaConcrete_kNm3: number;
   gammaWater_kNm3: number;
   /** Corner holes: diameter and centre-to-edge distance, m. */
@@ -78,6 +84,7 @@ export const SCREW_BASE_DEFAULTS: ScrewBaseParams = {
   thickness_m: 0.4,
   autoSize: true,
   padeyeHeight_m: 0.15,
+  cleatHeight_m: 0,
   gammaConcrete_kNm3: 25,
   gammaWater_kNm3: 10,
   holeDia_m: 0.12,
@@ -235,7 +242,7 @@ export function evaluateScrewBase(input: ScrewBaseInput, side_m: number, thickne
   const Mr = (W * B) / 2 + (n / 2) * Qu * (B - p.holeEdge_m) + (n / 2) * Qu * p.holeEdge_m;
 
   const loadCase = (id: 'low' | 'high', depth: number): ScrewBaseCase => {
-    const rise = Math.max(0, depth - t - p.padeyeHeight_m);
+    const rise = Math.max(0, depth + p.cleatHeight_m - t - p.padeyeHeight_m);
     const angle = Math.atan(rise / Math.max(0.1, span_m));
     const Th = T * Math.cos(angle), Tv = T * Math.sin(angle);
     const adhesion = W > Tv ? p.alphaBase * p.cuSurface_kPa * B * B : 0;
@@ -411,7 +418,7 @@ export function designScrewBaseForLines(input: BaseForLinesInput): BaseForLinesR
   const combosFor = (t: number): Array<{ name: string; level: 'low' | 'high'; Th: number; Tv: number }> => {
     const out: Array<{ name: string; level: 'low' | 'high'; Th: number; Tv: number }> = [];
     for (const [level, depth, levelName] of levels) {
-      const rise = Math.max(0, depth - t - p.padeyeHeight_m);
+      const rise = Math.max(0, depth + p.cleatHeight_m - t - p.padeyeHeight_m);
       const comp = (l: BaseLineLoad, T: number) => {
         const a = Math.atan(rise / Math.max(0.1, l.span_m));
         const az = (l.azimuth_deg * Math.PI) / 180;
@@ -436,7 +443,7 @@ export function designScrewBaseForLines(input: BaseForLinesInput): BaseForLinesR
 
   /** The base of side B and thickness t under one (Th, Tv): an equivalent cable with those two components. */
   const check = (Th: number, Tv: number, B: number, t: number, mesh?: [number, number]) => {
-    const h = Math.max(Th, 1e-6), span = 10, depth = t + p.padeyeHeight_m + (span * Tv) / h;
+    const h = Math.max(Th, 1e-6), span = 10, depth = t + p.padeyeHeight_m - p.cleatHeight_m + (span * Tv) / h;
     return evaluateScrewBase({ ...p, tension_kN: Math.hypot(h, Tv), span_m: span, depthLow_m: depth, depthHigh_m: depth }, B, t, mesh);
   };
   const structural = (r: ScrewBaseResult) => Math.max(r.upliftUtil, r.slideUtil, r.overturnUtil, r.screwUtil, r.bearingUtil);

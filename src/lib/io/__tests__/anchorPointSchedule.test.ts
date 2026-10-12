@@ -64,7 +64,7 @@ describe('Anchor-by-anchor calculation', () => {
     for (const row of single) {
       const b = row.base, l = b.lines[0];
       const raft = batch.find((x) => x.raft.name === l.raft)!;
-      const again = designScrewBase({ tension_kN: l.tension_kN, span_m: l.span_m, depthLow_m: b.depthLow_m, depthHigh_m: b.depthHigh_m, cuSurface_kPa: raft.state.anchor.cuBed_kPa, cuAverage_kPa: raft.state.anchor.cuBed_kPa });
+      const again = designScrewBase({ tension_kN: l.tension_kN, span_m: l.span_m, depthLow_m: b.depthLow_m, depthHigh_m: b.depthHigh_m, cleatHeight_m: 0.35, cuSurface_kPa: raft.state.anchor.cuBed_kPa, cuAverage_kPa: raft.state.anchor.cuBed_kPa });
       expect([b.side_m, b.thickness_m, b.design.rebarDia_mm, b.design.rebarSpacing_m], b.baseId).toEqual([again.side_m, again.thickness_m, again.rebarDia_mm, again.rebarSpacing_m]);
       expect(b.upliftUtil, b.baseId).toBeCloseTo(again.upliftUtil, 9);
       expect(b.slideUtil, b.baseId).toBeCloseTo(again.slideUtil, 9);
@@ -84,7 +84,9 @@ describe('Anchor-by-anchor calculation', () => {
       const both = b.combinations.find((c) => c.name.startsWith('cả hai dây căng') && c.level === 'high')!;
       const one = b.combinations.find((c) => c.name.startsWith(`${l1.code} căng`) && c.level === 'high')!;
       // hand calculation of the "both taut" combination at MNLKT
-      const rise = b.depthHigh_m - b.thickness_m - b.design.params.padeyeHeight_m;
+      // the cleat is on the float deck, 0.35 m above the water
+      expect(b.design.params.cleatHeight_m, b.baseId).toBe(0.35);
+      const rise = b.depthHigh_m + 0.35 - b.thickness_m - b.design.params.padeyeHeight_m;
       const part = (l: typeof l1) => {
         const a = Math.atan(rise / l.span_m), az = (l.azimuth_deg * Math.PI) / 180;
         return { hx: -l.tension_kN * Math.cos(a) * Math.sin(az), hy: -l.tension_kN * Math.cos(a) * Math.cos(az), v: l.tension_kN * Math.sin(a) };
@@ -100,7 +102,7 @@ describe('Anchor-by-anchor calculation', () => {
       expect(row.util, b.baseId).toBeGreaterThanOrEqual(Math.max(...b.combinations.map((c) => c.util)) - 1e-9);
       // never smaller than the base either line would need alone
       for (const l of b.lines) {
-        const alone = designScrewBaseForLines({ lines: [{ label: l.code, tension_kN: l.tension_kN, span_m: l.span_m, azimuth_deg: l.azimuth_deg }], depthLow_m: b.depthLow_m, depthHigh_m: b.depthHigh_m, pretension_kN: 5, cuSurface_kPa: 20, cuAverage_kPa: 20 });
+        const alone = designScrewBaseForLines({ lines: [{ label: l.code, tension_kN: l.tension_kN, span_m: l.span_m, azimuth_deg: l.azimuth_deg }], depthLow_m: b.depthLow_m, depthHigh_m: b.depthHigh_m, cleatHeight_m: 0.35, pretension_kN: 5, cuSurface_kPa: 20, cuAverage_kPa: 20 });
         expect(b.design.volume_m3, b.baseId).toBeGreaterThanOrEqual(alone.base.volume_m3 - 1e-9);
       }
     }
@@ -110,7 +112,7 @@ describe('Anchor-by-anchor calculation', () => {
     expect(s.totals.bedOk).toBe(s.bed.filter((b) => b.base.ok).length);
     for (const b of s.bed) expect(b.base.ok ? b.util <= 1 + 1e-9 : true, b.base.baseId).toBe(true);
     expect(s.totals.bedOk).toBe(32); // at the 20 m/s default every base passes
-    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 19, '3.00': 1, '3.25': 1 });
+    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 19, '3.25': 2 });
     expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(32);
     expect(s.totals.bedConcrete_m3).toBeCloseTo(s.bed.reduce((a, b) => a + b.base.concrete_m3, 0), 9);
   });

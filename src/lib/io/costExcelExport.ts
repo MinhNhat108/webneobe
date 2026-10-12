@@ -11,7 +11,7 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
   const rows: any[][] = [
     [`BÁO GIÁ THI CÔNG CỌC NEO — ${code}`],
     [`Công trình: ${name}`],
-    [c.bedAnchorKind === 'screwBase' ? 'Phương án: cọc khoan nhồi trên bờ + đế BTCT giữ bằng vít xoắn dưới lòng hồ' : 'Phương án: cọc khoan nhồi trên bờ + cọc vuông đúc sẵn đóng dưới lòng hồ'],
+    [c.bedAnchorKind === 'screwBase' ? 'Phương án chốt (Chủ đầu tư, 12/10/2026): cọc khoan nhồi trên bờ + đế BTCT giữ bằng vít xoắn dưới lòng hồ' : 'Phương án: cọc khoan nhồi trên bờ + cọc vuông đúc sẵn đóng dưới lòng hồ'],
     ['Đơn giá là GIÁ THAM KHẢO thị trường do Chủ đầu tư cung cấp (có thể điều chỉnh), không phải báo giá của nhà thầu.'],
     [''],
     ['STT', 'Hạng mục công việc', 'Đơn vị', 'Khối lượng', 'Đơn giá (VNĐ)', 'Thành tiền (VNĐ)', 'Căn cứ & ghi chú']
@@ -46,13 +46,15 @@ export function buildCostWorkbook(state: ProjectState, params: CostParams, c: Co
   rows.push(['']);
   rows.push(['GHI CHÚ']);
   rows.push(['1. Khối lượng lấy từ bảng thống kê cọc: chiều dài mỗi cọc = L_tk + đoạn nhô; điểm neo cọc đôi tính 2 cọc.']);
-  rows.push(['2. Tiền sàn đạo nổi / sà lan phân bổ cho các bè theo số mét cọc lòng hồ.']);
+  rows.push([c.bedAnchorKind === 'screwBase'
+    ? '2. Tiền sàn đạo nổi / sà lan phân bổ cho các bè theo số đế (đế dùng chung hai bè tính mỗi bè một nửa).'
+    : '2. Tiền sàn đạo nổi / sà lan phân bổ cho các bè theo số mét cọc lòng hồ.']);
   rows.push([
     `3. Đơn giá tham khảo áp dụng cho cọc thương mại thông thường. Cọc của thiết kế này có cốt thép chủ nặng hơn ` +
-      `(cọc bờ ≈ ${c.shoreMainSteel_kg_m.toFixed(1)} kg/md, cọc đáy ≈ ${c.bedMainSteel_kg_m.toFixed(1)} kg/md thép chủ), ` +
+      `(cọc bờ ≈ ${c.shoreMainSteel_kg_m.toFixed(1)} kg/md${c.bedAnchorKind === 'screwBase' ? '' : `, cọc đáy ≈ ${c.bedMainSteel_kg_m.toFixed(1)} kg/md`} thép chủ), ` +
       'nên giá thực tế của nhà thầu có thể cao hơn; dùng ô "phụ phí cốt thép" để điều chỉnh.'
   ]);
-  rows.push(['4. Chưa gồm: đài / bích neo đầu cọc, đài chung của cọc đôi, cáp neo và phụ kiện, khảo sát, thí nghiệm thử tải cọc.']);
+  rows.push(['4. Chưa gồm: đài / bích neo đầu cọc, đài chung của cọc đôi, tai neo và khóa đầu vít của đế, cáp neo và phụ kiện, khảo sát, thí nghiệm thử tải cọc.']);
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
   ws['!cols'] = [{ wch: 10 }, { wch: 52 }, { wch: 14 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 20 }];

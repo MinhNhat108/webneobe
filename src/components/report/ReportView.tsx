@@ -4,6 +4,7 @@ import { Printer, CheckCircle2, XCircle } from 'lucide-react';
 import { OptionComparisonView } from '../results/OptionComparisonView';
 import { ScrewBasePanel } from '../results/ScrewBasePanel';
 import { designWindCaveat } from '../../lib/calc/designWind';
+import { FinalDesignSection } from './FinalDesignSection';
 
 export const ReportView: React.FC = () => {
   const { currentProject, results, raftsSummary, setActiveRaft } = useProjectStore();
@@ -62,6 +63,9 @@ export const ReportView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Calculation note of the settled design, all nine rafts */}
+      <FinalDesignSection />
 
       {/* Printable Report Document */}
       <div className="print-page bg-white p-8 md:p-12 rounded-xl border border-slate-200 shadow-sm text-slate-900 font-sans space-y-6 max-w-4xl mx-auto">

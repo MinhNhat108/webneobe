@@ -4,6 +4,7 @@ import { exportProjectToExcel } from '../../lib/io/excelExport';
 import { exportAnchorSchedule, exportMooringCad, MOORING_OPTION_LABEL } from '../../lib/io/mooringExports';
 import { designWindCaveat } from '../../lib/calc/designWind';
 import { LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
+import { exportFinalDesignToExcel } from '../../lib/io/finalDesignWorkbook';
 import {
   Anchor,
   FileSpreadsheet,
@@ -25,7 +26,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGoToCompare, onGoToGuide, onLock }) => {
-  const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts, setMooringOption } = useProjectStore();
+  const { currentProject, results, recalculate, raftsSummary, batchResults, calculateAllRafts, setMooringOption, costParams } = useProjectStore();
   const handleExportExcel = () => {
     // The Master sheet and per-raft detailed checks need batch data — compute
     // it on demand if the user exports before ever opening the overview tab.
@@ -45,6 +46,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
   // Every anchor takes its values from its own raft's calculation, so the batch is computed on demand.
   const handleExportPileSchedule = () => {
     exportAnchorSchedule(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
+  };
+  // The calculation workbook of the settled design (bored shore piles + screw-pile bases), whatever option is being viewed.
+  const handleExportCalc = () => {
+    exportFinalDesignToExcel(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts(), costParams);
   };
   const handleExportDxf = () => {
     exportMooringCad(currentProject, results, batchResults.length > 0 ? batchResults : calculateAllRafts());
@@ -130,6 +135,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
 
           <button
             type="button"
+            onClick={handleExportCalc}
+            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-600 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            title="Bảng tính phương án chốt (.xlsx, 9 sheet): thuyết minh, thông số, lực dây, cọc khoan nhồi, đế BTCT, vít xoắn, khối lượng và báo giá, chiều dài cắt cáp"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span className="hidden md:inline">Bảng Tính</span>
+          </button>
+
+          <button
+            type="button"
             onClick={handleExportDxf}
             className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
             title={`Xuất bản vẽ mặt bằng hệ neo ra CAD (.DXF): cọc khoan nhồi bờ + neo đáy (${optionLabel}), kèm bảng thống kê`}
@@ -174,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            🔵 Đế BTCT + vít xoắn (thiết kế)
+            🔵 Đế BTCT + vít xoắn (PHƯƠNG ÁN CHỐT 12/10/2026)
           </button>
           <button
             type="button"

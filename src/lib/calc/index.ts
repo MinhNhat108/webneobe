@@ -277,6 +277,7 @@ export function calculateProject(state: ProjectState): CalcResults {
       span_m: state.raft.bedCableSpan_m ?? (state.raft.westDist_m ? state.raft.westDist_m / 2.0 : 13.5),
       depthLow_m: Math.min(depthNormal, state.env.minWaterDepthUnderRaft_m ?? 1.5),
       depthHigh_m: depthNormal + rise,
+      cleatHeight_m: state.raft.freeboardHeight_m ?? 0.35,
       cuSurface_kPa: state.anchor.cuBed_kPa,
       cuAverage_kPa: state.anchor.cuBed_kPa,
       ...(state.anchor.screwBase ?? {})

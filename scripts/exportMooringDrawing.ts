@@ -17,6 +17,7 @@ import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../src/data/huoiVanh
 import { buildMooringScrewBaseDxf } from '../src/lib/io/screwBaseDxf';
 import { buildScrewBaseScheduleWorkbook } from '../src/lib/io/screwBaseExcel';
 import { buildAnchorPointSchedule } from '../src/lib/io/anchorPointSchedule';
+import { buildFinalDesign, buildFinalDesignWorkbook, finalDesignNote } from '../src/lib/io/finalDesignWorkbook';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outDir = process.argv[2] ?? path.join(here, '../docs/mat-bang-neo-9-be');
@@ -41,9 +42,13 @@ const write = (name: string, data: string | Buffer) => {
 };
 const dxfName = write('mat_bang_neo_9_be.dxf', built.dxf);
 const xlsName = write('bang_thong_ke_neo_9_be.xlsx', XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+const final = buildFinalDesign(state, results, batch);
+const calcName = write('bang_tinh_phuong_an_chot.xlsx', XLSX.write(buildFinalDesignWorkbook(final), { type: 'buffer', bookType: 'xlsx' }));
+const noteName = write('THUYET_MINH_TINH_TOAN.md', ['# Thuyết minh tính toán hệ neo: cọc khoan nhồi ven bờ + đế BTCT vít xoắn', '', ...finalDesignNote(final).flatMap((sec) => [`## ${sec.title}`, '', ...sec.lines.map((l) => `- ${l}`), ''])].join(String.fromCharCode(10)));
+console.log('FINAL', calcName, noteName, JSON.stringify(final.totals), 'grand', final.cost.grandTotal_VND, 'unpriced', final.cost.unpriced.length);
 const T = built.schedule.totals;
 const pts = buildAnchorPointSchedule(state, results, batch);
-console.log('PER-POINT', JSON.stringify(pts.totals), 'bed depth at MNC min/max', Math.min(...pts.bed.map((b) => b.depthLow_m)).toFixed(2), Math.max(...pts.bed.map((b) => b.depthLow_m)).toFixed(2), 'at MNLKT', Math.min(...pts.bed.map((b) => b.depthHigh_m)).toFixed(2), Math.max(...pts.bed.map((b) => b.depthHigh_m)).toFixed(2), 'worst util', Math.max(...pts.bed.map((b) => b.util)).toFixed(2), 'failing', pts.bed.filter((b) => !b.base.ok).map((b) => b.code).join(','), 'shore ground min/max', Math.min(...pts.shore.map((p) => p.ground_m ?? 999)).toFixed(2), Math.max(...pts.shore.map((p) => p.ground_m ?? -999)).toFixed(2), 'steep-down', pts.shore.filter((p) => (p.slopeLow_deg ?? 0) < -25).length);
+console.log('PER-POINT', JSON.stringify(pts.totals), 'bed depth at MNC min/max', Math.min(...pts.bed.map((b) => b.base.depthLow_m)).toFixed(2), Math.max(...pts.bed.map((b) => b.base.depthLow_m)).toFixed(2), 'at MNLKT', Math.min(...pts.bed.map((b) => b.base.depthHigh_m)).toFixed(2), Math.max(...pts.bed.map((b) => b.base.depthHigh_m)).toFixed(2), 'worst util', Math.max(...pts.bed.map((b) => b.util)).toFixed(2), 'failing', pts.bed.filter((b) => !b.base.ok).map((b) => b.code).join(','), 'shore ground min/max', Math.min(...pts.shore.map((p) => p.ground_m ?? 999)).toFixed(2), Math.max(...pts.shore.map((p) => p.ground_m ?? -999)).toFixed(2), 'steep-down', pts.shore.filter((p) => (p.slopeLow_deg ?? 0) < -25).length);
 console.log(JSON.stringify({
   files: [dxfName, xlsName], rafts: built.raftCount, shorePoints: built.shorePileCount,
   shorePiles: built.schedule.shorePiles.reduce((s, r) => s + r.pileCount, 0), bases: built.baseCount,

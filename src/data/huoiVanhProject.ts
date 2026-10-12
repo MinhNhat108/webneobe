@@ -293,9 +293,9 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     },
     {
       id: 'doc_bang_tinh_chot_xlsx',
-      name: 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx (Bảng tính phương án chốt 9 sheet: thuyết minh, lực dây, 231 cọc khoan nhồi, 32 đế BTCT, vít xoắn, khối lượng và báo giá)',
+      name: 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx (Bảng tính phương án chốt: 9 sheet kết quả + 4 sheet công thức Excel, ô vàng là ô nhập)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 583333,
+      size: 167822,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx'
     },

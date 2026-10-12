@@ -137,7 +137,7 @@ export const AttachmentPanel: React.FC = () => {
                 <strong>Mặt bằng</strong>: HỒ HUỔI VANH.dxf và PDF bố trí 9 bè (08/10/2026)
               </li>
               <li>
-                <strong>Tính toán</strong>: thuyết minh (.docx) và bảng tính phương án chốt (.xlsx, 9 sheet)
+                <strong>Tính toán</strong>: thuyết minh (.docx) và bảng tính phương án chốt (.xlsx, 13 sheet, có 4 sheet công thức)
               </li>
               <li>
                 <strong>Bản vẽ, thống kê</strong>: mặt bằng neo 9 bè, bảng thống kê neo, chi tiết cọc ven bờ D350

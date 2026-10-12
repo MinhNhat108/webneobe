@@ -22,7 +22,7 @@ export function useFinalDesign() {
   );
 }
 
-export const FinalDesignExcelButton: React.FC<{ className?: string; label?: string }> = ({ className, label = 'Tải Bảng Tính Excel (9 sheet)' }) => {
+export const FinalDesignExcelButton: React.FC<{ className?: string; label?: string }> = ({ className, label = 'Tải Bảng Tính Excel (có công thức)' }) => {
   const d = useFinalDesign();
   return (
     <button
@@ -30,7 +30,7 @@ export const FinalDesignExcelButton: React.FC<{ className?: string; label?: stri
       disabled={!d}
       onClick={() => d && XLSX.writeFile(buildFinalDesignWorkbook(d), finalDesignFileName(d))}
       className={className ?? 'no-print px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center gap-1.5'}
-      title="Bảng tính phương án chốt: thuyết minh, thông số, lực dây, cọc khoan nhồi, đế BTCT, vít xoắn, khối lượng và báo giá, chiều dài cắt cáp"
+      title="Bảng tính phương án chốt: 9 sheet kết quả và 4 sheet CT_ có công thức Excel (đổi ô NHẬP là tự tính lại)"
     >
       <FileSpreadsheet className="w-3.5 h-3.5" /> {label}
     </button>

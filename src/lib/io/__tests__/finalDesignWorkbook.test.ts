@@ -5,6 +5,7 @@ import { calculateProject } from '../../calc';
 import { buildRaftProjectState } from '../../calc/raftState';
 import type { ProjectState } from '../../calc/types';
 import { DEFAULT_COST_PARAMS } from '../../calc/costEstimate';
+import { ringLeverFactor } from '../../calc/broms';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
 
 const dflt = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
@@ -80,5 +81,36 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     expect(text).toContain('GIẢ ĐỊNH');
     expect(text).toContain('đã trừ lực đẩy nổi');
     expect(text).toContain('B7-D01, B7-D09, B8-D13');
+  });
+});
+
+describe('Live formula sheets of the calculation workbook', () => {
+  const wb = buildFinalDesignWorkbook(d);
+  const cell = (sheet: string, addr: string) => wb.Sheets[sheet][addr];
+
+  it('the four CT_ sheets carry Excel formulas together with the engine values', () => {
+    for (const name of ['CT_ThongSo', 'CT_LucDay', 'CT_CocKhoanNhoi', 'CT_DeVitXoan']) {
+      const formulas = Object.keys(wb.Sheets[name]).filter((a) => a[0] !== '!' && wb.Sheets[name][a].f);
+      expect(formulas.length, name).toBeGreaterThan(10);
+    }
+    // line tension of the first raft: MAX of the two methods, value of the engine
+    expect(cell('CT_LucDay', 'M6').f).toBe('MAX(K6,L6)');
+    expect(cell('CT_LucDay', 'M6').v).toBeCloseTo(d.rafts[0].tMax_kN, 6);
+    // the pile takes its tension from the load sheet, the base from the load sheet by raft name
+    expect(cell('CT_CocKhoanNhoi', 'F6').f).toContain('VLOOKUP(A6,CT_LucDay!');
+    expect(cell('CT_DeVitXoan', 'D6').f).toContain('VLOOKUP(C6,CT_LucDay!');
+    // inputs are plain values, never formulas
+    expect(cell('CT_LucDay', 'B6').f).toBeUndefined();
+    expect(cell('CT_DeVitXoan', 'M6').f).toBeUndefined();
+    expect(cell('CT_DeVitXoan', 'M6').v).toBe(d.schedule.bases[0].side_m);
+  });
+
+  it('the bar-ring lever factor written as a formula equals the engine factor for 4, 6 and 8 bars', () => {
+    for (const n of [4, 6, 8]) expect(2 / Math.tan(Math.PI / n)).toBeCloseTo(ringLeverFactor(n), 3);
+    for (const r of d.rafts) {
+      const mrd = ((Math.PI * r.rebarDia_mm ** 2) / 4 / 1e6) * r.rebarRs_MPa * 1000 * (r.pileD_m / 2 - 0.05) * (2 / Math.tan(Math.PI / r.rebarCount));
+      expect(mrd, r.name).toBeCloseTo(r.Mrd_kNm, 1);
+      expect(r.rebarCount % 2, r.name).toBe(0); // the closed form holds for an even number of bars
+    }
   });
 });

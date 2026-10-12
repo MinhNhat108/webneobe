@@ -137,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             type="button"
             onClick={handleExportCalc}
             className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-600 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Bảng tính phương án chốt (.xlsx, 9 sheet): thuyết minh, thông số, lực dây, cọc khoan nhồi, đế BTCT, vít xoắn, khối lượng và báo giá, chiều dài cắt cáp"
+            title="Bảng tính phương án chốt (.xlsx, 13 sheet): thuyết minh, thông số, lực dây, cọc khoan nhồi, đế BTCT, vít xoắn, khối lượng và báo giá, chiều dài cắt cáp, và 4 sheet CT_ có công thức Excel"
           >
             <FileSpreadsheet className="w-4 h-4" />
             <span className="hidden md:inline">Bảng Tính</span>

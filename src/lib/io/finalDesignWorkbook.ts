@@ -6,6 +6,7 @@ import type { PileScheduleBatchLike, PileScheduleRow } from './pileSchedule';
 import { buildScrewBaseSchedule, type ScrewBaseRow, type ScrewBaseSchedule } from './screwBaseSchedule';
 import { buildAnchorPointSchedule, type AnchorPointSchedule, type ShorePointRow } from './anchorPointSchedule';
 import { buildCableCuttingSchedule, appendCableCuttingSheet } from './cableCuttingSchedule';
+import { buildLiveCalcSheets, LIVE_SHEETS } from './liveCalcSheets';
 
 /**
  * The calculation workbook and the calculation note of the design the owner
@@ -29,6 +30,11 @@ export interface FinalRaftRow {
   lines: number;
   shoreLines: number;
   bedLines: number;
+  /** Bounding rectangle of the raft, m (the float windage uses their mean). */
+  length_m: number;
+  width_m: number;
+  cdFloat: number;
+  freeboard_m: number;
   panels: number;
   panelArea_m2: number;
   tilt_deg: number;
@@ -63,6 +69,10 @@ export interface FinalRaftRow {
   cage: string;
   grade: string;
   stirrup: string;
+  /** Main bars of the round cage: count, diameter (mm) and design strength (MPa). */
+  rebarCount: number;
+  rebarDia_mm: number;
+  rebarRs_MPa: number;
   Hu_kN: number;
   Hallow_kN: number;
   bp1: number;
@@ -128,6 +138,7 @@ export function buildFinalDesign(
     return {
       name: b.raft.name, area_m2: b.raft.area_m2 ?? 0, perimeter_m: R.perimeter_m ?? 0,
       lines: L.count ?? 0, shoreLines: own.length, bedLines,
+      length_m: R.length_m ?? 0, width_m: R.width_m ?? 0, cdFloat: R.cdFloat ?? 1.1, freeboard_m: R.freeboardHeight_m ?? 0.35,
       panels, panelArea_m2: a1, tilt_deg: tilt, cdPanel: R.cdPanel ?? st.env.windCd ?? 1.3, shield: R.solarShieldFactor ?? 0.55,
       areaProjected_m2: panels * a1 * Math.sin((tilt * Math.PI) / 180),
       q_Pa: r.q_wind_Pa, fPanel_kN: r.f_wind_panel_kN ?? 0, fFloat_kN: r.f_wind_float_kN ?? 0, fWind_kN: r.f_wind_total_kN,
@@ -137,6 +148,7 @@ export function buildFinalDesign(
       cable: L.cableCode ?? '', mbl_kN: L.mbl_kN, sfIntact: L.mbl_kN / r.t_max_intact_kN, sfDamaged: L.mbl_kN / r.t_max_damaged_kN,
       pileCount: sum(own, (p) => p.pileCount), pileD_m: p0?.D_m ?? A.shoreD_m ?? 0.35, pileL_m: p0?.Linput_m ?? A.shoreL_m ?? 6.5, pileLtotal_m: p0?.Ltotal_m ?? 0,
       cage: p0?.cage.label ?? '-', grade: p0?.cage.grade ?? '-', stirrup: p0?.cage.stirrupLabel ?? '-',
+      rebarCount: p0?.cage.totalBars ?? 0, rebarDia_mm: p0?.rebarDia_mm ?? 0, rebarRs_MPa: A.pileRebarRs_MPa ?? 350,
       Hu_kN: sp?.Hu ?? 0, Hallow_kN: sp?.H_allow ?? 0, bp1: sp?.utilization_H ?? 0,
       Mmax_kNm: sp?.Mmax ?? 0, loadFactor: A.pileBendingLoadFactor ?? 1.2, Mrd_kNm: sp?.Mrd ?? 0, bp2: sp?.utilization_M ?? 0,
       Pmax_kN: p0?.Pmax_kN ?? 0, concretePerPile_m3: p0?.cage.concreteVol_m3 ?? 0, steelPerPile_kg: p0?.cage.steel_kg ?? 0,
@@ -285,9 +297,12 @@ const sheet = (wb: XLSX.WorkBook, name: string, rows: any[][], cols: number[]) =
   XLSX.utils.book_append_sheet(wb, ws, name);
 };
 
-export const FINAL_DESIGN_SHEETS = ['ThuyetMinh', 'ThongSo', 'LucDay', 'CocKhoanNhoi_TheoBe', 'CocKhoanNhoi_TungCoc', 'DeNeoDay_TungDe', 'VitXoan', 'KhoiLuong_BaoGia', 'ChieuDaiCatCap'];
+export const FINAL_DESIGN_SHEETS = ['ThuyetMinh', 'ThongSo', 'LucDay', 'CocKhoanNhoi_TheoBe', 'CocKhoanNhoi_TungCoc', 'DeNeoDay_TungDe', 'VitXoan', 'KhoiLuong_BaoGia', 'ChieuDaiCatCap', ...LIVE_SHEETS];
 
-/** The calculation workbook of the settled design (9 sheets). Pure builder, no DOM. */
+/**
+ * The calculation workbook of the settled design: nine sheets of results (values from the engine) and the
+ * four `CT_` sheets with live Excel formulas. Pure builder, no DOM.
+ */
 export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
   const wb = XLSX.utils.book_new();
   const st = d.state, A = st.anchor, E = st.env;
@@ -297,6 +312,7 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
 
   // 1. note
   const note: any[][] = [title('THUYẾT MINH TÍNH TOÁN HỆ NEO: CỌC KHOAN NHỒI VEN BỜ + ĐẾ BTCT VÍT XOẮN'), [`Dự án: ${d.name}`], ['']];
+  note.push(['File này có hai phần: 9 sheet đầu là KẾT QUẢ do web tính (dạng số); 4 sheet CT_… ở cuối là cùng phép tính đó dưới dạng CÔNG THỨC Excel — đổi ô nhập (tô vàng / ghi chữ NHẬP) là tự tính lại.'], ['']);
   for (const s of finalDesignNote(d)) { note.push([s.title]); for (const l of s.lines) note.push([`  ${l}`]); note.push(['']); }
   sheet(wb, FINAL_DESIGN_SHEETS[0], note, [180]);
 
@@ -462,6 +478,9 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
 
   // 9. cutting lengths
   appendCableCuttingSheet(wb, buildCableCuttingSchedule(st), st);
+
+  // 10–13. the same calculation as live Excel formulas
+  for (const s of buildLiveCalcSheets(d).sheets) XLSX.utils.book_append_sheet(wb, s.ws, s.name);
   return wb;
 }
 

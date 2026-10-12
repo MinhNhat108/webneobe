@@ -228,92 +228,28 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
   },
   attachments: [
     {
-      id: 'doc_huoi_vanh_dxf',
-      name: 'HỒ HUỔI VANH.dxf (Bản vẽ CAD mặt bằng 9 bè, 08/10/2026)',
-      mime: 'application/dxf',
-      size: 9317396,
-      kind: 'dxf' as const,
-      remoteUrl: 'docs_huoi_vanh/ho_huoi_vanh.dxf'
-    },
-    {
-      id: 'doc_huoi_vanh_pdf',
-      name: 'HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf (9 bè, 18.354 tấm pin, 26 inverter)',
-      mime: 'application/pdf',
-      size: 977579,
-      kind: 'pdf' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_Bo_tri_be_pin.pdf'
-    },
-    {
-      id: 'doc_huoi_vanh_screw_img',
-      name: 'NEO ĐẾ VÍT XOẮN.png (Sơ đồ đế BTCT + 4 vít xoắn)',
-      mime: 'image/png',
-      size: 46767,
-      kind: 'image' as const,
-      remoteUrl: 'docs_huoi_vanh/NEO_DE_VIT_XOAN.png'
-    },
-    {
-      id: 'doc_huoi_vanh_img',
-      name: 'ANH1.jpg (Ảnh phối cảnh vệ tinh hồ Huổi Vanh)',
-      mime: 'image/jpeg',
-      size: 1193488,
-      kind: 'image' as const,
-      remoteUrl: 'docs_huoi_vanh/ANH1_web.jpg'
-    },
-    {
       id: 'doc_huoi_vanh_docx',
-      name: 'HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx (Thuyết minh tính toán phương án chốt: cọc khoan nhồi ven bờ + đế BTCT vít xoắn)',
+      name: '1. Thuyết minh tính toán phương án chốt (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       size: 17750,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },
     {
-      id: 'doc_mb_neo_dwg',
-      name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg (Bản vẽ AutoCAD DWG 2018 - 32 đế dùng chung)',
-      mime: 'application/acad',
-      size: 176706,
-      kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dwg'
-    },
-    {
-      id: 'doc_mb_neo_dxf',
-      name: 'HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf (Bản vẽ CAD DXF mặt bằng neo 9 bè)',
-      mime: 'application/dxf',
-      size: 517017,
-      kind: 'dxf' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
-    },
-    {
-      id: 'doc_tk_neo_xlsx',
-      name: 'HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx (Bảng thống kê Excel 6 sheet, gồm Chiều Dài Cắt Cáp 295 dây)',
-      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 715166,
-      kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_NEO_9_BE_PA3_DE_VIT.xlsx'
-    },
-    {
       id: 'doc_bang_tinh_chot_xlsx',
-      name: 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx (Bảng tính phương án chốt: 9 sheet kết quả + 4 sheet công thức Excel, ô vàng là ô nhập)',
+      name: '2. Bảng tính Excel phương án chốt, có công thức (HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       size: 167822,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx'
     },
     {
-      id: 'doc_coc_bo_dwg',
-      name: 'HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg (Bản vẽ AutoCAD DWG 2018 chi tiết cọc bờ D350)',
-      mime: 'application/acad',
-      size: 50302,
-      kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg'
-    },
-    {
-      id: 'doc_coc_bo_dxf',
-      name: 'HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf (Bản vẽ CAD DXF chi tiết cọc bờ D350)',
+      id: 'doc_mb_neo_dxf',
+      name: '3. Bản vẽ CAD bố trí neo 9 bè (HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf)',
       mime: 'application/dxf',
-      size: 78315,
+      size: 517017,
       kind: 'dxf' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf'
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
     }
   ],
   raftsSummary: HUOI_VANH_RAFTS

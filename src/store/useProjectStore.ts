@@ -451,17 +451,8 @@ export const useProjectStore = create<ProjectStore>()(
             }
           }
 
-          // 2026-09-22: Sync attachments to the updated documents list
-          // (including CAD DXF file, HOHUOIVANH.Bố trí sơ bộ bè pin.pdf, and THUYET_MINH.docx)
-          if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
-            const hasDxf = persistedState.currentProject.attachments?.some((a: any) => a.kind === 'dxf');
-            const hasOldPdfName = persistedState.currentProject.attachments?.some((a: any) => a.name?.includes('bố trí bè pin'));
-            const hasDocx = persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_docx')
-              && persistedState.currentProject.attachments?.some((a: any) => a.id === 'doc_huoi_vanh_screw_img');
-            if (!hasDxf || hasOldPdfName || !hasDocx) {
-              persistedState.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
-            }
-          }
+          // The built-in attachments are re-synchronised with the current list when the store rehydrates
+          // (see onRehydrateStorage); nothing to migrate here.
 
           // v9 (2026-09-30): the multi-raft views now show the ACTIVE raft
           // from currentProject. Earlier versions could hold the bare default
@@ -562,13 +553,6 @@ export const useProjectStore = create<ProjectStore>()(
               state.currentProject = HUOI_VANH_START;
             } else if (JSON.stringify(state.raftsSummary) !== JSON.stringify(HUOI_VANH_RAFTS)) {
               state.raftsSummary = HUOI_VANH_RAFTS;
-            }
-            const hasDxf = state.currentProject.attachments?.some(a => a.kind === 'dxf');
-            const hasOldPdfName = state.currentProject.attachments?.some(a => a.name?.includes('bố trí bè pin'));
-            const hasDocx = state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_docx')
-              && state.currentProject.attachments?.some(a => a.id === 'doc_huoi_vanh_screw_img');
-            if (!hasDxf || hasOldPdfName || !hasDocx) {
-              state.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
             // The built-in documents (served from the site) always follow the current list, so a browser that
             // saved an earlier list still gets new or regenerated files; the user's own uploads are kept.

@@ -130,18 +130,12 @@ export const AttachmentPanel: React.FC = () => {
               </button>
             </div>
             <p className="text-slate-600 text-[11px]">
-              Chỉ gồm tài liệu của mặt bằng 9 bè và phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
+              Ba tài liệu của phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
             </p>
             <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
-              <li>
-                <strong>Mặt bằng</strong>: HỒ HUỔI VANH.dxf và PDF bố trí 9 bè (08/10/2026)
-              </li>
-              <li>
-                <strong>Tính toán</strong>: thuyết minh (.docx) và bảng tính phương án chốt (.xlsx, 13 sheet, có 4 sheet công thức)
-              </li>
-              <li>
-                <strong>Bản vẽ, thống kê</strong>: mặt bằng neo 9 bè, bảng thống kê neo, chi tiết cọc ven bờ D350
-              </li>
+              <li><strong>Thuyết minh tính toán</strong> (.docx)</li>
+              <li><strong>Bảng tính Excel</strong> (.xlsx, có 4 sheet công thức, ô vàng là ô nhập)</li>
+              <li><strong>Bản vẽ CAD bố trí neo</strong> (.dxf, mở được bằng AutoCAD và xem ngay trên web)</li>
             </ul>
           </div>
 

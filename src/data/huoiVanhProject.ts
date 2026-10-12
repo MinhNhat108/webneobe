@@ -263,7 +263,7 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       id: 'doc_huoi_vanh_docx',
       name: 'HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx (Thuyết minh tính toán phương án chốt: cọc khoan nhồi ven bờ + đế BTCT vít xoắn)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      size: 17034,
+      size: 17750,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },

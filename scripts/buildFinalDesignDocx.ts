@@ -29,17 +29,33 @@ const d = buildFinalDesign(state, calculateProject(state), batch);
 const T = d.totals;
 
 const FONT = 'Times New Roman';
-const run = (text: string, opt: { bold?: boolean; size?: number } = {}) => new TextRun({ text, font: FONT, size: opt.size ?? 24, bold: opt.bold });
+// Vietnamese text: no English proofing (Word would underline every word in red), and symbols such as c_u, T_0,
+// M_max written with a real subscript.
+const LANG = { value: 'vi-VN' };
+// one- or two-letter symbol + index only, so file names with underscores are left alone
+const SUB = /(?<![\p{L}\d_])([\p{L}]{1,2})_([\p{L}]+|\d+)(?![\p{L}\d_])/gu;
+const runs = (text: string, opt: { bold?: boolean; size?: number } = {}): TextRun[] => {
+  const base = { font: FONT, size: opt.size ?? 24, bold: opt.bold, noProof: true, language: LANG };
+  const out: TextRun[] = [];
+  let last = 0;
+  for (const m of text.matchAll(SUB)) {
+    out.push(new TextRun({ ...base, text: text.slice(last, m.index) + m[1] }));
+    out.push(new TextRun({ ...base, text: m[2], subScript: true }));
+    last = m.index! + m[0].length;
+  }
+  out.push(new TextRun({ ...base, text: text.slice(last) }));
+  return out;
+};
 const para = (text: string, opt: { bold?: boolean; size?: number; align?: (typeof AlignmentType)[keyof typeof AlignmentType]; after?: number } = {}) =>
-  new Paragraph({ children: [run(text, opt)], alignment: opt.align, spacing: { after: opt.after ?? 80 } });
-const heading = (text: string) => new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 240, after: 100 }, children: [run(text, { bold: true, size: 26 })] });
-const bullet = (text: string) => new Paragraph({ children: [run(text)], bullet: { level: 0 }, spacing: { after: 60 } });
+  new Paragraph({ children: runs(text, opt), alignment: opt.align, spacing: { after: opt.after ?? 80 } });
+const heading = (text: string) => new Paragraph({ heading: HeadingLevel.HEADING_2, keepNext: true, spacing: { before: 240, after: 100 }, children: runs(text, { bold: true, size: 26 }) });
+const bullet = (text: string) => new Paragraph({ children: runs(text), bullet: { level: 0 }, spacing: { after: 60 } });
 const table = (head: string[], rows: Array<Array<string | number>>) =>
   new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
     rows: [head, ...rows].map((r, i) => new TableRow({
       tableHeader: i === 0,
-      children: r.map((c) => new TableCell({ children: [new Paragraph({ children: [run(String(c), { size: 18, bold: i === 0 })], alignment: AlignmentType.CENTER })] }))
+      children: r.map((c) => new TableCell({ children: [new Paragraph({ children: runs(String(c), { size: 18, bold: i === 0 }), alignment: AlignmentType.CENTER })] }))
     }))
   });
 
@@ -92,6 +108,7 @@ body.push(para('Đơn giá cọc khoan nhồi và sà lan là giá tham khảo t
 body.push(para('Bảng từng cọc khoan nhồi (231 cọc), từng bước tính của mỗi đế và chiều dài cắt 295 dây: xem file HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx.', { size: 20 }));
 
 const doc = new Document({
+  styles: { default: { document: { run: { font: FONT, language: LANG } } } },
   sections: [{
     properties: { page: { size: { orientation: PageOrientation.PORTRAIT }, margin: { top: 1134, bottom: 1134, left: 1134, right: 850 } } },
     children: body

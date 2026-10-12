@@ -570,6 +570,14 @@ export const useProjectStore = create<ProjectStore>()(
             if (!hasDxf || hasOldPdfName || !hasDocx) {
               state.currentProject.attachments = (HUOI_VANH_DEFAULT_PROJECT as any).attachments;
             }
+            // The built-in documents (served from the site) always follow the current list, so a browser that
+            // saved an earlier list still gets new or regenerated files; the user's own uploads are kept.
+            const builtIn: any[] = (HUOI_VANH_DEFAULT_PROJECT as any).attachments ?? [];
+            const key = (list: any[]) => JSON.stringify(list.filter((a) => a.remoteUrl).map((a) => [a.id, a.name, a.size, a.remoteUrl]));
+            const saved: any[] = state.currentProject.attachments ?? [];
+            if (key(saved) !== key(builtIn)) {
+              state.currentProject.attachments = [...builtIn, ...saved.filter((a) => !a.remoteUrl)];
+            }
           }
           state.results = calculateProject(state.currentProject);
         }

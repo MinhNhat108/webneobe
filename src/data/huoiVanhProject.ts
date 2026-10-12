@@ -269,11 +269,11 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
     },
     {
       id: 'doc_huoi_vanh_docx',
-      name: 'THUYET_MINH_TINH_TOAN_KET_QUA_VA_KIEM_TRA_NEO_BE.docx (Thuyết minh phương pháp tính & kiểm tra)',
+      name: 'HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx (Thuyết minh tính toán phương án chốt: cọc khoan nhồi ven bờ + đế BTCT vít xoắn)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      size: 15955,
+      size: 17034,
       kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/THUYET_MINH_TINH_TOAN_KET_QUA_VA_KIEM_TRA_NEO_BE.docx'
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },
     {
       id: 'doc_mb_neo_dwg',

@@ -244,14 +244,6 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_Bo_tri_be_pin.pdf'
     },
     {
-      id: 'doc_huoi_vanh_xlsx',
-      name: 'BANG_TINH_NEO_DE_VIT_XOAN.xlsx (gồm sheet 6.DE_NEO_VIT)',
-      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 638109,
-      kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/BANG_TINH_NEO_DE_VIT_XOAN.xlsx'
-    },
-    {
       id: 'doc_huoi_vanh_screw_img',
       name: 'NEO ĐẾ VÍT XOẮN.png (Sơ đồ đế BTCT + 4 vít xoắn)',
       mime: 'image/png',

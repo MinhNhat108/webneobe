@@ -130,20 +130,17 @@ export const AttachmentPanel: React.FC = () => {
               </button>
             </div>
             <p className="text-slate-600 text-[11px]">
-              Tài liệu đã được tích hợp sẵn từ thư mục <code>/Tài liệu hồ Huổi Vanh</code>:
+              Chỉ gồm tài liệu của mặt bằng 9 bè và phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
             </p>
             <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
               <li>
-                <strong>HỒ HUỔI VANH.dxf</strong>: Mặt bằng CAD 9 cụm bè (bản 08/10/2026)
+                <strong>Mặt bằng</strong>: HỒ HUỔI VANH.dxf và PDF bố trí 9 bè (08/10/2026)
               </li>
               <li>
-                <strong>HOHUOIVANH.Bố trí sơ bộ bè pin.pdf</strong>: Bản vẽ thuyết minh layout
+                <strong>Tính toán</strong>: thuyết minh (.docx) và bảng tính phương án chốt (.xlsx, 9 sheet)
               </li>
               <li>
-                <strong>BANG_TINH_NEO_RUT_GON_1_v2.xlsx</strong>: Bảng tính neo rút gọn
-              </li>
-              <li>
-                <strong>ANH1.jpg</strong>: Ảnh phối cảnh vệ tinh độ phân giải cao
+                <strong>Bản vẽ, thống kê</strong>: mặt bằng neo 9 bè, bảng thống kê neo, chi tiết cọc ven bờ D350
               </li>
             </ul>
           </div>

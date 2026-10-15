@@ -250,6 +250,14 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       size: 517017,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
+    },
+    {
+      id: 'doc_tk_order_xlsx',
+      name: '4. Bảng thống kê vật tư đặt hàng Order BOQ (HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx)',
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 215117,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx'
     }
   ],
   raftsSummary: HUOI_VANH_RAFTS

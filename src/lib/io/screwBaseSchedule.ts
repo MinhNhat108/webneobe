@@ -4,10 +4,11 @@ import { designScrewBaseForLines, type BaseLoadCombination, type ScrewBaseResult
 import type { MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, bedAnchorsOf } from '../../data/huoiVanhLayout';
 import { buildPileSchedule, PileScheduleBatchLike, PileScheduleRow } from './pileSchedule';
+import { ACTIVE_LAKE } from '../../data/lakes';
 
-/** Reservoir levels the bases are checked at: flattest cable at MNC, steepest at MNLKT (project datum, m). */
-export const BASE_LOW_WATER_M = 380.0;
-export const BASE_HIGH_WATER_M = 386.0;
+/** Reservoir levels the bases are checked at: flattest cable at MNC, steepest at MNLKT (project datum, m; active lake). */
+export const BASE_LOW_WATER_M = ACTIVE_LAKE.levels.mnc_m;
+export const BASE_HIGH_WATER_M = ACTIVE_LAKE.levels.mnlkt_m;
 
 /** One cable tied to a base. */
 export interface ScrewBaseLine {
@@ -177,11 +178,18 @@ export function buildScrewBaseSchedule(
     return out;
   };
 
+  // Huổi Vanh: every line of a raft takes the raft's governing tension. Hồ Bản Mòng (equilibrium analysis):
+  // the largest tension of THAT line over every level and direction, plus the pretension, capped by the raft's.
+  const lineTension = (raft: string, code: string) => {
+    const { st, res } = raftOf(raft);
+    const own = res.mooringAnalysis?.lineMax_kN[code];
+    return own === undefined ? res.t_max_intact_kN : Math.min(res.t_max_intact_kN, own + (st.line.pretension_kN ?? 0));
+  };
   const bases: ScrewBaseRow[] = [];
   for (const anchor of bedAnchorsOf(coords)) {
     const lines: ScrewBaseLine[] = anchor.lines.map((l) => ({
       code: l.code, raft: l.raft, xRaft: l.xRaft, yRaft: l.yRaft, span_m: l.span, azimuth_deg: l.azimuth,
-      tension_kN: raftOf(l.raft).res.t_max_intact_kN
+      tension_kN: lineTension(l.raft, l.code)
     }));
     const { st } = raftOf(lines[0].raft);
     const depthLow = Math.max(0, BASE_LOW_WATER_M - anchor.z), depthHigh = Math.max(0, BASE_HIGH_WATER_M - anchor.z);
@@ -194,7 +202,7 @@ export function buildScrewBaseSchedule(
     });
     const b = d.base;
     bases.push({
-      baseId: `HV-DV${String(bases.length + 1).padStart(3, '0')}`,
+      baseId: `${ACTIVE_LAKE.codePrefix}-DV${String(bases.length + 1).padStart(3, '0')}`,
       code: lines.map((l) => l.code).join(' + '), raft: [...new Set(lines.map((l) => l.raft))].join(' + '),
       shared: d.shared, lines, x: anchor.x, y: anchor.y, z: anchor.z, depthLow_m: depthLow, depthHigh_m: depthHigh,
       azimuth_deg: lines[0].azimuth_deg, span_m: Math.min(...lines.map((l) => l.span_m)),

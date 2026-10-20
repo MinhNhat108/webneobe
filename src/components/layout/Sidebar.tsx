@@ -1,4 +1,6 @@
 import React from 'react';
+import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
+import { LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 import {
   FolderKanban,
   SlidersHorizontal,
@@ -48,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
     {
       id: 'map',
       label: '3. Mặt Bằng & Tọa Độ Neo',
-      description: 'Bản đồ 9 bè, 295 tuyến cáp, 263 điểm neo',
+      description: `Bản đồ ${HUOI_VANH_RAFTS.length} bè, ${LAYOUT_COUNTS.lines} tuyến cáp, ${LAYOUT_COUNTS.anchorPoints} điểm neo`,
       icon: Map
     },
     {

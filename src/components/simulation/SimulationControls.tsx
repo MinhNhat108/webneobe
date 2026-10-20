@@ -19,6 +19,8 @@ import {
   LoadedIfcMetadata
 } from './types';
 import { generateHuoiVanhSampleIfc } from './sampleIfcGenerator';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
+import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
 import { parseIfcFile } from './ifcLoader';
 import {
   MNC_M,
@@ -33,8 +35,9 @@ import {
 import { useProjectStore } from '../../store/useProjectStore';
 
 /** Slider range of the reservoir level, project datum. */
-export const WATER_LEVEL_MIN_M = 378.5;
-export const WATER_LEVEL_MAX_M = 390.0;
+// Huổi Vanh 378.5–390.0; Bản Mòng from 1.5 m under MNC (649.5) to 2 m over MNLKT (669.05)
+export const WATER_LEVEL_MIN_M = ACTIVE_LAKE_ID === 'ban-mong' ? 648.0 : 378.5;
+export const WATER_LEVEL_MAX_M = ACTIVE_LAKE_ID === 'ban-mong' ? 671.0 : 390.0;
 
 interface SimulationControlsProps {
   windParams: WindParams;
@@ -79,7 +82,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   const speedPresets = [
     { label: 'Gió nhẹ', speed: 8 },
     { label: 'Thường nhật', speed: 15 },
-    { label: 'Thiết kế Huổi Vanh', speed: 29.7 },
+    { label: `Gió tiêu chuẩn ${ACTIVE_LAKE.codeWind.confirmed ? '' : '(tạm) '}${ACTIVE_LAKE.shortName}`, speed: ACTIVE_LAKE.codeWind.speed_ms },
     { label: 'Bão cực đoan', speed: 38 }
   ];
 
@@ -532,8 +535,10 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               </div>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Địa hình là Toposolid của file IFC, quy đổi về cao độ dự án: mặt nước mô hình IFC 402,0 m ≡ MNDB 384,5 m
-              (lệch 17,5 m). Nước chỉ dâng trong lòng hồ, tính từ các cụm bè ra.
+              {ACTIVE_LAKE_ID === 'ban-mong'
+                ? <>Địa hình là Toposolid của file {ACTIVE_LAKE.ifc.file}, cao độ tuyệt đối (không quy đổi).</>
+                : <>Địa hình là Toposolid của file IFC, quy đổi về cao độ dự án: mặt nước mô hình IFC 402,0 m ≡ MNDB 384,5 m
+              (lệch 17,5 m).</>} Nước chỉ dâng trong lòng hồ, tính từ các cụm bè ra.
             </p>
           </div>
         </div>
@@ -569,14 +574,14 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                 />
               </label>
 
-              <button
+              {ACTIVE_LAKE_ID === 'huoi-vanh' && <button
                 type="button"
                 onClick={handleDownloadSampleIfc}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm transition"
               >
                 <Download className="w-3.5 h-3.5 text-slate-500" />
                 Tải IFC Mẫu Hồ Huổi Vanh
-              </button>
+              </button>}
             </div>
 
             {isParsingIfc && (
@@ -627,7 +632,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
                   onChange={(e) => onLayersChange({ ...layers, rafts: e.target.checked })}
                   className="rounded text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-medium text-slate-700">☀️ 9 Cụm Bè Pin Nổi</span>
+                <span className="font-medium text-slate-700">☀️ {HUOI_VANH_RAFTS.length} Cụm Bè Pin Nổi</span>
               </label>
 
               <label className="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer">

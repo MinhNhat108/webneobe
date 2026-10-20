@@ -3,6 +3,7 @@ import type { CalcResults, ProjectState } from '../calc/types';
 import type { DeadweightResult } from '../calc/deadweight';
 import type { MooringCoordinate } from '../../data/huoiVanhProject';
 import { buildPileSchedule, PileScheduleBatchLike, PileScheduleRow } from './pileSchedule';
+import { ACTIVE_LAKE } from '../../data/lakes';
 
 /** One lake-bed gravity block of option 2 — a row of the CAD table and of the Excel sheet. */
 export interface BlockScheduleRow {
@@ -115,7 +116,7 @@ export function buildDeadweightSchedule(
     if (r.type !== 'BED') continue;
     const { block, res } = blockOf(r.raft);
     blocks.push({
-      blockId: `HV-DW${String(blocks.length + 1).padStart(3, '0')}`,
+      blockId: `${ACTIVE_LAKE.codePrefix}-DW${String(blocks.length + 1).padStart(3, '0')}`,
       code: r.code,
       raft: r.raft,
       x: r.x,

@@ -5,6 +5,46 @@ import { OptionComparisonView } from '../results/OptionComparisonView';
 import { ScrewBasePanel } from '../results/ScrewBasePanel';
 import { designWindCaveat } from '../../lib/calc/designWind';
 import { FinalDesignSection } from './FinalDesignSection';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
+import { lakeCaveats } from '../../data/lakeCaveats';
+import { buildCableCuttingSchedule, type CableCutRow } from '../../lib/io/cableCuttingSchedule';
+import type { ProjectState } from '../../lib/calc/types';
+
+const vn1 = (x: number) => x.toFixed(1).replace('.', ',');
+const rangeOf = (rows: CableCutRow[], k: keyof CableCutRow) => {
+  const v = rows.map((r) => r[k] as number);
+  return `${vn1(Math.min(...v))} – ${vn1(Math.max(...v))}`;
+};
+
+/** Section 5 for a lake other than Huổi Vanh: every figure from the cable cutting schedule. */
+const LakeCableNote: React.FC<{ state: ProjectState }> = ({ state }) => {
+  const s = buildCableCuttingSchedule(state);
+  const shore = s.rows.filter((r) => r.type === 'SHORE'), bed = s.rows.filter((r) => r.type === 'BED');
+  const { mnc_m, mndb_m, mnlkt_m } = s.levels;
+  return (
+    <div className="text-[11px] text-slate-700 space-y-2 leading-relaxed">
+      <p>
+        Mực nước {ACTIVE_LAKE.name} dao động <strong>{vn1(mnlkt_m - mnc_m)} m</strong> (MNC {mnc_m} → MNDB {mndb_m} → MNLKT {mnlkt_m} m).
+        Cáp cắt theo chiều dài cố định ở mực nước làm dây dài nhất (cáp thẳng, không giãn, chốt tới chốt):
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
+        <div className="p-2.5 rounded bg-blue-50/60 border border-blue-200">
+          <span className="font-bold text-blue-900">• {bed.length} dây đáy:</span> {s.totals.governedBy.MNLKT} dây dài nhất ở MNLKT.
+          Chùng {rangeOf(bed, 'slackNormal_m')} m ở MNDB và {rangeOf(bed, 'slackLow_m')} m ở MNC (bè dịch tự do tới {rangeOf(bed, 'playLow_m')} m trước khi dây căng).
+        </div>
+        <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
+          <span className="font-bold text-emerald-900">• {shore.length} dây cọc bờ (D350):</span> dài nhất ở MNC (cọc ở cao độ ~MNDB, bè hạ thấp).
+          Chùng {rangeOf(shore, 'slackNormal_m')} m ở MNDB và {rangeOf(shore, 'slackHigh_m')} m ở MNLKT.
+        </div>
+      </div>
+      <p className="text-[10px] text-rose-700 font-semibold">
+        ⚠️ Ở mực nước vận hành bình thường MNDB mọi dây đều chùng: dây cắt cố định KHÔNG giữ được vị trí bè với biên độ dao động này.
+        Cần giải pháp bù (phao chỉ hướng / đối trọng trên dây, dây đàn hồi, hoặc căng chỉnh theo mùa) — chưa tính trong phần mềm.
+      </p>
+      {lakeCaveats().slice(1).map((c) => <p key={c} className="text-[10px] text-slate-600 italic">* {c}</p>)}
+    </div>
+  );
+};
 
 export const ReportView: React.FC = () => {
   const { currentProject, results, raftsSummary, setActiveRaft } = useProjectStore();
@@ -389,9 +429,10 @@ export const ReportView: React.FC = () => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 border-b border-slate-200 pb-1 flex items-center justify-between">
             <span>5. Chỉ Dẫn Kỹ Thuật Thi Công Căng Cáp &amp; Vận Hành Hiện Trường</span>
             <span className="text-[10px] font-normal text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-              Quy chuẩn dâng hạ nước hồ &Delta;H = 6,0 m
+              Quy chuẩn dâng hạ nước hồ &Delta;H = {(ACTIVE_LAKE.levels.mnlkt_m - ACTIVE_LAKE.levels.mnc_m).toFixed(2).replace('.', ',')} m
             </span>
           </h2>
+          {ACTIVE_LAKE_ID !== 'huoi-vanh' ? <LakeCableNote state={currentProject} /> : (
           <div className="text-[11px] text-slate-700 space-y-2 leading-relaxed">
             <p>
               <strong>Nguyên tắc vàng:</strong> Tuyệt đối không kéo căng cứng đét và không căn theo lực kéo T₀ ở MNDB. <strong>Cắt cáp theo chiều dài tính trước ở mực nước bất lợi</strong> của từng loại dây:
@@ -408,6 +449,7 @@ export const ReportView: React.FC = () => {
               * Khẳng định an toàn: Khe hẹp giữa 2 bè (10 &ndash; 13 m) không xảy ra va đập; độ dịch chuyển ngang khi gió thổi &lt; 0,8 m nhờ hệ dây bờ căng ở MNC và đế neo dùng chung chữ V ngược tự hãm ở MNDB/MNLKT.
             </p>
           </div>
+          )}
         </div>
 
         {/* Disclaimer */}

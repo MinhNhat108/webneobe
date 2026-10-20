@@ -1,10 +1,17 @@
 /**
  * Extracts the Huổi Vanh terrain height-field from the client's Revit IFC.
  *
- *   node scripts/extractTerrainFromIfc.mjs ["<file.ifc>"] [--res 128]
+ *   node scripts/extractTerrainFromIfc.mjs ["<file.ifc>"] [--res 128] [--lake=ban-mong]
  *
  * Default input: `Tài liệu hồ Huổi Vanh/dia hinh ho.ifc`.
- * Output:        `src/data/huoiVanhTerrainMesh.json`.
+ * Output:        the lake's terrain file (scripts/lakeConfig.mjs), by default
+ *                `src/data/huoiVanhTerrainMesh.json`.
+ *
+ * HỒ BẢN MÒNG (CHUGIAP.ifc, 2026-10-19): the water slab is an extruded solid,
+ * not a faceted shell; its top is the storey level "MN" 666.65 m, a modelling
+ * level that is NOT a reservoir level. The Toposolid is in absolute elevations
+ * (the CAD water outline lies on the 649.5 m = MNC contour), so the file gets
+ * `projectDatumOffset_m: 0` and the app does not derive the offset from the slab.
  *
  * WHY THIS SCRIPT EXISTS. The height-field the 3D view used before was not a
  * faithful extraction: compared with the IFC it was off by 7.6 m on average,
@@ -32,6 +39,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { lakeFromArgv } from './lakeConfig.mjs';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,9 +47,10 @@ const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
 const resIdx = args.indexOf('--res');
 const RES = resIdx >= 0 ? Number(args[resIdx + 1]) : 128;
+const LAKE = lakeFromArgv();
 const input = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--res')
   ?? path.join(ROOT, 'Tài liệu hồ Huổi Vanh', 'dia hinh ho.ifc');
-const OUT = path.join(ROOT, 'src', 'data', 'huoiVanhTerrainMesh.json');
+const OUT = LAKE.abs.terrain;
 
 // ---------------------------------------------------------------- STEP parse
 const text = fs.readFileSync(input, 'latin1');
@@ -137,6 +146,11 @@ for (const [id, e] of ent) {
     waterTop = Math.max(waterTop, a[2] + own.place.z, b[2] + own.place.z, c[2] + own.place.z);
   }
 }
+if (!Number.isFinite(waterTop)) {
+  // An extruded slab (IFCEXTRUDEDAREASOLID, Bản Mòng) placed at its storey and extruded downwards: its top is the placement level.
+  waterPlace = placement(refs(waterSlab[1].args).find((r) => ent.get(r)?.type === 'IFCLOCALPLACEMENT'));
+  waterTop = waterPlace.z;
+}
 if (!Number.isFinite(waterTop)) throw new Error('Water slab has no geometry');
 // Both objects must share the site origin in plan, otherwise X/Y would not
 // line up with each other (nor with the raft outlines).
@@ -186,6 +200,7 @@ const out = {
   frame: 'IFC local site frame (same X/Y as the raft outlines and mooring layout)',
   rowOrder: 'south-to-north',
   ifcWaterSurface_m: Math.round(waterTop * 1000) / 1000,
+  ...(LAKE.id === 'ban-mong' ? { projectDatumOffset_m: 0 } : {}),
   bounds: { minX, maxX, minY, maxY },
   nx,
   ny,

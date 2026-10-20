@@ -20,6 +20,8 @@ import {
 } from './types';
 import { computeRaftMooringStates, MNDB_M, MNC_M, MNLKT_M } from './sceneModel';
 import { WATER_LEVEL_MIN_M, WATER_LEVEL_MAX_M } from './SimulationControls';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
+import { LAYOUT_COUNTS, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
 import { useProjectStore } from '../../store/useProjectStore';
 
 export const SimulationView: React.FC = () => {
@@ -30,7 +32,7 @@ export const SimulationView: React.FC = () => {
 
   // Simulation State
   const [windParams, setWindParams] = useState<WindParams>({
-    speed: 29.7, // Design storm wind speed of Huổi Vanh
+    speed: ACTIVE_LAKE.codeWind.speed_ms, // code wind of the lake (Bản Mòng: provisional)
     direction: 45, // North-East
     gustFactor: 1.0,
     airDensity: 1.225,
@@ -91,7 +93,7 @@ export const SimulationView: React.FC = () => {
 
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `MoPhong_HuoiVanh_3D_Vw_${windParams.speed}ms_Dir_${windParams.direction}deg.png`;
+    a.download = `MoPhong_${ACTIVE_LAKE_ID === 'ban-mong' ? 'BanMong' : 'HuoiVanh'}_3D_Vw_${windParams.speed}ms_Dir_${windParams.direction}deg.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -115,7 +117,9 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 231 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 32 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, cả 32 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 295 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.
+              {ACTIVE_LAKE_ID === 'ban-mong'
+                ? <>Mô hình 3D của {RAFT_POLYGONS_V2.length} cụm bè điện mặt trời nổi trên địa hình IFC thật của {ACTIVE_LAKE.name}: {LAYOUT_COUNTS.shorePoints} điểm neo bờ bằng cọc khoan nhồi D350, {LAYOUT_COUNTS.bedBases} điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, {LAYOUT_COUNTS.sharedBases} đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), {LAYOUT_COUNTS.lines} tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>
+                : <>Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 231 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 32 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, cả 32 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 295 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>}
             </p>
           </div>
 
@@ -155,13 +159,13 @@ export const SimulationView: React.FC = () => {
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>
-              9 cụm bè (95.873 m²) theo bản vẽ DXF
+              {RAFT_POLYGONS_V2.length} cụm bè ({RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0).toLocaleString('vi-VN')} m²) theo bản vẽ DXF
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400" />
             <span>
-              295 tuyến cáp · 263 điểm neo (231 bờ + 32 đáy, cả 32 đế dùng chung)
+              {LAYOUT_COUNTS.lines} tuyến cáp · {LAYOUT_COUNTS.anchorPoints} điểm neo ({LAYOUT_COUNTS.shorePoints} bờ + {LAYOUT_COUNTS.bedBases} đáy, {LAYOUT_COUNTS.sharedBases} đế dùng chung)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -170,7 +174,7 @@ export const SimulationView: React.FC = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-            <span>Địa hình: Toposolid của dia hinh ho.ifc (quy đổi cao độ −17,5 m)</span>
+            <span>Địa hình: Toposolid của {ACTIVE_LAKE.ifc.file} ({ACTIVE_LAKE.ifc.datumNote})</span>
           </div>
         </div>
       </div>

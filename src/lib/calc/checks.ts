@@ -123,7 +123,7 @@ export function runChecks(
       criteria.sfLineIntact / sf,
       sf.toFixed(2),
       sf,
-      `MBL = ${line.mbl_kN} kN, T_max = ${t_max.toFixed(1)} kN (phương pháp ${results.tensionMethod === 'focus' ? 'hệ số tập trung tải' : 'phân bố hình học'})`
+      `MBL = ${line.mbl_kN} kN, T_max = ${t_max.toFixed(1)} kN (phương pháp ${results.tensionMethod === 'equilibrium' ? 'cân bằng tĩnh theo mực nước' : results.tensionMethod === 'focus' ? 'hệ số tập trung tải' : 'phân bố hình học'})`
     ));
   }
 
@@ -293,6 +293,28 @@ export function runChecks(
       spacing > maxSpacing
         ? `Khoảng cách dây neo trung bình ${spacing.toFixed(1)} m vượt khuyến nghị — cân nhắc bổ sung dây neo.`
         : undefined));
+  }
+
+  // ---- C12 — drift of the raft (equilibrium analysis only, Hồ Bản Mòng) ----
+  // Two neighbouring rafts may drift towards each other: each may take at most
+  // half the smallest clear gap. Taken over every level and direction analysed.
+  const eq = results.mooringAnalysis;
+  const layout = state.line.layout;
+  if (eq && layout) {
+    const limit = layout.minGap_m / 2;
+    const c12: CheckSpec = {
+      id: 'C12',
+      label: 'Độ trôi ngang của bè (cân bằng tĩnh, mọi mực nước)',
+      formula: 'u_max ≤ khe hở nhỏ nhất tới bè bên cạnh / 2',
+      unit: 'm',
+      threshold: `≤ ${limit.toFixed(2)} m`,
+      isMandatory: true
+    };
+    const u = eq.maxDrift_m;
+    const worst = eq.levels.reduce((a, b) => (b.maxDrift_m > a.maxDrift_m ? b : a), eq.levels[0]);
+    checks.push(evaluated(c12, Number.isFinite(u) ? u / limit : Number.POSITIVE_INFINITY,
+      Number.isFinite(u) ? `${u.toFixed(2)} m` : 'không giữ được', Number.isFinite(u) ? u : null,
+      `Lớn nhất ở mực nước ${worst.level_m} m (${eq.compensation === 'seasonal' ? 'căng chỉnh dây theo mực nước' : 'cáp cắt cố định'}); khe hở nhỏ nhất ${layout.minGap_m.toFixed(1)} m.`));
   }
 
   // ---- C10 — T_dây <= P_max (rated allowable pile holding capacity) -------

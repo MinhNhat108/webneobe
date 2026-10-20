@@ -5,6 +5,12 @@
  *
  *   node scripts/planMooringLayoutV2.mjs          # rewrite the two JSON files
  *   node scripts/planMooringLayoutV2.mjs --dry    # report only
+ *   node scripts/planMooringLayoutV2.mjs --lake=ban-mong   # Hồ Bản Mòng (files and levels: scripts/lakeConfig.mjs)
+ *
+ * Hồ Bản Mòng starts from an EMPTY line file (the client plan has no mooring):
+ * Step 2 lays out every line, R1 turns those near the bank into bored piles,
+ * R2/R3 pair the rest into shared bases. Its design bed is per raft
+ * (`designBed_m` of the polygon file), its shore level MNDB 662.76 - 0.5.
  *
  * Inputs : src/data/huoiVanhRaftPolygons_v2.json  (the 12 raft outlines — the
  *          ONLY thing taken from the client's CAD/Revit export)
@@ -41,12 +47,12 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { lakeFromArgv, ROOT } from './lakeConfig.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const POLYS = path.join(ROOT, 'src/data/huoiVanhRaftPolygons_v2.json');
-const COORDS = path.join(ROOT, 'src/data/huoiVanhCoordinates_v2.json');
-const PILES = path.join(ROOT, 'src/data/huoiVanhPiles_v2.json');
+const LAKE = lakeFromArgv();
+const POLYS = LAKE.abs.polygons;
+const COORDS = LAKE.abs.coords;
+const PILES = LAKE.abs.piles;
 const dryRun = process.argv.includes('--dry');
 
 const MAX_SPACING = 15.0;    // m, C9
@@ -58,14 +64,15 @@ const MIN_PILE_GAP = 3.0;    // m, G4 (when a shore pile is involved)
 // whatever their orientation.
 const MIN_BED_GAP = 7.0;     // m, G4 between two lake-bed anchors
 const MIN_CLEAT_GAP = 6.0;   // m, spacing of fittings on the pontoon edge
-const MNDB = 384.5;          // m, normal water level
+const MNDB = LAKE.mndb;      // m, normal water level (Huổi Vanh 384.5, Bản Mòng 662.76)
 // Lake-bed level under each raft = MNDB - design water depth (same depth the
 // load engine uses). The IFC terrain mesh cannot supply it: it reads ~396 m
 // under the rafts, i.e. above the water surface.
-const WATER_DEPTH = { 'BÈ 1': 6.0 };
-const DEFAULT_DEPTH = 6.2;
+// Bản Mòng: the polygon file carries the design bed of each raft (`designBed_m`, median IFC ground under it).
+const WATER_DEPTH = LAKE.waterDepth;
+const DEFAULT_DEPTH = LAKE.defaultDepth;
 
-const SHORE_LEVEL = 384.0;   // m, R1: ground at / above this is "shore or water's edge"
+const SHORE_LEVEL = MNDB - 0.5; // m, R1: ground at / above this is "shore or water's edge" (Huổi Vanh 384.0)
 const MAX_SHORE_SPAN = 60.0; // m, R1: longest cable to a new shore pile
 const GAP_LIMIT = 45.0;      // m, R1/R2: another raft within this distance of the cleat = "between two rafts"
 const SHORE_FAN_STEPS = [0, ...Array.from({ length: 15 }, (_, i) => [-(i + 1) * 5, (i + 1) * 5]).flat()]; // deg, R1: swing of the cable, 0 … ±75
@@ -76,10 +83,10 @@ const MAX_SWING = 60.0;      // deg, R2 second stage: how far a cable may be swu
 const PAIR_OFFSET = 12.0;    // m, R2: two facing cleats this close along the gap share a base
 
 // IFC terrain (Toposolid), converted to the project datum: IFC = project + (IFC water surface - MNDB).
-const TERRAIN = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/huoiVanhTerrainMesh.json'), 'utf8'));
+const TERRAIN = JSON.parse(fs.readFileSync(LAKE.abs.terrain, 'utf8'));
 const T_DX = (TERRAIN.bounds.maxX - TERRAIN.bounds.minX) / (TERRAIN.nx - 1);
 const T_DY = (TERRAIN.bounds.maxY - TERRAIN.bounds.minY) / (TERRAIN.ny - 1);
-const T_OFFSET = TERRAIN.ifcWaterSurface_m - MNDB;
+const T_OFFSET = TERRAIN.projectDatumOffset_m ?? TERRAIN.ifcWaterSurface_m - MNDB;
 /** Ground level at a plan point, project datum (same interpolation as sceneModel.groundAt); null outside the model. */
 function groundAt(x, y) {
   const fx = (x - TERRAIN.bounds.minX) / T_DX, fy = (y - TERRAIN.bounds.minY) / T_DY;
@@ -187,10 +194,23 @@ function channelWidth(o, dir, ownName) {
 }
 
 const minClearanceAll = (p) => Math.min(...polygons.map((q) => clearance(p, q.points)));
+/**
+ * Bản Mòng (`bedOnTerrain`): a lake-bed base stands only where the IFC terrain
+ * exists and lies at or below LAKE.bedMaxGround (under water at MNC), and its
+ * level is the IFC ground there. Huổi Vanh: no condition (its IFC reads above
+ * the water under the rafts), the base is on the design bed of its raft.
+ */
+const bedSiteOk = (p) => {
+  if (!LAKE.bedOnTerrain) return true;
+  const g = groundAt(p.x, p.y);
+  return g !== null && g <= LAKE.bedMaxGround;
+};
+/** Clear distance of a lake-bed base site to every raft, or -Infinity where no base may stand. */
+const bedStandoff = (p) => (bedSiteOk(p) ? minClearanceAll(p) : -Infinity);
 
 /** Is the line cleat->pile acceptable against the rest of the network? */
 function lineFeasible(cleat, pile, raftName, ignore) {
-  if (minClearanceAll(pile) < MIN_STANDOFF) return false;
+  if (bedStandoff(pile) < MIN_STANDOFF) return false;
   for (const c of coords) {
     if (c === ignore) continue;
     if (dist(anchorOf(c), pile) < (c.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP)) return false;
@@ -238,7 +258,10 @@ function placePile(cleat, normal, raftName, ignore) {
 }
 
 const report = { moved: [], added: [], unresolved: [] };
-const bedZ = (raft) => r2(MNDB - (WATER_DEPTH[raft] ?? DEFAULT_DEPTH));
+const bedZ = (raft) => {
+  const own = polygons.find((p) => p.name === raft);
+  return own?.designBed_m ?? r2(MNDB - (WATER_DEPTH[raft] ?? DEFAULT_DEPTH));
+};
 
 function setAnchor(c, pile) {
   c.xAnchor = r2(pile.x);
@@ -289,7 +312,7 @@ for (const k of Object.keys(freedCodes)) freedCodes[k].sort((a, b) => Number(a.s
 // ---- Step 1: bed piles closer than MIN_STANDOFF to any raft (G1) ----------
 for (const c of coords) {
   if (c.type !== 'BED') continue;
-  const standoff = minClearanceAll(anchorOf(c));
+  const standoff = bedStandoff(anchorOf(c));
   if (standoff >= MIN_STANDOFF - 1e-6) continue;
   const w = walker(ringOf[c.raft]);
   const t0 = w.param(cleatOf(c));
@@ -316,13 +339,14 @@ for (const c of coords) {
 // listed here, no two consecutive cleats along the perimeter may be more than
 // MAX_CLEAT_STEP apart. Applied to BÈ 5 on its 2026-09-27 re-plan.
 const MAX_CLEAT_STEP = 15.0; // m
-const GAP_LIMITED = new Set(['BÈ 3A', 'BÈ 5A', 'BÈ 8']); // the merged rafts of the 9-raft plan (2026-10-08)
+const GAP_LIMITED = new Set(LAKE.gapLimited); // Huổi Vanh: the merged rafts of the 9-raft plan (2026-10-08)
 const codeNum = (code) => Number(code.split('-D')[1]);
 
 function addBedLine(raftName, cleat, pile, note) {
   const own = coords.filter((c) => c.raft === raftName);
-  const prefix = own[0].code.split('-D')[0];
-  const next = Math.max(...own.map((c) => codeNum(c.code)), ...(freedCodes[raftName] ?? []).map(codeNum)) + 1;
+  // a raft with no line yet (Bản Mòng starts empty) takes the prefix B<raft number>
+  const prefix = own[0]?.code.split('-D')[0] ?? `B${raftName.replace('BÈ ', '')}`;
+  const next = Math.max(0, ...own.map((c) => codeNum(c.code)), ...(freedCodes[raftName] ?? []).map(codeNum)) + 1;
   const line = {
     raft: raftName, type: 'BED',
     xRaft: r2(cleat.x), yRaft: r2(cleat.y),
@@ -331,7 +355,12 @@ function addBedLine(raftName, cleat, pile, note) {
   };
   setAnchor(line, pile);
   const lastIdx = coords.map((c) => c.raft).lastIndexOf(raftName);
-  coords.splice(lastIdx + 1, 0, line);
+  if (lastIdx < 0) {
+    // first line of the raft: after the lines of the rafts before it in the catalogue
+    const order = polygons.map((p) => p.name), mine = order.indexOf(raftName);
+    const after = coords.findIndex((c) => order.indexOf(c.raft) > mine);
+    coords.splice(after < 0 ? coords.length : after, 0, line);
+  } else coords.splice(lastIdx + 1, 0, line);
   report.added.push(`${line.code}: ${note}, span ${line.span} m, standoff ${minClearanceAll(pile).toFixed(2)} m`);
   return line;
 }
@@ -431,7 +460,8 @@ function widestArc(name) {
   }
   return { ...worst, cx, cy };
 }
-for (const poly of polygons) {
+function closeOpenArcs() {
+ for (const poly of polygons) {
   for (let guard = 0; guard < 10; guard++) {
     const arc = widestArc(poly.name);
     if (arc.gap <= MAX_ARC) break;
@@ -455,7 +485,9 @@ for (const poly of polygons) {
     if (!best) { report.unresolved.push(`${poly.name}: open arc ${arc.gap.toFixed(0)}° cannot be closed`); break; }
     addBedLine(poly.name, best.cleat, best.pile, `closes a ${arc.gap.toFixed(0)}° open arc`);
   }
+ }
 }
+closeOpenArcs();
 
 // ---- Step 2c (R1): near the shore the anchor is a bored pile ---------------
 /** The raft facing a cleat within GAP_LIMIT along its cable (±30°), if any. */
@@ -511,6 +543,27 @@ function overOwnRaft(cleat, p, c) {
  * cable wins. Repeated until nothing changes: a line blocked by a neighbour's
  * old lake-bed line may pass once that neighbour has moved.
  */
+/**
+ * Applies a re-hook of several lines of one raft, and undoes it when it opens an
+ * arc wider than MAX_ARC (wider than before). Returns whether it was kept.
+ */
+function rehookKeepingArcs(raft, ls, apply) {
+  const before = widestArc(raft).gap;
+  const saved = ls.map((l) => ({ ...l }));
+  apply();
+  const after = widestArc(raft).gap;
+  if (after <= MAX_ARC || after <= before + 1e-9) return true;
+  ls.forEach((l, i) => { for (const k of Object.keys(l)) delete l[k]; Object.assign(l, saved[i]); });
+  return false;
+}
+/** Widest arc of the raft of line c with its anchor at p. */
+function arcBefore(c, p) {
+  const keep = { x: c.xAnchor, y: c.yAnchor };
+  c.xAnchor = p.x; c.yAnchor = p.y;
+  const g = widestArc(c.raft).gap;
+  c.xAnchor = keep.x; c.yAnchor = keep.y;
+  return g;
+}
 function convertToShore(eligible) {
  for (let pass = 0, changed = true; changed && pass < 10; pass++) {
  changed = false;
@@ -532,6 +585,12 @@ function convertToShore(eligible) {
     }
   }
   if (!best) continue;
+  // the swing must not open an arc wider than MAX_ARC with no line (Bản Mòng BÈ 5, a narrow raft)
+  const keep = { x: c.xAnchor, y: c.yAnchor };
+  c.xAnchor = best.q.x; c.yAnchor = best.q.y;
+  const opens = widestArc(c.raft).gap > MAX_ARC && widestArc(c.raft).gap > arcBefore(c, keep);
+  c.xAnchor = keep.x; c.yAnchor = keep.y;
+  if (opens) continue;
   changed = true;
   const before = c.span;
   c.type = 'SHORE';
@@ -605,7 +664,7 @@ for (let pass = 0, paired = true; paired && pass < 10; pass++) {
       const mid = { x: r2((a.xAnchor + pick.xAnchor) / 2), y: r2((a.yAnchor + pick.yAnchor) / 2) };
       // the shared position must respect every rule the two single anchors did
       const others = coords.filter((o) => o !== a && o !== pick);
-      const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+      const ok = bedStandoff(mid) >= MIN_STANDOFF - 1e-6
         && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
         && [a, pick].every((l) => others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
           && polygons.every((q) => q.name === l.raft || !segOverRing(cleatOf(l), mid, q.points)));
@@ -644,7 +703,7 @@ for (let pass = 0, paired = true; paired && pass < 10; pass++) {
     let found = null;
     for (const t of [0.5, 0.4, 0.6, 0.3, 0.7, 0.2, 0.8, 0.1, 0.9, 0, 1]) {
       const mid = { x: r2(pa.x + (pb.x - pa.x) * t), y: r2(pa.y + (pb.y - pa.y) * t) };
-      const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+      const ok = bedStandoff(mid) >= MIN_STANDOFF - 1e-6
         && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
         && [a, b].every((l) => dist(cleatOf(l), mid) <= MAX_SHARED_SPAN && swing(l, mid) <= MAX_SWING && !overOwnRaft(cleatOf(l), mid, l)
           && others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
@@ -719,13 +778,14 @@ function untangleToShore() {
           if (!best || total < best.total - 1e-9) best = { perm, total };
         }
         if (!best) continue;
-        group.forEach((l, i) => {
+        const kept = rehookKeepingArcs(c.raft, group, () => group.forEach((l, i) => {
           const p = piles[best.perm[i]];
           l.type = 'SHORE';
           delete l.anchorId; delete l.sharedWith;
           if (p.isNew) l.converted = true; else delete l.converted;
           setAnchor(l, { x: p.x, y: p.y });
-        });
+        }));
+        if (!kept) continue;
         done = `${c.code}: lake-bed line -> shore (R1, re-hooked with ${crossed.map((o) => o.code).join(', ')}; one new pile at ground ${cand.g.toFixed(2)} m), spans ${group.map((l) => l.span).join(' / ')} m`;
         break;
       }
@@ -803,12 +863,15 @@ function untangleKnots() {
             && coords.every((o) => knot.has(o) || waiting(o) || !segCross(cl, p, cleatOf(o), anchorOf(o)));
         });
         if (!good) continue;
-        for (const [l, p] of knot) {
-          l.type = 'SHORE';
-          delete l.anchorId; delete l.sharedWith;
-          if (p.isNew) l.converted = true; else delete l.converted;
-          setAnchor(l, { x: p.x, y: p.y });
-        }
+        const kept = rehookKeepingArcs(c.raft, [...knot.keys()], () => {
+          for (const [l, p] of knot) {
+            l.type = 'SHORE';
+            delete l.anchorId; delete l.sharedWith;
+            if (p.isNew) l.converted = true; else delete l.converted;
+            setAnchor(l, { x: p.x, y: p.y });
+          }
+        });
+        if (!kept) continue;
         done = `${c.code}: lake-bed line -> shore (R1, knot of ${knot.size} cables re-hooked: ${[...knot.keys()].map((l) => l.code).join(', ')}; one new pile at ground ${cand.g.toFixed(2)} m), longest ${Math.max(...[...knot.keys()].map((l) => l.span))} m`;
         break;
       }
@@ -898,7 +961,7 @@ for (const c of coords.filter((q) => q.type === 'BED' && !q.sharedWith)) {
     // not on top of a cleat the raft already has
     if (coords.some((o) => o.raft === f.name && dist(cleatOf(o), pt) < 2)) continue;
     for (const base of [{ x: r2((cleat.x + pt.x) / 2), y: r2((cleat.y + pt.y) / 2) }, base0]) {
-      if (minClearanceAll(base) < MIN_STANDOFF - 1e-6) continue;
+      if (bedStandoff(base) < MIN_STANDOFF - 1e-6) continue;
       if (others.some((o) => dist(anchorOf(o), base) < (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)) continue;
       const la = dist(cleat, base), lb = dist(pt, base);
       if (la > MAX_SHARED_SPAN || lb > MAX_SHARED_SPAN || la < 3 || lb < 3) continue;
@@ -935,6 +998,11 @@ if (process.argv.includes('--explain')) {
     console.log('WHY', c.code, 'cleat', cleat.x.toFixed(0), cleat.y.toFixed(0), 'shore-level points in fan:', pts, [...tally.entries()].sort((p, q) => q[1] - p[1]).slice(0, 9).map(([k, v]) => k + ':' + v).join(', '));
   }
 }
+// ---- Step 2e': an arc opened by the moves above (Bản Mòng BÈ 5: a cable swung to the bank left 62°) --------
+// Closed again like Step 2b, with a lake-bed line (swinging it to the bank would re-open the arc).
+// A no-op when every arc is <= MAX_ARC (Huổi Vanh).
+if (polygons.some((p) => widestArc(p.name).gap > MAX_ARC)) closeOpenArcs();
+
 // ---- Step 2f: a shared base stands midway between its two cleats -----------
 // Two cables of equal length pull the base alike from both sides, and neither is steeper than it has to be
 // (the steeper cable is the one that lifts the base). Moved only when the midpoint keeps every rule.
@@ -944,7 +1012,7 @@ for (const a of coords) {
   const mid = { x: r2((a.xRaft + b.xRaft) / 2), y: r2((a.yRaft + b.yRaft) / 2) };
   if (dist(mid, anchorOf(a)) < 0.5) continue;
   const others = coords.filter((o) => o !== a && o !== b);
-  const ok = minClearanceAll(mid) >= MIN_STANDOFF - 1e-6
+  const ok = bedStandoff(mid) >= MIN_STANDOFF - 1e-6
     && others.every((o) => dist(anchorOf(o), mid) >= (o.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP) - 1e-6)
     && [a, b].every((l) => !overOwnRaft(cleatOf(l), mid, l)
       && others.every((o) => !segCross(cleatOf(l), mid, cleatOf(o), anchorOf(o)))
@@ -968,14 +1036,14 @@ for (const a of coords) {
 // Lake-bed base: the DESIGN lake bed (MNDB - design depth). Shore pile: the IFC
 // terrain at the pile, project datum (the older files carried IFC-datum values).
 for (const c of coords) {
-  if (c.type === 'BED') c.zAnchor = bedZ(c.raft);
+  if (c.type === 'BED') c.zAnchor = LAKE.bedOnTerrain ? r2(groundAt(c.xAnchor, c.yAnchor)) : bedZ(c.raft);
   else { const g = groundAt(c.xAnchor, c.yAnchor); if (g !== null) c.zAnchor = r2(g); }
 }
 // A base shared by two rafts has ONE level: the deeper of the two design beds (steeper cables, more uplift).
 for (const c of coords) {
   if (c.type !== 'BED' || !c.sharedWith) continue;
   const o = coords.find((q) => q.code === c.sharedWith);
-  c.zAnchor = Math.min(bedZ(c.raft), bedZ(o.raft));
+  if (!LAKE.bedOnTerrain) c.zAnchor = Math.min(bedZ(c.raft), bedZ(o.raft)); // Bản Mòng: one point, one ground level already
 }
 
 // ------------------------------------------------------------------ verify
@@ -986,6 +1054,7 @@ for (const poly of polygons) {
 }
 for (const c of coords) {
   if (c.type === 'BED' && minClearanceAll(anchorOf(c)) < MIN_STANDOFF - 1e-6) errors.push(`G1 ${c.code}`);
+  if (c.type === 'BED' && !bedSiteOk(anchorOf(c))) errors.push(`bed site ${c.code}: no IFC ground, or ground above ${LAKE.bedMaxGround} m`);
   if (c.type === 'SHORE' && polygons.some((q) => inRing(anchorOf(c), q.points))) errors.push(`shore pile in raft ${c.code}`);
   for (const q of polygons) if (q.name !== c.raft && segOverRing(cleatOf(c), anchorOf(c), q.points)) errors.push(`G3 ${c.code} over ${q.name}`);
 }

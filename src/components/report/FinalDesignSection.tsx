@@ -5,6 +5,7 @@ import {
   buildFinalDesign, buildFinalDesignWorkbook, finalDesignFileName, finalDesignNote, vn, FINAL_OPTION_DATE, FINAL_OPTION_TITLE
 } from '../../lib/io/finalDesignWorkbook';
 import * as XLSX from 'xlsx';
+import { ACTIVE_LAKE_ID } from '../../data/lakes';
 
 /** One hook so the report, the quotation and the Excel button use the same settled design. */
 export function useFinalDesign() {
@@ -50,9 +51,13 @@ export const FinalDesignSection: React.FC = () => {
     <div className="print-page bg-white p-8 md:p-12 rounded-xl border border-slate-200 shadow-sm text-slate-900 space-y-5 max-w-4xl mx-auto">
       <div className="border-b-2 border-slate-900 pb-3 flex items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-bold text-brand-600 uppercase tracking-widest">Thuyết minh tính toán — phương án chốt (cả 9 bè)</div>
+          <div className="text-xs font-bold text-brand-600 uppercase tracking-widest">Thuyết minh tính toán — phương án chốt (cả {d.rafts.length} bè)</div>
           <h1 className="text-lg md:text-xl font-black mt-1">{FINAL_OPTION_TITLE}</h1>
-          <div className="text-xs text-slate-600 mt-1">Chủ đầu tư chốt ngày {FINAL_OPTION_DATE} · {d.name}</div>
+          <div className="text-xs text-slate-600 mt-1">
+            {ACTIVE_LAKE_ID === 'ban-mong'
+              ? <>Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày {FINAL_OPTION_DATE} (CHƯA chốt riêng cho Bản Mòng) · {d.name}</>
+              : <>Chủ đầu tư chốt ngày {FINAL_OPTION_DATE} · {d.name}</>}
+          </div>
         </div>
         <FinalDesignExcelButton />
       </div>

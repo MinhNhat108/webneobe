@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Table, CheckCircle2, XCircle, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
+import { ACTIVE_LAKE } from '../../data/lakes';
 
 const VerdictPill: React.FC<{ verdict: 'PASS' | 'FAIL' | 'NA' }> = ({ verdict }) => {
   if (verdict === 'PASS') {
@@ -47,7 +48,7 @@ export const RaftsOverviewTable: React.FC = () => {
           </div>
           <div>
             <h3 className="card-title">
-              Bảng Tổng Hợp {raftsSummary.length} Cụm Bè Pin Mặt Trời (Hồ Huổi Vanh)
+              Bảng Tổng Hợp {raftsSummary.length} Cụm Bè Pin Mặt Trời ({ACTIVE_LAKE.name})
             </h3>
             <p className="card-subtitle">
               Kết quả tính toán chi tiết từng bè: tải trọng, lực căng cáp, hệ số an toàn neo/cọc và kết luận ĐẠT/KHÔNG ĐẠT

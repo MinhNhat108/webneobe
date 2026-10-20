@@ -11,8 +11,14 @@
  *
  * That gap must be visible wherever a result is shown, printed or drawn —
  * this module is the single source of the wording.
+ *
+ * Hồ Bản Mòng (Sơn La): its TCVN 2737:2023 wind zone has not been looked up
+ * yet, so the Huổi Vanh code wind is kept as a PROVISIONAL yardstick and the
+ * caveat says so (src/data/lakes.ts, `codeWind.confirmed`).
  */
-export const CODE_WIND_SPEED_MS = 29.7;
+import { ACTIVE_LAKE } from '../../data/lakes';
+
+export const CODE_WIND_SPEED_MS = ACTIVE_LAKE.codeWind.speed_ms;
 /** The wind speed to enter in Tab 2 to check the storm case. */
 export const STORM_CHECK_WIND_MS = 30;
 
@@ -28,8 +34,9 @@ export function designWindCaveat(windSpeed_ms: number | undefined): string | nul
   const v = windSpeed_ms as number;
   const vn = (x: number, d: number) => x.toFixed(d).replace('.', ',');
   return (
-    `Gió tính toán V = ${vn(v, v % 1 === 0 ? 0 : 1)} m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B ` +
-    `(V ≈ ${vn(CODE_WIND_SPEED_MS, 1)} m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng ${Math.round(windPressureRatio(v) * 100)}% mức tiêu chuẩn. ` +
+    `Gió tính toán V = ${vn(v, v % 1 === 0 ? 0 : 1)} m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng ${ACTIVE_LAKE.codeWind.zone} ` +
+    (ACTIVE_LAKE.codeWind.confirmed ? '' : `(MỐC TẠM lấy theo Huổi Vanh — vùng gió của ${ACTIVE_LAKE.name} chưa tra cứu) `) +
+    `(V ≈ ${vn(CODE_WIND_SPEED_MS, 1)} m/s, q0 = ${vn(ACTIVE_LAKE.codeWind.q0_kPa, 2)} kN/m²): áp lực gió chỉ bằng ${Math.round(windPressureRatio(v) * 100)}% mức tiêu chuẩn. ` +
     `Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = ${STORM_CHECK_WIND_MS} m/s ở Tab 2 để kiểm tra.`
   );
 }

@@ -38,6 +38,12 @@ export interface RaftSummaryItem {
   /** Piles per shore / lake-bed anchor point (omit for 1). BÈ 5 uses twin piles. */
   shorePilesPerPoint?: number;
   bedPilesPerPoint?: number;
+  /**
+   * Hồ Bản Mòng: the raft's lines (bearing, span, pin level), its floating level
+   * and its smallest gap to another raft — the input of the equilibrium
+   * analysis that gives the line tension (src/lib/calc/mooringEquilibrium.ts).
+   */
+  mooringLayout?: import('../lib/calc/mooringEquilibrium').MooringLayoutInput;
 }
 
 export interface MooringCoordinate {
@@ -82,10 +88,14 @@ export interface MooringCoordinate {
  *    for the merged shapes.
  */
 import raftCatalogue from './huoiVanhRaftCatalogue.json';
+import { ACTIVE_LAKE_ID } from './lakes';
+import { BAN_MONG_RAFTS, banMongProjectFrom } from './banMongProject';
 
-export const HUOI_VANH_RAFTS: RaftSummaryItem[] = raftCatalogue as RaftSummaryItem[];
+/** The Huổi Vanh rafts, whichever lake is shown. */
+export const HUOI_VANH_RAFT_CATALOGUE: RaftSummaryItem[] = raftCatalogue as RaftSummaryItem[];
 
-export const HUOI_VANH_DEFAULT_PROJECT = {
+/** The Huổi Vanh project, whichever lake is shown (the catalogue script of Huổi Vanh sizes against it). */
+export const HUOI_VANH_PROJECT = {
   id: 'huoi-vanh-fpv',
   name: 'Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh',
   code: 'HV-FPV-2026',
@@ -260,5 +270,15 @@ export const HUOI_VANH_DEFAULT_PROJECT = {
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx'
     }
   ],
-  raftsSummary: HUOI_VANH_RAFTS
+  raftsSummary: HUOI_VANH_RAFT_CATALOGUE
 };
+
+/** The Hồ Bản Mòng project (src/data/banMongProject.ts). */
+export const BAN_MONG_PROJECT = banMongProjectFrom(HUOI_VANH_PROJECT);
+
+/**
+ * The ACTIVE lake's raft catalogue and default project (src/data/lakes.ts).
+ * The names are historical: with Hồ Bản Mòng selected they hold Bản Mòng.
+ */
+export const HUOI_VANH_RAFTS: RaftSummaryItem[] = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_RAFTS : HUOI_VANH_RAFT_CATALOGUE;
+export const HUOI_VANH_DEFAULT_PROJECT: typeof HUOI_VANH_PROJECT = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;

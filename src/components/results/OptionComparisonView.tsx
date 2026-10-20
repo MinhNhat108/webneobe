@@ -6,7 +6,7 @@ import { compareMooringOptions } from '../../lib/calc/technicalComparison';
 import { DEADWEIGHT_DEFAULTS, DeadweightParams } from '../../lib/calc/deadweight';
 import type { ProjectState } from '../../lib/calc/types';
 import { findBlockClashes } from '../../lib/io/deadweightSchedule';
-import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
+import { MOORING_LINES_V2, LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
 
@@ -104,7 +104,7 @@ export const OptionComparisonView: React.FC<{ compact?: boolean }> = ({ compact 
             So Sánh Phương Án Neo Đáy Đối Chứng: Cọc Đóng BTCT 350×350 (PA1) & Khối Bê Tông Trọng Lực (PA2)
           </h2>
           <p className="text-slate-500 mt-0.5">
-            Phương án thiết kế chính thức được phê duyệt là <strong>PA3: Đế BTCT + Vít Xoắn Dùng Chung (32 đế cho 64 dây đáy, 100% dùng chung)</strong>. Bảng dưới đây so sánh đối chứng kỹ thuật với 2 phương án truyền thống là PA1 (Cọc đóng BTCT) và PA2 (Khối bê tông trọng lực) trên cùng lực căng thiết kế T_max và góc cáp của từng bè.
+            Phương án thiết kế chính thức được phê duyệt là <strong>PA3: Đế BTCT + Vít Xoắn ({LAYOUT_COUNTS.bedBases} đế cho {LAYOUT_COUNTS.bedLines} dây đáy, {LAYOUT_COUNTS.sharedBases} đế dùng chung)</strong>. Bảng dưới đây so sánh đối chứng kỹ thuật với 2 phương án truyền thống là PA1 (Cọc đóng BTCT) và PA2 (Khối bê tông trọng lực) trên cùng lực căng thiết kế T_max và góc cáp của từng bè.
           </p>
         </div>
       </div>

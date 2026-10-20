@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ActiveSection } from '../layout/Sidebar';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import {
   BookOpen,
   FolderKanban,
@@ -92,6 +93,12 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {ACTIVE_LAKE_ID !== 'huoi-vanh' && (
+        <div className="p-3 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
+          ⚠️ Các ví dụ số trong hướng dẫn này (số bè, số cọc, cao trình MNC 380,0 / MNDB 384,5 / MNLKT 386,0 m, độ chùng cáp…) là của Hồ Huổi Vanh.
+          Với {ACTIVE_LAKE.name}, cách tính giống hệt; số liệu đúng của hồ xem ở các Mục 1–10 (MNC {ACTIVE_LAKE.levels.mnc_m} / MNDB {ACTIVE_LAKE.levels.mndb_m} / MNLKT {ACTIVE_LAKE.levels.mnlkt_m} m).
+        </div>
+      )}
       {/* Modern Header Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 border border-slate-800 text-white p-6 sm:p-8 shadow-xl">
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />

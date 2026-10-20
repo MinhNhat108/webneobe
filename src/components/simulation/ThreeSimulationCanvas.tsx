@@ -5,6 +5,8 @@ import { WindParams, LayerVisibility, SelectedElement, LoadedIfcMetadata } from 
 import { useProjectStore } from '../../store/useProjectStore';
 import {
   MNDB_M,
+  LOWEST_GROUND_M,
+  SCENE_SCALE,
   TERRAIN_NX,
   TERRAIN_NY,
   nodeGround,
@@ -137,7 +139,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     useImperativeHandle(ref, () => ({
       resetCamera: () => {
         if (!cameraRef.current || !controlsRef.current) return;
-        cameraRef.current.position.set(0, 320, 420);
+        cameraRef.current.position.set(0, 320 * SCENE_SCALE, 420 * SCENE_SCALE);
         controlsRef.current.target.set(0, 0, 0);
         controlsRef.current.update();
       },
@@ -145,15 +147,15 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
         if (!cameraRef.current || !controlsRef.current) return;
         switch (preset) {
           case 'overview':
-            cameraRef.current.position.set(0, 320, 420);
+            cameraRef.current.position.set(0, 320 * SCENE_SCALE, 420 * SCENE_SCALE);
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'topDown':
-            cameraRef.current.position.set(0, 750, 0.1);
+            cameraRef.current.position.set(0, 750 * SCENE_SCALE, 0.1);
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'waterLevel':
-            cameraRef.current.position.set(0, 12, 280);
+            cameraRef.current.position.set(0, 12, 280 * SCENE_SCALE);
             controlsRef.current.target.set(0, 0, 0);
             break;
           case 'raftFocus': {
@@ -187,7 +189,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       sceneRef.current = scene;
 
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.5, 4000);
-      camera.position.set(0, 320, 420);
+      camera.position.set(0, 320 * SCENE_SCALE, 420 * SCENE_SCALE);
       cameraRef.current = camera;
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
@@ -203,7 +205,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       controls.dampingFactor = 0.08;
       controls.maxPolarAngle = Math.PI / 2 - 0.02;
       controls.minDistance = 8;
-      controls.maxDistance = 2200;
+      controls.maxDistance = 2200 * SCENE_SCALE;
       controlsRef.current = controls;
 
       scene.add(new THREE.AmbientLight(0xffffff, 0.65));
@@ -259,11 +261,11 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       scene.add(pilesGroupRef.current);
       scene.add(axesGridGroupRef.current);
 
-      const grid = new THREE.GridHelper(1200, 60, 0x0284c7, 0xcbd5e1);
-      grid.position.y = 376.8 - 17.5 - MNDB_M - 2; // just under the lowest modelled ground
+      const grid = new THREE.GridHelper(1200 * SCENE_SCALE, 60, 0x0284c7, 0xcbd5e1);
+      grid.position.y = LOWEST_GROUND_M - MNDB_M - 2; // just under the lowest modelled ground
       axesGridGroupRef.current.add(grid);
       const compass = new THREE.Group();
-      compass.position.set(380, 25, -380);
+      compass.position.set(380 * SCENE_SCALE, 25, -380 * SCENE_SCALE);
       const ring = new THREE.RingGeometry(18, 20, 32);
       ring.rotateX(-Math.PI / 2);
       compass.add(new THREE.Mesh(ring, new THREE.MeshBasicMaterial({ color: 0x0284c7, side: THREE.DoubleSide })));

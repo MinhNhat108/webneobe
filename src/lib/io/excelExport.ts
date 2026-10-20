@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import { ProjectState, CalcResults } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
+import { ACTIVE_LAKE } from '../../data/lakes';
 import { buildPileSchedule, summarisePileMaterials, PileScheduleRow } from './pileSchedule';
 import { STIRRUP_DIA_MM } from '../calc/pileCage';
 
@@ -81,7 +82,7 @@ export function exportProjectToExcel(
     'η neo đáy ngang / trượt', 'η neo đáy nhổ', 'Neo đáy', 'Hạng mục chi phối', 'Kết luận'
   ];
   const masterRows: any[][] = [
-    [`BẢNG TỔNG HỢP ${rafts ? rafts.length : 1} CỤM BÈ PIN HỒ HUỔI VANH — MASTER SHEET`],
+    [`BẢNG TỔNG HỢP ${rafts ? rafts.length : 1} CỤM BÈ PIN ${ACTIVE_LAKE.name.toUpperCase()} — MASTER SHEET`],
     [''],
     masterHeader
   ];

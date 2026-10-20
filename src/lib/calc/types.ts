@@ -45,6 +45,8 @@ export interface RaftInput {
 }
 
 export interface EnvInput {
+  /** Dead water level MNC, m (Hồ Bản Mòng: the low end of the mooring analysis). */
+  mnc_m?: number;
   mndbt_m?: number;
   mncn_m?: number;
   maxDepth_m?: number;
@@ -110,6 +112,18 @@ export interface LineInput {
   unitWeightAir_kgpm: number;
   pretension_kN: number;
   focusFactor: number;
+  /**
+   * Hồ Bản Mòng: the raft's real lines (bearing, span, pin level). When given,
+   * the line tension comes from the quasi-static equilibrium of the raft on
+   * these lines at every level (mooringEquilibrium.ts), not from focusFactor /
+   * horizontalAngle_deg. Set per raft by buildRaftProjectState from the catalogue.
+   */
+  layout?: import('./mooringEquilibrium').MooringLayoutInput;
+  /** With `layout`: 'fixed' = cables cut once; 'seasonal' = re-tensioned every `adjustStep_m` of level change. */
+  levelCompensation?: 'fixed' | 'seasonal';
+  adjustStep_m?: number;
+  /** Axial stiffness EA of the rope as a multiple of its MBL (polyester ~10–20; 15 assumed). */
+  eaPerMbl?: number;
   totalLength_m: number;
   groundedLengthMin_m: number;
   seabedFrictionCoef: number;
@@ -429,7 +443,9 @@ export interface CalcResults {
   /** Tension by the geometric N_eff / cos(alpha) distribution, kN. */
   t_geometric_kN: number;
   /** Which method governed (the more onerous one). */
-  tensionMethod: 'focus' | 'geometric';
+  tensionMethod: 'focus' | 'geometric' | 'equilibrium';
+  /** Hồ Bản Mòng: the equilibrium analysis the tension comes from (line.layout given). */
+  mooringAnalysis?: import('./mooringEquilibrium').EqResult;
   t_max_intact_kN: number;
   t_max_damaged_kN: number;
   h_line_intact_kN: number;

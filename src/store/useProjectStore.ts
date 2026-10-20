@@ -8,8 +8,16 @@ import type { MooringOption } from '../lib/calc/technicalComparison';
 import type { DeadweightParams } from '../lib/calc/deadweight';
 import type { ScrewBaseParams } from '../lib/calc/screwAnchorBed';
 import { CostParams, DEFAULT_COST_PARAMS } from '../lib/calc/costEstimate';
+import { ACTIVE_LAKE } from '../data/lakes';
+
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
+/**
+ * Id of the built-in project of the ACTIVE lake ('huoi-vanh-fpv' / 'ban-mong-fpv').
+ * Each lake keeps its own browser storage (ACTIVE_LAKE.storageKey), so the
+ * Huổi Vanh migrations below never meet a Bản Mòng project.
+ */
+const BUILT_IN_ID = HUOI_VANH_DEFAULT_PROJECT.id;
 /**
  * The project as it opens: BÈ 1 exactly as designed. HUOI_VANH_DEFAULT_PROJECT
  * alone is NOT BÈ 1 (it carries older line/pile defaults, e.g. PES-28, 20
@@ -97,11 +105,11 @@ export const useProjectStore = create<ProjectStore>()(
       currentProject: HUOI_VANH_START,
       projectList: [
         {
-          id: 'huoi-vanh-fpv',
-          name: 'Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh',
-          code: 'HV-FPV-2026',
-          location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
-          date: '2026-08-19',
+          id: BUILT_IN_ID,
+          name: HUOI_VANH_DEFAULT_PROJECT.meta.name,
+          code: HUOI_VANH_DEFAULT_PROJECT.meta.code,
+          location: HUOI_VANH_DEFAULT_PROJECT.location,
+          date: HUOI_VANH_DEFAULT_PROJECT.date,
           systemType: 'solar_fpv'
         }
       ],
@@ -205,7 +213,7 @@ export const useProjectStore = create<ProjectStore>()(
       },
 
       switchProject: (projectId: string) => {
-        if (projectId === 'huoi-vanh-fpv') {
+        if (projectId === BUILT_IN_ID) {
           get().resetToHuoiVanh();
         }
       },
@@ -383,7 +391,7 @@ export const useProjectStore = create<ProjectStore>()(
       }
     }),
     {
-      name: 'mooring-calc-storage',
+      name: ACTIVE_LAKE.storageKey,
       version: 18,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
@@ -406,7 +414,7 @@ export const useProjectStore = create<ProjectStore>()(
             && persistedState.raftsSummary.some((r: any) => r?.id === 8);
           if (hasStaleRaft8) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
-            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            if (persistedState.currentProject?.id === BUILT_IN_ID) {
               persistedState.currentProject = HUOI_VANH_START;
               persistedState.activeRaftId = 1;
             }
@@ -425,7 +433,7 @@ export const useProjectStore = create<ProjectStore>()(
             && persistedState.raftsSummary.some((r: any) => (r?.id ?? 0) > 12 || r?.name === 'BÈ 13');
           if (hasStaleRaft13) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
-            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            if (persistedState.currentProject?.id === BUILT_IN_ID) {
               persistedState.currentProject = HUOI_VANH_START;
               persistedState.activeRaftId = 1;
             }
@@ -445,7 +453,7 @@ export const useProjectStore = create<ProjectStore>()(
           const v2Area = HUOI_VANH_RAFTS.reduce((s, r) => s + r.area_m2, 0);
           if (isHuoiVanhList && cachedArea !== v2Area) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
-            if (persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+            if (persistedState.currentProject?.id === BUILT_IN_ID) {
               persistedState.currentProject = HUOI_VANH_START;
               persistedState.activeRaftId = 1;
             }
@@ -459,7 +467,7 @@ export const useProjectStore = create<ProjectStore>()(
           // project under "BÈ 1" (PES-28, 20 lines), which would read as a
           // trial edit — re-apply the active raft's design values once,
           // keeping the project-wide inputs the user set.
-          if (version < 9 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          if (version < 9 && persistedState.currentProject?.id === BUILT_IN_ID) {
             const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId) ?? HUOI_VANH_RAFTS[0];
             persistedState.activeRaftId = item.id;
             persistedState.currentProject = buildRaftProjectState(persistedState.currentProject, item, DEFAULT_ANCHOR);
@@ -482,7 +490,7 @@ export const useProjectStore = create<ProjectStore>()(
           // inputs; project-wide inputs the user set are kept.
           // v14 (2026-10-04): 4 corner bars per pile, shore cable shackled 0.1 m above the ground.
           // v15 (2026-10-04): shore piles are round bored piles D350.
-          if (version < 15 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          if (version < 15 && persistedState.currentProject?.id === BUILT_IN_ID) {
             if (persistedState.currentProject.anchor) {
               persistedState.currentProject.anchor.shoreArm_e_m = DEFAULT_ANCHOR.shoreArm_e_m;
               persistedState.currentProject.anchor.shorePileShape = DEFAULT_ANCHOR.shorePileShape;
@@ -497,14 +505,14 @@ export const useProjectStore = create<ProjectStore>()(
           // lake-bed anchors on RC bases with screw piles. Raft ids and names
           // changed meaning, so a cached Huổi Vanh project restarts from the
           // new design; the quotation prices and a user's own project are kept.
-          if (version < 16 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          if (version < 16 && persistedState.currentProject?.id === BUILT_IN_ID) {
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             persistedState.activeRaftId = HUOI_VANH_RAFTS[0].id;
             persistedState.currentProject = HUOI_VANH_START;
           }
 
           // v17 (2026-10-08): client instruction default wind speed 20 m/s (down from 30 m/s)
-          if (version < 17 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          if (version < 17 && persistedState.currentProject?.id === BUILT_IN_ID) {
             if (persistedState.currentProject.env) {
               persistedState.currentProject.env.windSpeed_ms = 20.0;
             }
@@ -514,7 +522,7 @@ export const useProjectStore = create<ProjectStore>()(
           }
 
           // v18 (2026-10-08): enforce 9-raft layout, default PA3 screw base, 20 m/s wind
-          if (version < 18 && persistedState.currentProject?.id === 'huoi-vanh-fpv') {
+          if (version < 18 && persistedState.currentProject?.id === BUILT_IN_ID) {
             // HUOI_VANH_START already carries PA3 and the 20 m/s default; it is a shared
             // constant and must not be written to.
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
@@ -535,7 +543,7 @@ export const useProjectStore = create<ProjectStore>()(
       onRehydrateStorage: () => (state) => {
         if (state && state.currentProject) {
           state.currentProject.systemType = 'solar_fpv';
-          if (state.currentProject.id === 'huoi-vanh-fpv') {
+          if (state.currentProject.id === BUILT_IN_ID) {
             // The raft list of the Huổi Vanh project is design data shipped with the app,
             // never something the browser may keep an older copy of. Whatever the stored
             // version says:
@@ -553,6 +561,23 @@ export const useProjectStore = create<ProjectStore>()(
               state.currentProject = HUOI_VANH_START;
             } else if (JSON.stringify(state.raftsSummary) !== JSON.stringify(HUOI_VANH_RAFTS)) {
               state.raftsSummary = HUOI_VANH_RAFTS;
+            }
+            // Hồ Bản Mòng: the active raft's line layout (equilibrium analysis) and the project's level
+            // fields come from the shipped design, whatever an older browser copy holds.
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === state.activeRaftId);
+            if (item?.mooringLayout) {
+              const dflt = HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState;
+              state.currentProject = {
+                ...state.currentProject,
+                env: { ...state.currentProject.env, mnc_m: state.currentProject.env.mnc_m ?? dflt.env.mnc_m },
+                line: {
+                  ...state.currentProject.line,
+                  layout: item.mooringLayout,
+                  levelCompensation: state.currentProject.line.levelCompensation ?? dflt.line.levelCompensation,
+                  adjustStep_m: state.currentProject.line.adjustStep_m ?? dflt.line.adjustStep_m,
+                  eaPerMbl: state.currentProject.line.eaPerMbl ?? dflt.line.eaPerMbl
+                }
+              };
             }
             // The built-in documents (served from the site) always follow the current list, so a browser that
             // saved an earlier list still gets new or regenerated files; the user's own uploads are kept.

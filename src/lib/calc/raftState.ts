@@ -43,7 +43,9 @@ export function buildRaftProjectState(
       focusFactor: raftItem.focusFactor,
       shoreLineCount: raftItem.shoreAnchors,
       bedLineCount: raftItem.bedAnchors,
-      mbl_kN: CABLE_MBL_KN[raftItem.selectedCable] ?? 172
+      mbl_kN: CABLE_MBL_KN[raftItem.selectedCable] ?? 172,
+      // Hồ Bản Mòng: the raft's real lines for the equilibrium analysis (absent for Huổi Vanh)
+      layout: raftItem.mooringLayout
     },
     env: {
       ...base.env,

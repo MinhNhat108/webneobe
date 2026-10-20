@@ -16,10 +16,20 @@
  * retired on 2026-09-30 once the 304-pile layout was final. They remain only
  * as history for the V1 scripts (`extractRaftPolygons.mjs`,
  * `repairMooringLayout.mjs`).
+ *
+ * With Hồ Bản Mòng selected (src/data/lakes.ts) the same exports hold the
+ * Bản Mòng layout: src/data/banMong/raftPolygons.json and coordinates.json,
+ * made by scripts/importRaftLayoutBanMong.mjs and
+ * `planMooringLayoutV2.mjs --lake=ban-mong` (8 rafts, 268 lines).
  */
 import polygonsV2 from './huoiVanhRaftPolygons_v2.json';
 import linesV2 from './huoiVanhCoordinates_v2.json';
+import banMongPolygons from './banMong/raftPolygons.json';
+import banMongLines from './banMong/coordinates.json';
 import type { MooringCoordinate } from './huoiVanhProject';
+import { ACTIVE_LAKE_ID } from './lakes';
+
+const BAN_MONG = ACTIVE_LAKE_ID === 'ban-mong';
 
 export interface RaftPolygonV2 {
   id: number;
@@ -28,10 +38,13 @@ export interface RaftPolygonV2 {
   perimeter_m: number;
   centroid: { x: number; y: number };
   points: Array<{ x: number; y: number }>;
+  /** Bản Mòng: design lake bed of the raft, median IFC ground under the outline (m). */
+  designBed_m?: number;
 }
 
-export const RAFT_POLYGONS_V2: RaftPolygonV2[] = polygonsV2 as RaftPolygonV2[];
-export const MOORING_LINES_V2: MooringCoordinate[] = linesV2 as MooringCoordinate[];
+/** The active lake's raft outlines and mooring lines. */
+export const RAFT_POLYGONS_V2: RaftPolygonV2[] = (BAN_MONG ? banMongPolygons : polygonsV2) as RaftPolygonV2[];
+export const MOORING_LINES_V2: MooringCoordinate[] = (BAN_MONG ? banMongLines : linesV2) as MooringCoordinate[];
 
 /** One lake-bed base with the line(s) tied to it: one, or two facing lines of two rafts (a shared base). */
 export interface BedAnchor {

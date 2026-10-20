@@ -2,6 +2,7 @@ import { CalcResults, ProjectState } from '../calc/types';
 import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
 import { buildPileCage, PileCage, STIRRUP_DIA_MM, barUnitWeight_kg_m } from '../calc/pileCage';
+import { ACTIVE_LAKE } from '../../data/lakes';
 
 /** A surveyed raft-cluster boundary, site-local metres. */
 export interface RaftPolygon {
@@ -139,7 +140,7 @@ export function buildPileSchedule(
     const PmaxAtLopt_kN = opt?.effectivePmax_kN ?? 0;
 
     return {
-      pileId: `HV-P${String(i + 1).padStart(3, '0')}`,
+      pileId: `${ACTIVE_LAKE.codePrefix}-P${String(i + 1).padStart(3, '0')}`,
       code: c.code,
       raft: c.raft,
       type: c.type,

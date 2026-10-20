@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Anchor, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { LAKES } from '../../data/lakes';
 
 interface PasswordGateProps {
   onUnlock: () => void;
@@ -68,7 +69,7 @@ export const PasswordGate: React.FC<PasswordGateProps> = ({ onUnlock }) => {
               Phần Mềm Tính Hệ Neo Bè
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Dự án Điện Mặt Trời Nổi Hồ Huổi Vanh (9 Cụm Bè Pin Nổi)
+              Dự án Điện Mặt Trời Nổi {Object.values(LAKES).map((l) => l.name).join(' · ')}
             </p>
           </div>
         </div>

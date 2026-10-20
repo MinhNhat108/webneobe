@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { FolderKanban, Plus, RefreshCw, Layers } from 'lucide-react';
+import { ACTIVE_LAKE } from '../../data/lakes';
 
 export const ProjectForm: React.FC = () => {
   const {
@@ -35,10 +36,10 @@ export const ProjectForm: React.FC = () => {
             type="button"
             onClick={() => resetToHuoiVanh()}
             className="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center gap-1.5 transition-colors"
-            title="Tải lại dữ liệu dự án Hồ Huổi Vanh"
+            title={`Tải lại dữ liệu dự án ${ACTIVE_LAKE.name}`}
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            Dữ liệu gốc Huổi Vanh
+            Dữ liệu gốc {ACTIVE_LAKE.shortName}
           </button>
 
           <button
@@ -73,7 +74,7 @@ export const ProjectForm: React.FC = () => {
         </div>
       </div>
 
-      {/* Multi-Raft Quick Bar (the Huổi Vanh rafts) */}
+      {/* Multi-Raft Quick Bar (the rafts of the active lake) */}
       {currentProject.systemType === 'solar_fpv' && raftsSummary && raftsSummary.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -129,7 +130,7 @@ export const ProjectForm: React.FC = () => {
             value={meta.code}
             onChange={(e) => updateMeta({ code: e.target.value })}
             className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none font-mono"
-            placeholder="HV-FPV-2026"
+            placeholder={`${ACTIVE_LAKE.codePrefix}-FPV-2026`}
           />
         </div>
 

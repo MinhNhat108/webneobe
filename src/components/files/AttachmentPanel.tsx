@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Attachment } from '../../lib/calc/types';
-import { HUOI_VANH_DEFAULT_PROJECT } from '../../data/huoiVanhProject';
+import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
+import { ACTIVE_LAKE } from '../../data/lakes';
 import { resolveAssetUrl } from '../../lib/utils/assetUrl';
 import { PdfViewer } from './PdfViewer';
 import { ImageViewer } from './ImageViewer';
@@ -26,7 +27,7 @@ export const AttachmentPanel: React.FC = () => {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Restore default attachments for Huổi Vanh project
+  // Restore the default attachments of the active lake's project
   const handleRestoreHuoiVanhDocs = () => {
     const defaultAtts = (HUOI_VANH_DEFAULT_PROJECT as any).attachments || [];
     useProjectStore.setState((state) => ({
@@ -85,7 +86,7 @@ export const AttachmentPanel: React.FC = () => {
               Tài Liệu Đính Kèm & Bản Vẽ Kỹ Thuật
             </h3>
             <p className="card-subtitle">
-              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf) 9 bè, thuyết minh PDF và xem trước trực tiếp trên web
+              Quản lý hồ sơ thiết kế, bản vẽ CAD (.dxf) {HUOI_VANH_RAFTS.length} bè, thuyết minh PDF và xem trước trực tiếp trên web
             </p>
           </div>
         </div>
@@ -112,12 +113,12 @@ export const AttachmentPanel: React.FC = () => {
             />
           </label>
 
-          {/* Preset Huổi Vanh project docs banner */}
+          {/* Preset project docs banner (active lake) */}
           <div className="p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 text-xs space-y-2">
             <div className="flex items-center justify-between">
               <div className="font-semibold text-indigo-900 flex items-center gap-1.5">
                 <FileCheck className="w-4 h-4 text-indigo-600" />
-                Hồ sơ kỹ thuật Hồ Huổi Vanh:
+                Hồ sơ kỹ thuật {ACTIVE_LAKE.name}:
               </div>
               <button
                 type="button"

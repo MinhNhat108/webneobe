@@ -22,6 +22,7 @@ import { OptionComparisonView } from '../results/OptionComparisonView';
 import { ScrewBasePanel } from '../results/ScrewBasePanel';
 import { CostEstimateView } from '../cost/CostEstimateView';
 import { ShorePileHeadDetail } from '../results/ShorePileHeadDetail';
+import { MooringLevelPanel } from '../results/MooringLevelPanel';
 import { useProjectStore } from '../../store/useProjectStore';
 
 interface AppShellProps {
@@ -90,6 +91,7 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
                 governingCheck={results.governingCheck}
               />
               <CheckTable checks={results.checks} />
+              <MooringLevelPanel />
               <IntermediateTable state={currentProject} results={results} />
               {results.catenaryApplies && (
                 <CatenarySketch state={currentProject} results={results} />

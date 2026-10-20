@@ -5,6 +5,8 @@ import { exportAnchorSchedule, exportMooringCad, MOORING_OPTION_LABEL } from '..
 import { designWindCaveat } from '../../lib/calc/designWind';
 import { LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 import { exportFinalDesignToExcel } from '../../lib/io/finalDesignWorkbook';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID, LAKES, switchLake, type LakeId } from '../../data/lakes';
+import { lakeCaveats } from '../../data/lakeCaveats';
 import {
   Anchor,
   FileSpreadsheet,
@@ -57,6 +59,28 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
 
   return (
     <header className="no-print sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
+      {/* Lake (project) tabs: each lake has its own rafts, layout, terrain, levels and saved inputs. */}
+      <div className="bg-slate-950 border-b border-slate-800">
+        <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 flex items-end gap-1 pt-1.5" role="tablist" aria-label="Chọn dự án hồ">
+          {(Object.keys(LAKES) as LakeId[]).map((id) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={id === ACTIVE_LAKE_ID}
+              onClick={() => switchLake(id)}
+              className={`px-4 py-1.5 rounded-t-lg text-xs font-bold border border-b-0 transition-colors ${
+                id === ACTIVE_LAKE_ID
+                  ? 'bg-slate-900 border-slate-700 text-white'
+                  : 'bg-slate-950 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+              }`}
+              title={`${LAKES[id].name} — ${LAKES[id].province}`}
+            >
+              {LAKES[id].name}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand & Project Name */}
         <div className="flex items-center gap-3 min-w-0">
@@ -74,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
               </span>
             </div>
             <p className="text-xs text-slate-400 truncate">
-              ⚡ Điện mặt trời nổi (FPV) — Hồ Huổi Vanh ({raftsSummary.length} Bè)
+              ⚡ Điện mặt trời nổi (FPV) — {ACTIVE_LAKE.name} ({raftsSummary.length} Bè)
             </p>
           </div>
         </div>
@@ -228,6 +252,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           )}
         </div>
       </div>
+      {lakeCaveats().length > 0 && (
+        <div className="border-t border-rose-500/40 bg-rose-500/15 text-rose-100">
+          <details className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1 text-[11px] leading-snug">
+            <summary className="cursor-pointer font-semibold">
+              ⚠️ {lakeCaveats().length} vấn đề còn mở của {ACTIVE_LAKE.name} (dao động mực nước, bè chạm đáy, đế neo, vùng gió) — bấm để xem
+            </summary>
+            <div className="space-y-0.5 mt-1">
+              {lakeCaveats().map((c) => <div key={c}>⚠️ {c}</div>)}
+            </div>
+          </details>
+        </div>
+      )}
       {windCaveat && (
         <div className="border-t border-amber-500/40 bg-amber-500/15 text-amber-200">
           <div className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1 text-[11px] leading-snug">⚠️ {windCaveat}</div>

@@ -1,4 +1,5 @@
 import { RaftInput, EnvInput, LineInput } from './types';
+import { analyseMooring, type EqResult } from './mooringEquilibrium';
 
 export interface LoadsResult {
   q_wind_Pa: number;
@@ -15,7 +16,8 @@ export interface LoadsResult {
   /** Line tension by the geometric N_eff / cos(alpha) distribution, kN. */
   t_geometric_kN: number;
   /** Which of the two methods governs (the more onerous one). */
-  tensionMethod: 'focus' | 'geometric';
+  tensionMethod: 'focus' | 'geometric' | 'equilibrium';
+  mooringAnalysis?: EqResult;
   t_max_intact_kN: number;
   t_max_damaged_kN: number;
   h_line_intact_kN: number;
@@ -163,9 +165,31 @@ export function calculateLoads(
   // Method B — geometric distribution over the effective lines.
   const t_geometric_kN = f_env_total_kN / (n_eff * cosAlpha) + pretension_kN;
 
+  // Method C (Hồ Bản Mòng, line.layout given) — equilibrium of the raft on its
+  // real lines at every level and in 24 directions; the geometric method stays
+  // as a floor. The focus factor is not used: it was calibrated on Huổi Vanh's
+  // shallow lines.
+  const mooringAnalysis = line.layout && line.layout.lines.length > 0 && line.mbl_kN > 0
+    ? analyseMooring({
+        lines: line.layout.lines,
+        force_kN: f_env_total_kN,
+        mnc_m: env.mnc_m ?? env.mndbt_m ?? 0,
+        mndb_m: env.mndbt_m ?? 0,
+        mnlkt_m: env.mncn_m ?? env.mndbt_m ?? 0,
+        floatLevel_m: line.layout.floatLevel_m,
+        cleatHeight_m: raft.freeboardHeight_m ?? 0.35,
+        mbl_kN: line.mbl_kN,
+        compensation: line.levelCompensation ?? 'fixed',
+        adjustStep_m: line.adjustStep_m,
+        eaPerMbl: line.eaPerMbl
+      })
+    : undefined;
+  const t_equilibrium_kN = mooringAnalysis ? mooringAnalysis.governing.maxTension_kN + pretension_kN : 0;
+
   // The more onerous method governs.
-  const useFocus = t_focus_kN > t_geometric_kN;
-  const t_max_intact_kN = useFocus ? t_focus_kN : t_geometric_kN;
+  const useFocus = !mooringAnalysis && t_focus_kN > t_geometric_kN;
+  const useEquilibrium = !!mooringAnalysis && t_equilibrium_kN > t_geometric_kN;
+  const t_max_intact_kN = useEquilibrium ? t_equilibrium_kN : useFocus ? t_focus_kN : mooringAnalysis ? t_geometric_kN : Math.max(t_focus_kN, t_geometric_kN);
 
   // Damaged case: one effective line is lost.
   //  - focus method     : the concentration factor grows (empirical 1.33)
@@ -174,7 +198,9 @@ export function calculateLoads(
     ? f_env_total_kN * focusFactor * 1.33 + pretension_kN
     : 0;
   const t_geometric_damaged_kN = f_env_total_kN / (n_eff_damaged * cosAlpha) + pretension_kN;
-  const t_max_damaged_kN = Math.max(t_focus_damaged_kN, t_geometric_damaged_kN);
+  const t_max_damaged_kN = mooringAnalysis
+    ? Math.max(mooringAnalysis.damaged.maxTension_kN + pretension_kN, t_geometric_damaged_kN)
+    : Math.max(t_focus_damaged_kN, t_geometric_damaged_kN);
 
   // H and V are components of that SAME tension.
   const h_line_intact_kN = t_max_intact_kN * cosAlpha;
@@ -198,7 +224,8 @@ export function calculateLoads(
     f_env_total_kN,
     t_focus_kN,
     t_geometric_kN,
-    tensionMethod: useFocus ? 'focus' : 'geometric',
+    tensionMethod: useEquilibrium ? 'equilibrium' : useFocus ? 'focus' : 'geometric',
+    mooringAnalysis,
     t_max_intact_kN,
     t_max_damaged_kN,
     h_line_intact_kN,

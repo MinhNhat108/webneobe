@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { MOORING_LINES_V2, LAYOUT_COUNTS } from '../../data/huoiVanhLayout';
 import { MooringCoordinate } from '../../data/huoiVanhProject';
+import { ACTIVE_LAKE } from '../../data/lakes';
 import { useProjectStore } from '../../store/useProjectStore';
 import {
   Map as MapIcon,
@@ -171,7 +172,7 @@ export const MooringLayoutMap: React.FC = () => {
           </div>
           <div>
             <h3 className="card-title">
-              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo {uniqueRafts.length} Bè (Huổi Vanh)
+              Sơ Đồ Mặt Bằng Tọa Độ Hệ Neo {uniqueRafts.length} Bè ({ACTIVE_LAKE.shortName})
             </h3>
             <p className="card-subtitle">
               Biểu diễn {coordinates.length} tuyến cáp neo, cọc neo bờ (xanh lá) và cọc neo đáy hồ (cam)

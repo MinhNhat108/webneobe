@@ -7,6 +7,15 @@
  *   node scripts/importRaftLayout9.mjs "<plan.dxf>"   (new client plan only)
  *   node scripts/planMooringLayoutV2.mjs
  *   npx vite-node scripts/buildRaftCatalogue.ts [--dry]
+ *   npx vite-node scripts/buildRaftCatalogue.ts -- --lake=ban-mong   (Hồ Bản Mòng)
+ *
+ * Hồ Bản Mòng (src/data/banMong/raftCatalogue.json): 16,892 panels (Pre-FS),
+ * the design depth of each raft = MNDB 662.76 - its `designBed_m` (median IFC
+ * ground under it), and the LINE TENSION from the equilibrium of the raft on
+ * its real lines at every level (src/lib/calc/mooringEquilibrium.ts): each row
+ * carries `mooringLayout` (bearing, span and pin level of every line, the
+ * level at which the raft floats, its smallest gap to another raft). No focus
+ * factor (0): the Huổi Vanh calibration does not apply to steep lines.
  *
  * Rules (the same ones the 12-raft catalogue was built with, now automated):
  *  - area / perimeter      : the outline.
@@ -31,16 +40,23 @@ import { fileURLToPath } from 'node:url';
 import { calculateProject } from '../src/lib/calc';
 import { buildRaftProjectState, CABLE_MBL_KN } from '../src/lib/calc/raftState';
 import type { ProjectState } from '../src/lib/calc/types';
-import { HUOI_VANH_DEFAULT_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
+import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
+import { lakeFromArgv } from './lakeConfig.mjs';
+import { SCREW_BASE_DEFAULTS } from '../src/lib/calc/screwAnchorBed';
+import type { MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const OUT = path.join(here, '../src/data/huoiVanhRaftCatalogue.json');
+const LAKE = lakeFromArgv();
+const BAN_MONG = LAKE.id === 'ban-mong';
+const OUT = LAKE.abs.catalogue;
 const dry = process.argv.includes('--dry');
-const polygons: Array<{ id: number; name: string; area_m2: number; perimeter_m: number; points: Array<{ x: number; y: number }> }> =
-  JSON.parse(fs.readFileSync(path.join(here, '../src/data/huoiVanhRaftPolygons_v2.json'), 'utf8'));
-const lines: MooringCoordinate[] = JSON.parse(fs.readFileSync(path.join(here, '../src/data/huoiVanhCoordinates_v2.json'), 'utf8'));
+const polygons: Array<{ id: number; name: string; area_m2: number; perimeter_m: number; designBed_m?: number; points: Array<{ x: number; y: number }> }> =
+  JSON.parse(fs.readFileSync(LAKE.abs.polygons, 'utf8'));
+const lines: MooringCoordinate[] = JSON.parse(fs.readFileSync(LAKE.abs.coords, 'utf8'));
+const PROJECT = BAN_MONG ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;
 
-const TOTAL_PANELS = 18354; // HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf, 2026-10-08
+// HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf, 2026-10-08 / Pre-FS Bản Mòng (16 892 tấm 740 Wp)
+const TOTAL_PANELS = BAN_MONG ? 16892 : 18354;
 const LIMIT = 0.95;
 /** focus × N of the 12-raft calibration, by the raft(s) each new raft comes from. */
 const FOCUS_PRODUCT: Record<string, number[]> = {
@@ -48,7 +64,40 @@ const FOCUS_PRODUCT: Record<string, number[]> = {
   'BÈ 3A': [0.31 * 25, 0.131 * 39], 'BÈ 5A': [0.231 * 25, 0.27 * 26],
   'BÈ 6': [0.2 * 30], 'BÈ 7': [0.169 * 32], 'BÈ 8': [0.18 * 29, 0.3 * 18], 'BÈ 9': [0.327 * 20]
 };
-const WATER_DEPTH: Record<string, number> = { 'BÈ 1': 6.0 };
+const WATER_DEPTH: Record<string, number> = BAN_MONG
+  ? Object.fromEntries(polygons.map((p) => [p.name, Math.round((LAKE.mndb - p.designBed_m!) * 10) / 10]))
+  : { 'BÈ 1': 6.0 };
+/** Bản Mòng: no calibration of its own, the largest Huổi Vanh product (0.31 × 25, old BÈ 4). */
+const BAN_MONG_FOCUS_PRODUCT = 0;
+
+// ---- Bản Mòng: per-raft layout of the equilibrium analysis --------------------
+const SHORE_ARM_M = PROJECT.anchor.shoreArm_e_m ?? 0.1;
+// pin on a base: top of the slab + padeye (the cable cutting schedule uses the same)
+const BASE_PIN_M = SCREW_BASE_DEFAULTS.thickness_m + SCREW_BASE_DEFAULTS.padeyeHeight_m;
+const DRAFT_M = PROJECT.raft.draft_m ?? 0.2;
+type Pt = { x: number; y: number };
+const segDist = (p: Pt, a: Pt, b: Pt) => {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy);
+};
+/** Smallest clear distance between two outlines (no overlap in a plan). */
+const ringGap = (A: Pt[], B: Pt[]) => {
+  let m = Infinity;
+  for (const [P, Q] of [[A, B], [B, A]]) for (const p of P) for (let i = 0; i < Q.length; i++) m = Math.min(m, segDist(p, Q[i], Q[(i + 1) % Q.length]));
+  return m;
+};
+function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
+  const own = lines.filter((l) => l.raft === poly.name);
+  return {
+    floatLevel_m: Math.round((poly.designBed_m! + DRAFT_M) * 100) / 100,
+    minGap_m: Math.round(Math.min(...polygons.filter((q) => q.name !== poly.name).map((q) => ringGap(poly.points, q.points))) * 100) / 100,
+    lines: own.map((l) => ({
+      code: l.code, type: l.type, azimuth_deg: l.azimuth, span_m: l.span,
+      pin_m: Math.round((l.zAnchor + (l.type === 'SHORE' ? SHORE_ARM_M : BASE_PIN_M)) * 100) / 100
+    }))
+  };
+}
 
 // ------------------------------------------------------------------ geometry
 type Pt = { x: number; y: number };
@@ -86,9 +135,16 @@ const panels = share.map(Math.floor);
 // `--wind=20` sizes a WHAT-IF catalogue at another wind speed; it is never written to disk.
 const windArg = process.argv.find((a) => a.startsWith('--wind='));
 const WHAT_IF_WIND = windArg ? Number(windArg.split('=')[1]) : undefined;
+// Bản Mòng what-ifs (never written): `--adjust=<m>` re-tension step (0 = continuous), `--fixed` cables cut once.
+const adjustArg = process.argv.find((a) => a.startsWith('--adjust='));
+const WHAT_IF_ADJUST = adjustArg ? Number(adjustArg.split('=')[1]) : undefined;
+const WHAT_IF_FIXED = process.argv.includes('--fixed');
+const WHAT_IF = WHAT_IF_WIND !== undefined || WHAT_IF_ADJUST !== undefined || WHAT_IF_FIXED;
 const base = () => {
-  const p = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
+  const p = JSON.parse(JSON.stringify(PROJECT)) as ProjectState;
   if (WHAT_IF_WIND) p.env.windSpeed_ms = WHAT_IF_WIND;
+  if (WHAT_IF_ADJUST !== undefined) p.line.adjustStep_m = WHAT_IF_ADJUST;
+  if (WHAT_IF_FIXED) p.line.levelCompensation = 'fixed';
   return p;
 };
 function run(row: RaftSummaryItem, option: 'PA1_PILE' | 'PA3_SCREW_BASE' = 'PA1_PILE') {
@@ -109,12 +165,13 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   const own = lines.filter((l) => l.raft === poly.name);
   const shore = own.filter((l) => l.type === 'SHORE'), bed = own.filter((l) => l.type === 'BED');
   const rect = minBoundingRect(poly.points);
-  const product = Math.max(...FOCUS_PRODUCT[poly.name]);
+  const product = BAN_MONG ? BAN_MONG_FOCUS_PRODUCT : Math.max(...FOCUS_PRODUCT[poly.name]);
   let row: RaftSummaryItem = {
     id: poly.id, name: poly.name, area_m2: poly.area_m2, perimeter_m: poly.perimeter_m,
     length_m: up1(rect.L), width_m: up1(rect.W), angle_deg: Math.round(rect.angle * 10) / 10,
     solarPanelCount: panels[i],
     focusFactor: Math.ceil((product / own.length) * 1000 - 1e-6) / 1000,
+    ...(BAN_MONG ? { mooringLayout: mooringLayoutOf(poly) } : {}),
     cableCount: own.length, shoreAnchors: shore.length, bedAnchors: bed.length,
     selectedCable: CABLES[CABLES.length - 1],
     waterDepth_m: WATER_DEPTH[poly.name] ?? 6.2,
@@ -136,6 +193,9 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
     for (const rs of [350, 435]) {
       for (let L = 6.5; L <= 9.0 + 1e-9; L += 0.5) {
         for (const [n, d] of SHORE_CAGES) {
+          // Bản Mòng: a cage over 4 % of the D350 section cannot be concreted properly (6Φ32 / 8Φ32 in D350 are
+          // 5.0 % / 6.7 %); twin piles then. Not applied to the frozen Huổi Vanh catalogue.
+          if (BAN_MONG && (n * Math.PI * d * d) / 4 / ((Math.PI * 350 * 350) / 4) > 0.04 + 1e-9) continue;
           const cand: RaftSummaryItem = { ...row, shorePilesPerPoint: perPoint, pileRebarRs_MPa: rs, shorePileL_m: L, shoreRebarCount: n, shoreRebarDia_mm: d };
           const r = run(cand);
           if (util(r, 'BP-1') <= LIMIT && util(r, 'BP-2') <= LIMIT) { row = cand; shoreDone = true; break search; }
@@ -177,10 +237,11 @@ for (const row of rows) {
     ` | shore ${row.shorePilesPerPoint ?? 1}x ${row.shoreRebarCount}D${row.shoreRebarDia_mm} Rs${row.pileRebarRs_MPa ?? 350} L${row.shorePileL_m} BP1=${fx(util(p1, 'BP-1'))} BP2=${fx(util(p1, 'BP-2'))}` +
     ` | bedpile ${row.bedPilesPerPoint ?? 1}x 4D${row.bedRebarDia_mm} L${row.bedPileL_m} BP3=${fx(util(p1, 'BP-3'))} BP4=${fx(util(p1, 'BP-4'))} BP5=${fx(util(p1, 'BP-5'))}` +
     ` | base ${sb.side_m}x${sb.side_m}x${sb.thickness_m} ${fx(sb.concrete_m3, 1)}m3 ${fx(sb.liftMass_t, 1)}t ok=${sb.ok} span=${row.bedAnchorDist_m}` +
-    ` | PA1 ${p1.overallVerdict} PA3 ${p3.overallVerdict}`
+    ` | PA1 ${p1.overallVerdict} PA3 ${p3.overallVerdict}` +
+    (p3.mooringAnalysis ? ` | eq T=${fx(p3.mooringAnalysis.governing.maxTension_kN, 1)} @${p3.mooringAnalysis.governing.level_m} ${p3.mooringAnalysis.governing.maxLine} dam=${fx(p3.t_max_damaged_kN, 1)} drift=${fx(p3.mooringAnalysis.maxDrift_m, 2)}/${fx(row.mooringLayout!.minGap_m / 2, 2)} C12 ${p3.checks.find((c) => c.id === 'C12')?.status}` : '')
   );
 }
 console.log(`lines ${rows.reduce((s, r) => s + r.cableCount, 0)}, panels ${rows.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)}, area ${totalArea}`);
 if (notes.length) console.log('NOTES:\n  ' + notes.join('\n  '));
-if (WHAT_IF_WIND) console.log(`WHAT-IF at V = ${WHAT_IF_WIND} m/s — nothing written`);
+if (WHAT_IF) console.log(`WHAT-IF (${process.argv.slice(2).join(' ')}) — nothing written`);
 else if (!dry) { fs.writeFileSync(OUT, JSON.stringify(rows, null, 2) + '\n'); console.log('written', path.relative(path.join(here, '..'), OUT)); }

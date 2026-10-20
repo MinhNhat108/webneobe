@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useProjectStore } from '../../store/useProjectStore';
 import { Attachment } from '../../lib/calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
-import { ACTIVE_LAKE } from '../../data/lakes';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import { resolveAssetUrl } from '../../lib/utils/assetUrl';
 import { PdfViewer } from './PdfViewer';
 import { ImageViewer } from './ImageViewer';
@@ -130,14 +130,32 @@ export const AttachmentPanel: React.FC = () => {
                 Đồng bộ lại
               </button>
             </div>
-            <p className="text-slate-600 text-[11px]">
-              Ba tài liệu của phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
-            </p>
-            <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
-              <li><strong>Thuyết minh tính toán</strong> (.docx)</li>
-              <li><strong>Bảng tính Excel</strong> (.xlsx, có 4 sheet công thức, ô vàng là ô nhập)</li>
-              <li><strong>Bản vẽ CAD bố trí neo</strong> (.dxf, mở được bằng AutoCAD và xem ngay trên web)</li>
-            </ul>
+            {ACTIVE_LAKE_ID === 'ban-mong' ? (
+              <>
+                <p className="text-slate-600 text-[11px]">
+                  Hồ sơ gốc của hồ Bản Mòng (chỉ tài liệu của hồ này):
+                </p>
+                <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
+                  <li><strong>Mặt bằng bố trí bè pin PA2</strong> (.dxf, xem ngay trên web)</li>
+                  <li><strong>Thông số mực nước hồ</strong> (.png)</li>
+                  <li><strong>Mô hình địa hình IFC</strong> (.ifc, tải về)</li>
+                </ul>
+                <p className="text-slate-500 text-[11px]">
+                  Thuyết minh, bảng tính và bản vẽ neo của Bản Mòng chưa có bản sinh sẵn: xuất từ các nút Bảng Tính / Bảng Neo / Xuất CAD khi đang ở tab Bản Mòng.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-slate-600 text-[11px]">
+                  Ba tài liệu của phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
+                </p>
+                <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
+                  <li><strong>Thuyết minh tính toán</strong> (.docx)</li>
+                  <li><strong>Bảng tính Excel</strong> (.xlsx, có 4 sheet công thức, ô vàng là ô nhập)</li>
+                  <li><strong>Bản vẽ CAD bố trí neo</strong> (.dxf, mở được bằng AutoCAD và xem ngay trên web)</li>
+                </ul>
+              </>
+            )}
           </div>
 
           {/* Files List */}

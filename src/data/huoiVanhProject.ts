@@ -90,6 +90,7 @@ export interface MooringCoordinate {
 import raftCatalogue from './huoiVanhRaftCatalogue.json';
 import { ACTIVE_LAKE_ID } from './lakes';
 import { BAN_MONG_RAFTS, banMongProjectFrom } from './banMongProject';
+import type { Attachment } from '../lib/calc/types';
 
 /** The Huổi Vanh rafts, whichever lake is shown. */
 export const HUOI_VANH_RAFT_CATALOGUE: RaftSummaryItem[] = raftCatalogue as RaftSummaryItem[];
@@ -236,7 +237,7 @@ export const HUOI_VANH_PROJECT = {
     minScopeRatio: 5.0,
     maxOffset_m: 1.0
   },
-  attachments: [
+  attachments: <Attachment[]>[
     {
       id: 'doc_huoi_vanh_docx',
       name: '1. Thuyết minh tính toán phương án chốt (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',

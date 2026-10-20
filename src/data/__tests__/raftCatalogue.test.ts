@@ -379,3 +379,11 @@ describe('Rafts are restrained on every side', () => {
     }
   });
 });
+
+describe('Documents of each lake stay with their lake', () => {
+  it('Huổi Vanh lists only Huổi Vanh files, Bản Mòng only Bản Mòng files', async () => {
+    const { HUOI_VANH_PROJECT, BAN_MONG_PROJECT } = await import('../huoiVanhProject');
+    for (const d of HUOI_VANH_PROJECT.attachments ?? []) expect(d.remoteUrl, d.name).toMatch(/^docs_huoi_vanh\//);
+    for (const d of BAN_MONG_PROJECT.attachments ?? []) expect(d.remoteUrl, d.name).toMatch(/^docs_ban_mong\//);
+  });
+});

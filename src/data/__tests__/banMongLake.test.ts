@@ -53,6 +53,13 @@ describe('Hồ Bản Mòng tab', () => {
     expect([MNC_M, MNDB_M, MNLKT_M]).toEqual([649.5, 662.76, 669.05]);
     // CHUGIAP.ifc is in absolute elevations: its water slab (666.65 m) is not a reservoir level
     expect(IFC_DATUM_OFFSET_M).toBe(0);
+    // documents: only Bản Mòng files, never a Huổi Vanh one
+    const docs = HUOI_VANH_DEFAULT_PROJECT.attachments ?? [];
+    expect(docs.length).toBeGreaterThan(0);
+    for (const d of docs) {
+      expect(d.remoteUrl, d.name).toMatch(/^docs_ban_mong\/HOBANMONG_/);
+      expect(d.name, d.name).not.toMatch(/HUOI ?VANH|HUỔI VANH/i);
+    }
     expect([HUOI_VANH_DEFAULT_PROJECT.env.mndbt_m, HUOI_VANH_DEFAULT_PROJECT.env.mncn_m]).toEqual([MNDB_M, MNLKT_M]);
   });
 

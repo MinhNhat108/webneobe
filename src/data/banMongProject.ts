@@ -77,7 +77,34 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
     },
     env,
     line,
-    attachments: [],
+    // Source documents of Hồ Bản Mòng only (copied from "Tài liệu hồ Bản Mòng/" to public/docs_ban_mong/);
+    // the Huổi Vanh documents live in public/docs_huoi_vanh/ and are never listed here.
+    attachments: [
+      {
+        id: 'bm_mat_bang_dxf',
+        name: '1. Mặt bằng bố trí bè pin PA2 — bản vẽ của Chủ đầu tư (HOBANMONG_BO_TRI_BE_PIN_PA2.dxf)',
+        mime: 'application/dxf',
+        size: 20609895,
+        kind: 'dxf' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_PIN_PA2.dxf'
+      },
+      {
+        id: 'bm_thong_so_muc_nuoc_png',
+        name: '2. Thông số mực nước hồ Bản Mòng (HOBANMONG_THONG_SO_MUC_NUOC.png)',
+        mime: 'image/png',
+        size: 54177,
+        kind: 'image' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_SO_MUC_NUOC.png'
+      },
+      {
+        id: 'bm_dia_hinh_ifc',
+        name: '3. Mô hình địa hình lòng hồ IFC, cao độ tuyệt đối (HOBANMONG_DIA_HINH.ifc)',
+        mime: 'application/x-step',
+        size: 3144397,
+        kind: 'other' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_DIA_HINH.ifc'
+      }
+    ],
     raftsSummary: BAN_MONG_RAFTS
   };
 }

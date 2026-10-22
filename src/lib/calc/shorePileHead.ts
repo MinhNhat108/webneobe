@@ -36,6 +36,13 @@ export interface ShorePileHeadInput {
   attachHeight_m: number;
   /** Minimum breaking load of the heaviest mooring cable on a shore pile, kN (the shackle must not be the weak link). */
   cableMbl_kN?: number;
+  /**
+   * Angle of the cable above the horizontal at the pin, degrees (default 0: shore pile). The same
+   * padeye on the top of a lake-bed base sees a steep cable: the vertical part pulls the plate off.
+   */
+  inclination_deg?: number;
+  /** Longest anchor bar the support allows, mm (a base slab is thinner than the 600 mm bars). */
+  anchorLengthLimit_mm?: number;
 }
 
 export interface HeadCheck {
@@ -88,7 +95,9 @@ const check = (id: string, label: string, demand: number, capacity: number, unit
 };
 
 export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
-  const P = input.tension_kN * input.loadFactor; // design pull, taken as horizontal at the pin
+  const P = input.tension_kN * input.loadFactor; // design pull at the pin
+  const inc = ((input.inclination_deg ?? 0) * Math.PI) / 180;
+  const Ph = P * Math.cos(inc), Pv = P * Math.sin(inc);
   const pileDia_mm = Math.round(input.pileDia_m * 1000);
   const e_mm = Math.round(input.attachHeight_m * 1000);
 
@@ -106,26 +115,27 @@ export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
   const padeyeWidth_mm = 200;
   const padeyeHeight_mm = holeAbovePlate_mm + 50;
   const weldLeg_mm = 10;
-  const anchorBarDia_mm = 22, anchorBarCount = 4, anchorBarSpacing_mm = 180, anchorBarLength_mm = 600;
+  const anchorBarDia_mm = 22, anchorBarCount = 4, anchorBarSpacing_mm = 180;
+  const anchorBarLength_mm = Math.min(600, input.anchorLengthLimit_mm ?? 600);
   const collarSide_mm = Math.max(400, pileDia_mm + 50), collarDepth_mm = 300;
 
   // --- checks (N, mm) ---
-  const Pn = P * 1000;
   const bearing = (shacklePin_mm * padeyeThk_mm * PLATE_F_MPA) / 1000;
   const edge_mm = padeyeWidth_mm / 2 - holeDia_mm / 2;
   const tearOut = (2 * edge_mm * padeyeThk_mm * PLATE_FV_MPA) / 1000;
 
-  // Fillet weld on both sides of the padeye: shear P and moment P · arm.
+  // Fillet weld on both sides of the padeye: shear Ph, normal Pv and moment Ph · arm.
   const throat = 0.7 * weldLeg_mm;
   const weldArea = 2 * throat * padeyeWidth_mm;
   const weldW = (2 * throat * padeyeWidth_mm * padeyeWidth_mm) / 6;
-  const weldStress = Math.hypot(Pn / weldArea, (Pn * holeAbovePlate_mm) / weldW);
+  const weldStress = Math.hypot((Ph * 1000) / weldArea, (Pv * 1000) / weldArea + (Ph * 1000 * holeAbovePlate_mm) / weldW);
 
-  // Anchor bars: the couple P · (pin above the pile top) on two bars in tension, the shear on all four.
+  // Anchor bars: the couple Ph · (pin above the concrete) on two bars in tension plus the uplift Pv on all four,
+  // the shear Ph on all four.
   const armToConcrete_mm = holeAbovePlate_mm + plateThk_mm;
   const barArea = (Math.PI * anchorBarDia_mm * anchorBarDia_mm) / 4;
-  const barTension = (Pn * armToConcrete_mm) / anchorBarSpacing_mm / 2 / 1000; // kN per bar
-  const barShear = P / anchorBarCount;
+  const barTension = (Ph * 1000 * armToConcrete_mm) / anchorBarSpacing_mm / 2 / 1000 + Pv / anchorBarCount; // kN per bar
+  const barShear = Ph / anchorBarCount;
   const barTensionCap = (barArea * BAR_RS_MPA) / 1000;
   const barShearCap = (barArea * BAR_RSW_MPA) / 1000;
   const interaction = (barTension / barTensionCap) ** 2 + (barShear / barShearCap) ** 2;

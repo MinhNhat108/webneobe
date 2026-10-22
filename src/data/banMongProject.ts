@@ -119,7 +119,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_be_pin_xlsx',
         name: '5. Thống kê vật tư bè pin và cấu kiện bè pin (HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 594410,
+        size: 594532,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx'
       },
@@ -127,7 +127,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_neo_xlsx',
         name: '6. Thống kê vật tư neo và cáp neo (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 741936,
+        size: 729739,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       }

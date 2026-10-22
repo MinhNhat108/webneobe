@@ -270,7 +270,7 @@ for col, w in zip('ABCDEFGHIJKLMNOPQRS', [8, 6, 30, 34, 7, 10, 14, 10, 8, 9, 10,
 dc = wb.create_sheet('DoiChieu_MatBang')
 dc['A1'] = 'ĐỐI CHIẾU TỪNG TỜ CT-BP (22/10/2026) VỚI MẶT BẰNG BÈ MÀ WEB DÙNG TÍNH NEO (nhập từ tờ MB-B01-01)'; dc['A1'].font = Font(name='Calibri', size=13, bold=True)
 dc['A2'] = ('Đường bao bè đo trên ảnh từng tờ CT-BP (tỷ lệ in trên tờ, gồm cả mép phao nên rộng hơn 1–2 m); mặt bằng trên web lấy đường bao bè của tờ MB-B01-01. '
-            'Số tấm pin trên web lấy đúng bảng từng tờ (Pre-FS ghi 16.892 tấm, bản vẽ 22/10 có 18.240 tấm).')
+            'Số tấm pin trên web lấy đúng bảng từng tờ — ĐÃ CHỐT 18.240 tấm (Pre-FS cũ ghi 16.892).')
 dc.merge_cells('A2:N2'); dc['A2'].alignment = WRAP; dc.row_dimensions[2].height = 34
 H2 = ['Bè', 'Tỷ lệ tờ', 'Diện tích bản vẽ 22/10 (m²)', 'Diện tích trên web (m²)', 'Lệch diện tích', 'Kích thước bản vẽ (m)', 'Kích thước trên web (m)', 'Tấm pin bản vẽ', 'Tấm pin trên web', 'Lệch tấm pin',
       'Dầm C52 TB 1 thanh (m)', 'Hộp 40x60 TB 1 thanh (m)', 'Phương dầm C52 trên tờ', 'Số dây neo']
@@ -310,7 +310,7 @@ def dlref(code, j): return f'DuLieuBanVe!{RC[j]}{D[code]}'
 def gcsum(col, n): return f'SUMIF(GiaCuong_UocTinh!$A$4:$A${GC_LAST},"{n}",GiaCuong_UocTinh!${col}$4:${col}${GC_LAST})'
 ITEMS = [
     ('A. PIN, INVERTER, PHAO NỔI',),
-    ('Tấm pin mặt trời', 'tấm', lambda j: '=' + dlref('PV', j), 'same', 'BV', 'Tổng 18.240 tấm trên bản vẽ 22/10; Pre-FS và web: 16.892 tấm (xem DoiChieu_MatBang)'),
+    ('Tấm pin mặt trời', 'tấm', lambda j: '=' + dlref('PV', j), 'same', 'BV', 'ĐÃ CHỐT 18.240 tấm (Chủ đầu tư 22/10/2026), theo bảng từng tờ; Pre-FS cũ ghi 16.892 tấm'),
     ('Inverter SG-510HX', 'bộ', lambda j: '=' + dlref('I510', j), 'same', 'BV', '24 inverter; bản vẽ không có SG350HX'),
     ('Phao đỡ pin (Main Floater G5G)', 'cái', lambda j: '=' + dlref('FS', j), 'same', 'BV', ''),
     ('Phao đi lại (Walkway Floater) — nhóm 1', 'cái', lambda j: '=' + dlref('FWA', j), 'same', 'BV', 'Bản vẽ chia phao đi lại thành 2–3 dòng; cần nhà sản xuất xác nhận là 1 hay nhiều loại phao'),
@@ -403,7 +403,7 @@ NOTES = [
     'Bản vẽ 22/10 chỉ thể hiện các đoạn thép lộ giữa phao, nên KHÔNG đo được từng thanh như Huổi Vanh. Riêng tờ bè 5 vẽ thép bằng nét riêng: 32 dầm C52 dài 113,05 m và 20 hộp dài 39,2 m, khớp bảng (3.617,6 / 784,1 m). Số cây cấp hàng, mối nối, bulông M8 và M10 là ƯỚC LƯỢNG theo hệ số ở GiaDinh (K_DU, K_XF, B_C52 đo trên bè 5).',
     'Bản vẽ CHƯA có hộp 40x60 gia cường tai neo (Huổi Vanh mới có ở bè 1). Mục D ước tính cho cả 8 bè theo cách của Huổi Vanh: cáp 2 nhánh chữ Y (Chủ đầu tư chọn 16/10/2026 cho Huổi Vanh, áp dụng tạm cho Bản Mòng), 2 bích mỗi dây cách nhau 3,5 m, mỗi bích chịu K_Y × T; lực dây T của bè lấy từ bảng neo Bản Mòng (engine, gió 20 m/s, có thiết bị bù dao động mực nước). Lực dây Bản Mòng lớn hơn Huổi Vanh (62–130 kN so với 28–87 kN) nên mỗi cụm cần 1–5 thanh xếp song song (tổng nhiều hơn Huổi Vanh dù ít dây hơn) với P_KEP = 7 kN GIẢ ĐỊNH — cần số liệu sức chịu móc "几" của Mibet hoặc bản vẽ gia cường riêng.',
     'Mặt bằng neo (số dây, vị trí bích) là của web, tính trên mặt bằng bè 22/10/2026 (đường bao lấy từ tờ MB-B01-01, đặt về tọa độ PA2: so với PA2 chỉ BÈ 4 và BÈ 6 đổi hình). Đường bao đo trên từng tờ CT-BP rộng hơn 1–2 m vì gồm cả mép phao (sheet DoiChieu_MatBang).',
-    'Tổng tấm pin trên bản vẽ 18.240 tấm (13,5 MWp với tấm 740 Wp), khác Pre-FS 16.892 tấm (12,5 MWp). Tờ BÈ 2 có 1 dải 28 tấm ghi chú "be 1"; BÈ 4 ghi 80,43 string (2.252 tấm không chia hết cho 28). Cần thiết kế điện xác nhận.',
+    'Số tấm pin ĐÃ CHỐT 18.240 tấm (Chủ đầu tư 22/10/2026; 13,5 MWp với tấm 740 Wp — Pre-FS cũ ghi 16.892 tấm, 12,5 MWp). Lực gió và lực dây trên web tính theo số tấm từng bè này. Còn để thiết kế điện xem: tờ BÈ 2 có 1 dải 28 tấm ghi chú "be 1"; BÈ 4 ghi 80,43 string (2.252 tấm không chia hết cho 28).',
     'Khối lượng thép theo tiết diện GIẢ ĐỊNH (C52 ≈ 2,36 kg/m; hộp 40×60×2,0 ≈ 3,01 kg/m) vì chưa có catalogue tiết diện của nhà sản xuất.',
     'Gá đỡ, kẹp tấm pin, bulông nối phao là ƯỚC LƯỢNG theo hệ số mỗi tấm / mỗi phao (sheet GiaDinh) — phải thay bằng BOM của nhà sản xuất khi có. Kẹp tiếp địa: hỏi Mibet trước khi đặt (có thể bỏ nếu kẹp có răng tiếp địa).',
     'Chưa gồm: cáp neo, phụ kiện đầu cáp, cọc khoan nhồi, đế neo, thiết bị bù dao động mực nước (xem bảng thống kê vật tư neo Bản Mòng), cáp điện DC/AC, máng cáp, tủ điện, tấm lối đi (Walkway Board) nếu có, vận chuyển.',

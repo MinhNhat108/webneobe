@@ -18,7 +18,15 @@ thin = Side(style='thin'); BORDER = Border(left=thin, right=thin, top=thin, bott
 HEAD = PatternFill('solid', fgColor='F2F2F2'); SEC = PatternFill('solid', fgColor='D9D9D9')
 F = Font(name='Calibri', size=12); FB = Font(name='Calibri', size=12, bold=True)
 WRAP = Alignment(wrap_text=True, vertical='center'); CENTER = Alignment(horizontal='center', vertical='center', wrap_text=True)
-ALIAS = {'tai neo đơn mặt đế': 'tai neo đôi mặt đế'}
+ALIAS = {  # Bản Mòng rows with no Huổi Vanh twin of the same name -> the Huổi Vanh row with the same part
+    'tai neo đơn mặt đế': 'tai neo đôi mặt đế',
+    'bản mã đầu cọc mạ kẽm (cọc đơn và đài cọc đôi)': 'bản nắp thép đầu cọc mạ kẽm',
+    'tai neo đầu cọc / đài (padeye)': 'tai neo đầu cọc (padeye đơn)',
+    'thép neo bản mã vào bê tông': 'râu thép ngàm bản nắp',
+    'tai neo mặt đế (bản mã + tai + thép neo 1 bộ mỗi dây)': 'tai neo đôi mặt đế',
+    'thép tấm bản mã + tai neo (đầu cọc đài đế)': 'thép tấm bản nắp 400×400×20',
+    'thép neo bản mã': 'thép râu ngàm bản nắp',
+}
 
 def key(name):
     s = str(name).lower()

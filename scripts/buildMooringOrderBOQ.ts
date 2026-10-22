@@ -17,6 +17,8 @@ import fs from 'node:fs';
 import * as XLSX from 'xlsx';
 import { ACTIVE_LAKE } from '../src/data/lakes';
 import { groundAt } from '../src/components/simulation/sceneModel';
+import { designShorePileHead } from '../src/lib/calc/shorePileHead';
+import { designTwinPileCap } from '../src/lib/calc/twinPileCap';
 import { calculateProject } from '../src/lib/calc';
 import { buildRaftProjectState } from '../src/lib/calc/raftState';
 import type { ProjectState } from '../src/lib/calc/types';
@@ -106,6 +108,28 @@ const thkText = [...new Set(bases0.map((b) => b.thickness_m))].sort((a, b) => a 
 const compensated = state.line.levelCompensation === 'seasonal' && !(state.line.adjustStep_m ?? 0);
 const travel = (type: string) => Math.max(0, ...cut.rows.filter((c) => c.type === type).map((c) => c.cutLength_m - Math.min(c.chordLow_m, c.chordNormal_m, c.chordHigh_m)));
 const ORDER_REF = HV ? 'Theo bảng order 15/10' : 'Lấy theo chi tiết của Huổi Vanh (bảng order 15/10)';
+// Bản Mòng: the heads are designed (Huổi Vanh keeps the order of 15/10): single pile -> pile head,
+// twin piles -> RC cap tying the two heads with the same padeye on it, lake-bed base -> padeye per line
+// for the cable slope at MNLKT, anchor bars cut to the slab.
+const LF = state.anchor.pileBendingLoadFactor ?? 1.2, E_PIN = state.anchor.shoreArm_e_m ?? 0.1;
+const heads = HV ? [] : piles.filter((p) => p.pileCount === 1).map((p) => designShorePileHead({ tension_kN: R[p.raft].T, loadFactor: LF, pileDia_m: p.D_m, attachHeight_m: E_PIN, cableMbl_kN: R[p.raft].mbl }));
+const caps = HV ? [] : twinPoints.map((p) => designTwinPileCap({ tension_kN: R[p.raft].T, loadFactor: LF, pileDia_m: p.D_m, attachHeight_m: E_PIN, cableMbl_kN: R[p.raft].mbl, pileBarDia_mm: p.rebarDia_mm }));
+const slopeOf = (code: string) => { const c = cut.rows.find((q) => q.code === code); return c ? Math.max(0, c.slopeLow_deg, c.slopeNormal_deg, c.slopeHigh_deg) : 0; };
+const eyes = HV ? [] : bases0.flatMap((b) => b.lines.map((l) => designShorePileHead({
+  tension_kN: l.tension_kN, loadFactor: LF, pileDia_m: 0.35, attachHeight_m: bp.padeyeHeight_m, cableMbl_kN: R[l.raft].mbl,
+  inclination_deg: slopeOf(l.code), anchorLengthLimit_mm: b.thickness_m * 1000 - 50
+})));
+const allHeads = [...heads, ...caps.map((c) => c.head), ...eyes];
+const failed = [...heads.filter((h) => !h.ok).map(() => 'đầu cọc'), ...caps.filter((c) => !c.ok).map(() => 'đài cọc đôi'), ...eyes.filter((e) => !e.ok).map(() => 'tai neo đế')];
+if (failed.length) throw new Error(`thiết kế chi tiết không đạt: ${failed.join(', ')}`);
+// strength checks only: H-8 is the pin height, met exactly by construction
+const maxUtil = (hs: { checks: { id: string; utilization: number }[] }[]) => Math.max(0, ...hs.flatMap((h) => h.checks.filter((c) => c.id !== 'H-8').map((c) => c.utilization)));
+const holes = (hs: Head[]) => [...new Set(hs.map((h) => `Ø${h.holeDia_mm}`))].sort().join(' / ');
+type Head = typeof allHeads[number];
+const plateKg = (h: Head) => h.plateSide_mm ** 2 * h.plateThk_mm * 7850e-9;
+const eyeKg = (h: Head) => h.padeyeWidth_mm * h.padeyeHeight_mm * h.padeyeThk_mm * 7850e-9;
+const barsKg = (h: Head) => h.anchorBarCount * (h.anchorBarLength_mm / 1000) * (Math.PI * h.anchorBarDia_mm ** 2 / 4) * 7850e-6;
+const shackleRange = (hs: Head[]) => [...new Set(hs.map((h) => h.shackleWll_t))].sort((a, b) => a - b).join(' / ');
 
 // ---------------------------------------------------------------- summary sheet
 const order = (q: number, w: number) => Math.ceil(q * (1 + w));
@@ -133,17 +157,38 @@ it('Bê tông cọc', 'C25/30, đá 1×2, đổ tại chỗ bằng ống tremie'
 const cageGrades = [...new Set(piles.map((p) => p.cage.grade))].join(', ');
 it(`Thép chủ lồng cọc ${cageGrades}`, [...new Set(piles.map((p) => p.cage.label))].join(', '), 'kg', pileMain_kg, 0.03, `Engine (theo bè: ${[...new Set(piles.map((p) => p.cage.label))].sort().join(', ')})`, 0);
 it('Thép đai xoắn CB240-T', piles[0].cage.stirrupLabel, 'kg', pileStir_kg, 0.05, 'Engine', 0);
-it('Bản nắp thép đầu cọc mạ kẽm', 'SS400 400×400×20', 'tấm', T.shorePiles, 0, `${ORDER_REF} — chưa có bản vẽ chi tiết đầu cọc`);
-it('Tai neo đầu cọc (padeye đơn)', 'SS400 t = 25, lỗ chốt Ø40; tim chốt cách mặt đất 0,1 m', 'cái', piles.length, 0, `Như trên; 1 cái mỗi điểm neo, phải chịu T_max của bè (tới ${tx(tMaxAll)} kN)`);
-it('Râu thép ngàm bản nắp', '4Φ25 L = 600 mỗi cọc', 'thanh', T.shorePiles * 4, 0.02, 'Như trên');
-if (twinPoints.length) it('Đài / dầm nối đầu cọc đôi', 'BTCT nối 2 cọc D350 cách nhau ≥ 3D, đỡ tai neo chung', 'bộ', twinPoints.length, 'CHƯA thiết kế', `${twinPoints.length} điểm cọc đôi; hệ số nhóm 0,9 là GIẢ ĐỊNH — chưa có bản vẽ, KHÔNG đặt hàng theo dòng này`);
+if (HV) {
+  it('Bản nắp thép đầu cọc mạ kẽm', 'SS400 400×400×20', 'tấm', T.shorePiles, 0, `${ORDER_REF} — chưa có bản vẽ chi tiết đầu cọc`);
+  it('Tai neo đầu cọc (padeye đơn)', 'SS400 t = 25, lỗ chốt Ø40; tim chốt cách mặt đất 0,1 m', 'cái', piles.length, 0, `Như trên; 1 cái mỗi điểm neo, phải chịu T_max của bè (tới ${tx(tMaxAll)} kN)`);
+  it('Râu thép ngàm bản nắp', '4Φ25 L = 600 mỗi cọc', 'thanh', T.shorePiles * 4, 0.02, 'Như trên');
+} else {
+  const pileHeads = [...heads, ...caps.map((c) => c.head)], h0 = pileHeads[0];
+  it('Bản mã đầu cọc mạ kẽm (cọc đơn và đài cọc đôi)', `SS400 ${h0.plateSide_mm}×${h0.plateSide_mm}×${h0.plateThk_mm}`, 'tấm', piles.length, 0.02,
+    `${heads.length} đầu cọc đơn + ${caps.length} đài cọc đôi; thiết kế sơ bộ src/lib/calc/shorePileHead.ts (γ = ${LF}, T của bè), mức sử dụng lớn nhất ${tx(maxUtil(pileHeads), 2)}`);
+  it('Tai neo đầu cọc / đài (padeye)', `SS400 t = ${h0.padeyeThk_mm}, rộng ${h0.padeyeWidth_mm}, lỗ chốt ${holes(pileHeads)} (= chốt ma-nê + 4 mm); tim chốt cách mặt đất ${Math.round(E_PIN * 1000)} mm; hàn góc ${h0.weldLeg_mm} mm hai phía`, 'cái', piles.length, 0.02,
+    `1 cái mỗi điểm neo, chịu cả T của dây (tới ${tx(tMaxAll)} kN); ma-nê ${shackleRange(pileHeads)} t`);
+  it('Thép neo bản mã vào bê tông', `${h0.anchorBarCount}Φ${h0.anchorBarDia_mm} CB400-V L = ${h0.anchorBarLength_mm} mỗi bản mã`, 'thanh', piles.length * h0.anchorBarCount, 0.02, 'Theo thiết kế đầu cọc (H-6, H-7)');
+  if (caps.length) {
+    const c0 = caps[0];
+    it('Đài cọc đôi BTCT đổ tại chỗ', `C25/30; ${c0.length_mm}×${c0.width_mm}×${c0.depth_mm} (dài × rộng × cao), 2 cọc D350 cách ${c0.spacing_mm} mm; ${c0.faceBars.count}Φ${c0.faceBars.dia_mm} mỗi mặt chịu kéo, ${c0.topBottomBars.count}Φ${c0.topBottomBars.dia_mm} cấu tạo, đai Φ${c0.stirrup.dia_mm} a${c0.stirrup.spacing_mm}; thép chủ cọc móc 90° vào đài`, 'm³', sum(caps, (c) => c.concrete_m3), 0.05,
+      `${caps.length} điểm cọc đôi; thiết kế sơ bộ src/lib/calc/twinPileCap.ts (TC-1…TC-4), mức sử dụng lớn nhất ${tx(maxUtil(caps), 2)}; đỉnh đài ngang mặt đất`);
+    it('Thép đài cọc đôi', 'CB400-V Φ16, Φ12 + đai CB240-T Φ10', 'kg', sum(caps, (c) => c.steel_kg), 0.05, 'twinPileCap.ts', 0);
+  }
+}
 sec('III', 'ĐẾ NEO ĐÁY BTCT + VÍT XOẮN');
 it('Bê tông đế đúc sẵn', `C25/30 chống thấm; ${sizeText}; dày ${thkText} m`, 'm³', T.baseConcrete_m3, 0.03, `${T.bases} đế, đế nặng nhất ${tx(T.maxLift_t)} t khi cẩu`);
 it('Thép bản đế', `Φ${bp.rebarDia_mm} a${Math.round(bp.rebarSpacing_m * 1000)}`, 'kg', T.baseRebar_kg, 0.03, 'Engine (kiểm tra SV-6)', 0);
 it('Vít xoắn ống thép mạ kẽm', `Ống Ø${bp.tubeDia_m * 1000}×${bp.tubeThk_m * 1000}, ren Ø${bp.threadDia_m * 1000}, ngàm ${bp.screwLength_m} m; 4 vít/đế`, 'md', T.screwLength_m, 0.05, `${T.screws} vít`);
 it('Nắp chụp khóa đầu vít vào đế', 'Ống lồng Ø114×6 + bản bích chặn', 'bộ', T.screws, 0, 'Chưa thiết kế chi tiết');
-if (sharedBases) it('Tai neo đôi mặt đế', 'SS400 t = 25, 2 lỗ chốt Ø40', 'bộ', sharedBases, 0, 'Mỗi đế 2 dây của 2 bè; CHƯA thiết kế');
-if (T.bases > sharedBases) it('Tai neo đơn mặt đế', 'SS400 t = 25, 1 lỗ chốt Ø40', 'bộ', T.bases - sharedBases, 0, 'Đế một dây; CHƯA thiết kế');
+if (HV) {
+  if (sharedBases) it('Tai neo đôi mặt đế', 'SS400 t = 25, 2 lỗ chốt Ø40', 'bộ', sharedBases, 0, 'Mỗi đế 2 dây của 2 bè; CHƯA thiết kế');
+  if (T.bases > sharedBases) it('Tai neo đơn mặt đế', 'SS400 t = 25, 1 lỗ chốt Ø40', 'bộ', T.bases - sharedBases, 0, 'Đế một dây; CHƯA thiết kế');
+} else {
+  const e0 = eyes[0];
+  const steepest = Math.max(...bases0.flatMap((b) => b.lines.map((l) => slopeOf(l.code))));
+  it('Tai neo mặt đế (bản mã + tai + thép neo, 1 bộ mỗi dây)', `Bản mã SS400 ${e0.plateSide_mm}×${e0.plateSide_mm}×${e0.plateThk_mm}, tai t = ${e0.padeyeThk_mm} lỗ ${holes(eyes)}, ${e0.anchorBarCount}Φ${e0.anchorBarDia_mm} L = ${Math.min(...eyes.map((e) => e.anchorBarLength_mm))}–${Math.max(...eyes.map((e) => e.anchorBarLength_mm))} móc vào lưới đáy đế; đặt sẵn khi đúc đế`, 'bộ', eyes.length, 0.02,
+    `${sharedBases} đế dùng chung có 2 bộ, ${T.bases - sharedBases} đế đơn có 1 bộ; tính cho lực lớn nhất của chính dây, cáp dốc tới ${tx(steepest, 0)}° (có thành phần nhổ); mức sử dụng lớn nhất ${tx(maxUtil(eyes), 2)}`);
+}
 sec('IV', 'PHỤ KIỆN CHẠC CHỮ Y TẠI BÈ');
 for (const [w, n] of countBy((r) => r.lines, (r) => r.plate)) it(`Tấm chia tam giác 3 lỗ (delta plate)${rafts.some((r) => r.plate !== BRIDLE.plateWLL_t) ? ` WLL ${w} t` : ''}`, `Thép tấm mạ kẽm nhúng nóng, WLL ${w} t, 3 lỗ chốt`, 'cái', n, 0.02, '1 tấm mỗi dây; chọn thay cho vòng khuyên vì mỗi mắt cáp có lỗ riêng');
 it('Ống bọc chống mài nhánh cáp tại bích', 'Ống bọc polyurethane / vải bọc cáp, dài 1 m', 'đoạn', 2 * nLines, 0.05, 'Chỗ nhánh cáp cọ mép phao, khung thép');
@@ -223,22 +268,51 @@ for (const p of piles) { const k = `${String(p.rebarDia_mm).padStart(3, '0')}|${
 const oneGradePerDia = new Set([...byDia.keys()].map((k) => k.split('|')[0])).size === byDia.size;
 const steelRows: (string | number)[][] = [
   ...[...byDia.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, kg]) => { const [dia, grade] = k.split('|'); return [`Thép chủ cọc Φ${+dia}${oneGradePerDia ? '' : ` ${grade}`}`, `${grade}, thanh vằn`, kg, 0.03, 'Lồng thép cọc khoan nhồi (engine)']; }),
-  [`Thép râu ngàm bản nắp Φ25`, 'CB400-V, 4 thanh L600 mỗi cọc', T.shorePiles * ANCHOR_BARS_KG, 0.02, ORDER_REF],
+  ...(HV ? [[`Thép râu ngàm bản nắp Φ25`, 'CB400-V, 4 thanh L600 mỗi cọc', T.shorePiles * ANCHOR_BARS_KG, 0.02, ORDER_REF]] : []),
   ['Thép đai xoắn Φ8', 'CB240-T, thép cuộn', pileStir_kg, 0.05, 'Cọc khoan nhồi (engine)'],
   [`Thép bản đế Φ${bp.rebarDia_mm}`, 'CB400-V (lưới đế)', T.baseRebar_kg, 0.03, 'Đế BTCT (engine)'],
   ['Thép ống vít Ø89×5', 'Ống thép mạ kẽm nhúng nóng', T.screwLength_m * SCREW_KG_M, 0.05, `${tx(SCREW_KG_M, 2)} kg/m`],
-  ['Thép tấm bản nắp 400×400×20', 'SS400 mạ kẽm', T.shorePiles * PLATE_KG, 0.02, `${tx(PLATE_KG, 1)} kg/tấm`]
+  ...(HV ? [['Thép tấm bản nắp 400×400×20', 'SS400 mạ kẽm', T.shorePiles * PLATE_KG, 0.02, `${tx(PLATE_KG, 1)} kg/tấm`]] : [
+    ['Thép tấm bản mã + tai neo (đầu cọc, đài, đế)', 'SS400 mạ kẽm nhúng nóng', sum(allHeads, (h) => plateKg(h) + eyeKg(h)), 0.05, `${allHeads.length} bộ`],
+    [`Thép neo bản mã Φ${allHeads[0].anchorBarDia_mm}`, 'CB400-V', sum(allHeads, barsKg), 0.03, `${allHeads.length} bộ × ${allHeads[0].anchorBarCount} thanh`],
+    ...(caps.length ? [['Thép đài cọc đôi', 'CB400-V Φ16, Φ12; CB240-T Φ10', sum(caps, (c) => c.steel_kg), 0.05, 'twinPileCap.ts']] : [])
+  ])
 ];
 const steel = [
   ['TỔNG HỢP THÉP HỆ NEO THEO LOẠI VÀ ĐƯỜNG KÍNH'],
-  [`Chưa gồm: tai neo đầu cọc, tai neo của đế, nắp khóa vít, tấm chia tam giác${twinPoints.length ? ', đài cọc đôi' : ''} (chưa có kích thước chi tiết).`],
+  [HV ? 'Chưa gồm: tai neo đầu cọc, tai neo của đế, nắp khóa vít, tấm chia tam giác (chưa có kích thước chi tiết).' : 'Chưa gồm: nắp khóa vít, tấm chia tam giác (chưa có kích thước chi tiết).'],
   ['Loại thép', 'Quy cách', 'Khối lượng thiết kế (kg)', 'Hao hụt', 'Khối lượng đặt hàng (kg)', 'Ghi chú'],
   ...steelRows.map(([a, b, kg, w, n]) => [a, b, Math.round(kg as number), `${Math.round((w as number) * 100)}%`, Math.ceil((kg as number) * (1 + (w as number))), n]),
   ['TỔNG', '', Math.round(sum(steelRows, (r) => r[2] as number)), '', sum(steelRows, (r) => Math.ceil((r[2] as number) * (1 + (r[3] as number)))), '']
 ];
 sec(compensated ? 'VII' : 'VI', 'TỔNG THÉP HỆ NEO (chi tiết theo đường kính: sheet TongHop_Thep)');
 for (const [a, b, kg, w, n] of steelRows) it(a as string, b as string, 'kg', kg as number, w as number, n as string, 0);
-stt++; rows.push([stt, 'TỔNG THÉP HỆ NEO', 'Thép thanh + thép ống vít + thép tấm bản nắp', 'kg', Math.round(sum(steelRows, (r) => r[2] as number)), 'theo từng loại', sum(steelRows, (r) => Math.ceil((r[2] as number) * (1 + (r[3] as number)))), 'Chưa gồm tai neo, nắp khóa vít, tấm chia (chưa có kích thước chi tiết)']);
+stt++; rows.push([stt, 'TỔNG THÉP HỆ NEO', 'Thép thanh + thép ống vít + thép tấm bản nắp', 'kg', Math.round(sum(steelRows, (r) => r[2] as number)), 'theo từng loại', sum(steelRows, (r) => Math.ceil((r[2] as number) * (1 + (r[3] as number)))), HV ? 'Chưa gồm tai neo, nắp khóa vít, tấm chia (chưa có kích thước chi tiết)' : 'Chưa gồm nắp khóa vít, tấm chia (chưa có kích thước chi tiết)']);
+const headSheet = HV ? null : [
+  ['KIỂM TRA ĐẦU CỌC, ĐÀI CỌC ĐÔI, TAI NEO MẶT ĐẾ (thiết kế sơ bộ, γ = ' + LF + ')'],
+  ['Mức sử dụng = tải / khả năng; ≤ 1 là đạt. H-1…H-7: shorePileHead.ts (ma-nê, ép mặt, xé mép, hàn, thép neo, chiều dài neo); TC-1…TC-4: twinPileCap.ts. Mỗi dòng là một nhóm giống nhau (cùng bè, cùng loại).'],
+  ['Loại', 'Bè', 'Số bộ', 'T (kN)', 'Góc cáp (°)', 'Ma-nê WLL (t)', 'Lỗ chốt (mm)', 'Thép neo L (mm)', 'H-1', 'H-3', 'H-4', 'H-5', 'H-6', 'H-7', 'TC-1', 'TC-2', 'TC-3', 'TC-4'],
+  ...(() => {
+    const out: (string | number)[][] = [];
+    const u = (h: { checks: { id: string; utilization: number }[] }, id: string) => { const c = h.checks.find((k) => k.id === id); return c ? vn(c.utilization, 2) : ''; };
+    const add = (kind: string, raft: string, items: { h: Head; T: number; inc: number; cap?: typeof caps[number] }[]) => {
+      if (!items.length) return;
+      const w = items.reduce((a, b) => (maxUtil([b.cap ?? b.h]) > maxUtil([a.cap ?? a.h]) ? b : a));
+      const src = w.cap ?? w.h;
+      out.push([kind, raft, items.length, vn(w.T), vn(w.inc, 0), w.h.shackleWll_t, w.h.holeDia_mm, w.h.anchorBarLength_mm,
+        ...['H-1', 'H-3', 'H-4', 'H-5', 'H-6', 'H-7', 'TC-1', 'TC-2', 'TC-3', 'TC-4'].map((id) => u(src, id))]);
+    };
+    for (const r of rafts) {
+      const single = piles.filter((p) => p.raft === r.name && p.pileCount === 1);
+      add('Đầu cọc đơn', r.name, single.map((p) => ({ h: heads[piles.filter((q) => q.pileCount === 1).indexOf(p)], T: r.T, inc: 0 })));
+      add('Đài cọc đôi', r.name, twinPoints.filter((p) => p.raft === r.name).map((p) => { const c = caps[twinPoints.indexOf(p)]; return { h: c.head, T: r.T, inc: 0, cap: c }; }));
+      let k = 0; const own: { h: Head; T: number; inc: number }[] = [];
+      for (const b of bases0) for (const l of b.lines) { const h = eyes[k++]; if (l.raft === r.name) own.push({ h, T: l.tension_kN, inc: slopeOf(l.code) }); }
+      add('Tai neo mặt đế', r.name, own);
+    }
+    return out;
+  })()
+];
 const notes = [
   ['GHI CHÚ VÀ GIẢ ĐỊNH'], [''],
   ['1', `Số cọc, đế, bê tông, thép, vít, chiều dài cáp lấy từ engine tính toán của web (${ACTIVE_LAKE.name}, phương án chốt 12/10/2026, gió ${d.wind_ms} m/s) — không gõ tay. Chạy lại: npx vite-node scripts/buildMooringOrderBOQ.ts -- <file.xlsx>${HV ? '' : ` --lake=${ACTIVE_LAKE.id}`}.`],
@@ -247,12 +321,14 @@ const notes = [
   ['4', HV
     ? `Dây đáy: cao độ đáy hồ tại đế là GIẢ ĐỊNH (${zText}) — đo thực tế trước khi cắt; đoạn xích 1,2 m giữa tấm chia Y và cáp chính để chỉnh trên mặt nước.`
     : `Dây đáy: đế đặt trên mặt đất theo địa hình IFC (${zText}), CHƯA khảo sát — đo thực tế trước khi cắt; đoạn xích 1,2 m giữa tấm chia Y và cáp chính để chỉnh trên mặt nước.`],
-  ['5', `Bản nắp, tai neo, râu thép đầu cọc và nắp khóa vít, tai neo của đế lấy theo bảng order ngày 15/10${HV ? '' : ' của Huổi Vanh'} — CHƯA có bản vẽ / tính toán chi tiết.`],
+  ['5', HV
+    ? 'Bản nắp, tai neo, râu thép đầu cọc và nắp khóa vít, tai neo của đế lấy theo bảng order ngày 15/10 — CHƯA có bản vẽ / tính toán chi tiết.'
+    : 'Đầu cọc, đài cọc đôi và tai neo mặt đế là THIẾT KẾ SƠ BỘ của web (shorePileHead.ts, twinPileCap.ts: ma-nê, ép mặt, xé mép lỗ, đường hàn, thép neo kéo + cắt, chiều dài neo, uốn / cắt / xoắn của đài) cho γ·T, T là lực lớn nhất của bè (đầu cọc) hoặc của chính dây (đế); bản vẽ chế tạo phải được kỹ sư kết cấu lập và kiểm tra. Nắp khóa vít vẫn CHƯA thiết kế.'],
   ...(HV
     ? [['6', 'Bỏ so với bảng order 15/10: vòng khuyên chủ (thay bằng tấm chia tam giác), xích ở 590 bích (chỉ giữ 64 đoạn cho dây đáy), phao treo chuyển thành tùy chọn. Sửa: cánh/ren vít Ø105 (không phải Ø250–300), thép bản đế theo engine, cọc 1.524,6 m.']]
     : [['6', `Dao động mực nước ${tx(LV.mnlkt_m - LV.mnc_m, 2)} m (${tx(LV.mnc_m, 2)}–${tx(LV.mnlkt_m, 2)} m): lực dây của engine là cân bằng tĩnh với giả định MỌI dây được giữ vừa căng ở mọi mực nước bằng thiết bị bù (mục VI) — thiết bị này CHƯA thiết kế, chưa có trong khối lượng đặt hàng. Tăng đơ và đoạn xích chỉ để chỉnh tinh, không thay được thiết bị bù.`],
-       ['6b', `${twinPoints.length} điểm neo bờ dùng cọc đôi (${T.shorePiles} cọc / ${piles.length} điểm); đài nối đầu cọc đôi CHƯA thiết kế. ${T.bases - sharedBases}/${T.bases} đế là đế một dây ở vùng nước trống; đế nặng nhất ${tx(T.maxLift_t)} t — cần sà lan / cẩu phù hợp.`],
-       ['6c', 'Mặt bằng bè theo bản vẽ "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG" (đường bao tờ MB-B01-01; so với PA2 19/10 chỉ BÈ 4 và BÈ 6 đổi hình), số tấm pin từng bè theo bảng các tờ CT-BP (18.240 tấm). Vị trí dây, cọc, đế là thiết kế của web (scripts/planMooringLayoutV2.mjs), CHƯA khảo sát.']]),
+       ['6b', `${twinPoints.length} điểm neo bờ dùng cọc đôi (${T.shorePiles} cọc / ${piles.length} điểm); đài nối đầu cọc đôi: thiết kế sơ bộ ở mục II. ${T.bases - sharedBases}/${T.bases} đế là đế một dây ở vùng nước trống; đế nặng nhất ${tx(T.maxLift_t)} t — cần sà lan / cẩu phù hợp.`],
+       ['6c', 'Mặt bằng bè theo bản vẽ "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG" (đường bao tờ MB-B01-01; so với PA2 19/10 chỉ BÈ 4 và BÈ 6 đổi hình), số tấm pin từng bè theo bảng các tờ CT-BP — ĐÃ CHỐT 18.240 tấm (Chủ đầu tư 22/10/2026). Vị trí dây, cọc, đế là thiết kế của web (scripts/planMooringLayoutV2.mjs), CHƯA khảo sát.']]),
   ['7', 'Dây có cáp chính ngắn dưới 3 m (dây bờ rất ngắn) được ghi chú ở sheet ChieuDaiCat: rút nhánh còn 2,5 m hoặc neo thẳng không chạc Y.']
 ];
 
@@ -265,6 +341,7 @@ add(ct2, 'CocBo_TungCoc', [6, 10, 8, 12, 12, 12, 9, 10, 10, 10, 10]);
 add(de, 'DeDay_TungDe', [10, 10, 22, 16, 9, 8, 10, 11, 7, 9, 11, 11, 11]);
 add(kt, 'KiemTra_Nhanh', [8, 10, 10, 12, 14, 14, 10, 10, 12, 12, 12, 12, 12]);
 add(ct, 'ChieuDaiCat', [6, 10, 8, 8, 10, 10, 10, 14, 14, 10, 10, 10, 60]);
+if (headSheet) add(headSheet, 'KiemTra_DauCoc_De', [16, 8, 7, 8, 9, 10, 9, 10, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]);
 add(notes, 'GhiChu', [4, 170]);
 fs.writeFileSync(out, XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
 console.log(JSON.stringify({ out, lines: nLines, reach_m: vn(reach_m, 3), cleatGap_m: vn(cleatGap_m, 2), shoreMain, bedMain, branches, shortMain: lines.filter((l) => l.flag).map((l) => `${l.code} ${vn(l.main_m, 2)}`), rafts: rafts.map((r) => `${r.name} ${r.branch} ${vn(r.sfB, 2)}/${vn(r.sf1, 2)} sh ${r.mainShackle}/${r.branchShackle}`) }, null, 1));

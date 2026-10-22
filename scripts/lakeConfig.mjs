@@ -60,7 +60,7 @@ export const LAKES = {
     // open water are normal, so a base facing a raft that has no room for a partner line stays single.
     singleBaseFacingOk: true,
     // Panels of each raft, tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of the sheets CT-BP-01…08 of
-    // "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf" (18 240 panels; the Pre-FS had 16 892).
+    // "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf": 18 240 panels, SETTLED by the owner 2026-10-22 (the Pre-FS had 16 892).
     panelsByRaft: { 'BÈ 1': 2352, 'BÈ 2': 2380, 'BÈ 3': 3136, 'BÈ 4': 2252, 'BÈ 5': 784, 'BÈ 6': 1568, 'BÈ 7': 2884, 'BÈ 8': 2884 }
   }
 };

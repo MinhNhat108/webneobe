@@ -44,6 +44,13 @@ export interface RaftSummaryItem {
    * analysis that gives the line tension (src/lib/calc/mooringEquilibrium.ts).
    */
   mooringLayout?: import('../lib/calc/mooringEquilibrium').MooringLayoutInput;
+  /**
+   * Hồ Bản Mòng: what happens when the storm lock of the level-compensating
+   * devices does NOT engage — every line stays a constant-tension line of
+   * `setTension_kN`, with `stroke_m` of margin each way, until the end stop
+   * (mooringEquilibrium.ts, compensation 'device'). Written by buildRaftCatalogue.
+   */
+  lockFailure?: { setTension_kN: number; stroke_m: number; drift_m: number; maxTension_kN: number };
 }
 
 export interface MooringCoordinate {

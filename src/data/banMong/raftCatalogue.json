@@ -276,7 +276,13 @@
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 28,
-    "shorePilesPerPoint": 2
+    "shorePilesPerPoint": 2,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 5.4,
+      "maxTension_kN": 251
+    }
   },
   {
     "id": 2,
@@ -554,7 +560,13 @@
     "shoreRebarFaceCount": 2,
     "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
-    "bedRebarDia_mm": 20
+    "bedRebarDia_mm": 20,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 6.1,
+      "maxTension_kN": 133
+    }
   },
   {
     "id": 3,
@@ -889,7 +901,13 @@
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 20,
-    "shorePilesPerPoint": 2
+    "shorePilesPerPoint": 2,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 5.1,
+      "maxTension_kN": 206
+    }
   },
   {
     "id": 4,
@@ -1182,7 +1200,13 @@
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 20,
-    "shorePilesPerPoint": 2
+    "shorePilesPerPoint": 2,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 6.3,
+      "maxTension_kN": 188
+    }
   },
   {
     "id": 5,
@@ -1362,7 +1386,13 @@
     "shoreRebarFaceCount": 2,
     "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
-    "bedRebarDia_mm": 22
+    "bedRebarDia_mm": 22,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 5.1,
+      "maxTension_kN": 108
+    }
   },
   {
     "id": 6,
@@ -1584,7 +1614,13 @@
     "shoreRebarFaceCount": 2,
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
-    "bedRebarDia_mm": 20
+    "bedRebarDia_mm": 20,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 5.6,
+      "maxTension_kN": 122
+    }
   },
   {
     "id": 7,
@@ -1898,7 +1934,13 @@
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 32,
-    "shorePilesPerPoint": 2
+    "shorePilesPerPoint": 2,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 6.1,
+      "maxTension_kN": 296
+    }
   },
   {
     "id": 8,
@@ -2163,6 +2205,12 @@
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 28,
-    "shorePilesPerPoint": 2
+    "shorePilesPerPoint": 2,
+    "lockFailure": {
+      "setTension_kN": 5,
+      "stroke_m": 3,
+      "drift_m": 5.6,
+      "maxTension_kN": 178
+    }
   }
 ]

@@ -7,6 +7,7 @@
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from './lakes';
 import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf } from './huoiVanhLayout';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from './huoiVanhProject';
+import { CABLE_MBL_KN } from '../lib/calc/raftState';
 import { groundAt } from '../components/simulation/sceneModel';
 
 const vn = (x: number, d = 2) => x.toFixed(d).replace('.', ',');
@@ -64,8 +65,19 @@ export function lakeCaveats(): string[] {
   out.push(
     `Mực nước hồ dao động ${vn(mnlkt_m - mnc_m)} m (MNC ${vn(mnc_m)} → MNDB ${vn(mndb_m)} → MNLKT ${vn(mnlkt_m)} m), gấp hơn 3 lần Huổi Vanh. ` +
     'Cáp cắt cố định không dùng được (lực dây và độ trôi quá lớn — xem bảng so sánh cách bù ở Mục 4). Lực dây tính bằng cân bằng tĩnh từng dây theo mực nước, với giả định dây được BÙ dao động mực nước (mặc định: bù liên tục bằng đối trọng treo / bộ tự căng — CHƯA thiết kế; chọn ở Mục 4). ' +
-      'Mô hình lấy độ cứng của chính sợi cáp, nên thiết bị bù phải KHÓA được khi có gió bão; đối trọng trượt tự do thì bè trôi cho tới khi đối trọng chạm chặn.'
+      'Mô hình lấy độ cứng của chính sợi cáp, nên thiết bị bù phải KHÓA được khi có gió bão (khóa an toàn khi mất điện / mất tín hiệu).'
   );
+  const lf = HUOI_VANH_RAFTS.filter((r) => r.lockFailure);
+  if (lf.length) {
+    const sf = lf.map((r) => (CABLE_MBL_KN[r.selectedCable] ?? 0) / r.lockFailure!.maxTension_kN);
+    const dr = lf.map((r) => r.lockFailure!.drift_m), tt = lf.map((r) => r.lockFailure!.maxTension_kN);
+    out.push(
+      `Nếu khóa của thiết bị bù KHÔNG khóa kịp, đối trọng chỉ giữ lực căng ${vn(lf[0].lockFailure!.setTension_kN, 0)} kN và hành trình dư ${vn(lf[0].lockFailure!.stroke_m, 0)} m mỗi chiều: ` +
+      `bè trôi ${vn(Math.min(...dr), 1)}–${vn(Math.max(...dr), 1)} m (tới hết hành trình rồi dây mới căng) và lực dây vọt tới ${vn(Math.min(...tt), 0)}–${vn(Math.max(...tt), 0)} kN ` +
+      `(hệ số an toàn cáp chỉ ${vn(Math.min(...sf), 1)}–${vn(Math.max(...sf), 1)}; đế và cọc không được tính cho lực này). Đối trọng treo tự do KHÔNG đủ giữ bè: ` +
+      'cần bộ khóa / phanh chủ động, dự phòng, kiểm tra định kỳ.'
+    );
+  }
   const aground = raftsAgroundAtMnc();
   if (aground.length) {
     out.push(

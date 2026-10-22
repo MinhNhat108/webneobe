@@ -176,6 +176,13 @@ describe('Hồ Bản Mòng tab', () => {
     expect(c.some((t) => t.includes('đế ĐƠN'))).toBe(LAYOUT_COUNTS.bedBases > LAYOUT_COUNTS.sharedBases);
     expect(ACTIVE_LAKE.codeWind.confirmed).toBe(false);
     expect(c.some((t) => t.includes('Sơn La'))).toBe(true);
+    // a failed storm lock is quantified from the catalogue: drift within the stroke margin, tension well above the locked value
+    for (const r of HUOI_VANH_RAFTS) {
+      expect(r.lockFailure, r.name).toBeDefined();
+      expect(r.lockFailure!.drift_m, r.name).toBeGreaterThan(3);
+      expect(r.lockFailure!.maxTension_kN, r.name).toBeGreaterThan(r.lockFailure!.setTension_kN * 10);
+    }
+    expect(c.some((t) => t.includes('KHÔNG khóa kịp') && t.includes('KHÔNG đủ giữ bè'))).toBe(true);
     // shore lines lying on the slope near low water are named (IFC grid)
     const slope = linesOnSlope();
     expect(slope.length).toBeGreaterThan(0);

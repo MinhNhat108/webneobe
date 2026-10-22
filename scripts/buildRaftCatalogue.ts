@@ -46,7 +46,7 @@ import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
 import { lakeFromArgv } from './lakeConfig.mjs';
 import { SCREW_BASE_DEFAULTS } from '../src/lib/calc/screwAnchorBed';
-import type { MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
+import { analyseMooring, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const LAKE = lakeFromArgv();
@@ -62,6 +62,8 @@ const PROJECT = BAN_MONG ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;
 const PANELS_BY_RAFT = LAKE.panelsByRaft;
 const TOTAL_PANELS = PANELS_BY_RAFT ? Object.values(PANELS_BY_RAFT).reduce((s, v) => s + v, 0) : 18354;
 const LIMIT = 0.95;
+/** Margin of a compensating device beyond the level range, m, in the lock-failure check. */
+const LOCK_FAIL_STROKE_M = 3;
 /** focus × N of the 12-raft calibration, by the raft(s) each new raft comes from. */
 const FOCUS_PRODUCT: Record<string, number[]> = {
   'BÈ 1': [0.306 * 19], 'BÈ 2': [0.282 * 20], 'BÈ 3': [0.327 * 21],
@@ -226,6 +228,17 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
     }
   }
   if (!bedDone) notes.push(`${poly.name}: NO lake-bed pile 350x350 passes (PA1, up to 3 piles per point, L 12 m, 4D32)`);
+
+  // Bản Mòng: the storm lock fails -> constant-tension lines (the pretension) with LOCK_FAIL_STROKE_M of margin
+  if (BAN_MONG) {
+    const b = base(), st = buildRaftProjectState(b, row, b.anchor), res = calculateProject(st), lay = row.mooringLayout!;
+    const eq = analyseMooring({
+      lines: lay.lines, force_kN: res.f_env_total_kN, mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
+      floatLevel_m: lay.floatLevel_m, cleatHeight_m: st.raft.freeboardHeight_m ?? 0.35, mbl_kN: st.line.mbl_kN,
+      compensation: 'device', deviceTension_kN: st.line.pretension_kN, deviceStroke_m: LOCK_FAIL_STROKE_M
+    });
+    row = { ...row, lockFailure: { setTension_kN: st.line.pretension_kN, stroke_m: LOCK_FAIL_STROKE_M, drift_m: Math.round(eq.maxDrift_m * 10) / 10, maxTension_kN: Math.round(eq.governing.maxTension_kN) } };
+  }
 
   // tidy: omit the fields that equal the defaults of a single pile in normal steel
   const out: RaftSummaryItem = { ...row };

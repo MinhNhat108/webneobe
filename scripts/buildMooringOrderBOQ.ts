@@ -60,7 +60,7 @@ const rafts = d.rafts.map((r) => {
   const fEq = T / (2 * Math.cos(half)), fDes = BRIDLE.unequal * T;
   const branch = ['PES-24', 'PES-28', 'PES-32', 'PES-36'].find((c) => MBL[c] / fDes >= BRIDLE.sfIntact && MBL[c] / T >= BRIDLE.sfOneBranch) ?? 'PES-40';
   return { name: r.name, T, cable: r.cable, mbl: r.mbl_kN, fEq, fDes, branch, sfB: MBL[branch] / fDes, sf1: MBL[branch] / T,
-    mainShackle: wll(T), branchShackle: wll(fDes), plate: Math.max(BRIDLE.plateWLL_t, wll(T)), lines: r.lines, shore: r.shoreLines, bed: r.bedLines };
+    mainShackle: wll(T), branchShackle: wll(fDes), plate: Math.max(BRIDLE.plateWLL_t, wll(T)), lockFailure: HUOI_VANH_RAFTS.find((q) => q.name === r.name)?.lockFailure, lines: r.lines, shore: r.shoreLines, bed: r.bedLines };
 });
 const R = Object.fromEntries(rafts.map((r) => [r.name, r]));
 
@@ -205,9 +205,14 @@ for (const [w, n] of countBy((r) => r.bed, fitting)) it(`Đoạn xích chỉnh c
 it('Phao treo cáp đáy (TÙY CHỌN)', `Phao xốp đặc chịu ngập ≥ ${maxDepth} m, sức nổi 15–20 kg`, 'quả', 0, 'tùy chọn', `Không bắt buộc, chưa tính toán; nếu dùng: ${nBed} quả, treo cách đế 3 m`);
 it('Phao đánh dấu vị trí đế', 'Phao nhỏ có số hiệu, dây buộc riêng (không nối vào dây neo)', 'quả', T.bases, 0.1, 'Định vị khi thi công, bảo dưỡng; báo cho thuyền bè');
 if (compensated) {
-  sec('VI', 'THIẾT BỊ BÙ DAO ĐỘNG MỰC NƯỚC (BẮT BUỘC, CHƯA THIẾT KẾ — KHÔNG ĐẶT HÀNG THEO MỤC NÀY)');
-  it('Thiết bị bù dao động mực nước mỗi dây', `Đối trọng treo / bộ tự căng giữ dây vừa căng ở mọi mực nước (${tx(LV.mnc_m, 2)}–${tx(LV.mnlkt_m, 2)} m); hành trình thu–xả: dây đáy tới ${tx(travel('BED'))} m, dây bờ tới ${tx(travel('SHORE'))} m; phải KHÓA được khi bão`, 'bộ', nLines, 'CHƯA thiết kế',
-    `Lực dây ${tx(Math.min(...rafts.map((r) => r.T)))}–${tx(tMaxAll)} kN của engine CHỈ đúng khi có thiết bị này (cáp cắt cố định thì không cáp PES nào đủ — bảng so sánh ở Mục 4 trên web). Pre-FS gợi ý phao chỉ hướng ~2,5 t`);
+  sec('VI', 'THIẾT BỊ BÙ DAO ĐỘNG MỰC NƯỚC (BẮT BUỘC — CHỈ MỚI CÓ YÊU CẦU KỸ THUẬT, CHƯA CHỌN LOẠI: KHÔNG ĐẶT HÀNG THEO MỤC NÀY)');
+  const lock = rafts.filter((r) => r.lockFailure);
+  const pre = state.line.pretension_kN;
+  const lockCables = [...new Set(rafts.map((r) => r.cable))].sort();
+  it('Bộ tự căng / thu xả cáp mỗi dây (đối trọng hoặc tời)', `Giữ lực căng đặt ${tx(pre, 0)} kN ở mọi mực nước ${tx(LV.mnc_m, 2)}–${tx(LV.mnlkt_m, 2)} m; hành trình thu–xả: dây đáy ${tx(travel('BED'))} m, dây bờ ${tx(travel('SHORE'))} m, cộng ${tx(lock[0]?.lockFailure?.stroke_m ?? 3, 0)} m dư mỗi chiều`, 'bộ', nLines, 'CHƯA chọn loại',
+    `Yêu cầu của mô hình cân bằng (mooringEquilibrium.ts): dây luôn vừa căng ở mọi mực nước. Đối trọng treo một mình KHÔNG giữ được bè: nếu không khóa, bè trôi ${tx(Math.min(...lock.map((r) => r.lockFailure!.drift_m)))}–${tx(Math.max(...lock.map((r) => r.lockFailure!.drift_m)))} m hết hành trình dư rồi lực dây vọt tới ${Math.min(...lock.map((r) => r.lockFailure!.maxTension_kN))}–${Math.max(...lock.map((r) => r.lockFailure!.maxTension_kN))} kN`);
+  it('Bộ khóa / phanh cáp chống bão mỗi dây (fail-safe)', `Khóa cáp khi gió vượt ngưỡng, giữ tới lực đứt của cáp chính (${lockCables.map((c) => `${c}: ${MBL[c]} kN`).join('; ')}) để khóa không yếu hơn cáp; mất điện / mất tín hiệu thì tự khóa (lò xo ép phanh)`, 'bộ', nLines, 'CHƯA chọn loại',
+    `Lực dây, đế, cọc của bảng này chỉ đúng khi khóa làm việc. Cần: tín hiệu gió + dự phòng, kiểm tra định kỳ, thử tải; khóa hỏng thì hệ số an toàn cáp chỉ còn ${tx(Math.min(...lock.map((r) => MBL[r.cable] / r.lockFailure!.maxTension_kN)))}–${tx(Math.max(...lock.map((r) => MBL[r.cable] / r.lockFailure!.maxTension_kN)))} (xem cảnh báo ở Header). Pre-FS gợi ý phao chỉ hướng ~2,5 t — chưa đánh giá`);
 }
 
 // ---------------------------------------------------------------- detail sheets

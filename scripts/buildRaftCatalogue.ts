@@ -9,7 +9,8 @@
  *   npx vite-node scripts/buildRaftCatalogue.ts [--dry]
  *   npx vite-node scripts/buildRaftCatalogue.ts -- --lake=ban-mong   (Hồ Bản Mòng)
  *
- * Hồ Bản Mòng (src/data/banMong/raftCatalogue.json): 16,892 panels (Pre-FS),
+ * Hồ Bản Mòng (src/data/banMong/raftCatalogue.json): the panels of each raft from
+ * the drawing "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG" (18,240; `panelsByRaft` of lakeConfig),
  * the design depth of each raft = MNDB 662.76 - its `designBed_m` (median IFC
  * ground under it), and the LINE TENSION from the equilibrium of the raft on
  * its real lines at every level (src/lib/calc/mooringEquilibrium.ts): each row
@@ -20,14 +21,16 @@
  * Rules (the same ones the 12-raft catalogue was built with, now automated):
  *  - area / perimeter      : the outline.
  *  - length × width        : minimum-area bounding rectangle, rounded UP to 0.1 m.
- *  - solarPanelCount       : the plan's total (18,354 panels) shared by area.
+ *  - solarPanelCount       : the plan's total (18,354 panels) shared by area, or the
+ *    count of each raft when the lake gives it (`panelsByRaft`).
  *  - cableCount, shore/bed : counted from the line file.
  *  - bed/shoreAnchorDist   : the SHORTEST lake-bed / shore line, floored to 0.1 m.
  *  - focusFactor           : the earlier calibration is (focus × N) per raft.
  *    A raft keeps the product of the raft it comes from; a MERGED raft takes the
  *    LARGER product of its two parents. This is an assumption: no force-
  *    distribution model exists for the merged shapes.
- *  - cable                 : smallest PES cable with utilisation <= 0.95
+ *  - cable                 : smallest PES cable with utilisation <= 0.95, intact AND with
+ *    one line broken (C6)
  *    (<= 1.0 when none reaches 0.95).
  *  - shore pile (bored D350, round cage) and lake-bed pile (square 350, PA1):
  *    fewest piles per point, then normal-grade steel before CB500-V, then the
@@ -55,8 +58,9 @@ const polygons: Array<{ id: number; name: string; area_m2: number; perimeter_m: 
 const lines: MooringCoordinate[] = JSON.parse(fs.readFileSync(LAKE.abs.coords, 'utf8'));
 const PROJECT = BAN_MONG ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;
 
-// HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf, 2026-10-08 / Pre-FS Bản Mòng (16 892 tấm 740 Wp)
-const TOTAL_PANELS = BAN_MONG ? 16892 : 18354;
+// HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf, 2026-10-08 (shared by area) / Bản Mòng: per raft from the drawing
+const PANELS_BY_RAFT = LAKE.panelsByRaft;
+const TOTAL_PANELS = PANELS_BY_RAFT ? Object.values(PANELS_BY_RAFT).reduce((s, v) => s + v, 0) : 18354;
 const LIMIT = 0.95;
 /** focus × N of the 12-raft calibration, by the raft(s) each new raft comes from. */
 const FOCUS_PRODUCT: Record<string, number[]> = {
@@ -130,6 +134,10 @@ const totalArea = polygons.reduce((s, p) => s + p.area_m2, 0);
 const share = polygons.map((p) => (TOTAL_PANELS * p.area_m2) / totalArea);
 const panels = share.map(Math.floor);
 [...share.map((v, i) => ({ i, f: v - Math.floor(v) }))].sort((a, b) => b.f - a.f).slice(0, TOTAL_PANELS - panels.reduce((s, v) => s + v, 0)).forEach(({ i }) => { panels[i] += 1; });
+if (PANELS_BY_RAFT) polygons.forEach((p, i) => {
+  if (!(p.name in PANELS_BY_RAFT)) throw new Error(`${p.name}: no panel count in lakeConfig.panelsByRaft`);
+  panels[i] = PANELS_BY_RAFT[p.name];
+});
 
 // ------------------------------------------------------------------ engine helpers
 // `--wind=20` sizes a WHAT-IF catalogue at another wind speed; it is never written to disk.
@@ -182,8 +190,9 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   };
 
   // cable
-  const cable = CABLES.find((c) => (run({ ...row, selectedCable: c }).cableUtilization ?? Infinity) <= LIMIT)
-    ?? CABLES.find((c) => (run({ ...row, selectedCable: c }).cableUtilization ?? Infinity) <= 1);
+  // intact (C5, cableUtilization) AND one line broken (C6): the damaged case can govern on steep deep-water lines
+  const cableUtil = (c: string) => { const r = run({ ...row, selectedCable: c }); return Math.max(r.cableUtilization ?? Infinity, r.checks.find((k) => k.id === 'C6')?.utilization ?? 0); };
+  const cable = CABLES.find((c) => cableUtil(c) <= LIMIT) ?? CABLES.find((c) => cableUtil(c) <= 1);
   if (!cable) notes.push(`${poly.name}: no PES cable in the list reaches utilisation <= 1.0`);
   row = { ...row, selectedCable: cable ?? CABLES[CABLES.length - 1] };
 

@@ -970,7 +970,11 @@ for (const c of coords.filter((q) => q.type === 'BED' && !q.sharedWith)) {
       break; // the centred base is preferred for this cleat
     }
   }
-  if (!best) { report.unresolved.push(`R3 ${c.code}: no place on ${f.name} for a partner line`); continue; }
+  if (!best) {
+    // Bản Mòng has single bases in open water anyway: one left facing a raft is reported, not a violation.
+    (LAKE.singleBaseFacingOk ? report.moved : report.unresolved).push(`R3 ${c.code}: no place on ${f.name} for a partner line${LAKE.singleBaseFacingOk ? ' — kept as a single base' : ''}`);
+    continue;
+  }
   setAnchor(c, best.base);
   const partner = addBedLine(f.name, best.pt, best.base, `partner of ${c.code} on its base (R3)`);
   c.sharedWith = partner.code; partner.sharedWith = c.code;

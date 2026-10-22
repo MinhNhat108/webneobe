@@ -8,6 +8,10 @@ export interface ScriptLake {
   bedOnTerrain: boolean;
   bedMaxGround?: number;
   gapLimited: string[];
+  /** Panels of each raft from the drawing; without it the plan total is shared by area. */
+  panelsByRaft?: Record<string, number>;
+  /** R3: a single base facing a raft without room for a partner is reported, not a violation. */
+  singleBaseFacingOk?: boolean;
 }
 export const ROOT: string;
 export const LAKES: Record<'huoi-vanh' | 'ban-mong', ScriptLake>;

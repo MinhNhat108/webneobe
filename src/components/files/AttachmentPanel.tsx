@@ -136,9 +136,10 @@ export const AttachmentPanel: React.FC = () => {
                   Hồ sơ gốc của hồ Bản Mòng (chỉ tài liệu của hồ này):
                 </p>
                 <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
-                  <li><strong>Mặt bằng bố trí bè pin PA2</strong> (.dxf, xem ngay trên web)</li>
+                  <li><strong>Bố trí bè pin 22/10/2026</strong> (.pdf, 9 tờ) và đường bao 8 bè dùng tính neo (.dxf)</li>
                   <li><strong>Thông số mực nước hồ</strong> (.png)</li>
                   <li><strong>Mô hình địa hình IFC</strong> (.ifc, tải về)</li>
+                  <li><strong>Thống kê vật tư bè pin</strong> và <strong>vật tư neo, cáp neo</strong> (.xlsx)</li>
                 </ul>
                 <p className="text-slate-500 text-[11px]">
                   Thuyết minh, bảng tính và bản vẽ neo của Bản Mòng chưa có bản sinh sẵn: xuất từ các nút Bảng Tính / Bảng Neo / Xuất CAD khi đang ở tab Bản Mòng.

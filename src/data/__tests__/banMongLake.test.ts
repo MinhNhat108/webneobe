@@ -69,10 +69,13 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('8 rafts of the client plan, 92 624 m², 16 892 panels', () => {
+  it('8 rafts of the plan 22/10/2026, 93 178 m², the panels of each raft from the drawing (18 240)', () => {
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5', 'BÈ 6', 'BÈ 7', 'BÈ 8']);
-    expect(RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0)).toBe(92624);
-    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(16892);
+    expect(RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0)).toBe(93178);
+    // tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of CT-BP-01…08
+    expect(HUOI_VANH_RAFTS.map((r) => r.solarPanelCount)).toEqual([2352, 2380, 3136, 2252, 784, 1568, 2884, 2884]);
+    // vs the PA2 plan of 19/10 only BÈ 4 (notch filled in) and BÈ 6 (shortened) changed
+    expect(RAFT_POLYGONS_V2.map((p) => p.area_m2)).toEqual([12085, 12028, 16289, 11697, 4146, 8103, 14962, 13868]);
     // design depth = MNDB - median IFC ground under the raft
     for (const r of HUOI_VANH_RAFTS) {
       const p = RAFT_POLYGONS_V2.find((q) => q.name === r.name)!;

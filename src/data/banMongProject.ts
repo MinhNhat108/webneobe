@@ -1,8 +1,11 @@
 /**
  * Hồ Bản Mòng (phường Chiềng Cơi, tỉnh Sơn La) — 8 raft clusters of the client
- * plan "191026-HOBANMONG - Floor Plan - BỐ TRÍ BÈ PIN PA2" (2026-10-19),
- * 92.624 m², 16.892 panels Trina TSM-740NEG21C.20 (740 Wp, 2384 × 1303 mm),
- * 12,5 MWp (Pre-FS).
+ * drawing "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG" (2026-10-22, PDF only): 93.178 m²,
+ * 18.240 panels Trina TSM-740NEG21C.20 (740 Wp, 2384 × 1303 mm), counted per raft
+ * on the sheets CT-BP-01…08 (the Pre-FS had 16.892 panels, 12,5 MWp). The
+ * outlines come from sheet MB-B01-01, placed on the coordinates of the PA2 plan
+ * of 2026-10-19 (scripts/raftPlanPdfToDxf.py): against PA2 only BÈ 4 (notch
+ * filled in) and BÈ 6 (shortened) changed.
  *
  * Same calculation basis as Huổi Vanh (the owner's settled option: bored D350
  * shore piles + RC bases with screw piles on the lake bed, default wind
@@ -53,7 +56,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
     adjustStep_m: 0,
     eaPerMbl: 15
   };
-  const note = `Tính toán hệ thống neo 8 cụm bè pin nổi hồ Bản Mòng (BÈ 1 … BÈ 8; tổng ${totalArea.toLocaleString('vi-VN')} m², 16.892 tấm pin 740 Wp), neo bờ bằng cọc khoan nhồi D350 và neo đáy bằng đế BTCT + 4 vít xoắn (cùng phương án đã chốt ở Huổi Vanh).`;
+  const note = `Tính toán hệ thống neo 8 cụm bè pin nổi hồ Bản Mòng (BÈ 1 … BÈ 8; tổng ${totalArea.toLocaleString('vi-VN')} m², ${BAN_MONG_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0).toLocaleString('vi-VN')} tấm pin 740 Wp, mặt bằng 22/10/2026), neo bờ bằng cọc khoan nhồi D350 và neo đáy bằng đế BTCT + 4 vít xoắn (cùng phương án đã chốt ở Huổi Vanh).`;
   return {
     ...hv,
     id: 'ban-mong-fpv',
@@ -81,16 +84,24 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
     // the Huổi Vanh documents live in public/docs_huoi_vanh/ and are never listed here.
     attachments: [
       {
+        id: 'bm_bo_tri_be_pin_pdf',
+        name: '1. Bố trí bè pin hồ Bản Mòng 22/10/2026 — bản vẽ của Chủ đầu tư, 9 tờ (HOBANMONG_BO_TRI_BE_PIN_221026.pdf)',
+        mime: 'application/pdf',
+        size: 25867807,
+        kind: 'pdf' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_PIN_221026.pdf'
+      },
+      {
         id: 'bm_mat_bang_dxf',
-        name: '1. Mặt bằng bố trí bè pin PA2 — bản vẽ của Chủ đầu tư (HOBANMONG_BO_TRI_BE_PIN_PA2.dxf)',
+        name: '2. Đường bao 8 bè dùng tính neo, lấy từ tờ MB-B01-01 (HOBANMONG_BO_TRI_BE_PIN_221026.dxf)',
         mime: 'application/dxf',
-        size: 20609895,
+        size: 5977,
         kind: 'dxf' as const,
-        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_PIN_PA2.dxf'
+        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_PIN_221026.dxf'
       },
       {
         id: 'bm_thong_so_muc_nuoc_png',
-        name: '2. Thông số mực nước hồ Bản Mòng (HOBANMONG_THONG_SO_MUC_NUOC.png)',
+        name: '3. Thông số mực nước hồ Bản Mòng (HOBANMONG_THONG_SO_MUC_NUOC.png)',
         mime: 'image/png',
         size: 54177,
         kind: 'image' as const,
@@ -98,11 +109,27 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
       },
       {
         id: 'bm_dia_hinh_ifc',
-        name: '3. Mô hình địa hình lòng hồ IFC, cao độ tuyệt đối (HOBANMONG_DIA_HINH.ifc)',
+        name: '4. Mô hình địa hình lòng hồ IFC, cao độ tuyệt đối (HOBANMONG_DIA_HINH.ifc)',
         mime: 'application/x-step',
         size: 3144397,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_DIA_HINH.ifc'
+      },
+      {
+        id: 'bm_thong_ke_be_pin_xlsx',
+        name: '5. Thống kê vật tư bè pin và cấu kiện bè pin (HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx)',
+        mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        size: 594410,
+        kind: 'other' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx'
+      },
+      {
+        id: 'bm_thong_ke_neo_xlsx',
+        name: '6. Thống kê vật tư neo và cáp neo (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
+        mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        size: 741936,
+        kind: 'other' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       }
     ],
     raftsSummary: BAN_MONG_RAFTS

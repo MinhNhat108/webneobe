@@ -298,7 +298,7 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
 /** How the lines follow the water level, in words (Hồ Bản Mòng). */
 export function compensationText(mode: 'fixed' | 'seasonal' | undefined, step_m: number | undefined): string {
   if (mode !== 'seasonal') return 'cáp cắt một lần theo khoảng cách bích – chốt dài nhất giữa MNC và MNLKT, không điều chỉnh';
-  if (!step_m || step_m <= 0) return 'BÙ LIÊN TỤC — mỗi dây luôn vừa căng ở mọi mực nước nhờ thiết bị bù (đối trọng treo hoặc bộ tự căng, CHƯA thiết kế)';
+  if (!step_m || step_m <= 0) return 'BÙ LIÊN TỤC — mỗi dây luôn vừa căng ở mọi mực nước nhờ thiết bị tự căng (đối trọng / tời), có bộ KHÓA chống bão bắt buộc; thiết bị CHƯA chọn loại';
   return `căng chỉnh lại dây mỗi khi mực nước thay đổi ${vn(step_m, 1)} m (trong mỗi khoảng, dây đặt bằng khoảng cách bích – chốt dài nhất của khoảng)`;
 }
 
@@ -335,7 +335,7 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
       lines: [
         HV
           ? `Mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m trong khi dây đáy chỉ dài ${vn(Math.min(...bedSpans), 1)}–${vn(Math.max(...bedSpans), 1)} m: chiều dài cần của dây đổi theo mực nước, dây chùng – căng khác nhau, nên số dây thật sự chịu lực thay đổi theo hướng tải và mực nước. Cách góc dây 30° + hệ số tập trung (coi mọi dây cùng làm việc) cho lực dây thấp hơn thực tế nên không dùng nữa.`
-          : `Hồ sâu, mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m: góc dốc thật của dây thay đổi theo mực nước (dây đáy dốc tới 70°), nên KHÔNG dùng góc dây cố định 30° và hệ số tập trung như Huổi Vanh.`,
+          : `Hồ sâu, mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m: góc dốc thật của dây thay đổi theo mực nước (dây đáy dốc tới 70°), nên KHÔNG dùng góc dây cố định 30° và hệ số tập trung.`,
         `Mỗi bè: tải môi trường F đặt lần lượt theo 24 hướng (15°/hướng), ở mọi mực nước từ mức bè còn nổi tới MNLKT (bước 1 m, thêm MNDB và MNLKT). Bè tịnh tiến tới khi tổng lực các dây đang căng cân bằng F. Dây thẳng, đàn hồi EA = ${vn(L.eaPerMbl ?? 15, 0)} × lực đứt (GIẢ ĐỊNH cho polyester), dây chùng không chịu lực; không xét xoay bè và tải động.`,
         `${r.name} (bè có lực dây lớn nhất): F = ${vn(r.fEnv_kN)} kN; chi phối ở mực nước ${vn(g.level_m, 2)} m, tải đẩy về hướng ${g.direction_deg}°, dây ${g.maxLine} chịu ${vn(g.maxTension_kN)} kN, ${g.taut} dây cùng căng; bè trôi ${vn(g.drift_m, 2)} m. Mất dây ${g.maxLine}: dây lớn nhất còn lại ${vn(a.damaged.maxTension_kN)} kN.`,
         `Lực dây thiết kế của ${r.name}: T = ${vn(r.tMax_kN)} kN (đã cộng lực căng trước ${vn(r.pretension_kN, 0)} kN; không nhỏ hơn F / (n × cos α) = ${vn(r.tGeometric_kN)} kN); khi đứt một dây: ${vn(r.tDamaged_kN)} kN. Cáp và cọc bờ của bè kiểm tra với lực này; mỗi đế vít xoắn kiểm tra với lực lớn nhất của chính (các) dây nối vào nó (bao mọi hướng, mọi mực nước).`,
@@ -360,7 +360,9 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
       title: '8. Giả định và vấn đề còn mở',
       lines: [
         ...lakeCaveats(),
-        'Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng. Độ cứng dây EA = 15 × lực đứt là giả định.',
+        HV
+          ? 'Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng. Độ cứng dây EA = 15 × lực đứt là giả định.'
+          : 'Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng.',
         ...(HV
           ? hv[7].lines.filter((x) => !x.startsWith('Số dây làm việc'))
           : [

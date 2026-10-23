@@ -12,9 +12,14 @@ const huoiVanhRaftPolygons = RAFT_POLYGONS_V2.map((p) => ({ ...p, rafts: [p.name
 const base = (): ProjectState =>
   JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
 
+// built once: every raft runs the equilibrium analysis, too slow to repeat in each test
+let drawing: ReturnType<typeof buildMooringPileDxf> | undefined;
 const built = () => {
-  const state = base();
-  return buildMooringPileDxf(state, calculateProject(state));
+  if (!drawing) {
+    const state = base();
+    drawing = buildMooringPileDxf(state, calculateProject(state));
+  }
+  return drawing;
 };
 
 describe('DXF document structure', () => {
@@ -35,9 +40,10 @@ describe('DXF document structure', () => {
     // Trailing newline aside, the body must have an even number of lines.
     const body = lines[lines.length - 1] === '' ? lines.slice(0, -1) : lines;
     expect(body.length % 2).toBe(0);
-    for (let i = 0; i < body.length; i += 2) {
-      expect(body[i]).toMatch(/^-?\d+$/); // group codes are integers
-    }
+    // group codes are integers (collected first: one expect per line is too slow on a drawing this size)
+    const bad: string[] = [];
+    for (let i = 0; i < body.length; i += 2) if (!/^-?\d+$/.test(body[i])) bad.push(`${i}: ${body[i]}`);
+    expect(bad).toEqual([]);
   });
 
   it('declares every layer it draws on', () => {

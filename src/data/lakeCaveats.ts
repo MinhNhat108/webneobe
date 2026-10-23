@@ -87,7 +87,7 @@ export function lakeCaveats(): string[] {
   const out: string[] = [];
   out.push(
     `Mực nước hồ dao động ${vn(mnlkt_m - mnc_m)} m (MNC ${vn(mnc_m)} → MNDB ${vn(mndb_m)} → MNLKT ${vn(mnlkt_m)} m), gấp hơn 3 lần Huổi Vanh. ` +
-    'Cáp cắt cố định không dùng được (lực dây và độ trôi quá lớn — xem bảng so sánh cách bù ở Mục 4). Lực dây tính bằng cân bằng tĩnh từng dây theo mực nước, với giả định dây được BÙ dao động mực nước (mặc định: bù liên tục bằng đối trọng treo / bộ tự căng — CHƯA thiết kế; chọn ở Mục 4). ' +
+    'Cáp cắt cố định không dùng được (lực dây và độ trôi quá lớn — xem bảng so sánh cách bù ở Mục 4). Lực dây tính bằng cân bằng tĩnh từng dây theo mực nước, với giả định dây được BÙ dao động mực nước (mặc định: bù liên tục bằng bộ tự căng có khóa chống bão — CHƯA chọn loại; so sánh cách bù ở Mục 4). ' +
       'Mô hình lấy độ cứng của chính sợi cáp, nên thiết bị bù phải KHÓA được khi có gió bão (khóa an toàn khi mất điện / mất tín hiệu).'
   );
   const lf = HUOI_VANH_RAFTS.filter((r) => r.lockFailure);

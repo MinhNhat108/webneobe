@@ -4,10 +4,13 @@
  * note and the calculation workbook (`finalDesignWorkbook.ts`).
  *
  *   npx vite-node scripts/buildFinalDesignDocx.ts
+ *   npx vite-node scripts/buildFinalDesignDocx.ts -- --lake=ban-mong
  *
- * Output: docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx and the web
- * attachment public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx.
+ * Output (Huổi Vanh): docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx and the web
+ * attachment public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx;
+ * (Bản Mòng): docs/mat-bang-neo-ban-mong/ and public/docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx.
  */
+import './selectLake';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,6 +20,9 @@ import { buildRaftProjectState } from '../src/lib/calc/raftState';
 import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../src/data/huoiVanhProject';
 import { buildFinalDesign, finalDesignNote, vn, FINAL_OPTION_DATE, FINAL_OPTION_TITLE } from '../src/lib/io/finalDesignWorkbook';
+import { ACTIVE_LAKE_ID } from '../src/data/lakes';
+
+const HV = ACTIVE_LAKE_ID === 'huoi-vanh';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dflt = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
@@ -62,8 +68,8 @@ const table = (head: string[], rows: Array<Array<string | number>>) =>
 const body: Array<Paragraph | Table> = [
   para('THUYẾT MINH TÍNH TOÁN HỆ NEO BÈ', { bold: true, size: 32, align: AlignmentType.CENTER }),
   para(d.name, { bold: true, size: 26, align: AlignmentType.CENTER }),
-  para(`Phương án chốt: ${FINAL_OPTION_TITLE}`, { align: AlignmentType.CENTER }),
-  para(`Chủ đầu tư chốt ngày ${FINAL_OPTION_DATE} · Mã hồ sơ ${d.code}`, { align: AlignmentType.CENTER, after: 240 })
+  para(HV ? `Phương án chốt: ${FINAL_OPTION_TITLE}` : `Phương án neo: ${FINAL_OPTION_TITLE} (áp dụng tạm phương án chốt của Huổi Vanh, CHƯA chốt cho hồ này)`, { align: AlignmentType.CENTER }),
+  para(HV ? `Chủ đầu tư chốt ngày ${FINAL_OPTION_DATE} · Mã hồ sơ ${d.code}` : `HỒ SƠ ĐỂ XEM XÉT — chưa dùng để đặt hàng, thi công · Mã hồ sơ ${d.code}`, { align: AlignmentType.CENTER, after: 240 })
 ];
 for (const s of finalDesignNote(d)) {
   body.push(heading(s.title));
@@ -105,7 +111,7 @@ body.push(table(
 body.push(para('Đơn giá cọc khoan nhồi và sà lan là giá tham khảo thị trường do Chủ đầu tư cung cấp, không phải báo giá nhà thầu. ' +
   (d.cost.unpriced.length > 0 ? `${d.cost.unpriced.length} hạng mục của đế và vít xoắn CHƯA CÓ ĐƠN GIÁ nên chưa nằm trong tổng. ` : '') +
   'Chưa gồm: cáp neo và phụ kiện, tai neo và khóa đầu vít của đế, bích neo đầu cọc, khảo sát, thử tải.', { size: 20 }));
-body.push(para('Bảng từng cọc khoan nhồi (231 cọc), từng bước tính của mỗi đế và chiều dài cắt 295 dây: xem file HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx.', { size: 20 }));
+body.push(para(`Bảng từng cọc khoan nhồi (${T.shorePiles} cọc), từng bước tính của mỗi đế và chiều dài cắt ${T.lines} dây: xem file ${HV ? 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx' : 'HOBANMONG_BANG_TINH_NEO.xlsx'}.`, { size: 20 }));
 
 const doc = new Document({
   styles: { default: { document: { run: { font: FONT, language: LANG } } } },
@@ -115,9 +121,9 @@ const doc = new Document({
   }]
 });
 const buf = await Packer.toBuffer(doc);
-const out = [
-  path.join(here, '../docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx'),
-  path.join(here, '../public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx')
-];
+const out = HV
+  ? [path.join(here, '../docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx'), path.join(here, '../public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx')]
+  : [path.join(here, `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}/THUYET_MINH_TINH_TOAN.docx`), path.join(here, '../public/docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx')];
+fs.mkdirSync(path.dirname(out[0]), { recursive: true });
 for (const f of out) fs.writeFileSync(f, buf);
 console.log(JSON.stringify({ files: out.map((f) => path.basename(f)), bytes: buf.length, sections: finalDesignNote(d).length, rafts: d.rafts.length, bases: d.schedule.bases.length }));

@@ -263,7 +263,7 @@ export const HUOI_VANH_PROJECT = {
       id: 'doc_huoi_vanh_docx',
       name: '1. Thuyết minh tính toán phương án chốt — tính lại 23/10/2026 (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      size: 19041,
+      size: 19042,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },

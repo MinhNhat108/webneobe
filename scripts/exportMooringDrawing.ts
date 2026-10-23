@@ -4,8 +4,10 @@
  * bases with screw piles) — the same files the web buttons "Xuất CAD" and
  * "Bảng Neo" download, produced without a browser.
  *
- *   npx vite-node scripts/exportMooringDrawing.ts [outDir]
+ *   npx vite-node scripts/exportMooringDrawing.ts [outDir]                    (Hồ Huổi Vanh, docs/mat-bang-neo-9-be)
+ *   npx vite-node scripts/exportMooringDrawing.ts -- [outDir] --lake=ban-mong (Hồ Bản Mòng, docs/mat-bang-neo-ban-mong)
  */
+import './selectLake';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,9 +20,11 @@ import { buildMooringScrewBaseDxf } from '../src/lib/io/screwBaseDxf';
 import { buildScrewBaseScheduleWorkbook } from '../src/lib/io/screwBaseExcel';
 import { buildAnchorPointSchedule } from '../src/lib/io/anchorPointSchedule';
 import { buildFinalDesign, buildFinalDesignWorkbook, finalDesignNote } from '../src/lib/io/finalDesignWorkbook';
+import { ACTIVE_LAKE_ID } from '../src/data/lakes';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const outDir = process.argv[2] ?? path.join(here, '../docs/mat-bang-neo-9-be');
+const HV = ACTIVE_LAKE_ID === 'huoi-vanh';
+const outDir = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? path.join(here, HV ? '../docs/mat-bang-neo-9-be' : `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}`);
 const dflt = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
 const state = buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[0], dflt().anchor);
 const batch = HUOI_VANH_RAFTS.map((raft) => {
@@ -40,10 +44,11 @@ const write = (name: string, data: string | Buffer) => {
     return alt;
   }
 };
-const dxfName = write('mat_bang_neo_9_be.dxf', built.dxf);
-const xlsName = write('bang_thong_ke_neo_9_be.xlsx', XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+const nb = `${HUOI_VANH_RAFTS.length}_be`;
+const dxfName = write(`mat_bang_neo_${nb}.dxf`, built.dxf);
+const xlsName = write(`bang_thong_ke_neo_${nb}.xlsx`, XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
 const final = buildFinalDesign(state, results, batch);
-const calcName = write('bang_tinh_phuong_an_chot.xlsx', XLSX.write(buildFinalDesignWorkbook(final), { type: 'buffer', bookType: 'xlsx' }));
+const calcName = write(HV ? 'bang_tinh_phuong_an_chot.xlsx' : 'bang_tinh_neo.xlsx', XLSX.write(buildFinalDesignWorkbook(final), { type: 'buffer', bookType: 'xlsx' }));
 const noteName = write('THUYET_MINH_TINH_TOAN.md', ['# Thuyết minh tính toán hệ neo: cọc khoan nhồi ven bờ + đế BTCT vít xoắn', '', ...finalDesignNote(final).flatMap((sec) => [`## ${sec.title}`, '', ...sec.lines.map((l) => `- ${l}`), ''])].join(String.fromCharCode(10)));
 console.log('FINAL', calcName, noteName, JSON.stringify(final.totals), 'grand', final.cost.grandTotal_VND, 'unpriced', final.cost.unpriced.length);
 const T = built.schedule.totals;

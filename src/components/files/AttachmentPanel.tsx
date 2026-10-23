@@ -140,9 +140,10 @@ export const AttachmentPanel: React.FC = () => {
                   <li><strong>Thông số mực nước hồ</strong> (.png)</li>
                   <li><strong>Mô hình địa hình IFC</strong> (.ifc, tải về)</li>
                   <li><strong>Thống kê vật tư bè pin</strong> và <strong>vật tư neo, cáp neo</strong> (.xlsx)</li>
+                  <li><strong>Thuyết minh, bảng tính, bản vẽ neo</strong> (24/10/2026, .docx / .xlsx / .dxf)</li>
                 </ul>
                 <p className="text-slate-500 text-[11px]">
-                  Thuyết minh, bảng tính và bản vẽ neo của Bản Mòng chưa có bản sinh sẵn: xuất từ các nút Bảng Tính / Bảng Neo / Xuất CAD khi đang ở tab Bản Mòng.
+                  Hồ sơ tính toán neo của Bản Mòng là hồ sơ ĐỂ XEM XÉT: phương án neo, thiết bị bù mực nước + khóa bão, đế đơn và khảo sát địa chất chưa được chốt (xem mục 8 thuyết minh).
                 </p>
               </>
             ) : (

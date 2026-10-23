@@ -2,65 +2,71 @@
 
 ## 1. Phương án chốt
 
-- Chủ đầu tư chốt ngày 12/10/2026: Cọc khoan nhồi D350 ven bờ + đế BTCT giữ bằng vít xoắn dưới đáy hồ.
-- Hệ neo: 295 tuyến cáp tại 263 điểm neo = 231 cọc khoan nhồi ven bờ + 32 đế đáy hồ (cả 32 đế dùng chung cho hai dây của hai bè đối diện).
-- Gió tính toán V = 20 m/s. Gió tính toán V = 20 m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (V ≈ 29,7 m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng 45% mức tiêu chuẩn. Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = 30 m/s ở Tab 2 để kiểm tra.
+- Chủ đầu tư chốt ngày 12/10/2026: Cọc khoan nhồi D350 ven bờ + đế BTCT giữ bằng vít xoắn dưới đáy hồ. Lực dây tính lại ngày 23/10/2026 bằng cân bằng tĩnh của bè trên từng dây theo mực nước (thay cách góc dây 30° + hệ số tập trung); cáp, cọc, đế định cỡ lại theo lực này.
+- Hệ neo: 295 tuyến cáp tại 263 điểm neo = 231 cọc khoan nhồi ven bờ + 32 đế đáy hồ (32 đế dùng chung hai bè).
+- Gió tính toán V = 20 m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (V ≈ 29,7 m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng 45% mức tiêu chuẩn. Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = 30 m/s ở Tab 2 để kiểm tra.
+- Vận hành dây: căng chỉnh lại dây mỗi khi mực nước thay đổi 1,0 m (trong mỗi khoảng, dây đặt bằng khoảng cách bích – chốt dài nhất của khoảng).
 - Kết quả: 9/9 bè đạt; 231/231 cọc bờ đạt; 32/32 đế đạt.
 
 ## 2. Số liệu đầu vào và giả định
 
-- Mực nước hồ: MNC 380,0 m; MNDB 384,5 m; MNLKT 386,0 m.
+- Mực nước hồ: MNC 380,00 m; MNDB 384,50 m; MNLKT 386,00 m.
 - Tấm pin: 2,701 m²/tấm, nghiêng 12°, hệ số cản 1,15, hệ số che chắn giữa các hàng 0,55; sóng và dòng chảy gộp bằng hệ số 1,05.
 - Đất bờ (GIẢ ĐỊNH, chưa khảo sát): sét, c_u = 40 kPa. Bùn đáy hồ (GIẢ ĐỊNH): c_u = 20 kPa, γ' = 6 kN/m³.
 - Hệ số an toàn: cáp ≥ 3,0; cọc bờ chịu ngang 2,5; hệ số tải uốn cọc 1,2; đế: trượt 1,5, lật 1,5, nhổ vít 2,0, nền 2,5; trọng lượng đế nhân 0,9 khi chống nhổ.
 
-## 3. Lực gió lên bè (ví dụ BÈ 5A, bè có lực dây lớn nhất)
+## 3. Lực gió lên bè (ví dụ BÈ 3A, bè có lực dây lớn nhất)
 
 - Áp lực gió: q = 0,5 × ρ × V² = 0,5 × 1,25 × 20² = 250 N/m².
-- Diện tích đón gió của pin: A = số tấm × diện tích tấm × sin(nghiêng) = 4.410 × 2,701 × sin 12° = 2.477 m².
-- Lực gió lên pin: F_pin = q × C_d × A × hệ số che chắn = 250 × 1,15 × 2.477 × 0,55 = 391,6 kN.
-- Lực gió lên phao (mạn khô 0,35 m): F_phao = 15,9 kN. Tổng gió: 407,5 kN.
-- Tổng lực môi trường: F = 407,5 × 1,05 = 427,9 kN.
+- Diện tích đón gió của pin: A = số tấm × diện tích tấm × sin(nghiêng) = 3.657 × 2,701 × sin 12° = 2.054 m².
+- Lực gió lên pin: F_pin = q × C_d × A × hệ số che chắn = 250 × 1,15 × 2.054 × 0,55 = 324,7 kN.
+- Lực gió lên phao (mạn khô 0,35 m): F_phao = 15,0 kN. Tổng gió: 339,8 kN.
+- Tổng lực môi trường: F = 339,8 × 1,05 = 356,8 kN.
 
-## 4. Lực căng một dây
+## 4. Lực căng dây — phân tích cân bằng tĩnh theo mực nước
 
-- Tính hai cách, lấy giá trị lớn hơn; mọi dây của bè đều kiểm tra với lực này.
-- Cách hệ số tập trung: T = F × k + T_0 = 427,9 × 0,144 + 5 = 66,6 kN.
-- Cách chia cho số dây làm việc: T = F / (n × cos α) + T_0 = 427,9 / (6 × cos 30°) + 5 = 87,3 kN.
-- Lực dây thiết kế của BÈ 5A: T = 87,3 kN; khi đứt một dây: 103,8 kN.
-- Cáp PES-32, lực đứt 305 kN: hệ số an toàn 3,49 (yêu cầu ≥ 3,0); khi đứt một dây 2,94 (yêu cầu ≥ 2,0).
+- Mực nước dao động 6,00 m trong khi dây đáy chỉ dài 9,0–21,5 m: chiều dài cần của dây đổi theo mực nước, dây chùng – căng khác nhau, nên số dây thật sự chịu lực thay đổi theo hướng tải và mực nước. Cách góc dây 30° + hệ số tập trung (coi mọi dây cùng làm việc) cho lực dây thấp hơn thực tế nên không dùng nữa.
+- Mỗi bè: tải môi trường F đặt lần lượt theo 24 hướng (15°/hướng), ở mọi mực nước từ mức bè còn nổi tới MNLKT (bước 1 m, thêm MNDB và MNLKT). Bè tịnh tiến tới khi tổng lực các dây đang căng cân bằng F. Dây thẳng, đàn hồi EA = 15 × lực đứt (GIẢ ĐỊNH cho polyester), dây chùng không chịu lực; không xét xoay bè và tải động.
+- BÈ 3A (bè có lực dây lớn nhất): F = 356,8 kN; chi phối ở mực nước 385,00 m, tải đẩy về hướng 180°, dây B3A-D01 chịu 145,3 kN, 14 dây cùng căng; bè trôi 0,54 m. Mất dây B3A-D01: dây lớn nhất còn lại 147,3 kN.
+- Lực dây thiết kế của BÈ 3A: T = 150,3 kN (đã cộng lực căng trước 5 kN; không nhỏ hơn F / (n × cos α) = 73,7 kN); khi đứt một dây: 152,3 kN. Cáp và cọc bờ của bè kiểm tra với lực này; mỗi đế vít xoắn kiểm tra với lực lớn nhất của chính (các) dây nối vào nó (bao mọi hướng, mọi mực nước).
+- Cáp PES-40, lực đứt 475 kN: hệ số an toàn 3,16 (yêu cầu ≥ 3,0); khi đứt một dây 3,12 (yêu cầu ≥ 2,0).
+- Độ trôi bè lớn nhất (mọi hướng, mọi mực nước): 0,3 – 0,9 m tùy bè (kiểm tra C12: ≤ nửa khoảng hở nhỏ nhất tới bè bên cạnh).
+- Dây ngắn hơn 4 m (B6-D04, B6-D29) không tính vào cân bằng: lắp làm dây dự phòng, cắt dài thêm 0,5 m — bè trôi chưa tới 0,5 m nên chúng không chịu lực.
 
-## 5. Cọc khoan nhồi ven bờ (ví dụ BÈ 5A)
+## 5. Cọc khoan nhồi ven bờ (ví dụ BÈ 3A)
 
-- Cọc tròn D350 đổ tại chỗ, ngàm L_tk = 6,5 m, dài cả cọc 6,6 m; thép chủ 6Φ32 CB400-V, Đai xoắn Φ8 a150. Cáp móc cách mặt đất 0,1 m.
-- BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét): H_u = 290,2 kN; cho phép H_u / 2,5 = 116,1 kN ≥ T = 87,3 kN; mức sử dụng 0,75.
-- BP-2, uốn thân cọc (TCVN 5574:2018): 1,2 × M_max = 1,2 × 84,9 = 101,8 kNm ≤ M_rd = 121,9 kNm; mức sử dụng 0,84.
-- Cả hệ: 231 cọc, tổng dài 1.524,6 m, 146,7 m³ bê tông, 38,3 tấn thép. Lực kiểm tra cọc là toàn bộ lực dây (không giảm theo góc xiên), thiên về an toàn.
+- Cọc tròn D350 đổ tại chỗ, ngàm L_tk = 6,5 m, dài cả cọc 6,6 m; thép chủ 8Φ25 CB400-V, Đai xoắn Φ8 a150. Cáp móc cách mặt đất 0,1 m.
+- Điểm neo CỌC ĐÔI: 2 cọc cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3D; mỗi cọc chịu P = T / (2 × 0,9) = 83,5 kN (hệ số nhóm là GIẢ ĐỊNH); đài BTCT nối hai đầu cọc: thiết kế sơ bộ ở bảng thống kê vật tư neo (twinPileCap.ts).
+- BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét): H_u = 290,2 kN; cho phép H_u / 2,5 = 116,1 kN ≥ P = 83,5 kN; mức sử dụng 0,72.
+- BP-2, uốn thân cọc (TCVN 5574:2018): 1,2 × M_max = 1,2 × 79,9 = 95,8 kNm ≤ M_rd = 103,7 kNm; mức sử dụng 0,92.
+- Cả hệ: 262 cọc, tổng dài 1.729,2 m, 166,4 m³ bê tông, 57,7 tấn thép. Lực kiểm tra cọc là toàn bộ lực dây (không giảm theo góc xiên), thiên về an toàn.
 
-## 6. Đế BTCT + vít xoắn (ví dụ HV-DV008, đế làm việc nặng nhất)
+## 6. Đế BTCT + vít xoắn (ví dụ HV-DV028, đế làm việc nặng nhất)
 
 - Một vít: ống Ø89×5, ren Ø105, ngàm 3,0 m. Sức chịu nhổ cực hạn Q_u = α × c_u × π × D_ren × L = 0,8 × 20 × π × 0,105 × 3,0 = 15,8 kN; cho phép Q_a = Q_u / 2 = 7,9 kN. Sức chịu ngang cực hạn H_u = 15,0 kN.
-- Đế HV-DV008 giữ hai dây B3-D20 (BÈ 3, T = 38,6 kN, dài 12,34 m) và B3A-D22 (BÈ 3A, T = 73,7 kN, dài 12,34 m). Bích bè cao hơn mặt nước 0,35 m.
-- Tổ hợp chi phối: cả hai dây căng (MN cao). Lực nhổ T_v = 58,3 kN (hai dây cộng lại), lực ngang T_h = 29,9 kN (cộng véc-tơ).
+- Đế HV-DV028 giữ hai dây B7-D20 (BÈ 7, T = 67,0 kN, dài 11,52 m) và B8-D31 (BÈ 8, T = 52,7 kN, dài 11,52 m). Bích bè cao hơn mặt nước 0,35 m.
+- Tổ hợp chi phối: cả hai dây căng (MN cao). Lực nhổ T_v = 65,3 kN (hai dây cộng lại), lực ngang T_h = 12,0 kN (cộng véc-tơ).
 - Đế 2,75 × 2,75 × 0,4 m: thể tích 3,03 m³, nặng 75,6 kN trên cạn, W' = 3,03 × (25 − 10) = 45,4 kN trong nước (đã trừ lực đẩy nổi).
-- SV-1 nhổ: T_v ≤ 0,9 × W' + 4 × Q_a = 72,5 kN; mức sử dụng 0,80.
-- SV-2 trượt: 1,5 × T_h ≤ bám dính đáy + gờ + 4 × H_u; mức sử dụng 0,67 (bám dính đáy lấy bằng 0 khi T_v > W').
-- SV-3 lật quanh mép đế: 1,5 × M_lật = 1,5 × 96,7 ≤ M_giữ = 149,5 kNm; mức sử dụng 0,97.
-- SV-4 một vít: N_1 = 7,8 kN ≤ Q_a; mức sử dụng 0,98. SV-5 nền: 0,15. SV-6 thép bản (lưới Ø12 a200, hai lớp): 0,62.
-- Cả hệ: 32 đế (11 đế 2,50 m, 19 đế 2,75 m, 2 đế 3,25 m), 92,8 m³ bê tông, 4,4 tấn thép bản, 128 vít (474 m), đế nặng nhất khi cẩu 10,8 tấn.
-- Tổng lực nhổ lên 32 đế 1.643 kN, tổng sức chống nhổ 2.275 kN. Mức sử dụng lớn nhất: nhổ 0,89, trượt 0,85, lật 0,97, một vít 0,99.
+- SV-1 nhổ: T_v ≤ 0,9 × W' + 4 × Q_a = 72,5 kN; mức sử dụng 0,90.
+- SV-2 trượt: 1,5 × T_h ≤ bám dính đáy + gờ + 4 × H_u; mức sử dụng 0,61 (bám dính đáy lấy bằng 0 khi T_v > W').
+- SV-3 lật quanh mép đế: 1,5 × M_lật = 1,5 × 96,4 ≤ M_giữ = 149,5 kNm; mức sử dụng 0,97.
+- SV-4 một vít: N_1 = 7,7 kN ≤ Q_a; mức sử dụng 0,98. SV-5 nền: 0,15. SV-6 thép bản (lưới Ø12 a200, hai lớp): 0,62.
+- Cả hệ: 32 đế (28 đế 2,50 m, 2 đế 2,75 m, 1 đế 3,00 m, 1 đế 3,75 m), 84,7 m³ bê tông, 4,1 tấn thép bản, 128 vít (474 m), đế nặng nhất khi cẩu 14,3 tấn.
+- Tổng lực nhổ lên 32 đế 1.368 kN, tổng sức chống nhổ 2.165 kN. Mức sử dụng lớn nhất: nhổ 0,90, trượt 0,65, lật 0,97, một vít 0,98.
 
-## 7. Chiều dài cắt cáp
+## 7. Chiều dài cắt cáp và điều chỉnh dây
 
-- Cáp không lắp bằng cách kéo căng: mỗi dây cắt theo khoảng cách thẳng từ bích bè tới chốt neo ở mực nước mà khoảng cách đó dài nhất (64 dây đáy ở MNLKT, 231 dây bờ ở MNC).
-- Tổng chiều dài cắt: dây bờ 6.509 m, dây đáy 1.129 m, chưa gồm đoạn bện đầu và phụ kiện. Phải đo cao độ đáy từng đế trước khi cắt dây đáy.
+- Mỗi dây cắt đủ dài cho mực nước làm khoảng cách bích – chốt dài nhất (64 dây đáy ở MNLKT, 231 dây bờ ở MNC). Tổng chiều dài cắt: dây bờ 6.510 m, dây đáy 1.129 m, chưa gồm đoạn bện đầu và phụ kiện.
+- QUY TRÌNH VẬN HÀNH BẮT BUỘC: chỉnh lại mọi dây cho vừa căng mỗi khi mực nước thay đổi 1,0 m (đo từ MNC). Đầu dây phải chỉnh được: dây đáy tới 2,6 m cả mùa (đoạn xích chỉnh), dây bờ tới 3,5 m (tăng đơ, thêm đoạn xích ở dây ngắn).
 
 ## 8. Giả định và vấn đề còn mở
 
+- Lực dây tính bằng cân bằng tĩnh của bè trên từng dây theo mực nước (380,0–386,0 m), với QUY TRÌNH VẬN HÀNH BẮT BUỘC: chỉnh lại độ căng mọi dây mỗi khi mực nước thay đổi 1,0 m. Nếu cáp cắt một lần rồi để nguyên, dây đáy chùng khi nước thấp và lực dồn vào ít dây: lực dây tới 93–190 kN; 8/9 bè khi đó không còn đủ hệ số an toàn cáp (thấp nhất 1,6, yêu cầu ≥ 3).
+- 2 dây quá ngắn (B6-D04, B6-D29) lắp làm DÂY DỰ PHÒNG: cắt dài thêm 0,5 m, không tính chịu lực (dây ngắn như vậy cứng tới mức hút gần hết tải của bè).
+- Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng. Độ cứng dây EA = 15 × lực đứt là giả định.
 - Chưa có khảo sát địa chất: c_u đất bờ và bùn đáy là giả định. Sức chịu của vít tỷ lệ thuận với c_u; cọc bờ không đạt ở một số bè nếu c_u đất bờ chỉ 20 kPa.
-- Số dây làm việc lấy bằng 6 và góc dây 30° cho mọi bè là giả định; số dây thực sự căng theo từng hướng gió ở MNC và MNLKT chưa kiểm tra.
 - Hệ số che chắn 0,55 và diện tích chiếu của tấm nghiêng quyết định lực gió; lực gió trên một m² bè ở đây thấp hơn một số hồ sơ tham khảo.
-- Sức chịu nhổ và sức chịu ngang của vít tính độc lập, chưa xét tương tác. Chưa thiết kế: tai neo đôi của đế, khóa đầu vít, móc cẩu, chống ăn mòn, đài / bích neo đầu cọc.
+- Sức chịu nhổ và sức chịu ngang của vít tính độc lập, chưa xét tương tác. Đầu cọc, đài cọc đôi, tai neo mặt đế mới có thiết kế sơ bộ (bảng thống kê vật tư neo, sheet KiemTra_DauCoc_De); chưa thiết kế: khóa đầu vít, móc cẩu, chống ăn mòn.
 - Cao độ đáy đặt đế là đáy thiết kế, chưa phải khảo sát; tại 4 đế địa hình IFC cao hơn đáy thiết kế trên 0,5 m. 183/231 cọc bờ đứng ở chỗ mặt đất thấp hơn MNDB (thi công mùa nước thấp, có ống vách).
 - Ba dây của cọc bờ đã định vị còn rất xiên so với mép bè: B7-D01, B7-D09, B8-D13.
 - Lớp bê tông bảo vệ cọc bờ tới đai chỉ 26–30 mm (tính với 50 mm tới tim thép chủ).

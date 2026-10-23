@@ -38,31 +38,31 @@ describe('Default unit prices come from the reference price lists', () => {
 });
 
 describe('Quotation for Huổi Vanh at the default prices', () => {
-  it('takes the quantities from the pile schedule at the 20 m/s default: 231 bored piles, 1 524.6 m; 64 driven piles (PA1), 595.5 m', () => {
+  it('takes the quantities from the pile schedule at the 20 m/s default: 262 bored piles, 1 729.2 m; 83 driven piles (PA1), 773.0 m', () => {
     const { rows } = setup();
     const c = calculateCostEstimate(DEFAULT_COST_PARAMS, rows);
-    expect([c.totalShorePiles, c.totalBedPiles, c.totalPiles]).toEqual([231, 64, 295]);
+    expect([c.totalShorePiles, c.totalBedPiles, c.totalPiles]).toEqual([262, 83, 345]);
     expect(c.bedAnchorKind).toBe('pile');
     expect(c.unpriced).toEqual([]);
-    expect(c.totalShoreMeters).toBeCloseTo(1524.6, 6);
-    expect(c.totalBedMeters).toBeCloseTo(595.5, 6);
+    expect(c.totalShoreMeters).toBeCloseTo(1729.2, 6);
+    expect(c.totalBedMeters).toBeCloseTo(773.0, 6);
     expect(c.totalMeters).toBeCloseTo(rows.reduce((s, r) => s + r.pileCount * r.Ltotal_m, 0), 6);
   });
 
   it('hand check of every line and of the total', () => {
     const { rows } = setup();
     const c = calculateCostEstimate(DEFAULT_COST_PARAMS, rows);
-    expect(c.shoreTotal_VND).toBeCloseTo(1524.6 * 480_000, 3); // 731 808 000
-    expect(c.bedMaterialTotal_VND).toBeCloseTo(595.5 * 380_000, 3); // 226 290 000
-    expect(c.bedDrivingTotal_VND).toBeCloseTo(595.5 * 170_000, 3); // 101 235 000
-    expect(c.bedLogisticsTotal_VND).toBeCloseTo(0.07 * 595.5 * 380_000, 3); // 15 840 300
+    expect(c.shoreTotal_VND).toBeCloseTo(1729.2 * 480_000, 3); // 830 016 000
+    expect(c.bedMaterialTotal_VND).toBeCloseTo(773.0 * 380_000, 3); // 293 740 000
+    expect(c.bedDrivingTotal_VND).toBeCloseTo(773.0 * 170_000, 3); // 131 410 000
+    expect(c.bedLogisticsTotal_VND).toBeCloseTo(0.07 * 773.0 * 380_000, 3); // 20 561 800
     expect(c.bedBargeSetup_VND).toBe(50_000_000);
-    expect(c.bedTotal_VND).toBeCloseTo(226_290_000 + 101_235_000 + 15_840_300 + 50_000_000, 3);
-    expect(c.directTotal_VND).toBeCloseTo(731_808_000 + 393_365_300, 3); // 1 125 173 300
-    expect(c.contingency_VND).toBeCloseTo(0.05 * 1_125_173_300, 3);
-    expect(c.beforeVat_VND).toBeCloseTo(1.05 * 1_125_173_300, 3);
-    expect(c.vat_VND).toBeCloseTo(0.08 * 1.05 * 1_125_173_300, 3);
-    expect(c.grandTotal_VND).toBeCloseTo(1.08 * 1.05 * 1_125_173_300, 2); // 1 275 946 522
+    expect(c.bedTotal_VND).toBeCloseTo(293_740_000 + 131_410_000 + 20_561_800 + 50_000_000, 3);
+    expect(c.directTotal_VND).toBeCloseTo(830_016_000 + 495_711_800, 3); // 1 325 727 800
+    expect(c.contingency_VND).toBeCloseTo(0.05 * 1_325_727_800, 3);
+    expect(c.beforeVat_VND).toBeCloseTo(1.05 * 1_325_727_800, 3);
+    expect(c.vat_VND).toBeCloseTo(0.08 * 1.05 * 1_325_727_800, 3);
+    expect(c.grandTotal_VND).toBeCloseTo(1.08 * 1.05 * 1_325_727_800, 2); // 1 503 375 325
     expect(c.lines.map((l) => l.no)).toEqual(['A', 'B.1', 'B.2', 'B.3', 'B.4']);
     expect(c.lines.reduce((s, l) => s + l.amount_VND, 0)).toBeCloseTo(c.directTotal_VND, 3);
   });
@@ -75,10 +75,10 @@ describe('Quotation for Huổi Vanh at the default prices', () => {
     expect(sum((b) => b.totalCost_VND)).toBeCloseTo(c.directTotal_VND, 3);
     expect(sum((b) => b.shoreCost_VND)).toBeCloseTo(c.shoreTotal_VND, 3);
     expect(sum((b) => b.bedCost_VND)).toBeCloseTo(c.bedTotal_VND, 3); // includes the shared barge set-up
-    expect(sum((b) => b.shorePiles)).toBe(231);
-    expect(sum((b) => b.bedPiles)).toBe(64);
+    expect(sum((b) => b.shorePiles)).toBe(262);
+    expect(sum((b) => b.bedPiles)).toBe(83);
     const be5a = c.raftBreakdowns.find((b) => b.raftName === 'BÈ 5A')!;
-    expect([be5a.shorePiles, be5a.bedPiles]).toEqual([36, 13]); // one pile per point at the 20 m/s default
+    expect([be5a.shorePiles, be5a.bedPiles]).toEqual([36, 13]); // one pile per point at the 20 m/s default (BÈ 3A has two)
   });
 
   it('states how much heavier the designed reinforcement is than a reference pile', () => {
@@ -104,14 +104,14 @@ describe('Quotation with the lake-bed anchors on screw-pile bases (the design)',
     const { screw, summary } = qty();
     const c = calculateCostEstimate(DEFAULT_COST_PARAMS, rows, screw);
     expect(c.bedAnchorKind).toBe('screwBase');
-    expect([c.totalBases, c.totalBedPiles, c.totalShorePiles]).toEqual([32, 0, 231]);
+    expect([c.totalBases, c.totalBedPiles, c.totalShorePiles]).toEqual([32, 0, 262]);
     expect(c.baseConcrete_m3).toBeCloseTo(summary.concrete_m3, 6);
     expect(c.screwLength_m).toBeCloseTo(summary.screwLength_m, 6);
     expect(c.lines.map((l) => l.no)).toEqual(['A', 'B.1', 'B.2', 'B.3', 'B.4', 'B.5']);
     expect(c.unpriced).toHaveLength(4);
     expect(c.lines.filter((l) => l.note.startsWith('CHƯA CÓ ĐƠN GIÁ'))).toHaveLength(4);
     expect(c.bedTotal_VND).toBe(50_000_000); // only the barge set-up has a price
-    expect(c.shoreTotal_VND).toBeCloseTo(1524.6 * 480_000, 3); // the shore piles are the same in both options
+    expect(c.shoreTotal_VND).toBeCloseTo(1729.2 * 480_000, 3); // the shore piles are the same in both options
   });
 
   it('once prices are entered every line is quantity x rate and the rafts add up', () => {
@@ -145,16 +145,16 @@ describe('Editable prices', () => {
     const detailed = calculateCostEstimate({ ...DEFAULT_COST_PARAMS, shoreBoredCostMode: 'detailed' }, rows);
     expect(detailed.shoreTotal_VND).toBeCloseTo(base.shoreTotal_VND, 3); // 270 000 + 210 000 = 480 000
     const dear = calculateCostEstimate({ ...DEFAULT_COST_PARAMS, shoreBoredCostMode: 'detailed', shoreLaborRate_VND_m: 300_000 }, rows);
-    expect(dear.shoreTotal_VND - base.shoreTotal_VND).toBeCloseTo(1524.6 * 30_000, 3);
+    expect(dear.shoreTotal_VND - base.shoreTotal_VND).toBeCloseTo(1729.2 * 30_000, 3);
     const sur = calculateCostEstimate({ ...DEFAULT_COST_PARAMS, shoreRebarSurcharge_VND_m: 100_000, bedRebarSurcharge_VND_m: 50_000 }, rows);
-    expect(sur.shoreTotal_VND - base.shoreTotal_VND).toBeCloseTo(1524.6 * 100_000, 3);
-    expect(sur.bedMaterialTotal_VND - base.bedMaterialTotal_VND).toBeCloseTo(595.5 * 50_000, 3);
+    expect(sur.shoreTotal_VND - base.shoreTotal_VND).toBeCloseTo(1729.2 * 100_000, 3);
+    expect(sur.bedMaterialTotal_VND - base.bedMaterialTotal_VND).toBeCloseTo(773.0 * 50_000, 3);
     expect(sur.bedLogisticsTotal_VND).toBeGreaterThan(base.bedLogisticsTotal_VND); // logistics follows the purchase price
     const noVat = calculateCostEstimate({ ...DEFAULT_COST_PARAMS, includeVat: false }, rows);
     expect(noVat.vat_VND).toBe(0);
     expect(noVat.grandTotal_VND).toBeCloseTo(base.beforeVat_VND, 3);
     const prestressed = calculateCostEstimate({ ...DEFAULT_COST_PARAMS, bedMaterialPreset: 'prestressed', bedMaterialRate_VND_m: 840_000 }, rows);
-    expect(prestressed.bedMaterialTotal_VND).toBeCloseTo(595.5 * 840_000, 3);
+    expect(prestressed.bedMaterialTotal_VND).toBeCloseTo(773.0 * 840_000, 3);
   });
 
   it('no lake-bed piles, no barge', () => {
@@ -174,10 +174,10 @@ describe('Quotation workbook', () => {
     const data = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.BaoGia_ThiCong, { header: 1 });
     const row = (label: string) => data.find((r) => r[1] === label || r[0] === label)!;
     expect(row('TỔNG CỘNG')[5]).toBe(Math.round(c.grandTotal_VND));
-    expect(row('CỘNG CHI PHÍ TRỰC TIẾP (A + B)')[5]).toBe(1_125_173_300);
-    expect(data.find((r) => r[0] === 'A')![5]).toBe(731_808_000);
+    expect(row('CỘNG CHI PHÍ TRỰC TIẾP (A + B)')[5]).toBe(1_325_727_800);
+    expect(data.find((r) => r[0] === 'A')![5]).toBe(830_016_000);
     expect(data.filter((r) => /^BÈ \d+A?$/.test(String(r[0])))).toHaveLength(9);
-    expect(data.find((r) => r[0] === 'TỔNG')![7]).toBe(1_125_173_300);
+    expect(data.find((r) => r[0] === 'TỔNG')![7]).toBe(1_325_727_800);
     expect(data.some((r) => String(r[0]).includes('GIÁ THAM KHẢO'))).toBe(true);
     expect(costExcelFileName(state, new Date(2026, 9, 4))).toBe(`bao-gia-thi-cong-coc_${state.meta.code}_20261004.xlsx`);
   });

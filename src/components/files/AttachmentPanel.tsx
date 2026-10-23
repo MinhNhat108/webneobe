@@ -148,13 +148,17 @@ export const AttachmentPanel: React.FC = () => {
             ) : (
               <>
                 <p className="text-slate-600 text-[11px]">
-                  Ba tài liệu của phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn):
+                  Tài liệu của phương án chốt (cọc khoan nhồi ven bờ + đế BTCT vít xoắn), <strong>tính lại ngày 23/10/2026</strong> với lực dây cân bằng theo mực nước (chỉnh dây mỗi 1 m mực nước):
                 </p>
                 <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
                   <li><strong>Thuyết minh tính toán</strong> (.docx)</li>
-                  <li><strong>Bảng tính Excel</strong> (.xlsx, có 4 sheet công thức, ô vàng là ô nhập)</li>
+                  <li><strong>Bảng tính Excel</strong> (.xlsx, kèm sheet cân bằng theo từng mực nước)</li>
                   <li><strong>Bản vẽ CAD bố trí neo</strong> (.dxf, mở được bằng AutoCAD và xem ngay trên web)</li>
+                  <li><strong>Thống kê vật tư neo, cáp neo</strong> và <strong>vật tư bè pin</strong> (.xlsx)</li>
                 </ul>
+                <p className="text-slate-500 text-[11px]">
+                  Bản tính cũ (12/10/2026, góc dây 30° + hệ số tập trung) đã được thay thế, lưu riêng để đối chiếu.
+                </p>
               </>
             )}
           </div>

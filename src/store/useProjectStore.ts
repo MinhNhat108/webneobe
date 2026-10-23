@@ -567,9 +567,15 @@ export const useProjectStore = create<ProjectStore>()(
             const item = HUOI_VANH_RAFTS.find((r) => r.id === state.activeRaftId);
             if (item?.mooringLayout) {
               const dflt = HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState;
+              // Huổi Vanh copies saved before 2026-10-23 hold the old 383 / 384 level fields: take the real levels
+              const oldLevels = state.currentProject.env.mndbt_m === 383 && state.currentProject.env.mncn_m === 384;
               state.currentProject = {
                 ...state.currentProject,
-                env: { ...state.currentProject.env, mnc_m: state.currentProject.env.mnc_m ?? dflt.env.mnc_m },
+                env: {
+                  ...state.currentProject.env,
+                  mnc_m: state.currentProject.env.mnc_m ?? dflt.env.mnc_m,
+                  ...(oldLevels ? { mndbt_m: dflt.env.mndbt_m, mncn_m: dflt.env.mncn_m } : {})
+                },
                 line: {
                   ...state.currentProject.line,
                   layout: item.mooringLayout,

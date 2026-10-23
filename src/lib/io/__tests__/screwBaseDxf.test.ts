@@ -49,11 +49,15 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared 
     }
   });
 
-  it('every line carries the governing tension of ITS raft; the raft-level engine base is kept beside the per-point bases', () => {
+  it('every line carries its own largest tension (equilibrium), never above the raft tension; the raft-level engine base is kept beside the per-point bases', () => {
     const { state, results, batch } = setup();
     const s = buildScrewBaseSchedule(state, results, batch);
     for (const b of s.bases) {
-      for (const l of b.lines) expect(l.tension_kN, l.code).toBe(batch.find((x) => x.raft.name === l.raft)!.results.t_max_intact_kN);
+      // the largest tension of THAT line in the equilibrium (every level and direction) + the pretension, capped by its raft's
+      for (const l of b.lines) {
+        const r = batch.find((x) => x.raft.name === l.raft)!.results;
+        expect(l.tension_kN, l.code).toBe(Math.min(r.t_max_intact_kN, r.mooringAnalysis!.lineMax_kN[l.code] + 5));
+      }
       expect(b.Tmax_kN, b.baseId).toBe(Math.max(...b.lines.map((l) => l.tension_kN)));
       expect(b.ok, b.baseId).toBe(true);
     }
@@ -89,15 +93,16 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared 
     expect(T.rebar_kg).toBeCloseTo(sum.rebar_kg, 6);
     expect(T.screwLength_m).toBeCloseTo(sum.screwLength_m, 6);
     expect(T.maxLiftMass_t).toBeCloseTo(sum.maxLiftMass_t, 9);
-    // At the 20 m/s default 11 bases are the workbook base 2.5 m; the others need 2.75–3.25 m, up to 10.8 t to lift.
-    // The largest ones are the shared bases of the narrow gap BÈ 3 – BÈ 3A, governed by BOTH lines taut.
-    expect(sum.basesBySide).toEqual({ '2.50': 11, '2.75': 19, '3.25': 2 });
-    expect(sum.enlargedRafts).toEqual(['BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7']);
-    expect(sum.side_m).toEqual([2.5, 3.25]);
-    expect(sum.maxLiftMass_t).toBeGreaterThan(10.5);
-    expect(sum.maxLiftMass_t).toBeLessThan(11);
-    expect(sum.concrete_m3).toBeGreaterThan(90);
-    expect(sum.concrete_m3).toBeLessThan(98);
+    // At the 20 m/s default (each base sized for the largest equilibrium tension of its own lines) 28 bases are the
+    // workbook base 2.5 m; the others need 2.75–3.75 m, up to 14.3 t to lift. The raft-level engine base (every bed
+    // line at the raft's governing tension, shortest bed line) is larger on every raft but BÈ 1.
+    expect(sum.basesBySide).toEqual({ '2.50': 28, '2.75': 2, '3.00': 1, '3.75': 1 });
+    expect(sum.enlargedRafts).toEqual(['BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9']);
+    expect(sum.side_m).toEqual([2.5, 3.75]);
+    expect(sum.maxLiftMass_t).toBeGreaterThan(14);
+    expect(sum.maxLiftMass_t).toBeLessThan(14.6);
+    expect(sum.concrete_m3).toBeGreaterThan(82);
+    expect(sum.concrete_m3).toBeLessThan(88);
     expect(sum.allOk).toBe(true);
   });
 });
@@ -161,7 +166,7 @@ describe('Option 3 DXF drawing', () => {
     expect(out.dxf).toContain('\nSTYLE\n2\nVN\n');
     expect(out.dxf).toContain('arial.ttf');
     const texts = parse(out.dxf).entities.filter((e: any) => e.type === 'TEXT').map((e: any) => decode(e.text as string));
-    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (231 ĐIỂM NEO, 231 CỌC)'))).toBe(true);
+    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (231 ĐIỂM NEO, 262 CỌC)'))).toBe(true);
     expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (32 ĐẾ, 32 ĐẾ DÙNG CHUNG, 64 TUYẾN CÁP)'))).toBe(true);
     expect(texts.some((t) => t.includes('CHI TIẾT ĐẾ NEO ĐÁY HỒ'))).toBe(true);
     // every TEXT entity uses the Vietnamese style
@@ -196,8 +201,8 @@ describe('Option 3 DXF drawing', () => {
     const sharedBase = out.schedule.bases.find((b) => b.shared)!;
     expect(bedLines.filter((l) => Math.hypot(l.vertices[1].x - sharedBase.x, l.vertices[1].y - sharedBase.y) < 0.01)).toHaveLength(2);
     expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(231);
-    // 231 locating circles + 231 piles (a twin-pile point would add a circle)
-    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'CIRCLE')).toHaveLength(231 + 231);
+    // 231 locating circles + 262 piles (the 31 twin-pile points of BÈ 3A add a circle each)
+    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'CIRCLE')).toHaveLength(231 + 262);
   });
 
   it('states the assumptions and what is not designed, and carries no money', () => {

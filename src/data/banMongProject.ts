@@ -127,7 +127,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_neo_xlsx',
         name: '6. Thống kê vật tư neo và cáp neo (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 730139,
+        size: 730267,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       }

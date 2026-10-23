@@ -295,4 +295,15 @@ export interface MooringLayoutInput {
   /** Smallest clear distance from the raft to another raft, m (drift check: half of it). */
   minGap_m: number;
   lines: EqLine[];
+  /**
+   * Lines left out of `lines`: shorter than STANDBY_SPAN_M in plan, installed with STANDBY_SLACK_M of slack
+   * as standby lines (a 2 m rope is so stiff it would take the whole load). Valid while the drift stays
+   * under the slack (catalogue script checks it).
+   */
+  standbyLines?: string[];
 }
+
+/** A line shorter than this in plan is a standby line (installed slack, not counted in the equilibrium), m. */
+export const STANDBY_SPAN_M = 4;
+/** Slack of a standby line at every level, m. */
+export const STANDBY_SLACK_M = 0.5;

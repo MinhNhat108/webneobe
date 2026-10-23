@@ -205,23 +205,23 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     const bed = HUOI_VANH_RAFTS.reduce((s, r) => s + r.bedAnchors * (r.bedPilesPerPoint ?? 1) * r.bedPileD_m! ** 2 * (r.bedPileL_m! + (a.bed1Stickup_m ?? 0)), 0);
     // shore piles are ROUND (bored D350): area = pi D^2 / 4
     const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + r.shoreAnchors * (r.shorePilesPerPoint ?? 1) * (Math.PI * r.shorePileD_m! ** 2 / 4) * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
-    expect(c.shorePileCount).toBe(231);
-    expect(c.pa1BedPileCount).toBe(64);
+    expect(c.shorePileCount).toBe(262); // 31 twin-pile points at BÈ 3A
+    expect(c.pa1BedPileCount).toBe(83);
     expect(c.pa1BedConcrete_m3).toBeCloseTo(bed, 6);
     expect(c.shoreConcrete_m3).toBeCloseTo(shore, 6);
   });
 
-  it('pins the computed quantities at the 20 m/s default: blocks 19–68 t against 350 mm piles of 2.6–3.1 t, ~1 205 m³ against ~73 m³ (64 lake-bed lines)', () => {
+  it('pins the computed quantities at the 20 m/s default: blocks 49–109 t against 350 mm piles of 2.6–3.2 t, ~1 940 m³ against ~95 m³ (64 lake-bed lines)', () => {
     const c = compare();
-    expect(c.blockMass_t[0]).toBeGreaterThan(17);
-    expect(c.blockMass_t[0]).toBeLessThan(22);
-    expect(c.blockMass_t[1]).toBeGreaterThan(62);
-    expect(c.blockMass_t[1]).toBeLessThan(74);
+    expect(c.blockMass_t[0]).toBeGreaterThan(45);
+    expect(c.blockMass_t[0]).toBeLessThan(53);
+    expect(c.blockMass_t[1]).toBeGreaterThan(100);
+    expect(c.blockMass_t[1]).toBeLessThan(118);
     expect(c.bedPileSide_m).toEqual([0.35, 0.35]);
     expect(c.bedPileMass_t[1]).toBeLessThan(3.5);
-    expect(c.pa1BedConcrete_m3).toBeCloseTo(72.9, 0);
-    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1100);
-    expect(c.pa2BedConcrete_m3).toBeLessThan(1300);
+    expect(c.pa1BedConcrete_m3).toBeCloseTo(94.7, 0);
+    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1800);
+    expect(c.pa2BedConcrete_m3).toBeLessThan(2100);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
     expect(c.pa2BedFootprint_m2).toBeGreaterThan(50 * c.pa1BedFootprint_m2);
     expect(c.params.slidingModel).toBe('friction'); // the default: a flat block, friction only
@@ -230,12 +230,12 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.failingRafts).toEqual([]);
   });
 
-  it('with shear keys the same 64 anchors need 4–15 t blocks instead of 19–68 t — if the surface mud has c_u = 10 kPa', () => {
+  it('with shear keys the same 64 anchors need 8–24 t blocks instead of 49–109 t — if the surface mud has c_u = 10 kPa', () => {
     const s = start();
     const keyed = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 10 } } });
     expect(keyed.allBlocksOk).toBe(true);
-    expect(keyed.blockMass_t[0]).toBeGreaterThan(3.5);
-    expect(keyed.blockMass_t[1]).toBeLessThan(17);
+    expect(keyed.blockMass_t[0]).toBeGreaterThan(8);
+    expect(keyed.blockMass_t[1]).toBeLessThan(26);
     expect(keyed.pa2BedConcrete_m3).toBeLessThan(compare().pa2BedConcrete_m3 / 3);
     // and it is very sensitive to that strength
     const weak = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 5 } } });

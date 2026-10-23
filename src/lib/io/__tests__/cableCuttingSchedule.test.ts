@@ -42,9 +42,12 @@ describe('Cable cutting schedule', () => {
     for (const r of s.rows) {
       // never shorter than the distance it has to span, at any level
       for (const v of [r.slackLow_m, r.slackNormal_m, r.slackHigh_m]) expect(v, r.code).toBeGreaterThanOrEqual(-1e-9);
-      // taut at its governing level
-      expect(r.type === 'BED' ? r.slackHigh_m : r.slackLow_m, r.code).toBeCloseTo(0, 9);
+      // taut at its governing level — a standby line (shorter than 4 m) keeps 0.5 m of slack there
+      expect(r.type === 'BED' ? r.slackHigh_m : r.slackLow_m, r.code).toBeCloseTo(r.span_m < 4 ? 0.5 : 0, 9);
     }
+    const standby = s.rows.filter((r) => r.span_m < 4);
+    expect(standby.map((r) => r.code)).toEqual(['B6-D04', 'B6-D29']);
+    for (const r of standby) expect(r.note, r.code).toContain('DÂY DỰ PHÒNG');
   });
 
   it('pins the slack the site has to live with: lake-bed cables 1.2–2.6 m slack at MNC, most shore cables a few decimetres at MNDB', () => {

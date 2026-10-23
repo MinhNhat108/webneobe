@@ -9,6 +9,7 @@ import { buildCableCuttingSchedule, appendCableCuttingSheet } from './cableCutti
 import { buildLiveCalcSheets, LIVE_SHEETS } from './liveCalcSheets';
 import type { EqResult } from '../calc/mooringEquilibrium';
 import { lakeCaveats } from '../../data/lakeCaveats';
+import { ACTIVE_LAKE_ID } from '../../data/lakes';
 
 /**
  * The calculation workbook and the calculation note of the design the owner
@@ -205,6 +206,8 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
   const sides = Object.entries(P.basesBySide).map(([s, n]) => `${n} đế ${s.replace('.', ',')} m`).join(', ');
   const lv = d.points.levels;
   const cut = buildCableCuttingSchedule(st);
+  const perPoint = Math.round(r.pileCount / r.shoreLines);
+  const pileLoad = perPoint > 1 ? r.tMax_kN / (perPoint * (A.pileGroupEfficiency ?? 0.9)) : r.tMax_kN;
   if (r.analysis) return lakeAnalysisNote(d, r, cut);
   return [
     {
@@ -249,7 +252,8 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
       title: `5. Cọc khoan nhồi ven bờ (ví dụ ${r.name})`,
       lines: [
         `Cọc tròn D${Math.round(r.pileD_m * 1000)} đổ tại chỗ, ngàm L_tk = ${vn(r.pileL_m)} m, dài cả cọc ${vn(r.pileLtotal_m)} m; thép chủ ${r.cage} ${r.grade}, ${r.stirrup}. Cáp móc cách mặt đất ${vn(A.shoreArm_e_m ?? 0.1, 1)} m.`,
-        `BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét): H_u = ${vn(r.Hu_kN)} kN; cho phép H_u / ${vn(A.sfPile ?? 2.5, 1)} = ${vn(r.Hallow_kN)} kN ≥ T = ${vn(r.tMax_kN)} kN; mức sử dụng ${vn(r.bp1, 2)}.`,
+        ...(perPoint > 1 ? [`Điểm neo CỌC ĐÔI: ${perPoint} cọc cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3D; mỗi cọc chịu P = T / (${perPoint} × ${vn(A.pileGroupEfficiency ?? 0.9, 1)}) = ${vn(pileLoad)} kN (hệ số nhóm là GIẢ ĐỊNH); đài BTCT nối hai đầu cọc: thiết kế sơ bộ ở bảng thống kê vật tư neo (twinPileCap.ts).`] : []),
+        `BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét): H_u = ${vn(r.Hu_kN)} kN; cho phép H_u / ${vn(A.sfPile ?? 2.5, 1)} = ${vn(r.Hallow_kN)} kN ≥ ${perPoint > 1 ? 'P' : 'T'} = ${vn(pileLoad)} kN; mức sử dụng ${vn(r.bp1, 2)}.`,
         `BP-2, uốn thân cọc (TCVN 5574:2018): ${vn(r.loadFactor, 1)} × M_max = ${vn(r.loadFactor, 1)} × ${vn(r.Mmax_kNm)} = ${vn(r.loadFactor * r.Mmax_kNm)} kNm ≤ M_rd = ${vn(r.Mrd_kNm)} kNm; mức sử dụng ${vn(r.bp2, 2)}.`,
         `Cả hệ: ${T.shorePiles} cọc, tổng dài ${vn(T.shoreLength_m)} m, ${vn(T.shoreConcrete_m3)} m³ bê tông, ${vn(T.shoreSteel_kg / 1000)} tấn thép. Lực kiểm tra cọc là toàn bộ lực dây (không giảm theo góc xiên), thiên về an toàn.`
       ]
@@ -282,7 +286,7 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
         'Chưa có khảo sát địa chất: c_u đất bờ và bùn đáy là giả định. Sức chịu của vít tỷ lệ thuận với c_u; cọc bờ không đạt ở một số bè nếu c_u đất bờ chỉ 20 kPa.',
         'Số dây làm việc lấy bằng 6 và góc dây 30° cho mọi bè là giả định; số dây thực sự căng theo từng hướng gió ở MNC và MNLKT chưa kiểm tra.',
         'Hệ số che chắn 0,55 và diện tích chiếu của tấm nghiêng quyết định lực gió; lực gió trên một m² bè ở đây thấp hơn một số hồ sơ tham khảo.',
-        'Sức chịu nhổ và sức chịu ngang của vít tính độc lập, chưa xét tương tác. Chưa thiết kế: tai neo đôi của đế, khóa đầu vít, móc cẩu, chống ăn mòn, đài / bích neo đầu cọc.',
+        'Sức chịu nhổ và sức chịu ngang của vít tính độc lập, chưa xét tương tác. Đầu cọc, đài cọc đôi, tai neo mặt đế mới có thiết kế sơ bộ (bảng thống kê vật tư neo, sheet KiemTra_DauCoc_De); chưa thiết kế: khóa đầu vít, móc cẩu, chống ăn mòn.',
         `Cao độ đáy đặt đế là đáy thiết kế, chưa phải khảo sát; tại ${P.terrainHigherPoints} đế địa hình IFC cao hơn đáy thiết kế trên 0,5 m. ${P.shoreBelowNormalWater}/${P.shorePoints} cọc bờ đứng ở chỗ mặt đất thấp hơn MNDB (thi công mùa nước thấp, có ống vách).`,
         'Ba dây của cọc bờ đã định vị còn rất xiên so với mép bè: B7-D01, B7-D09, B8-D13.',
         'Lớp bê tông bảo vệ cọc bờ tới đai chỉ 26–30 mm (tính với 50 mm tới tim thép chủ).'
@@ -309,11 +313,16 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
   const a = r.analysis!, g = a.governing;
   const comp = compensationText(L.levelCompensation, L.adjustStep_m);
   const drifts = d.rafts.map((x) => x.analysis!.maxDrift_m);
+  const HV = ACTIVE_LAKE_ID === 'huoi-vanh';
+  const bedSpans = cut.rows.filter((x) => x.type === 'BED').map((x) => x.span_m);
+  const standby = cut.rows.filter((x) => x.note.includes('DÂY DỰ PHÒNG')).map((x) => x.code);
   return [
     {
-      title: '1. Phương án neo',
+      title: HV ? '1. Phương án chốt' : '1. Phương án neo',
       lines: [
-        `Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày ${FINAL_OPTION_DATE} (${FINAL_OPTION_TITLE}); CHƯA chốt riêng cho hồ này.`,
+        HV
+          ? `Chủ đầu tư chốt ngày ${FINAL_OPTION_DATE}: ${FINAL_OPTION_TITLE}. Lực dây tính lại ngày 23/10/2026 bằng cân bằng tĩnh của bè trên từng dây theo mực nước (thay cách góc dây 30° + hệ số tập trung); cáp, cọc, đế định cỡ lại theo lực này.`
+          : `Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày ${FINAL_OPTION_DATE} (${FINAL_OPTION_TITLE}); CHƯA chốt riêng cho hồ này.`,
         `Hệ neo: ${d.totals.lines} tuyến cáp tại ${P.points} điểm neo = ${P.shorePoints} cọc khoan nhồi ven bờ + ${P.bedBases} đế đáy hồ (${P.sharedBases} đế dùng chung hai bè).`,
         d.windCaveat ?? `Gió tính toán V = ${vn(d.wind_ms, 0)} m/s.`,
         `Vận hành dây: ${comp}.`,
@@ -324,12 +333,15 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
     {
       title: '4. Lực căng dây — phân tích cân bằng tĩnh theo mực nước',
       lines: [
-        `Hồ sâu, mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m: góc dốc thật của dây thay đổi theo mực nước (dây đáy dốc tới 70°), nên KHÔNG dùng góc dây cố định 30° và hệ số tập trung như Huổi Vanh.`,
+        HV
+          ? `Mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m trong khi dây đáy chỉ dài ${vn(Math.min(...bedSpans), 1)}–${vn(Math.max(...bedSpans), 1)} m: chiều dài cần của dây đổi theo mực nước, dây chùng – căng khác nhau, nên số dây thật sự chịu lực thay đổi theo hướng tải và mực nước. Cách góc dây 30° + hệ số tập trung (coi mọi dây cùng làm việc) cho lực dây thấp hơn thực tế nên không dùng nữa.`
+          : `Hồ sâu, mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m: góc dốc thật của dây thay đổi theo mực nước (dây đáy dốc tới 70°), nên KHÔNG dùng góc dây cố định 30° và hệ số tập trung như Huổi Vanh.`,
         `Mỗi bè: tải môi trường F đặt lần lượt theo 24 hướng (15°/hướng), ở mọi mực nước từ mức bè còn nổi tới MNLKT (bước 1 m, thêm MNDB và MNLKT). Bè tịnh tiến tới khi tổng lực các dây đang căng cân bằng F. Dây thẳng, đàn hồi EA = ${vn(L.eaPerMbl ?? 15, 0)} × lực đứt (GIẢ ĐỊNH cho polyester), dây chùng không chịu lực; không xét xoay bè và tải động.`,
         `${r.name} (bè có lực dây lớn nhất): F = ${vn(r.fEnv_kN)} kN; chi phối ở mực nước ${vn(g.level_m, 2)} m, tải đẩy về hướng ${g.direction_deg}°, dây ${g.maxLine} chịu ${vn(g.maxTension_kN)} kN, ${g.taut} dây cùng căng; bè trôi ${vn(g.drift_m, 2)} m. Mất dây ${g.maxLine}: dây lớn nhất còn lại ${vn(a.damaged.maxTension_kN)} kN.`,
         `Lực dây thiết kế của ${r.name}: T = ${vn(r.tMax_kN)} kN (đã cộng lực căng trước ${vn(r.pretension_kN, 0)} kN; không nhỏ hơn F / (n × cos α) = ${vn(r.tGeometric_kN)} kN); khi đứt một dây: ${vn(r.tDamaged_kN)} kN. Cáp và cọc bờ của bè kiểm tra với lực này; mỗi đế vít xoắn kiểm tra với lực lớn nhất của chính (các) dây nối vào nó (bao mọi hướng, mọi mực nước).`,
         `Cáp ${r.cable}, lực đứt ${vn(r.mbl_kN, 0)} kN: hệ số an toàn ${vn(r.sfIntact, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineIntact ?? 3, 1)}); khi đứt một dây ${vn(r.sfDamaged, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineDamaged ?? 2, 1)}).`,
-        `Độ trôi bè lớn nhất (mọi hướng, mọi mực nước): ${vn(Math.min(...drifts), 1)} – ${vn(Math.max(...drifts), 1)} m tùy bè (kiểm tra C12: ≤ nửa khoảng hở nhỏ nhất tới bè bên cạnh).`
+        `Độ trôi bè lớn nhất (mọi hướng, mọi mực nước): ${vn(Math.min(...drifts), 1)} – ${vn(Math.max(...drifts), 1)} m tùy bè (kiểm tra C12: ≤ nửa khoảng hở nhỏ nhất tới bè bên cạnh).`,
+        ...(standby.length ? [`Dây ngắn hơn 4 m (${standby.join(', ')}) không tính vào cân bằng: lắp làm dây dự phòng, cắt dài thêm 0,5 m — bè trôi chưa tới 0,5 m nên chúng không chịu lực.`] : [])
       ]
     },
     hv[4], hv[5],
@@ -337,7 +349,9 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
       title: '7. Chiều dài cắt cáp và điều chỉnh dây',
       lines: [
         `Mỗi dây cắt đủ dài cho mực nước làm khoảng cách bích – chốt dài nhất (${cut.totals.governedBy.MNLKT} dây đáy ở MNLKT, ${cut.totals.governedBy.MNC} dây bờ ở MNC). Tổng chiều dài cắt: dây bờ ${vn(cut.totals.shoreLength_m, 0)} m, dây đáy ${vn(cut.totals.bedLength_m, 0)} m, chưa gồm đoạn bện đầu và phụ kiện.`,
-        L.levelCompensation === 'seasonal'
+        HV && L.levelCompensation === 'seasonal' && (L.adjustStep_m ?? 0) > 0
+          ? `QUY TRÌNH VẬN HÀNH BẮT BUỘC: chỉnh lại mọi dây cho vừa căng mỗi khi mực nước thay đổi ${vn(L.adjustStep_m!, 1)} m (đo từ MNC). Đầu dây phải chỉnh được: dây đáy tới ${vn(cut.totals.maxBedSlackLow_m, 1)} m cả mùa (đoạn xích chỉnh), dây bờ tới ${vn(cut.totals.maxShoreSlackNormal_m, 1)} m (tăng đơ, thêm đoạn xích ở dây ngắn).`
+          : L.levelCompensation === 'seasonal'
           ? `Thiết bị bù / điều chỉnh ở đầu bè phải thu – xả được: dây đáy tới ${vn(cut.totals.maxBedSlackLow_m, 1)} m, dây bờ tới ${vn(cut.totals.maxShoreSlackNormal_m, 1)} m (độ chùng lớn nhất của dây cắt cố định), và giữ được lực dây thiết kế. Thiết bị này CHƯA thiết kế.`
           : `Không điều chỉnh: dây đáy chùng tới ${vn(cut.totals.maxBedSlackLow_m, 1)} m ở MNC, dây bờ chùng tới ${vn(cut.totals.maxShoreSlackNormal_m, 1)} m ở MNDB.`
       ]
@@ -346,9 +360,13 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
       title: '8. Giả định và vấn đề còn mở',
       lines: [
         ...lakeCaveats(),
-        'Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng.',
-        'Chưa có khảo sát địa chất: c_u đất bờ và bùn đáy là giả định (lấy như Huổi Vanh).',
-        `Đế đặt trên địa hình IFC tại chỗ, chưa phải khảo sát. ${P.shoreBelowNormalWater}/${P.shorePoints} cọc bờ đứng ở chỗ mặt đất thấp hơn MNDB.`
+        'Mô hình cân bằng không xét phân bố tải không đều trên bè lớn và tải động khi dây đang chùng bị giật căng. Độ cứng dây EA = 15 × lực đứt là giả định.',
+        ...(HV
+          ? hv[7].lines.filter((x) => !x.startsWith('Số dây làm việc'))
+          : [
+              'Chưa có khảo sát địa chất: c_u đất bờ và bùn đáy là giả định (lấy như Huổi Vanh).',
+              `Đế đặt trên địa hình IFC tại chỗ, chưa phải khảo sát. ${P.shoreBelowNormalWater}/${P.shorePoints} cọc bờ đứng ở chỗ mặt đất thấp hơn MNDB.`
+            ])
       ]
     }
   ];
@@ -380,7 +398,9 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
 
   // 1. note
   const note: any[][] = [title('THUYẾT MINH TÍNH TOÁN HỆ NEO: CỌC KHOAN NHỒI VEN BỜ + ĐẾ BTCT VÍT XOẮN'), [`Dự án: ${d.name}`], ['']];
-  note.push(['File này có hai phần: 9 sheet đầu là KẾT QUẢ do web tính (dạng số); 4 sheet CT_… ở cuối là cùng phép tính đó dưới dạng CÔNG THỨC Excel — đổi ô nhập (tô vàng / ghi chữ NHẬP) là tự tính lại.'], ['']);
+  note.push([d.rafts.some((r) => r.analysis)
+    ? 'File này gồm 9 sheet KẾT QUẢ do web tính (dạng số) và sheet CanBangNeo_MucNuoc (cân bằng của bè theo từng mực nước). Lực dây là kết quả lặp của mô hình cân bằng nên không có sheet công thức CT_.'
+    : 'File này có hai phần: 9 sheet đầu là KẾT QUẢ do web tính (dạng số); 4 sheet CT_… ở cuối là cùng phép tính đó dưới dạng CÔNG THỨC Excel — đổi ô nhập (tô vàng / ghi chữ NHẬP) là tự tính lại.'], ['']);
   for (const s of finalDesignNote(d)) { note.push([s.title]); for (const l of s.lines) note.push([`  ${l}`]); note.push(['']); }
   sheet(wb, FINAL_DESIGN_SHEETS[0], note, [180]);
 
@@ -547,10 +567,10 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
   // 9. cutting lengths
   appendCableCuttingSheet(wb, buildCableCuttingSchedule(st), st);
 
-  // Hồ Bản Mòng: the equilibrium analysis replaces the single-angle tension, which the live CT_ sheets implement — so they are left out
+  // Equilibrium analysis (both lakes since 2026-10-23): it replaces the single-angle tension, which the live CT_ sheets implement — so they are left out
   if (d.rafts.some((r) => r.analysis)) {
     const eq: any[][] = [title('CÂN BẰNG TĨNH CỦA BÈ TRÊN CÁC DÂY THẬT, THEO MỰC NƯỚC'), caveat,
-      ['Mỗi mực nước: lực dây lớn nhất và độ trôi lớn nhất của bè trong 24 hướng tải. Dây chùng không chịu lực. Bốn sheet CT_ (công thức một góc dây 30°) không áp dụng cho hồ này nên không xuất.'], [''],
+      ['Mỗi mực nước: lực dây lớn nhất và độ trôi lớn nhất của bè trong 24 hướng tải. Dây chùng không chịu lực. Bốn sheet CT_ (công thức một góc dây 30°) không áp dụng khi lực dây tính bằng cân bằng nên không xuất.'], [''],
       ['BÈ', 'Mực nước (m)', 'T lớn nhất (kN)', 'Dây chịu lớn nhất', 'Hướng tải (°)', 'Độ trôi lớn nhất (m)', 'Số dây căng ít nhất']];
     for (const r of d.rafts) for (const l of r.analysis?.levels ?? []) {
       eq.push([r.name, num(l.level_m, 2), num(l.maxTension_kN, 1), l.maxLine, l.direction_deg, Number.isFinite(l.maxDrift_m) ? num(l.maxDrift_m, 2) : 'KHÔNG GIỮ ĐƯỢC', l.minTaut]);

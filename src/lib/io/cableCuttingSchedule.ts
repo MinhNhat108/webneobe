@@ -5,6 +5,7 @@ import type { MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
 import { groundAt, MNDB_M, CLEAT_ABOVE_WATERLINE_M } from '../../components/simulation/sceneModel';
 import { BASE_LOW_WATER_M, BASE_HIGH_WATER_M } from './screwBaseSchedule';
+import { STANDBY_SPAN_M, STANDBY_SLACK_M } from '../calc/mooringEquilibrium';
 
 /**
  * Cutting length of every mooring cable, and how slack it is at the three
@@ -26,6 +27,8 @@ import { BASE_LOW_WATER_M, BASE_HIGH_WATER_M } from './screwBaseSchedule';
  *    its stretch under load are not included;
  *  - the length is pin to pin: terminations (thimbles, splices, shackles,
  *    turnbuckles) are NOT included — `allowance_m` adds a constant if wanted;
+ *  - a line shorter than STANDBY_SPAN_M in plan is a STANDBY line: cut STANDBY_SLACK_M longer, so it stays
+ *    slack while the raft drifts less than that (the equilibrium leaves it out; see mooringEquilibrium.ts);
  *  - the levels of the anchors are the layout's: the DESIGN lake bed for the
  *    bases (an assumption, to be sounded before cutting) and the IFC terrain
  *    for the shore piles (not a survey).
@@ -109,7 +112,8 @@ export function buildCableCuttingSchedule(
     const chord = (w: number) => Math.hypot(l.span, drop(w));
     const c = { MNC: chord(low), MNDB: chord(normal), MNLKT: chord(high) };
     const governing = (Object.entries(c).sort((a, b) => b[1] - a[1])[0][0]) as CableCutRow['governing'];
-    const L = c[governing] + allowance_m;
+    const standby = l.span < STANDBY_SPAN_M;
+    const L = c[governing] + allowance_m + (standby ? STANDBY_SLACK_M : 0);
     const play = (w: number) => Math.sqrt(Math.max(0, L * L - drop(w) ** 2)) - l.span;
     const slope = (w: number) => (Math.atan2(drop(w), l.span) * 180) / Math.PI;
     const steepest = Math.max(Math.abs(slope(low)), Math.abs(slope(normal)), Math.abs(slope(high)));
@@ -120,6 +124,7 @@ export function buildCableCuttingSchedule(
       playLow_m: play(low), playNormal_m: play(normal), playHigh_m: play(high),
       slopeLow_deg: slope(low), slopeNormal_deg: slope(normal), slopeHigh_deg: slope(high),
       note: [
+        standby ? `DÂY DỰ PHÒNG (ngắn < ${STANDBY_SPAN_M} m): cắt dài thêm ${STANDBY_SLACK_M} m, lắp chùng, không tính chịu lực` : '',
         l.type === 'SHORE' && l.span < SHORT_SHORE_SPAN_M ? `Dây bờ ngắn (< ${SHORT_SHORE_SPAN_M} m): góc cáp đổi nhiều theo mực nước, giữ bè kém khi chùng` : '',
         steepest > STEEP_DEG ? `Cáp dốc tới ${steepest.toFixed(0)}°: thành phần đứng lớn tại bích bè` : '',
         l.type === 'BED' ? 'Đo cao độ đáy thực tế trước khi cắt' : ''

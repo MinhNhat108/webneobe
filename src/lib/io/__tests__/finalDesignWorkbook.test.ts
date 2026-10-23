@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as XLSX from 'xlsx';
 import { buildFinalDesign, buildFinalDesignWorkbook, finalDesignNote, FINAL_DESIGN_SHEETS } from '../finalDesignWorkbook';
+import { buildLiveCalcSheets } from '../liveCalcSheets';
 import { calculateProject } from '../../calc';
 import { buildRaftProjectState } from '../../calc/raftState';
 import type { ProjectState } from '../../calc/types';
@@ -25,20 +26,23 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
       expect(fPanel, r.name).toBeCloseTo(r.fPanel_kN, 1);
       expect((fPanel + r.fFloat_kN) * r.waveCurrentFactor, r.name).toBeCloseTo(r.fEnv_kN, 1);
       const tGeo = r.fEnv_kN / (r.nEff * Math.cos((r.alpha_deg * Math.PI) / 180)) + r.pretension_kN;
-      expect(Math.max(tGeo, r.fEnv_kN * r.focusFactor + r.pretension_kN), r.name).toBeCloseTo(r.tMax_kN, 1);
+      // equilibrium of the raft on its real lines (2026-10-23), the single-angle method as a floor
+      expect(Math.max(tGeo, r.analysis!.governing.maxTension_kN + r.pretension_kN), r.name).toBeCloseTo(r.tMax_kN, 1);
       expect(r.sfIntact, r.name).toBeGreaterThanOrEqual(3);
-      expect(r.tMax_kN / r.Hallow_kN, r.name).toBeCloseTo(r.bp1, 2);
+      // a twin-pile point (BÈ 3A): each pile takes T / (2 x 0.9)
+      const perPoint = r.pileCount / r.shoreLines;
+      expect(r.tMax_kN / (perPoint > 1 ? perPoint * 0.9 : 1) / r.Hallow_kN, r.name).toBeCloseTo(r.bp1, 2);
       expect((r.loadFactor * r.Mmax_kNm) / r.Mrd_kNm, r.name).toBeCloseTo(r.bp2, 2);
       expect(r.shoreLines + r.bedLines, r.name).toBe(r.lines);
     }
   });
 
-  it('totals: 231 bored piles and 32 bases that all pass, uplift resistance above the demand', () => {
+  it('totals: 262 bored piles (231 points) and 32 bases that all pass, uplift resistance above the demand', () => {
     const T = d.totals;
-    expect([T.lines, T.shorePiles, T.bases, T.screws]).toEqual([295, 231, 32, 128]);
+    expect([T.lines, T.shorePiles, T.bases, T.screws]).toEqual([295, 262, 32, 128]);
     expect(T.allOk).toBe(true);
-    expect(T.shoreLength_m).toBeCloseTo(1524.6, 1);
-    expect(T.baseConcrete_m3).toBeCloseTo(92.8, 1);
+    expect(T.shoreLength_m).toBeCloseTo(1729.2, 1);
+    expect(T.baseConcrete_m3).toBeCloseTo(84.7, 1);
     expect(T.upliftResistance_kN).toBeGreaterThan(T.upliftDemand_kN);
     for (const k of ['uplift', 'slide', 'overturn', 'screw'] as const) expect(T.worst[k], k).toBeLessThanOrEqual(1);
     // one base: uplift resistance = 0.9 W' + 4 Q_a
@@ -55,9 +59,10 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     expect(priced.cost.grandTotal_VND).toBeGreaterThan(d.cost.grandTotal_VND);
   });
 
-  it('workbook: nine sheets, one row per pile and per base, the wind caveat and the assumptions written on it', () => {
+  it('workbook: nine sheets + the equilibrium sheet, one row per pile and per base, the wind caveat and the assumptions written on it', () => {
     const wb = buildFinalDesignWorkbook(d);
-    expect(wb.SheetNames).toEqual(FINAL_DESIGN_SHEETS);
+    // the line tension is the equilibrium: no CT_ sheets (single-angle formulas), the level-by-level sheet instead
+    expect(wb.SheetNames).toEqual([...FINAL_DESIGN_SHEETS.filter((n) => !n.startsWith('CT_')), 'CanBangNeo_MucNuoc']);
     const rows = (name: string) => XLSX.utils.sheet_to_json<any[]>(wb.Sheets[name], { header: 1 });
     expect(rows('CocKhoanNhoi_TungCoc').filter((r) => /^HV-P\d+$/.test(String(r[1])))).toHaveLength(231);
     expect(rows('DeNeoDay_TungDe').filter((r) => /^HV-DV\d+$/.test(String(r[1])))).toHaveLength(32);
@@ -85,7 +90,10 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
 });
 
 describe('Live formula sheets of the calculation workbook', () => {
-  const wb = buildFinalDesignWorkbook(d);
+  // Not in the Huổi Vanh workbook since the line tension comes from the equilibrium (2026-10-23); the builder is
+  // kept for the single-angle method and checked on its own.
+  const live = buildLiveCalcSheets(d);
+  const wb = { Sheets: Object.fromEntries(live.sheets.map((x) => [x.name, x.ws])) } as unknown as XLSX.WorkBook;
   const cell = (sheet: string, addr: string) => wb.Sheets[sheet][addr];
 
   it('the four CT_ sheets carry Excel formulas together with the engine values', () => {

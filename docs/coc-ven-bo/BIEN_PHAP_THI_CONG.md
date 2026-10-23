@@ -6,16 +6,16 @@ Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_b
 
 | Bè | Điểm neo | Cọc/điểm | Số cọc | L_tk (m) | Thép chủ | Mác | T dây (kN) | γ·T/cọc (kN) | HSSD uốn | BT/cọc (m³) | Thép/cọc (kg) | Lớp bảo vệ thực tới đai (mm) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| BÈ 1 | 17 | 1 | 17 | 6,5 | 4Φ25 | CB400-V | 30,2 | 36,3 | 0,63 | 0,63 | 118 | 30 |
-| BÈ 2 | 15 | 1 | 15 | 6,5 | 4Φ25 | CB400-V | 27,8 | 33,3 | 0,57 | 0,63 | 118 | 30 |
-| BÈ 3 | 15 | 1 | 15 | 6,5 | 4Φ25 | CB400-V | 38,6 | 46,4 | 0,84 | 0,63 | 118 | 30 |
-| BÈ 3A | 31 | 1 | 31 | 6,5 | 6Φ28 | CB400-V | 73,7 | 88,4 | 0,87 | 0,63 | 208 | 28 |
+| BÈ 1 | 17 | 1 | 17 | 6,5 | 6Φ25 | CB400-V | 64,0 | 76,8 | 0,91 | 0,63 | 169 | 30 |
+| BÈ 2 | 15 | 1 | 15 | 6,5 | 6Φ28 | CB400-V | 67,5 | 81,0 | 0,78 | 0,63 | 208 | 28 |
+| BÈ 3 | 15 | 1 | 15 | 6,5 | 6Φ28 | CB400-V | 70,5 | 84,6 | 0,82 | 0,63 | 208 | 28 |
+| BÈ 3A | 31 | 2 | 62 | 6,5 | 8Φ25 | CB400-V | 150,3 | 100,2 | 0,92 | 0,63 | 220 | 30 |
 | BÈ 5A | 36 | 1 | 36 | 6,5 | 6Φ32 | CB400-V | 87,3 | 104,8 | 0,83 | 0,63 | 266 | 26 |
-| BÈ 6 | 28 | 1 | 28 | 6,5 | 4Φ25 | CB400-V | 40,8 | 49,0 | 0,90 | 0,63 | 118 | 30 |
-| BÈ 7 | 24 | 1 | 24 | 6,5 | 4Φ28 | CB400-V | 45,6 | 54,7 | 0,82 | 0,63 | 144 | 28 |
-| BÈ 8 | 46 | 1 | 46 | 6,5 | 6Φ25 | CB400-V | 59,1 | 71,0 | 0,82 | 0,63 | 169 | 30 |
-| BÈ 9 | 19 | 1 | 19 | 6,5 | 4Φ25 | CB400-V | 30,9 | 37,0 | 0,65 | 0,63 | 118 | 30 |
-| **Tổng** | 231 | | 231 | 1524,6 m | | | | | | 146,7 m³ | 38,3 tấn | |
+| BÈ 6 | 28 | 1 | 28 | 6,5 | 6Φ32 | CB400-V | 86,0 | 103,2 | 0,82 | 0,63 | 266 | 26 |
+| BÈ 7 | 24 | 1 | 24 | 6,5 | 6Φ28 | CB400-V | 69,0 | 82,9 | 0,80 | 0,63 | 208 | 28 |
+| BÈ 8 | 46 | 1 | 46 | 6,5 | 6Φ25 | CB400-V | 65,6 | 78,7 | 0,94 | 0,63 | 169 | 30 |
+| BÈ 9 | 19 | 1 | 19 | 6,5 | 8Φ28 | CB400-V | 100,3 | 120,3 | 0,95 | 0,63 | 271 | 28 |
+| **Tổng** | 231 | | 262 | 1729,2 m | | | | | | 166,4 m³ | 57,7 tấn | |
 
 ## Trình tự thi công
 
@@ -62,16 +62,17 @@ Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_b
 ## Ghi chú
 
 **1. PHẠM VI VÀ SỐ LIỆU THIẾT KẾ**
-- Cọc khoan nhồi tròn D350 đổ tại chỗ, 231 cọc tại 231 điểm neo ven bờ, tổng chiều dài 1524,6 m, bê tông 146,7 m³, thép khoảng 38,3 tấn.
+- Cọc khoan nhồi tròn D350 đổ tại chỗ, 262 cọc tại 231 điểm neo ven bờ, tổng chiều dài 1729,2 m, bê tông 166,4 m³, thép khoảng 57,7 tấn.
 - Tải trọng: gió tính toán V = 20 m/s, giàn pin nghiêng 12°. Lực căng dây và số thép từng bè theo bảng E. Hệ số tải trọng uốn cọc γ = 1,2.
 - CHÚ Ý: Gió tính toán V = 20 m/s là cấp gió vận hành, THẤP HƠN gió tiêu chuẩn TCVN 2737:2023 vùng II-B (V ≈ 29,7 m/s, q0 = 0,54 kN/m²): áp lực gió chỉ bằng 45% mức tiêu chuẩn. Cáp, cọc và đế neo định cỡ ở cấp gió này CHƯA được kiểm tra với bão thiết kế; nhập V = 30 m/s ở Tab 2 để kiểm tra.
 - Sức chịu tải ngang theo Broms với đất sét dẻo cứng φ = 28°, c = 12 kPa, γ = 18 kN/m³: GIẢ ĐỊNH, chưa có khoan khảo sát địa chất tại vị trí cọc.
 - Uốn cọc theo TCVN 5574:2018 với lồng thép ở hướng bất lợi nhất (lồng không định hướng khi thả vào lỗ).
+- Cọc đôi (BÈ 3A): 2 cọc cách nhau ≥ 3D = 1,05 m, vuông góc phương cáp. Đài / bích neo chung CHƯA THIẾT KẾ.
 
 **2. VẬT LIỆU**
 - Bê tông cọc và mũ cọc: B25 (M350), đá 1×2 (D_max 20 mm), độ sụt 16–18 cm khi đổ qua ống, 10–14 cm khi lỗ khô đổ trực tiếp. Lấy mẫu thử nén mỗi đợt đổ.
 - Thép chủ: CB400-V, theo TCVN 1651-2:2018. Thép đai xoắn Φ8 CB240-T. Không hàn nối thép chủ tại công trường.
-- Bản mã, tai neo: thép tấm SS400 / CT38; que hàn E42. Ma-ní móng ngựa WLL 9,5 T có chốt an toàn, mạ kẽm nhúng nóng.
+- Bản mã, tai neo: thép tấm SS400 / CT38; que hàn E42. Ma-ní móng ngựa WLL 12 T có chốt an toàn, mạ kẽm nhúng nóng.
 - Bản mã, tai neo và đường hàn: mạ kẽm nhúng nóng hoặc sơn epoxy 2 lớp (làm việc trong vùng mực nước dao động).
 
 **3. YÊU CẦU BẮT BUỘC CỦA THIẾT KẾ**
@@ -98,7 +99,7 @@ Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_b
 **7. GIỚI HẠN CỦA BẢN VẼ — PHẢI ĐỌC**
 - LỚP BÊ TÔNG BẢO VỆ: với a_s = 50 mm, lớp bảo vệ thực tế đến đai xoắn chỉ còn 26–30 mm, nhỏ hơn mức thông thường ≥ 50 mm của cọc khoan nhồi.
 - Nếu tăng lớp bảo vệ lên 50 mm mà giữ D350 thì cánh tay đòn thép giảm khoảng 20% và thép trong bảng E KHÔNG còn đủ: phải tăng đường kính lỗ khoan (D400) hoặc tính lại thép. CẦN CHỦ ĐẦU TƯ / THIẾT KẾ QUYẾT ĐỊNH TRƯỚC KHI THI CÔNG.
-- Khoảng hở giữa các thép chủ nhỏ nhất 99 mm (lồng 6 thanh): dùng đá 1×2, bê tông độ sụt cao, đảm bảo bê tông chui qua lồng.
-- Chưa thiết kế: lực cắt thân cọc (đai xoắn là cấu tạo), bảo vệ chống ăn mòn chi tiết, bê tông cục bộ mũ cọc.
+- Khoảng hở giữa các thép chủ nhỏ nhất 70 mm (lồng 8 thanh): dùng đá 1×2, bê tông độ sụt cao, đảm bảo bê tông chui qua lồng.
+- Chưa thiết kế: lực cắt thân cọc (đai xoắn là cấu tạo), đài cọc đôi, bảo vệ chống ăn mòn chi tiết, bê tông cục bộ mũ cọc.
 - Bản vẽ theo mặt bằng 9 bè của Chủ đầu tư (HỒ HUỔI VANH.dxf, 08/10/2026). Neo đáy hồ (đế BTCT + vít xoắn) thể hiện ở bản vẽ mặt bằng hệ neo, không thuộc bản vẽ này.
 - Đây là bản vẽ đề xuất phục vụ trao đổi; hồ sơ thi công phải do đơn vị thiết kế có chứng chỉ phát hành.

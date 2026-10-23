@@ -462,16 +462,13 @@ describe('Full project', () => {
   });
 
   it('twin piles: each pile of a 2-pile point is checked for T / (2 x 0.9); one pile takes the whole tension', () => {
-    // At the 20 m/s default no raft needs twin piles. BÈ 3A at the STORM wind (30 m/s) does:
-    // two piles 6Φ32 per point, as the catalogue sized at 30 m/s had it.
+    // At the 20 m/s default only BÈ 3A has twin piles (equilibrium tension, 2026-10-23): two piles per point
+    // with the catalogue cage.
     const be3a = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3A')!;
     const mapped = buildRaftProjectState(base(), be3a, base().anchor);
-    expect(mapped.anchor.shorePilesPerPoint).toBe(1);
-    const s = {
-      ...mapped,
-      env: { ...mapped.env, windSpeed_ms: 30 },
-      anchor: { ...mapped.anchor, bedAnchorOption: 'PA1_PILE' as const, shorePilesPerPoint: 2, bedPilesPerPoint: 2, shoreRebarCount: 6, shoreRebarDia_mm: 32 }
-    };
+    expect(mapped.anchor.shorePilesPerPoint).toBe(2);
+    expect(mapped.anchor.bedPilesPerPoint).toBe(2);
+    const s = { ...mapped, anchor: { ...mapped.anchor, bedAnchorOption: 'PA1_PILE' as const } };
     const twin = calculateProject(s);
     expect(twin.shorePileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
     expect(twin.bedPileTension_kN).toBeCloseTo(twin.t_max_intact_kN / 1.8, 1);
@@ -488,8 +485,8 @@ describe('Full project', () => {
     const weak = calculateProject({ ...s, anchor: { ...s.anchor, pileGroupEfficiency: 0.7 } });
     expect(weak.shorePileTension_kN!).toBeGreaterThan(twin.shorePileTension_kN!);
 
-    // At the 20 m/s default every raft has one shore pile per point.
-    expect(HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1).map((r) => r.name)).toEqual([]);
+    // At the 20 m/s default every other raft has one shore pile per point.
+    expect(HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1).map((r) => r.name)).toEqual(['BÈ 3A']);
     for (const raft of HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) === 1)) {
       const r = calculateProject(buildRaftProjectState(base(), raft, base().anchor));
       expect(r.shorePileTension_kN, raft.name).toBe(r.t_max_intact_kN);

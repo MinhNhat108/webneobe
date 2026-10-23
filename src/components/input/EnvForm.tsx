@@ -32,7 +32,7 @@ export const EnvForm: React.FC = () => {
           onChange={(val) => updateEnv({ mndbt_m: val })}
           unit="m"
           step={0.1}
-          helpText="Cao trình MNDBT theo hồ sơ hồ chứa (vd: 383m)"
+          helpText="Cao trình MNDBT theo hồ sơ hồ chứa (Huổi Vanh 384,5 m; Bản Mòng 662,76 m)"
         />
 
         <NumberField
@@ -41,7 +41,7 @@ export const EnvForm: React.FC = () => {
           onChange={(val) => updateEnv({ mncn_m: val })}
           unit="m"
           step={0.1}
-          helpText="Cao trình MNCN khi có lũ kiểm tra (vd: 384m)"
+          helpText="Cao trình MNLKT khi có lũ kiểm tra (Huổi Vanh 386,0 m; Bản Mòng 669,05 m)"
         />
 
         <NumberField

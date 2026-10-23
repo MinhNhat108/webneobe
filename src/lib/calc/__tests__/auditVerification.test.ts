@@ -84,14 +84,15 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(s.anchor.sfPile).toBeGreaterThanOrEqual(2.0);
     }
 
-    // Shore piles: 231 points, 231 piles — at the 20 m/s default no raft needs twin piles.
+    // Shore piles: 231 points, 262 piles — at the 20 m/s default only BÈ 3A (31 points) needs twin piles
+    // (line tension from the equilibrium of the raft, re-tensioned every 1 m of level change).
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildScrewBaseSchedule(baseState, baseResults, batchResults, coordinates as any);
     expect(schedule.shorePiles).toHaveLength(231);
-    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(231);
+    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(262);
     for (const p of schedule.shorePiles) {
-      expect(p.pileCount, p.pileId).toBe(1);
+      expect(p.pileCount, p.pileId).toBe(p.raft === 'BÈ 3A' ? 2 : 1);
       expect(p.Lopt_m, p.pileId).not.toBeNull();
       expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
       expect(p.isPmaxOk, p.pileId).toBe(true);
@@ -131,8 +132,8 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
     const piles = (type: string) => schedule.filter((p) => p.type === type).reduce((s, p) => s + p.pileCount, 0);
-    expect(piles('SHORE')).toBe(231);
-    expect(piles('BED')).toBe(64); // one pile per point everywhere at the 20 m/s default
+    expect(piles('SHORE')).toBe(262);
+    expect(piles('BED')).toBe(83); // two piles per point at BÈ 3A (19 lines), one elsewhere, at the 20 m/s default
 
     const wb = buildPileScheduleWorkbook(baseState, baseResults, batchResults, coordinates as any);
     expect(wb.SheetNames).toContain('BangThongKeCoc');

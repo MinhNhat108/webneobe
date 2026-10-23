@@ -46,7 +46,7 @@ import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
 import { lakeFromArgv } from './lakeConfig.mjs';
 import { SCREW_BASE_DEFAULTS } from '../src/lib/calc/screwAnchorBed';
-import { analyseMooring, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
+import { analyseMooring, STANDBY_SPAN_M, STANDBY_SLACK_M, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const LAKE = lakeFromArgv();
@@ -73,6 +73,8 @@ const FOCUS_PRODUCT: Record<string, number[]> = {
 const WATER_DEPTH: Record<string, number> = BAN_MONG
   ? Object.fromEntries(polygons.map((p) => [p.name, Math.round((LAKE.mndb - p.designBed_m!) * 10) / 10]))
   : { 'BÈ 1': 6.0 };
+/** Huổi Vanh design depth of the rafts not listed above, m. */
+const DEFAULT_DEPTH_M = 6.2;
 /** Bản Mòng: no calibration of its own, the largest Huổi Vanh product (0.31 × 25, old BÈ 4). */
 const BAN_MONG_FOCUS_PRODUCT = 0;
 
@@ -95,13 +97,16 @@ const ringGap = (A: Pt[], B: Pt[]) => {
 };
 function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
   const own = lines.filter((l) => l.raft === poly.name);
+  // Huổi Vanh: no IFC median per raft, the design bed is MNDB - the raft's design depth
+  const bed = poly.designBed_m ?? LAKE.mndb - (WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M);
   return {
-    floatLevel_m: Math.round((poly.designBed_m! + DRAFT_M) * 100) / 100,
+    floatLevel_m: Math.round((bed + DRAFT_M) * 100) / 100,
     minGap_m: Math.round(Math.min(...polygons.filter((q) => q.name !== poly.name).map((q) => ringGap(poly.points, q.points))) * 100) / 100,
-    lines: own.map((l) => ({
+    lines: own.filter((l) => l.span >= STANDBY_SPAN_M).map((l) => ({
       code: l.code, type: l.type, azimuth_deg: l.azimuth, span_m: l.span,
       pin_m: Math.round((l.zAnchor + (l.type === 'SHORE' ? SHORE_ARM_M : BASE_PIN_M)) * 100) / 100
-    }))
+    })),
+    ...(own.some((l) => l.span < STANDBY_SPAN_M) ? { standbyLines: own.filter((l) => l.span < STANDBY_SPAN_M).map((l) => l.code) } : {})
   };
 }
 
@@ -181,10 +186,10 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
     length_m: up1(rect.L), width_m: up1(rect.W), angle_deg: Math.round(rect.angle * 10) / 10,
     solarPanelCount: panels[i],
     focusFactor: Math.ceil((product / own.length) * 1000 - 1e-6) / 1000,
-    ...(BAN_MONG ? { mooringLayout: mooringLayoutOf(poly) } : {}),
+    mooringLayout: mooringLayoutOf(poly),
     cableCount: own.length, shoreAnchors: shore.length, bedAnchors: bed.length,
     selectedCable: CABLES[CABLES.length - 1],
-    waterDepth_m: WATER_DEPTH[poly.name] ?? 6.2,
+    waterDepth_m: WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M,
     bedAnchorDist_m: down1(Math.min(...bed.map((l) => l.span))),
     shoreAnchorDist_m: down1(Math.min(...shore.map((l) => l.span))),
     shorePileD_m: 0.35, shorePileL_m: 6.5, bedPileD_m: 0.35, bedPileL_m: 8,
@@ -238,6 +243,23 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
       compensation: 'device', deviceTension_kN: st.line.pretension_kN, deviceStroke_m: LOCK_FAIL_STROKE_M
     });
     row = { ...row, lockFailure: { setTension_kN: st.line.pretension_kN, stroke_m: LOCK_FAIL_STROKE_M, drift_m: Math.round(eq.maxDrift_m * 10) / 10, maxTension_kN: Math.round(eq.governing.maxTension_kN) } };
+  }
+
+  // Huổi Vanh: re-tensioned every adjustStep_m — what the raft sees if the lines are cut once and left alone
+  if (!BAN_MONG && !WHAT_IF) {
+    const b = base(), st = buildRaftProjectState(b, row, b.anchor), res = calculateProject(st), lay = row.mooringLayout!;
+    const eq = analyseMooring({
+      lines: lay.lines, force_kN: res.f_env_total_kN, mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
+      floatLevel_m: lay.floatLevel_m, cleatHeight_m: st.raft.freeboardHeight_m ?? 0.35, mbl_kN: st.line.mbl_kN,
+      compensation: 'fixed', eaPerMbl: st.line.eaPerMbl
+    });
+    row = { ...row, noAdjust: { drift_m: Math.round(eq.maxDrift_m * 10) / 10, maxTension_kN: Math.round(eq.governing.maxTension_kN + (st.line.pretension_kN ?? 0)) } };
+  }
+
+  // standby lines stay slack only while the raft drifts less than their slack
+  if (row.mooringLayout?.standbyLines) {
+    const r = run(row, 'PA3_SCREW_BASE'), drift = r.mooringAnalysis?.maxDrift_m ?? Infinity;
+    if (drift >= STANDBY_SLACK_M) notes.push(`${poly.name}: drift ${drift.toFixed(2)} m >= standby slack ${STANDBY_SLACK_M} m (${row.mooringLayout.standbyLines.join(', ')} would take load)`);
   }
 
   // tidy: omit the fields that equal the defaults of a single pile in normal steel

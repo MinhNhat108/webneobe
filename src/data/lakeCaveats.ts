@@ -1,13 +1,14 @@
 /**
  * Open issues of the ACTIVE lake that must stay in front of whoever reads a
  * result (header bar, report). Every number comes from the data files; none is
- * typed in here. Huổi Vanh has none here: its open issues are in CLAUDE.md and
- * in the report itself.
+ * typed in here. Huổi Vanh: only the line-operation rule of the equilibrium
+ * tension (2026-10-23); its other open issues are in CLAUDE.md and the report.
  */
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from './lakes';
 import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf } from './huoiVanhLayout';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from './huoiVanhProject';
 import { CABLE_MBL_KN } from '../lib/calc/raftState';
+import { STANDBY_SLACK_M } from '../lib/calc/mooringEquilibrium';
 import { groundAt } from '../components/simulation/sceneModel';
 
 const vn = (x: number, d = 2) => x.toFixed(d).replace('.', ',');
@@ -58,8 +59,30 @@ export function linesOnSlope(): Array<{ code: string; depth_m: number; fromLevel
   return out;
 }
 
+/** Huổi Vanh: the line tension holds only while the lines are re-tensioned as the water moves. */
+function huoiVanhCaveats(): string[] {
+  const out: string[] = [];
+  const step = HUOI_VANH_DEFAULT_PROJECT.line.adjustStep_m;
+  const na = HUOI_VANH_RAFTS.filter((r) => r.noAdjust);
+  if (na.length && step) {
+    const { mnc_m, mnlkt_m } = ACTIVE_LAKE.levels;
+    const sf = na.map((r) => (CABLE_MBL_KN[r.selectedCable] ?? 0) / r.noAdjust!.maxTension_kN);
+    const tt = na.map((r) => r.noAdjust!.maxTension_kN);
+    out.push(
+      `Lực dây tính bằng cân bằng tĩnh của bè trên từng dây theo mực nước (${vn(mnc_m, 1)}–${vn(mnlkt_m, 1)} m), với QUY TRÌNH VẬN HÀNH BẮT BUỘC: ` +
+      `chỉnh lại độ căng mọi dây mỗi khi mực nước thay đổi ${vn(step, 1)} m. Nếu cáp cắt một lần rồi để nguyên, dây đáy chùng khi nước thấp và lực dồn vào ít dây: ` +
+      `lực dây tới ${vn(Math.min(...tt), 0)}–${vn(Math.max(...tt), 0)} kN; ${sf.filter((x) => x < 3).length}/${na.length} bè khi đó không còn đủ hệ số an toàn cáp (thấp nhất ${vn(Math.min(...sf), 1)}, yêu cầu ≥ 3).`
+    );
+  }
+  const standby = HUOI_VANH_RAFTS.flatMap((r) => r.mooringLayout?.standbyLines ?? []);
+  if (standby.length) {
+    out.push(`${standby.length} dây quá ngắn (${standby.join(', ')}) lắp làm DÂY DỰ PHÒNG: cắt dài thêm ${vn(STANDBY_SLACK_M, 1)} m, không tính chịu lực (dây ngắn như vậy cứng tới mức hút gần hết tải của bè).`);
+  }
+  return out;
+}
+
 export function lakeCaveats(): string[] {
-  if (ACTIVE_LAKE_ID !== 'ban-mong') return [];
+  if (ACTIVE_LAKE_ID !== 'ban-mong') return huoiVanhCaveats();
   const { mnc_m, mndb_m, mnlkt_m } = ACTIVE_LAKE.levels;
   const out: string[] = [];
   out.push(

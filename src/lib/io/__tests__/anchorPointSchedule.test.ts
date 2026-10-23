@@ -44,7 +44,8 @@ describe('Anchor-by-anchor calculation', () => {
         expect([b.x, b.y, b.z], l.code).toEqual([line.xAnchor, line.yAnchor, line.zAnchor]);
         expect([l.span_m, l.azimuth_deg], l.code).toEqual([line.span, line.azimuth]);
         const raft = batch.find((x) => x.raft.name === l.raft)!;
-        expect(l.tension_kN, l.code).toBe(raft.results.t_max_intact_kN); // the governing line tension of ITS raft
+        // the largest tension of THAT line in the equilibrium + the pretension, capped by the raft's governing tension
+        expect(l.tension_kN, l.code).toBe(Math.min(raft.results.t_max_intact_kN, raft.results.mooringAnalysis!.lineMax_kN[l.code] + 5));
       }
       expect(b.z, b.baseId).toBeLessThan(MNC_M);
       expect(b.depthLow_m, b.baseId).toBeCloseTo(MNC_M - b.z, 9);
@@ -112,7 +113,7 @@ describe('Anchor-by-anchor calculation', () => {
     expect(s.totals.bedOk).toBe(s.bed.filter((b) => b.base.ok).length);
     for (const b of s.bed) expect(b.base.ok ? b.util <= 1 + 1e-9 : true, b.base.baseId).toBe(true);
     expect(s.totals.bedOk).toBe(32); // at the 20 m/s default every base passes
-    expect(s.totals.basesBySide).toEqual({ '2.50': 11, '2.75': 19, '3.25': 2 });
+    expect(s.totals.basesBySide).toEqual({ '2.50': 28, '2.75': 2, '3.00': 1, '3.75': 1 });
     expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(32);
     expect(s.totals.bedConcrete_m3).toBeCloseTo(s.bed.reduce((a, b) => a + b.base.concrete_m3, 0), 9);
   });

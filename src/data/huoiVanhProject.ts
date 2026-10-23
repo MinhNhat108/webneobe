@@ -51,6 +51,11 @@ export interface RaftSummaryItem {
    * (mooringEquilibrium.ts, compensation 'device'). Written by buildRaftCatalogue.
    */
   lockFailure?: { setTension_kN: number; stroke_m: number; drift_m: number; maxTension_kN: number };
+  /**
+   * Huổi Vanh (lines re-tensioned every `line.adjustStep_m`): the same raft if the lines are cut once and never
+   * re-tensioned — what the operating rule protects against (scripts/buildRaftCatalogue.ts).
+   */
+  noAdjust?: { drift_m: number; maxTension_kN: number };
 }
 
 export interface MooringCoordinate {
@@ -110,7 +115,7 @@ export const HUOI_VANH_PROJECT = {
   location: 'Hồ Huổi Vanh, Tỉnh Điện Biên',
   designer: 'Kỹ sư Kết cấu Thủy công & Năng lượng tái tạo',
   date: '2026-08-19',
-  note: 'Tính toán hệ thống neo 9 cụm bè pin nổi (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; tổng 95.873 m², 18.354 tấm pin), 295 tuyến cáp neo Polyester PES-28/32/40/48: 231 điểm neo bờ bằng cọc khoan nhồi D350 và 32 đế BTCT + 4 vít xoắn dưới đáy hồ, đặt giữa hai bè (cả 32 đế dùng chung cho hai bè đối diện); 9/9 bè đạt C9 (P/N ≤ 15 m).',
+  note: 'Tính toán hệ thống neo 9 cụm bè pin nổi (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; tổng 95.873 m², 18.354 tấm pin), 295 tuyến cáp neo Polyester PES-28/32/36/40 (lực dây cân bằng theo mực nước, chỉnh dây mỗi 1 m): 231 điểm neo bờ bằng cọc khoan nhồi D350 (262 cọc, cọc đôi ở BÈ 3A) và 32 đế BTCT + 4 vít xoắn dưới đáy hồ, đặt giữa hai bè (cả 32 đế dùng chung cho hai bè đối diện); 9/9 bè đạt C9 (P/N ≤ 15 m).',
   systemType: 'solar_fpv' as const,
   activeRaftId: 1,
   meta: {
@@ -142,8 +147,11 @@ export const HUOI_VANH_PROJECT = {
     westDist_m: 27.0
   },
   env: {
-    mndbt_m: 383.0,
-    mncn_m: 384.0,
+    // Huổi Vanh levels: MNC 380,0 / MNDB 384,5 / MNLKT 386,0 m (the line equilibrium runs over this range;
+    // before 2026-10-23 the fields held 383 / 384, a 1,0 m rise instead of 1,5 m)
+    mnc_m: 380.0,
+    mndbt_m: 384.5,
+    mncn_m: 386.0,
     maxDepth_m: 6.2,
     minWaterDepthUnderRaft_m: 1.5,
     bankSlope_m: 3.1,
@@ -178,6 +186,12 @@ export const HUOI_VANH_PROJECT = {
     unitWeightAir_kgpm: 0.54,
     pretension_kN: 5.0,
     focusFactor: 0.276,
+    // Line tension from the equilibrium of the raft on its real lines (src/lib/calc/mooringEquilibrium.ts,
+    // catalogue `mooringLayout`), as at Hồ Bản Mòng. Re-tensioned (turnbuckles) every `adjustStep_m` of
+    // level change: see the what-ifs of scripts/buildRaftCatalogue.ts.
+    levelCompensation: 'seasonal' as 'fixed' | 'seasonal',
+    adjustStep_m: 1,
+    eaPerMbl: 15,
     totalLength_m: 35.0,
     groundedLengthMin_m: 5.0,
     seabedFrictionCoef: 0.8
@@ -247,35 +261,43 @@ export const HUOI_VANH_PROJECT = {
   attachments: <Attachment[]>[
     {
       id: 'doc_huoi_vanh_docx',
-      name: '1. Thuyết minh tính toán phương án chốt (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',
+      name: '1. Thuyết minh tính toán phương án chốt — tính lại 23/10/2026 (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      size: 17750,
+      size: 19041,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },
     {
       id: 'doc_bang_tinh_chot_xlsx',
-      name: '2. Bảng tính Excel phương án chốt, có công thức (HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx)',
+      name: '2. Bảng tính Excel phương án chốt — tính lại 23/10/2026, lực dây cân bằng theo mực nước (HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 167822,
+      size: 604841,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx'
     },
     {
       id: 'doc_mb_neo_dxf',
-      name: '3. Bản vẽ CAD bố trí neo 9 bè (HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf)',
+      name: '3. Bản vẽ CAD bố trí neo 9 bè — tính lại 23/10/2026 (HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf)',
       mime: 'application/dxf',
-      size: 517017,
+      size: 519402,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_9_BE_PA3_DE_VIT.dxf'
     },
     {
       id: 'doc_tk_order_xlsx',
-      name: '4. Bảng thống kê vật tư đặt hàng Order BOQ (HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx)',
+      name: '4. Thống kê vật tư neo và cáp neo, đặt hàng — tính lại 23/10/2026 (HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 215117,
+      size: 854276,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_VAT_TU_ORDER.xlsx'
+    },
+    {
+      id: 'doc_tk_be_pin_xlsx',
+      name: '5. Thống kê vật tư bè pin và cấu kiện bè pin — tính lại 23/10/2026 (HOHUOIVANH_THONG_KE_VAT_TU_BE_PIN.xlsx)',
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 705392,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THONG_KE_VAT_TU_BE_PIN.xlsx'
     }
   ],
   raftsSummary: HUOI_VANH_RAFT_CATALOGUE

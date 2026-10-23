@@ -9,11 +9,53 @@ import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import { lakeCaveats } from '../../data/lakeCaveats';
 import { buildCableCuttingSchedule, type CableCutRow } from '../../lib/io/cableCuttingSchedule';
 import type { ProjectState } from '../../lib/calc/types';
+import { CABLE_MBL_KN } from '../../lib/calc/raftState';
 
 const vn1 = (x: number) => x.toFixed(1).replace('.', ',');
 const rangeOf = (rows: CableCutRow[], k: keyof CableCutRow) => {
   const v = rows.map((r) => r[k] as number);
   return `${vn1(Math.min(...v))} – ${vn1(Math.max(...v))}`;
+};
+
+/**
+ * Section 5 for Huổi Vanh (2026-10-23): lines re-tensioned every `line.adjustStep_m` of level change — the
+ * condition of the equilibrium line tension. Every figure from the cable cutting schedule and the catalogue.
+ */
+const HuoiVanhCableNote: React.FC<{ state: ProjectState }> = ({ state }) => {
+  const raftsSummary = useProjectStore((st) => st.raftsSummary);
+  const s = buildCableCuttingSchedule(state);
+  const shore = s.rows.filter((r) => r.type === 'SHORE'), bed = s.rows.filter((r) => r.type === 'BED');
+  const standby = s.rows.filter((r) => r.note.includes('DÂY DỰ PHÒNG'));
+  const step = state.line.adjustStep_m ?? 0;
+  const na = raftsSummary.filter((r) => r.noAdjust).map((r) => r.noAdjust!.maxTension_kN);
+  const short = raftsSummary.filter((r) => r.noAdjust && (CABLE_MBL_KN[r.selectedCable] ?? 0) / r.noAdjust.maxTension_kN < (state.criteria.sfLineIntact ?? 3));
+  const { mnc_m, mndb_m, mnlkt_m } = s.levels;
+  return (
+    <div className="text-[11px] text-slate-700 space-y-2 leading-relaxed">
+      <p>
+        <strong>Cắt cáp</strong> theo khoảng cách thẳng bích bè – chốt neo ở mực nước làm dây dài nhất (bảng ChieuDaiCatCap):
+        dây đáy ở MNLKT {mnlkt_m} m, dây bờ ở MNC {mnc_m} m. <strong>Chỉnh dây</strong>: mỗi khi mực nước hồ thay đổi
+        {' '}<strong>{vn1(step)} m</strong> (đo từ MNC {mnc_m} m), chỉnh lại MỌI dây cho vừa căng (lực căng trước {vn1(state.line.pretension_kN ?? 5)} kN) —
+        lực dây, cáp, cọc và đế của thiết kế chỉ đúng khi làm đúng quy trình này.
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
+        <div className="p-2.5 rounded bg-blue-50/60 border border-blue-200">
+          <span className="font-bold text-blue-900">• {bed.length} dây đáy:</span> chiều dài thay đổi theo mực nước, cần hành trình chỉnh
+          tới {vn1(s.totals.maxBedSlackLow_m)} m cả mùa (đoạn xích chỉnh giữa tấm chia Y và mắt cáp). Ở MNDB {mndb_m} m dây đáy chùng {rangeOf(bed, 'slackNormal_m')} m nếu không chỉnh.
+        </div>
+        <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
+          <span className="font-bold text-emerald-900">• {shore.length} dây cọc bờ:</span> chùng {rangeOf(shore, 'slackNormal_m')} m ở MNDB nếu không chỉnh;
+          dây dài chỉ cần tăng đơ ±300 mm, {s.totals.shortShoreLines} dây ngắn dưới 10 m cần thêm đoạn xích chỉnh.
+          {standby.length > 0 && <> {standby.length} dây quá ngắn ({standby.map((r) => r.code).join(', ')}) là dây dự phòng: cắt dài thêm 0,5 m, lắp chùng.</>}
+        </div>
+      </div>
+      {na.length > 0 && (
+        <p className="text-[10px] text-rose-700 font-semibold">
+          ⚠️ Nếu cắt cáp một lần rồi để nguyên, dây đáy chùng khi nước thấp, lực dồn vào ít dây: lực dây tới {Math.min(...na)} – {Math.max(...na)} kN; {short.length}/{raftsSummary.length} bè ({short.map((r) => r.name).join(', ')}) khi đó không còn đủ hệ số an toàn cáp {state.criteria.sfLineIntact ?? 3}.
+        </p>
+      )}
+    </div>
+  );
 };
 
 /** Section 5 for a lake other than Huổi Vanh: every figure from the cable cutting schedule. */
@@ -432,24 +474,7 @@ export const ReportView: React.FC = () => {
               Quy chuẩn dâng hạ nước hồ &Delta;H = {(ACTIVE_LAKE.levels.mnlkt_m - ACTIVE_LAKE.levels.mnc_m).toFixed(2).replace('.', ',')} m
             </span>
           </h2>
-          {ACTIVE_LAKE_ID !== 'huoi-vanh' ? <LakeCableNote state={currentProject} /> : (
-          <div className="text-[11px] text-slate-700 space-y-2 leading-relaxed">
-            <p>
-              <strong>Nguyên tắc vàng:</strong> Tuyệt đối không kéo căng cứng đét và không căn theo lực kéo T₀ ở MNDB. <strong>Cắt cáp theo chiều dài tính trước ở mực nước bất lợi</strong> của từng loại dây:
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10.5px]">
-              <div className="p-2.5 rounded bg-blue-50/60 border border-blue-200">
-                <span className="font-bold text-blue-900">• 64 Dây đáy (32 đế dùng chung):</span> Dài nhất ở mùa lũ <strong>MNLKT 386,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNLKT</em>. Mùa cạn MNC 380,0 m dây chùng 1,2 &ndash; 2,6 m nằm tiếp đáy. Gắn phao nổi 15&ndash;20 kg cách đế 3 m để chống chôn vùi trong bùn và chống quấn chéo dây.
-              </div>
-              <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
-                <span className="font-bold text-emerald-900">• 231 Dây cọc bờ (D350):</span> Chốt cọc trên sườn đồi (+384,0 ~ +386,5 m), dài nhất ở mùa cạn <strong>MNC 380,0 m</strong> &rarr; <em>Bắt buộc cắt cáp theo MNC</em>. Mùa lũ dây chùng nhẹ 0,1 &ndash; 0,3 m. Lắp cụm tăng đơ 10&ndash;12T hành trình &plusmn;300 mm tại đầu cọc bờ.
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-600 italic">
-              * Khẳng định an toàn: Khe hẹp giữa 2 bè (10 &ndash; 13 m) không xảy ra va đập; độ dịch chuyển ngang khi gió thổi &lt; 0,8 m nhờ hệ dây bờ căng ở MNC và đế neo dùng chung chữ V ngược tự hãm ở MNDB/MNLKT.
-            </p>
-          </div>
-          )}
+          {ACTIVE_LAKE_ID !== 'huoi-vanh' ? <LakeCableNote state={currentProject} /> : <HuoiVanhCableNote state={currentProject} />}
         </div>
 
         {/* Disclaimer */}

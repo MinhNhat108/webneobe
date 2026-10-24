@@ -159,16 +159,16 @@
   },
   {
     "raft": "BÈ 1",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -132.97,
     "yRaft": 571.25,
-    "xAnchor": -144.29,
-    "yAnchor": 559.94,
-    "zAnchor": 649.81,
-    "span": 16,
-    "azimuth": 225,
+    "xAnchor": -157.63,
+    "yAnchor": 503.6,
+    "zAnchor": 662.48,
+    "span": 72,
+    "azimuth": 200,
     "code": "B1-D13",
-    "anchorId": "DV-007"
+    "converted": true
   },
   {
     "raft": "BÈ 1",
@@ -181,7 +181,7 @@
     "span": 17.5,
     "azimuth": 285,
     "code": "B1-D14",
-    "anchorId": "DV-008"
+    "anchorId": "DV-007"
   },
   {
     "raft": "BÈ 1",
@@ -194,7 +194,7 @@
     "span": 17.51,
     "azimuth": 15,
     "code": "B1-D15",
-    "anchorId": "DV-009"
+    "anchorId": "DV-008"
   },
   {
     "raft": "BÈ 1",
@@ -234,7 +234,7 @@
     "azimuth": 168.9,
     "code": "B1-D18",
     "sharedWith": "B2-D12",
-    "anchorId": "DV-010"
+    "anchorId": "DV-009"
   },
   {
     "raft": "BÈ 1",
@@ -247,7 +247,7 @@
     "span": 17.5,
     "azimuth": 15,
     "code": "B1-D19",
-    "anchorId": "DV-011"
+    "anchorId": "DV-010"
   },
   {
     "raft": "BÈ 1",
@@ -273,7 +273,7 @@
     "span": 17.5,
     "azimuth": 15,
     "code": "B1-D21",
-    "anchorId": "DV-012"
+    "anchorId": "DV-011"
   },
   {
     "raft": "BÈ 1",
@@ -325,7 +325,7 @@
     "span": 17.5,
     "azimuth": 342.5,
     "code": "B1-D25",
-    "anchorId": "DV-013"
+    "anchorId": "DV-012"
   },
   {
     "raft": "BÈ 1",
@@ -338,7 +338,7 @@
     "span": 17.5,
     "azimuth": 15,
     "code": "B1-D26",
-    "anchorId": "DV-014"
+    "anchorId": "DV-013"
   },
   {
     "raft": "BÈ 1",
@@ -377,7 +377,7 @@
     "span": 20.76,
     "azimuth": 225,
     "code": "B1-D29",
-    "anchorId": "DV-015"
+    "anchorId": "DV-014"
   },
   {
     "raft": "BÈ 1",
@@ -416,7 +416,7 @@
     "span": 17.51,
     "azimuth": 15,
     "code": "B1-D32",
-    "anchorId": "DV-016"
+    "anchorId": "DV-015"
   },
   {
     "raft": "BÈ 1",
@@ -482,7 +482,7 @@
     "azimuth": 180.8,
     "code": "B2-D02",
     "sharedWith": "B3-D40",
-    "anchorId": "DV-017"
+    "anchorId": "DV-016"
   },
   {
     "raft": "BÈ 2",
@@ -522,7 +522,7 @@
     "azimuth": 185.6,
     "code": "B2-D05",
     "sharedWith": "B3-D31",
-    "anchorId": "DV-018"
+    "anchorId": "DV-017"
   },
   {
     "raft": "BÈ 2",
@@ -575,7 +575,7 @@
     "azimuth": 190.7,
     "code": "B2-D09",
     "sharedWith": "B3-D10",
-    "anchorId": "DV-019"
+    "anchorId": "DV-018"
   },
   {
     "raft": "BÈ 2",
@@ -602,7 +602,7 @@
     "azimuth": 173.8,
     "code": "B2-D11",
     "sharedWith": "B3-D23",
-    "anchorId": "DV-020"
+    "anchorId": "DV-019"
   },
   {
     "raft": "BÈ 2",
@@ -616,7 +616,7 @@
     "azimuth": 348.9,
     "code": "B2-D12",
     "sharedWith": "B1-D18",
-    "anchorId": "DV-010"
+    "anchorId": "DV-009"
   },
   {
     "raft": "BÈ 2",
@@ -682,7 +682,7 @@
     "azimuth": 198.3,
     "code": "B2-D17",
     "sharedWith": "B3-D19",
-    "anchorId": "DV-021"
+    "anchorId": "DV-020"
   },
   {
     "raft": "BÈ 2",
@@ -696,7 +696,7 @@
     "azimuth": 165.6,
     "code": "B2-D18",
     "sharedWith": "B3-D03",
-    "anchorId": "DV-022"
+    "anchorId": "DV-021"
   },
   {
     "raft": "BÈ 2",
@@ -868,7 +868,7 @@
     "azimuth": 177.3,
     "code": "B2-D31",
     "sharedWith": "B3-D12",
-    "anchorId": "DV-023"
+    "anchorId": "DV-022"
   },
   {
     "raft": "BÈ 2",
@@ -960,7 +960,7 @@
     "azimuth": 345.6,
     "code": "B3-D03",
     "sharedWith": "B2-D18",
-    "anchorId": "DV-022"
+    "anchorId": "DV-021"
   },
   {
     "raft": "BÈ 3",
@@ -974,20 +974,20 @@
     "azimuth": 214.3,
     "code": "B3-D04",
     "sharedWith": "B4-D21",
-    "anchorId": "DV-024"
+    "anchorId": "DV-023"
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -128.9,
     "yRaft": 291.9,
-    "xAnchor": -145.8,
-    "yAnchor": 296.43,
-    "zAnchor": 649.03,
-    "span": 17.5,
+    "xAnchor": -201.34,
+    "yAnchor": 311.32,
+    "zAnchor": 662.38,
+    "span": 75,
     "azimuth": 285,
     "code": "B3-D05",
-    "anchorId": "DV-025"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1027,7 +1027,7 @@
     "azimuth": 179.8,
     "code": "B3-D08",
     "sharedWith": "B4-D27",
-    "anchorId": "DV-026"
+    "anchorId": "DV-024"
   },
   {
     "raft": "BÈ 3",
@@ -1041,7 +1041,7 @@
     "azimuth": 130.7,
     "code": "B3-D09",
     "sharedWith": "B5-D19",
-    "anchorId": "DV-027"
+    "anchorId": "DV-025"
   },
   {
     "raft": "BÈ 3",
@@ -1055,20 +1055,20 @@
     "azimuth": 10.7,
     "code": "B3-D10",
     "sharedWith": "B2-D09",
-    "anchorId": "DV-019"
+    "anchorId": "DV-018"
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -147.12,
     "yRaft": 268.31,
-    "xAnchor": -164.03,
-    "yAnchor": 272.84,
-    "zAnchor": 648.13,
-    "span": 17.51,
+    "xAnchor": -207.01,
+    "yAnchor": 284.35,
+    "zAnchor": 662.28,
+    "span": 62,
     "azimuth": 285,
     "code": "B3-D11",
-    "anchorId": "DV-028"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1082,7 +1082,7 @@
     "azimuth": 359.6,
     "code": "B3-D12",
     "sharedWith": "B2-D31",
-    "anchorId": "DV-023"
+    "anchorId": "DV-022"
   },
   {
     "raft": "BÈ 3",
@@ -1099,16 +1099,16 @@
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -120.44,
     "yRaft": 221.07,
-    "xAnchor": -124.97,
-    "yAnchor": 204.17,
-    "zAnchor": 647,
-    "span": 17.5,
-    "azimuth": 195,
+    "xAnchor": -183.43,
+    "yAnchor": 191.7,
+    "zAnchor": 662.3,
+    "span": 69.5,
+    "azimuth": 245,
     "code": "B3-D14",
-    "anchorId": "DV-029"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1135,7 +1135,7 @@
     "azimuth": 210.2,
     "code": "B3-D16",
     "sharedWith": "B4-D01",
-    "anchorId": "DV-030"
+    "anchorId": "DV-026"
   },
   {
     "raft": "BÈ 3",
@@ -1175,20 +1175,20 @@
     "azimuth": 18.4,
     "code": "B3-D19",
     "sharedWith": "B2-D17",
-    "anchorId": "DV-021"
+    "anchorId": "DV-020"
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -135.78,
     "yRaft": 276.95,
-    "xAnchor": -138.07,
-    "yAnchor": 294.3,
-    "zAnchor": 648.56,
-    "span": 17.5,
-    "azimuth": 352.5,
+    "xAnchor": -203.98,
+    "yAnchor": 298.43,
+    "zAnchor": 662.43,
+    "span": 71.5,
+    "azimuth": 287.5,
     "code": "B3-D20",
-    "anchorId": "DV-031"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1202,7 +1202,7 @@
     "azimuth": 104.6,
     "code": "B3-D21",
     "sharedWith": "B5-D01",
-    "anchorId": "DV-032"
+    "anchorId": "DV-027"
   },
   {
     "raft": "BÈ 3",
@@ -1229,7 +1229,7 @@
     "azimuth": 349.6,
     "code": "B3-D23",
     "sharedWith": "B2-D11",
-    "anchorId": "DV-020"
+    "anchorId": "DV-019"
   },
   {
     "raft": "BÈ 3",
@@ -1282,7 +1282,7 @@
     "azimuth": 208.6,
     "code": "B3-D27",
     "sharedWith": "B4-D13",
-    "anchorId": "DV-033"
+    "anchorId": "DV-028"
   },
   {
     "raft": "BÈ 3",
@@ -1296,7 +1296,7 @@
     "azimuth": 176.4,
     "code": "B3-D28",
     "sharedWith": "B4-D08",
-    "anchorId": "DV-034"
+    "anchorId": "DV-029"
   },
   {
     "raft": "BÈ 3",
@@ -1310,7 +1310,7 @@
     "azimuth": 105,
     "code": "B3-D29",
     "sharedWith": "B5-D21",
-    "anchorId": "DV-035"
+    "anchorId": "DV-030"
   },
   {
     "raft": "BÈ 3",
@@ -1337,7 +1337,7 @@
     "azimuth": 5.7,
     "code": "B3-D31",
     "sharedWith": "B2-D05",
-    "anchorId": "DV-018"
+    "anchorId": "DV-017"
   },
   {
     "raft": "BÈ 3",
@@ -1351,33 +1351,33 @@
     "azimuth": 201.1,
     "code": "B3-D32",
     "sharedWith": "B4-D35",
-    "anchorId": "DV-036"
+    "anchorId": "DV-031"
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -144.54,
     "yRaft": 277.97,
-    "xAnchor": -161.44,
-    "yAnchor": 282.5,
-    "zAnchor": 648.76,
-    "span": 17.5,
+    "xAnchor": -204.91,
+    "yAnchor": 294.15,
+    "zAnchor": 662.31,
+    "span": 62.5,
     "azimuth": 285,
     "code": "B3-D33",
-    "anchorId": "DV-037"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -110.78,
     "yRaft": 218.48,
-    "xAnchor": -115.31,
-    "yAnchor": 201.58,
-    "zAnchor": 647,
-    "span": 17.5,
-    "azimuth": 195,
+    "xAnchor": -182.38,
+    "yAnchor": 185.1,
+    "zAnchor": 662.32,
+    "span": 79,
+    "azimuth": 245,
     "code": "B3-D34",
-    "anchorId": "DV-038"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1390,20 +1390,20 @@
     "span": 17.5,
     "azimuth": 105,
     "code": "B3-D35",
-    "anchorId": "DV-039"
+    "anchorId": "DV-032"
   },
   {
     "raft": "BÈ 3",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -126.31,
     "yRaft": 301.56,
-    "xAnchor": -143.21,
-    "yAnchor": 306.09,
-    "zAnchor": 649.57,
-    "span": 17.5,
-    "azimuth": 285,
+    "xAnchor": -154.2,
+    "yAnchor": 361.38,
+    "zAnchor": 662.32,
+    "span": 66,
+    "azimuth": 335,
     "code": "B3-D36",
-    "anchorId": "DV-040"
+    "converted": true
   },
   {
     "raft": "BÈ 3",
@@ -1456,7 +1456,7 @@
     "azimuth": 0.8,
     "code": "B3-D40",
     "sharedWith": "B2-D02",
-    "anchorId": "DV-017"
+    "anchorId": "DV-016"
   },
   {
     "raft": "BÈ 3",
@@ -1470,7 +1470,7 @@
     "azimuth": 195,
     "code": "B3-D41",
     "sharedWith": "B4-D36",
-    "anchorId": "DV-041"
+    "anchorId": "DV-033"
   },
   {
     "raft": "BÈ 3",
@@ -1497,7 +1497,7 @@
     "azimuth": 195.3,
     "code": "B3-D43",
     "sharedWith": "B4-D19",
-    "anchorId": "DV-042"
+    "anchorId": "DV-034"
   },
   {
     "raft": "BÈ 4",
@@ -1511,7 +1511,7 @@
     "azimuth": 295.8,
     "code": "B4-D01",
     "sharedWith": "B3-D16",
-    "anchorId": "DV-030"
+    "anchorId": "DV-026"
   },
   {
     "raft": "BÈ 4",
@@ -1541,16 +1541,16 @@
   },
   {
     "raft": "BÈ 4",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -92.45,
     "yRaft": 114.38,
-    "xAnchor": -109.68,
-    "yAnchor": 111.34,
-    "zAnchor": 651.25,
-    "span": 17.5,
-    "azimuth": 260,
+    "xAnchor": -158.43,
+    "yAnchor": 126.01,
+    "zAnchor": 662.33,
+    "span": 67,
+    "azimuth": 280,
     "code": "B4-D04",
-    "anchorId": "DV-043"
+    "converted": true
   },
   {
     "raft": "BÈ 4",
@@ -1577,7 +1577,7 @@
     "azimuth": 247.8,
     "code": "B4-D06",
     "sharedWith": "B6-D05",
-    "anchorId": "DV-044"
+    "anchorId": "DV-035"
   },
   {
     "raft": "BÈ 4",
@@ -1604,7 +1604,7 @@
     "azimuth": 356.4,
     "code": "B4-D08",
     "sharedWith": "B3-D28",
-    "anchorId": "DV-034"
+    "anchorId": "DV-029"
   },
   {
     "raft": "BÈ 4",
@@ -1631,7 +1631,7 @@
     "azimuth": 256.5,
     "code": "B4-D10",
     "sharedWith": "B6-D20",
-    "anchorId": "DV-045"
+    "anchorId": "DV-036"
   },
   {
     "raft": "BÈ 4",
@@ -1671,7 +1671,7 @@
     "azimuth": 345.8,
     "code": "B4-D13",
     "sharedWith": "B3-D27",
-    "anchorId": "DV-033"
+    "anchorId": "DV-028"
   },
   {
     "raft": "BÈ 4",
@@ -1684,8 +1684,7 @@
     "span": 30.1,
     "azimuth": 240.6,
     "code": "B4-D14",
-    "sharedWith": "B6-D09",
-    "anchorId": "DV-046"
+    "anchorId": "DV-037"
   },
   {
     "raft": "BÈ 4",
@@ -1702,16 +1701,16 @@
   },
   {
     "raft": "BÈ 4",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -97.83,
     "yRaft": 144.91,
-    "xAnchor": -115.06,
-    "yAnchor": 141.87,
-    "zAnchor": 649.56,
-    "span": 17.5,
+    "xAnchor": -160.36,
+    "yAnchor": 133.88,
+    "zAnchor": 662.4,
+    "span": 63.5,
     "azimuth": 260,
     "code": "B4-D16",
-    "anchorId": "DV-047"
+    "converted": true
   },
   {
     "raft": "BÈ 4",
@@ -1725,7 +1724,7 @@
     "azimuth": 248.3,
     "code": "B4-D17",
     "sharedWith": "B6-D03",
-    "anchorId": "DV-048"
+    "anchorId": "DV-038"
   },
   {
     "raft": "BÈ 4",
@@ -1752,7 +1751,7 @@
     "azimuth": 290,
     "code": "B4-D19",
     "sharedWith": "B3-D43",
-    "anchorId": "DV-042"
+    "anchorId": "DV-034"
   },
   {
     "raft": "BÈ 4",
@@ -1779,7 +1778,7 @@
     "azimuth": 34.3,
     "code": "B4-D21",
     "sharedWith": "B3-D04",
-    "anchorId": "DV-024"
+    "anchorId": "DV-023"
   },
   {
     "raft": "BÈ 4",
@@ -1796,29 +1795,29 @@
   },
   {
     "raft": "BÈ 4",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -95.22,
     "yRaft": 130.13,
-    "xAnchor": -112.46,
-    "yAnchor": 127.1,
-    "zAnchor": 650.94,
-    "span": 17.5,
-    "azimuth": 260,
+    "xAnchor": -158.72,
+    "yAnchor": 130.17,
+    "zAnchor": 662.31,
+    "span": 63.5,
+    "azimuth": 270,
     "code": "B4-D23",
-    "anchorId": "DV-049"
+    "converted": true
   },
   {
     "raft": "BÈ 4",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -89.84,
     "yRaft": 99.6,
-    "xAnchor": -107.08,
-    "yAnchor": 96.57,
-    "zAnchor": 650.38,
-    "span": 17.5,
-    "azimuth": 260,
+    "xAnchor": -161.71,
+    "yAnchor": 125.8,
+    "zAnchor": 663.15,
+    "span": 76.5,
+    "azimuth": 290,
     "code": "B4-D24",
-    "anchorId": "DV-050"
+    "converted": true
   },
   {
     "raft": "BÈ 4",
@@ -1845,7 +1844,7 @@
     "azimuth": 242.9,
     "code": "B4-D26",
     "sharedWith": "B6-D24",
-    "anchorId": "DV-051"
+    "anchorId": "DV-039"
   },
   {
     "raft": "BÈ 4",
@@ -1859,7 +1858,7 @@
     "azimuth": 359.8,
     "code": "B4-D27",
     "sharedWith": "B3-D08",
-    "anchorId": "DV-026"
+    "anchorId": "DV-024"
   },
   {
     "raft": "BÈ 4",
@@ -1873,20 +1872,20 @@
     "azimuth": 237.3,
     "code": "B4-D28",
     "sharedWith": "B6-D14",
-    "anchorId": "DV-052"
+    "anchorId": "DV-040"
   },
   {
     "raft": "BÈ 4",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -100.61,
     "yRaft": 160.66,
-    "xAnchor": -117.84,
-    "yAnchor": 157.62,
-    "zAnchor": 648.95,
-    "span": 17.5,
-    "azimuth": 260,
+    "xAnchor": -162.63,
+    "yAnchor": 138.08,
+    "zAnchor": 662.36,
+    "span": 66,
+    "azimuth": 250,
     "code": "B4-D29",
-    "anchorId": "DV-053"
+    "converted": true
   },
   {
     "raft": "BÈ 4",
@@ -1939,7 +1938,7 @@
     "azimuth": 246.2,
     "code": "B4-D33",
     "sharedWith": "B6-D26",
-    "anchorId": "DV-054"
+    "anchorId": "DV-041"
   },
   {
     "raft": "BÈ 4",
@@ -1966,7 +1965,7 @@
     "azimuth": 21.1,
     "code": "B4-D35",
     "sharedWith": "B3-D32",
-    "anchorId": "DV-036"
+    "anchorId": "DV-031"
   },
   {
     "raft": "BÈ 4",
@@ -1980,7 +1979,7 @@
     "azimuth": 331.3,
     "code": "B4-D36",
     "sharedWith": "B3-D41",
-    "anchorId": "DV-041"
+    "anchorId": "DV-033"
   },
   {
     "raft": "BÈ 4",
@@ -1994,7 +1993,7 @@
     "azimuth": 246.2,
     "code": "B4-D37",
     "sharedWith": "B6-D22",
-    "anchorId": "DV-055"
+    "anchorId": "DV-042"
   },
   {
     "raft": "BÈ 5",
@@ -2008,7 +2007,7 @@
     "azimuth": 284.6,
     "code": "B5-D01",
     "sharedWith": "B3-D21",
-    "anchorId": "DV-032"
+    "anchorId": "DV-027"
   },
   {
     "raft": "BÈ 5",
@@ -2132,11 +2131,11 @@
     "type": "SHORE",
     "xRaft": 103.4,
     "yRaft": 199.16,
-    "xAnchor": 160.33,
-    "yAnchor": 210.23,
-    "zAnchor": 662.33,
-    "span": 58,
-    "azimuth": 79,
+    "xAnchor": 142.59,
+    "yAnchor": 263.11,
+    "zAnchor": 663.77,
+    "span": 75,
+    "azimuth": 31.5,
     "code": "B5-D11",
     "converted": true
   },
@@ -2243,7 +2242,7 @@
     "azimuth": 310.7,
     "code": "B5-D19",
     "sharedWith": "B3-D09",
-    "anchorId": "DV-027"
+    "anchorId": "DV-025"
   },
   {
     "raft": "BÈ 5",
@@ -2270,7 +2269,7 @@
     "azimuth": 0.2,
     "code": "B5-D21",
     "sharedWith": "B3-D29",
-    "anchorId": "DV-035"
+    "anchorId": "DV-030"
   },
   {
     "raft": "BÈ 6",
@@ -2287,16 +2286,16 @@
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -158.7,
     "yRaft": -57.86,
-    "xAnchor": -173.91,
-    "yAnchor": -66.52,
-    "zAnchor": 650.44,
-    "span": 17.5,
-    "azimuth": 240.3,
+    "xAnchor": -170.91,
+    "yAnchor": -124.75,
+    "zAnchor": 662.33,
+    "span": 68,
+    "azimuth": 190.3,
     "code": "B6-D02",
-    "anchorId": "DV-056"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2310,7 +2309,7 @@
     "azimuth": 68.4,
     "code": "B6-D03",
     "sharedWith": "B4-D17",
-    "anchorId": "DV-048"
+    "anchorId": "DV-038"
   },
   {
     "raft": "BÈ 6",
@@ -2323,7 +2322,7 @@
     "span": 17.5,
     "azimuth": 240.3,
     "code": "B6-D04",
-    "anchorId": "DV-057"
+    "anchorId": "DV-043"
   },
   {
     "raft": "BÈ 6",
@@ -2337,7 +2336,7 @@
     "azimuth": 67.8,
     "code": "B6-D05",
     "sharedWith": "B4-D06",
-    "anchorId": "DV-044"
+    "anchorId": "DV-035"
   },
   {
     "raft": "BÈ 6",
@@ -2350,47 +2349,46 @@
     "span": 17.5,
     "azimuth": 240.4,
     "code": "B6-D06",
-    "anchorId": "DV-058"
+    "anchorId": "DV-044"
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -191.31,
     "yRaft": 52.28,
-    "xAnchor": -199.97,
-    "yAnchor": 67.49,
-    "zAnchor": 647,
-    "span": 17.5,
-    "azimuth": 330.3,
+    "xAnchor": -172.52,
+    "yAnchor": 120.75,
+    "zAnchor": 663.27,
+    "span": 71,
+    "azimuth": 15.3,
     "code": "B6-D07",
-    "anchorId": "DV-059"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -119.01,
     "yRaft": -35.65,
-    "xAnchor": -110.29,
-    "yAnchor": -50.82,
-    "zAnchor": 650.72,
-    "span": 17.5,
-    "azimuth": 150.1,
+    "xAnchor": -74.12,
+    "yAnchor": -89.36,
+    "zAnchor": 662.4,
+    "span": 70,
+    "azimuth": 140.1,
     "code": "B6-D08",
-    "anchorId": "DV-060"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -139.52,
     "yRaft": 54.33,
-    "xAnchor": -113.29,
-    "yAnchor": 69.09,
-    "zAnchor": 649.09,
-    "span": 30.1,
-    "azimuth": 60.6,
+    "xAnchor": -156.64,
+    "yAnchor": 121.17,
+    "zAnchor": 662.39,
+    "span": 69,
+    "azimuth": 345.6,
     "code": "B6-D09",
-    "sharedWith": "B4-D14",
-    "anchorId": "DV-046"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2403,7 +2401,7 @@
     "span": 17.5,
     "azimuth": 240.3,
     "code": "B6-D10",
-    "anchorId": "DV-061"
+    "anchorId": "DV-045"
   },
   {
     "raft": "BÈ 6",
@@ -2430,20 +2428,20 @@
     "azimuth": 324.6,
     "code": "B6-D12",
     "sharedWith": "B7-D13",
-    "anchorId": "DV-062"
+    "anchorId": "DV-046"
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -138.95,
     "yRaft": -47.1,
-    "xAnchor": -130.23,
-    "yAnchor": -62.28,
-    "zAnchor": 650.66,
-    "span": 17.51,
-    "azimuth": 150.1,
+    "xAnchor": -85.33,
+    "yAnchor": -100.96,
+    "zAnchor": 662.34,
+    "span": 76,
+    "azimuth": 135.1,
     "code": "B6-D13",
-    "anchorId": "DV-063"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2457,7 +2455,7 @@
     "azimuth": 57.3,
     "code": "B6-D14",
     "sharedWith": "B4-D28",
-    "anchorId": "DV-052"
+    "anchorId": "DV-040"
   },
   {
     "raft": "BÈ 6",
@@ -2470,20 +2468,20 @@
     "span": 17.5,
     "azimuth": 240.4,
     "code": "B6-D15",
-    "anchorId": "DV-064"
+    "anchorId": "DV-047"
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -99.07,
     "yRaft": -24.19,
-    "xAnchor": -90.35,
-    "yAnchor": -39.36,
-    "zAnchor": 650.68,
-    "span": 17.5,
-    "azimuth": 150.1,
+    "xAnchor": -53.9,
+    "yAnchor": -69.53,
+    "zAnchor": 662.54,
+    "span": 64,
+    "azimuth": 135.1,
     "code": "B6-D16",
-    "anchorId": "DV-065"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2509,20 +2507,20 @@
     "span": 17.49,
     "azimuth": 240.4,
     "code": "B6-D18",
-    "anchorId": "DV-066"
+    "anchorId": "DV-048"
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -148.49,
     "yRaft": -52.58,
-    "xAnchor": -139.77,
-    "yAnchor": -67.76,
-    "zAnchor": 650.72,
-    "span": 17.51,
-    "azimuth": 150.1,
+    "xAnchor": -155.19,
+    "yAnchor": -127.28,
+    "zAnchor": 662.33,
+    "span": 75,
+    "azimuth": 185.1,
     "code": "B6-D19",
-    "anchorId": "DV-067"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2536,7 +2534,7 @@
     "azimuth": 47.6,
     "code": "B6-D20",
     "sharedWith": "B4-D10",
-    "anchorId": "DV-045"
+    "anchorId": "DV-036"
   },
   {
     "raft": "BÈ 6",
@@ -2549,7 +2547,7 @@
     "span": 17.5,
     "azimuth": 240.4,
     "code": "B6-D21",
-    "anchorId": "DV-068"
+    "anchorId": "DV-049"
   },
   {
     "raft": "BÈ 6",
@@ -2563,7 +2561,7 @@
     "azimuth": 66.3,
     "code": "B6-D22",
     "sharedWith": "B4-D37",
-    "anchorId": "DV-055"
+    "anchorId": "DV-042"
   },
   {
     "raft": "BÈ 6",
@@ -2577,7 +2575,7 @@
     "azimuth": 314.5,
     "code": "B6-D23",
     "sharedWith": "B7-D40",
-    "anchorId": "DV-069"
+    "anchorId": "DV-050"
   },
   {
     "raft": "BÈ 6",
@@ -2591,20 +2589,20 @@
     "azimuth": 62.9,
     "code": "B6-D24",
     "sharedWith": "B4-D26",
-    "anchorId": "DV-051"
+    "anchorId": "DV-039"
   },
   {
     "raft": "BÈ 6",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -109.47,
     "yRaft": -30.17,
-    "xAnchor": -100.75,
-    "yAnchor": -45.34,
-    "zAnchor": 650.75,
-    "span": 17.5,
-    "azimuth": 150.1,
+    "xAnchor": -66.18,
+    "yAnchor": -81.96,
+    "zAnchor": 662.36,
+    "span": 67.5,
+    "azimuth": 140.1,
     "code": "B6-D25",
-    "anchorId": "DV-070"
+    "converted": true
   },
   {
     "raft": "BÈ 6",
@@ -2618,7 +2616,7 @@
     "azimuth": 66.1,
     "code": "B6-D26",
     "sharedWith": "B4-D33",
-    "anchorId": "DV-054"
+    "anchorId": "DV-041"
   },
   {
     "raft": "BÈ 6",
@@ -2632,7 +2630,7 @@
     "azimuth": 302.5,
     "code": "B6-D27",
     "sharedWith": "B7-D25",
-    "anchorId": "DV-071"
+    "anchorId": "DV-051"
   },
   {
     "raft": "BÈ 7",
@@ -2646,7 +2644,7 @@
     "azimuth": 277.4,
     "code": "B7-D01",
     "sharedWith": "B8-D15",
-    "anchorId": "DV-072"
+    "anchorId": "DV-052"
   },
   {
     "raft": "BÈ 7",
@@ -2676,16 +2674,16 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -272.21,
     "yRaft": 146.56,
-    "xAnchor": -262.17,
-    "yAnchor": 160.89,
-    "zAnchor": 653.87,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -203.78,
+    "yAnchor": 186.04,
+    "zAnchor": 662.34,
+    "span": 79,
+    "azimuth": 60,
     "code": "B7-D04",
-    "anchorId": "DV-073"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -2712,7 +2710,7 @@
     "azimuth": 317.6,
     "code": "B7-D06",
     "sharedWith": "B8-D19",
-    "anchorId": "DV-074"
+    "anchorId": "DV-053"
   },
   {
     "raft": "BÈ 7",
@@ -2768,16 +2766,16 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -302.52,
     "yRaft": 167.78,
-    "xAnchor": -292.48,
-    "yAnchor": 182.11,
-    "zAnchor": 651.1,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -292.12,
+    "yAnchor": 239.55,
+    "zAnchor": 662.5,
+    "span": 72.52,
+    "azimuth": 8.2,
     "code": "B7-D11",
-    "anchorId": "DV-075"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -2804,7 +2802,7 @@
     "azimuth": 144.6,
     "code": "B7-D13",
     "sharedWith": "B6-D12",
-    "anchorId": "DV-062"
+    "anchorId": "DV-046"
   },
   {
     "raft": "BÈ 7",
@@ -2818,20 +2816,20 @@
     "azimuth": 279,
     "code": "B7-D14",
     "sharedWith": "B8-D02",
-    "anchorId": "DV-076"
+    "anchorId": "DV-054"
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -361.5,
     "yRaft": 209.08,
-    "xAnchor": -351.46,
-    "yAnchor": 223.41,
-    "zAnchor": 650.82,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -322.6,
+    "yAnchor": 255.41,
+    "zAnchor": 662.29,
+    "span": 60.5,
+    "azimuth": 40,
     "code": "B7-D15",
-    "anchorId": "DV-077"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -2871,7 +2869,7 @@
     "azimuth": 293.8,
     "code": "B7-D18",
     "sharedWith": "B8-D33",
-    "anchorId": "DV-078"
+    "anchorId": "DV-055"
   },
   {
     "raft": "BÈ 7",
@@ -2884,7 +2882,7 @@
     "span": 17.5,
     "azimuth": 35,
     "code": "B7-D19",
-    "anchorId": "DV-079"
+    "anchorId": "DV-056"
   },
   {
     "raft": "BÈ 7",
@@ -2927,16 +2925,16 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -257.46,
     "yRaft": 136.23,
-    "xAnchor": -247.43,
-    "yAnchor": 150.57,
-    "zAnchor": 655.8,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -198.15,
+    "yAnchor": 170.51,
+    "zAnchor": 662.27,
+    "span": 68.5,
+    "azimuth": 60,
     "code": "B7-D23",
-    "anchorId": "DV-080"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -2963,20 +2961,20 @@
     "azimuth": 122.5,
     "code": "B7-D25",
     "sharedWith": "B6-D27",
-    "anchorId": "DV-071"
+    "anchorId": "DV-051"
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -317.26,
     "yRaft": 178.1,
-    "xAnchor": -307.23,
-    "yAnchor": 192.44,
-    "zAnchor": 650.69,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -296.22,
+    "yAnchor": 239.5,
+    "zAnchor": 662.41,
+    "span": 64.9,
+    "azimuth": 18.9,
     "code": "B7-D26",
-    "anchorId": "DV-081"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -3003,7 +3001,7 @@
     "azimuth": 278.6,
     "code": "B7-D28",
     "sharedWith": "B8-D26",
-    "anchorId": "DV-082"
+    "anchorId": "DV-057"
   },
   {
     "raft": "BÈ 7",
@@ -3033,29 +3031,29 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -360.45,
     "yRaft": 118.01,
-    "xAnchor": -370.49,
-    "yAnchor": 103.67,
-    "zAnchor": 652.18,
-    "span": 17.51,
-    "azimuth": 215,
+    "xAnchor": -406.06,
+    "yAnchor": 72.4,
+    "zAnchor": 662.28,
+    "span": 64.5,
+    "azimuth": 225,
     "code": "B7-D31",
-    "anchorId": "DV-083"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -376.24,
     "yRaft": 219.4,
-    "xAnchor": -366.2,
-    "yAnchor": 233.74,
-    "zAnchor": 651.12,
-    "span": 17.51,
+    "xAnchor": -340.68,
+    "yAnchor": 270.19,
+    "zAnchor": 662.52,
+    "span": 62,
     "azimuth": 35,
     "code": "B7-D32",
-    "anchorId": "DV-084"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -3072,16 +3070,16 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -324.64,
     "yRaft": 183.27,
-    "xAnchor": -314.6,
-    "yAnchor": 197.6,
-    "zAnchor": 650.58,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -299.95,
+    "yAnchor": 242.83,
+    "zAnchor": 664.03,
+    "span": 64.47,
+    "azimuth": 22.5,
     "code": "B7-D34",
-    "anchorId": "DV-085"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -3111,42 +3109,42 @@
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -353.08,
     "yRaft": 112.84,
-    "xAnchor": -363.11,
-    "yAnchor": 98.51,
-    "zAnchor": 652.41,
-    "span": 17.49,
-    "azimuth": 215,
+    "xAnchor": -358.56,
+    "yAnchor": 50.08,
+    "zAnchor": 662.46,
+    "span": 63,
+    "azimuth": 185,
     "code": "B7-D37",
-    "anchorId": "DV-086"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -264.84,
     "yRaft": 141.39,
-    "xAnchor": -254.8,
-    "yAnchor": 155.73,
-    "zAnchor": 654.7,
-    "span": 17.51,
-    "azimuth": 35,
+    "xAnchor": -201.62,
+    "yAnchor": 177.89,
+    "zAnchor": 662.32,
+    "span": 73,
+    "azimuth": 60,
     "code": "B7-D38",
-    "anchorId": "DV-087"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -295.15,
     "yRaft": 162.62,
-    "xAnchor": -285.11,
-    "yAnchor": 176.95,
-    "zAnchor": 651.52,
-    "span": 17.5,
-    "azimuth": 35,
+    "xAnchor": -288.46,
+    "yAnchor": 238.83,
+    "zAnchor": 662.36,
+    "span": 76.5,
+    "azimuth": 5,
     "code": "B7-D39",
-    "anchorId": "DV-088"
+    "converted": true
   },
   {
     "raft": "BÈ 7",
@@ -3160,7 +3158,7 @@
     "azimuth": 134.5,
     "code": "B7-D40",
     "sharedWith": "B6-D23",
-    "anchorId": "DV-069"
+    "anchorId": "DV-050"
   },
   {
     "raft": "BÈ 8",
@@ -3187,7 +3185,7 @@
     "azimuth": 99,
     "code": "B8-D02",
     "sharedWith": "B7-D14",
-    "anchorId": "DV-076"
+    "anchorId": "DV-054"
   },
   {
     "raft": "BÈ 8",
@@ -3213,7 +3211,7 @@
     "span": 17.5,
     "azimuth": 180,
     "code": "B8-D04",
-    "anchorId": "DV-089"
+    "anchorId": "DV-058"
   },
   {
     "raft": "BÈ 8",
@@ -3252,18 +3250,18 @@
     "span": 17.5,
     "azimuth": 270,
     "code": "B8-D07",
-    "anchorId": "DV-090"
+    "anchorId": "DV-059"
   },
   {
     "raft": "BÈ 8",
     "type": "SHORE",
     "xRaft": -452.51,
     "yRaft": 268.12,
-    "xAnchor": -436.98,
-    "yAnchor": 326.08,
-    "zAnchor": 662.3,
-    "span": 60,
-    "azimuth": 15,
+    "xAnchor": -403.48,
+    "yAnchor": 313.05,
+    "zAnchor": 662.31,
+    "span": 66.5,
+    "azimuth": 47.5,
     "code": "B8-D08",
     "converted": true
   },
@@ -3291,33 +3289,33 @@
     "span": 17.5,
     "azimuth": 180,
     "code": "B8-D10",
-    "anchorId": "DV-091"
+    "anchorId": "DV-060"
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -567.5,
     "yRaft": 271.13,
-    "xAnchor": -567.5,
-    "yAnchor": 288.63,
-    "zAnchor": 650.79,
-    "span": 17.5,
-    "azimuth": 0,
+    "xAnchor": -579.13,
+    "yAnchor": 337.11,
+    "zAnchor": 662.68,
+    "span": 67,
+    "azimuth": 350,
     "code": "B8-D11",
-    "anchorId": "DV-092"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -526.52,
     "yRaft": 189.13,
-    "xAnchor": -526.52,
-    "yAnchor": 171.63,
-    "zAnchor": 652.24,
-    "span": 17.5,
-    "azimuth": 180,
+    "xAnchor": -490.38,
+    "yAnchor": 137.52,
+    "zAnchor": 662.32,
+    "span": 63.01,
+    "azimuth": 145,
     "code": "B8-D12",
-    "anchorId": "DV-093"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
@@ -3357,20 +3355,20 @@
     "azimuth": 97.4,
     "code": "B8-D15",
     "sharedWith": "B7-D01",
-    "anchorId": "DV-072"
+    "anchorId": "DV-052"
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -597.52,
     "yRaft": 241.13,
-    "xAnchor": -615.02,
-    "yAnchor": 241.13,
-    "zAnchor": 650.88,
-    "span": 17.5,
-    "azimuth": 270,
+    "xAnchor": -659.37,
+    "yAnchor": 284.44,
+    "zAnchor": 662.65,
+    "span": 75.51,
+    "azimuth": 305,
     "code": "B8-D16",
-    "anchorId": "DV-094"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
@@ -3383,7 +3381,7 @@
     "span": 17.5,
     "azimuth": 180,
     "code": "B8-D17",
-    "anchorId": "DV-095"
+    "anchorId": "DV-061"
   },
   {
     "raft": "BÈ 8",
@@ -3410,7 +3408,7 @@
     "azimuth": 137.5,
     "code": "B8-D19",
     "sharedWith": "B7-D06",
-    "anchorId": "DV-074"
+    "anchorId": "DV-053"
   },
   {
     "raft": "BÈ 8",
@@ -3423,7 +3421,7 @@
     "span": 17.5,
     "azimuth": 270,
     "code": "B8-D20",
-    "anchorId": "DV-096"
+    "anchorId": "DV-062"
   },
   {
     "raft": "BÈ 8",
@@ -3436,7 +3434,7 @@
     "span": 17.5,
     "azimuth": 270,
     "code": "B8-D21",
-    "anchorId": "DV-097"
+    "anchorId": "DV-063"
   },
   {
     "raft": "BÈ 8",
@@ -3479,16 +3477,16 @@
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -582.5,
     "yRaft": 271.13,
-    "xAnchor": -582.5,
-    "yAnchor": 288.63,
-    "zAnchor": 651.05,
-    "span": 17.5,
-    "azimuth": 0,
+    "xAnchor": -614.75,
+    "yAnchor": 326.99,
+    "zAnchor": 662.36,
+    "span": 64.5,
+    "azimuth": 330,
     "code": "B8-D25",
-    "anchorId": "DV-098"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
@@ -3502,31 +3500,31 @@
     "azimuth": 98.6,
     "code": "B8-D26",
     "sharedWith": "B7-D28",
-    "anchorId": "DV-082"
+    "anchorId": "DV-057"
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -452.51,
     "yRaft": 253.12,
-    "xAnchor": -435.01,
-    "yAnchor": 253.12,
-    "zAnchor": 649.81,
-    "span": 17.5,
-    "azimuth": 90,
+    "xAnchor": -398.8,
+    "yAnchor": 311.73,
+    "zAnchor": 662.46,
+    "span": 79.5,
+    "azimuth": 42.5,
     "code": "B8-D27",
-    "anchorId": "DV-099"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
     "type": "SHORE",
     "xRaft": -452.51,
     "yRaft": 283.12,
-    "xAnchor": -440.86,
-    "yAnchor": 326.59,
-    "zAnchor": 662.43,
-    "span": 45,
-    "azimuth": 15,
+    "xAnchor": -401.48,
+    "yAnchor": 315.63,
+    "zAnchor": 664.33,
+    "span": 60.51,
+    "azimuth": 57.5,
     "code": "B8-D28",
     "converted": true
   },
@@ -3545,29 +3543,29 @@
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -597.52,
     "yRaft": 256.13,
-    "xAnchor": -615.02,
-    "yAnchor": 256.13,
-    "zAnchor": 651.21,
-    "span": 17.5,
-    "azimuth": 270,
+    "xAnchor": -655.98,
+    "yAnchor": 289.88,
+    "zAnchor": 662.38,
+    "span": 67.5,
+    "azimuth": 300,
     "code": "B8-D30",
-    "anchorId": "DV-100"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
-    "type": "BED",
+    "type": "SHORE",
     "xRaft": -541.52,
     "yRaft": 189.13,
-    "xAnchor": -541.52,
-    "yAnchor": 171.63,
-    "zAnchor": 650.91,
-    "span": 17.5,
-    "azimuth": 180,
+    "xAnchor": -494.92,
+    "yAnchor": 133.59,
+    "zAnchor": 662.28,
+    "span": 72.5,
+    "azimuth": 140,
     "code": "B8-D31",
-    "anchorId": "DV-101"
+    "converted": true
   },
   {
     "raft": "BÈ 8",
@@ -3594,6 +3592,6 @@
     "azimuth": 113.7,
     "code": "B8-D33",
     "sharedWith": "B7-D18",
-    "anchorId": "DV-078"
+    "anchorId": "DV-055"
   }
 ]

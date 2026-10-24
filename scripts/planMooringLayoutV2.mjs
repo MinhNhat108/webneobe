@@ -73,7 +73,7 @@ const WATER_DEPTH = LAKE.waterDepth;
 const DEFAULT_DEPTH = LAKE.defaultDepth;
 
 const SHORE_LEVEL = MNDB - 0.5; // m, R1: ground at / above this is "shore or water's edge" (Huổi Vanh 384.0)
-const MAX_SHORE_SPAN = 60.0; // m, R1: longest cable to a new shore pile
+const MAX_SHORE_SPAN = Number(process.argv.find((a) => a.startsWith("--max-shore="))?.split("=")[1] ?? LAKE.maxShoreSpan ?? 60); // m, R1: longest cable to a new shore pile (Huổi Vanh 60)
 const GAP_LIMIT = 45.0;      // m, R1/R2: another raft within this distance of the cleat = "between two rafts"
 const SHORE_FAN_STEPS = [0, ...Array.from({ length: 15 }, (_, i) => [-(i + 1) * 5, (i + 1) * 5]).flat()]; // deg, R1: swing of the cable, 0 … ±75
 const MAX_OBLIQUITY = 60.0;   // deg, a new shore cable further than this off the normal of its edge is straightened if the bank allows

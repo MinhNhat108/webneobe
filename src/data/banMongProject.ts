@@ -119,7 +119,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_be_pin_xlsx',
         name: '5. Thống kê vật tư bè pin và cấu kiện bè pin (HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 594532,
+        size: 594352,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx'
       },
@@ -127,7 +127,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_neo_xlsx',
         name: '6. Thống kê vật tư neo và cáp neo (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 730267,
+        size: 741436,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       },
@@ -135,7 +135,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thuyet_minh_docx',
         name: '7. Thuyết minh tính toán hệ neo — hồ sơ để xem xét 24/10/2026, chưa chốt phương án (HOBANMONG_THUYET_MINH_TINH_TOAN.docx)',
         mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 28478,
+        size: 26476,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx'
       },
@@ -143,7 +143,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_bang_tinh_xlsx',
         name: '8. Bảng tính Excel hệ neo, cân bằng theo mực nước — 24/10/2026 (HOBANMONG_BANG_TINH_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 644447,
+        size: 626588,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_TINH_NEO.xlsx'
       },
@@ -151,7 +151,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_mb_neo_dxf',
         name: '9. Bản vẽ CAD bố trí neo 8 bè — 24/10/2026 (HOBANMONG_MAT_BANG_NEO_8_BE.dxf)',
         mime: 'application/dxf',
-        size: 535277,
+        size: 508052,
         kind: 'dxf' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_8_BE.dxf'
       }

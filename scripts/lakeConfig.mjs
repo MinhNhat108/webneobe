@@ -59,6 +59,10 @@ export const LAKES = {
     // Rule R3 (no single base facing another raft) is the Huổi Vanh owner's; here single bases in
     // open water are normal, so a base facing a raft that has no room for a partner line stays single.
     singleBaseFacingOk: true,
+    // Rule R1 reach: the bank is 60–110 m from several rafts (BÈ 3 west end, BÈ 6, BÈ 8 south). Owner 2026-10-24:
+    // anchor to the bank wherever possible, settled on 80 m shore cables (Huổi Vanh 60 m). 100 m gives 48 bases
+    // but loads BÈ 8 to 179 kN (short stiff bed lines left among long shore lines: PES-48, 3 piles per point).
+    maxShoreSpan: 80,
     // Panels of each raft, tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of the sheets CT-BP-01…08 of
     // "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf": 18 240 panels, SETTLED by the owner 2026-10-22 (the Pre-FS had 16 892).
     panelsByRaft: { 'BÈ 1': 2352, 'BÈ 2': 2380, 'BÈ 3': 3136, 'BÈ 4': 2252, 'BÈ 5': 784, 'BÈ 6': 1568, 'BÈ 7': 2884, 'BÈ 8': 2884 }

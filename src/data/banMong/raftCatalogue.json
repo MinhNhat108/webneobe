@@ -99,10 +99,10 @@
         },
         {
           "code": "B1-D13",
-          "type": "BED",
-          "azimuth_deg": 225,
-          "span_m": 16,
-          "pin_m": 650.36
+          "type": "SHORE",
+          "azimuth_deg": 200,
+          "span_m": 72,
+          "pin_m": 662.58
         },
         {
           "code": "B1-D14",
@@ -261,8 +261,8 @@
       ]
     },
     "cableCount": 35,
-    "shoreAnchors": 19,
-    "bedAnchors": 16,
+    "shoreAnchors": 20,
+    "bedAnchors": 15,
     "selectedCable": "PES-36",
     "waterDepth_m": 15.4,
     "bedAnchorDist_m": 13.5,
@@ -270,7 +270,7 @@
     "shorePileD_m": 0.35,
     "shorePileL_m": 6.5,
     "bedPileD_m": 0.35,
-    "bedPileL_m": 8.5,
+    "bedPileL_m": 9,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
     "shoreRebarDia_mm": 25,
@@ -281,7 +281,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 5.4,
-      "maxTension_kN": 251
+      "maxTension_kN": 252
     }
   },
   {
@@ -612,10 +612,10 @@
         },
         {
           "code": "B3-D05",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 285,
-          "span_m": 17.5,
-          "pin_m": 649.58
+          "span_m": 75,
+          "pin_m": 662.48
         },
         {
           "code": "B3-D06",
@@ -654,10 +654,10 @@
         },
         {
           "code": "B3-D11",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 285,
-          "span_m": 17.51,
-          "pin_m": 648.68
+          "span_m": 62,
+          "pin_m": 662.38
         },
         {
           "code": "B3-D12",
@@ -675,10 +675,10 @@
         },
         {
           "code": "B3-D14",
-          "type": "BED",
-          "azimuth_deg": 195,
-          "span_m": 17.5,
-          "pin_m": 647.55
+          "type": "SHORE",
+          "azimuth_deg": 245,
+          "span_m": 69.5,
+          "pin_m": 662.4
         },
         {
           "code": "B3-D15",
@@ -717,10 +717,10 @@
         },
         {
           "code": "B3-D20",
-          "type": "BED",
-          "azimuth_deg": 352.5,
-          "span_m": 17.5,
-          "pin_m": 649.11
+          "type": "SHORE",
+          "azimuth_deg": 287.5,
+          "span_m": 71.5,
+          "pin_m": 662.53
         },
         {
           "code": "B3-D21",
@@ -808,17 +808,17 @@
         },
         {
           "code": "B3-D33",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 285,
-          "span_m": 17.5,
-          "pin_m": 649.31
+          "span_m": 62.5,
+          "pin_m": 662.41
         },
         {
           "code": "B3-D34",
-          "type": "BED",
-          "azimuth_deg": 195,
-          "span_m": 17.5,
-          "pin_m": 647.55
+          "type": "SHORE",
+          "azimuth_deg": 245,
+          "span_m": 79,
+          "pin_m": 662.42
         },
         {
           "code": "B3-D35",
@@ -829,10 +829,10 @@
         },
         {
           "code": "B3-D36",
-          "type": "BED",
-          "azimuth_deg": 285,
-          "span_m": 17.5,
-          "pin_m": 650.12
+          "type": "SHORE",
+          "azimuth_deg": 335,
+          "span_m": 66,
+          "pin_m": 662.42
         },
         {
           "code": "B3-D37",
@@ -886,8 +886,8 @@
       ]
     },
     "cableCount": 43,
-    "shoreAnchors": 17,
-    "bedAnchors": 26,
+    "shoreAnchors": 24,
+    "bedAnchors": 19,
     "selectedCable": "PES-36",
     "waterDepth_m": 15.8,
     "bedAnchorDist_m": 6.4,
@@ -906,7 +906,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 5.1,
-      "maxTension_kN": 206
+      "maxTension_kN": 207
     }
   },
   {
@@ -946,10 +946,10 @@
         },
         {
           "code": "B4-D04",
-          "type": "BED",
-          "azimuth_deg": 260,
-          "span_m": 17.5,
-          "pin_m": 651.8
+          "type": "SHORE",
+          "azimuth_deg": 280,
+          "span_m": 67,
+          "pin_m": 662.43
         },
         {
           "code": "B4-D05",
@@ -1030,10 +1030,10 @@
         },
         {
           "code": "B4-D16",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 260,
-          "span_m": 17.5,
-          "pin_m": 650.11
+          "span_m": 63.5,
+          "pin_m": 662.5
         },
         {
           "code": "B4-D17",
@@ -1079,17 +1079,17 @@
         },
         {
           "code": "B4-D23",
-          "type": "BED",
-          "azimuth_deg": 260,
-          "span_m": 17.5,
-          "pin_m": 651.49
+          "type": "SHORE",
+          "azimuth_deg": 270,
+          "span_m": 63.5,
+          "pin_m": 662.41
         },
         {
           "code": "B4-D24",
-          "type": "BED",
-          "azimuth_deg": 260,
-          "span_m": 17.5,
-          "pin_m": 650.93
+          "type": "SHORE",
+          "azimuth_deg": 290,
+          "span_m": 76.5,
+          "pin_m": 663.25
         },
         {
           "code": "B4-D25",
@@ -1121,10 +1121,10 @@
         },
         {
           "code": "B4-D29",
-          "type": "BED",
-          "azimuth_deg": 260,
-          "span_m": 17.5,
-          "pin_m": 649.5
+          "type": "SHORE",
+          "azimuth_deg": 250,
+          "span_m": 66,
+          "pin_m": 662.46
         },
         {
           "code": "B4-D30",
@@ -1185,8 +1185,8 @@
       ]
     },
     "cableCount": 37,
-    "shoreAnchors": 16,
-    "bedAnchors": 21,
+    "shoreAnchors": 21,
+    "bedAnchors": 16,
     "selectedCable": "PES-32",
     "waterDepth_m": 15.8,
     "bedAnchorDist_m": 6.4,
@@ -1205,7 +1205,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 6.3,
-      "maxTension_kN": 188
+      "maxTension_kN": 186
     }
   },
   {
@@ -1295,9 +1295,9 @@
         {
           "code": "B5-D11",
           "type": "SHORE",
-          "azimuth_deg": 79,
-          "span_m": 58,
-          "pin_m": 662.43
+          "azimuth_deg": 31.5,
+          "span_m": 75,
+          "pin_m": 663.87
         },
         {
           "code": "B5-D12",
@@ -1374,7 +1374,7 @@
     "cableCount": 21,
     "shoreAnchors": 18,
     "bedAnchors": 3,
-    "selectedCable": "PES-32",
+    "selectedCable": "PES-28",
     "waterDepth_m": 13.8,
     "bedAnchorDist_m": 12.1,
     "shoreAnchorDist_m": 15,
@@ -1384,14 +1384,14 @@
     "bedPileL_m": 8,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 28,
+    "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
-    "bedRebarDia_mm": 22,
+    "bedRebarDia_mm": 20,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.1,
-      "maxTension_kN": 108
+      "drift_m": 5.2,
+      "maxTension_kN": 92
     }
   },
   {
@@ -1417,10 +1417,10 @@
         },
         {
           "code": "B6-D02",
-          "type": "BED",
-          "azimuth_deg": 240.3,
-          "span_m": 17.5,
-          "pin_m": 650.99
+          "type": "SHORE",
+          "azimuth_deg": 190.3,
+          "span_m": 68,
+          "pin_m": 662.43
         },
         {
           "code": "B6-D03",
@@ -1452,24 +1452,24 @@
         },
         {
           "code": "B6-D07",
-          "type": "BED",
-          "azimuth_deg": 330.3,
-          "span_m": 17.5,
-          "pin_m": 647.55
+          "type": "SHORE",
+          "azimuth_deg": 15.3,
+          "span_m": 71,
+          "pin_m": 663.37
         },
         {
           "code": "B6-D08",
-          "type": "BED",
-          "azimuth_deg": 150.1,
-          "span_m": 17.5,
-          "pin_m": 651.27
+          "type": "SHORE",
+          "azimuth_deg": 140.1,
+          "span_m": 70,
+          "pin_m": 662.5
         },
         {
           "code": "B6-D09",
-          "type": "BED",
-          "azimuth_deg": 60.6,
-          "span_m": 30.1,
-          "pin_m": 649.64
+          "type": "SHORE",
+          "azimuth_deg": 345.6,
+          "span_m": 69,
+          "pin_m": 662.49
         },
         {
           "code": "B6-D10",
@@ -1494,10 +1494,10 @@
         },
         {
           "code": "B6-D13",
-          "type": "BED",
-          "azimuth_deg": 150.1,
-          "span_m": 17.51,
-          "pin_m": 651.21
+          "type": "SHORE",
+          "azimuth_deg": 135.1,
+          "span_m": 76,
+          "pin_m": 662.44
         },
         {
           "code": "B6-D14",
@@ -1515,10 +1515,10 @@
         },
         {
           "code": "B6-D16",
-          "type": "BED",
-          "azimuth_deg": 150.1,
-          "span_m": 17.5,
-          "pin_m": 651.23
+          "type": "SHORE",
+          "azimuth_deg": 135.1,
+          "span_m": 64,
+          "pin_m": 662.64
         },
         {
           "code": "B6-D17",
@@ -1536,10 +1536,10 @@
         },
         {
           "code": "B6-D19",
-          "type": "BED",
-          "azimuth_deg": 150.1,
-          "span_m": 17.51,
-          "pin_m": 651.27
+          "type": "SHORE",
+          "azimuth_deg": 185.1,
+          "span_m": 75,
+          "pin_m": 662.43
         },
         {
           "code": "B6-D20",
@@ -1578,10 +1578,10 @@
         },
         {
           "code": "B6-D25",
-          "type": "BED",
-          "azimuth_deg": 150.1,
-          "span_m": 17.5,
-          "pin_m": 651.3
+          "type": "SHORE",
+          "azimuth_deg": 140.1,
+          "span_m": 67.5,
+          "pin_m": 662.46
         },
         {
           "code": "B6-D26",
@@ -1600,8 +1600,8 @@
       ]
     },
     "cableCount": 27,
-    "shoreAnchors": 3,
-    "bedAnchors": 24,
+    "shoreAnchors": 11,
+    "bedAnchors": 16,
     "selectedCable": "PES-28",
     "waterDepth_m": 15.5,
     "bedAnchorDist_m": 15.1,
@@ -1610,16 +1610,16 @@
     "shorePileL_m": 6.5,
     "bedPileD_m": 0.35,
     "bedPileL_m": 8,
-    "shoreRebarCount": 6,
+    "shoreRebarCount": 4,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 25,
+    "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 20,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.6,
-      "maxTension_kN": 122
+      "drift_m": 5.3,
+      "maxTension_kN": 116
     }
   },
   {
@@ -1659,10 +1659,10 @@
         },
         {
           "code": "B7-D04",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 654.42
+          "type": "SHORE",
+          "azimuth_deg": 60,
+          "span_m": 79,
+          "pin_m": 662.44
         },
         {
           "code": "B7-D05",
@@ -1708,10 +1708,10 @@
         },
         {
           "code": "B7-D11",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 651.65
+          "type": "SHORE",
+          "azimuth_deg": 8.2,
+          "span_m": 72.52,
+          "pin_m": 662.6
         },
         {
           "code": "B7-D12",
@@ -1736,10 +1736,10 @@
         },
         {
           "code": "B7-D15",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 651.37
+          "type": "SHORE",
+          "azimuth_deg": 40,
+          "span_m": 60.5,
+          "pin_m": 662.39
         },
         {
           "code": "B7-D16",
@@ -1792,10 +1792,10 @@
         },
         {
           "code": "B7-D23",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 656.35
+          "type": "SHORE",
+          "azimuth_deg": 60,
+          "span_m": 68.5,
+          "pin_m": 662.37
         },
         {
           "code": "B7-D24",
@@ -1813,10 +1813,10 @@
         },
         {
           "code": "B7-D26",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 651.24
+          "type": "SHORE",
+          "azimuth_deg": 18.9,
+          "span_m": 64.9,
+          "pin_m": 662.51
         },
         {
           "code": "B7-D27",
@@ -1848,17 +1848,17 @@
         },
         {
           "code": "B7-D31",
-          "type": "BED",
-          "azimuth_deg": 215,
-          "span_m": 17.51,
-          "pin_m": 652.73
+          "type": "SHORE",
+          "azimuth_deg": 225,
+          "span_m": 64.5,
+          "pin_m": 662.38
         },
         {
           "code": "B7-D32",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 35,
-          "span_m": 17.51,
-          "pin_m": 651.67
+          "span_m": 62,
+          "pin_m": 662.62
         },
         {
           "code": "B7-D33",
@@ -1869,10 +1869,10 @@
         },
         {
           "code": "B7-D34",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 651.13
+          "type": "SHORE",
+          "azimuth_deg": 22.5,
+          "span_m": 64.47,
+          "pin_m": 664.13
         },
         {
           "code": "B7-D35",
@@ -1890,24 +1890,24 @@
         },
         {
           "code": "B7-D37",
-          "type": "BED",
-          "azimuth_deg": 215,
-          "span_m": 17.49,
-          "pin_m": 652.96
+          "type": "SHORE",
+          "azimuth_deg": 185,
+          "span_m": 63,
+          "pin_m": 662.56
         },
         {
           "code": "B7-D38",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.51,
-          "pin_m": 655.25
+          "type": "SHORE",
+          "azimuth_deg": 60,
+          "span_m": 73,
+          "pin_m": 662.42
         },
         {
           "code": "B7-D39",
-          "type": "BED",
-          "azimuth_deg": 35,
-          "span_m": 17.5,
-          "pin_m": 652.07
+          "type": "SHORE",
+          "azimuth_deg": 5,
+          "span_m": 76.5,
+          "pin_m": 662.46
         },
         {
           "code": "B7-D40",
@@ -1919,8 +1919,8 @@
       ]
     },
     "cableCount": 40,
-    "shoreAnchors": 20,
-    "bedAnchors": 20,
+    "shoreAnchors": 31,
+    "bedAnchors": 9,
     "selectedCable": "PES-36",
     "waterDepth_m": 13.6,
     "bedAnchorDist_m": 14,
@@ -1938,8 +1938,8 @@
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 6.1,
-      "maxTension_kN": 296
+      "drift_m": 5.3,
+      "maxTension_kN": 264
     }
   },
   {
@@ -2008,9 +2008,9 @@
         {
           "code": "B8-D08",
           "type": "SHORE",
-          "azimuth_deg": 15,
-          "span_m": 60,
-          "pin_m": 662.4
+          "azimuth_deg": 47.5,
+          "span_m": 66.5,
+          "pin_m": 662.41
         },
         {
           "code": "B8-D09",
@@ -2028,17 +2028,17 @@
         },
         {
           "code": "B8-D11",
-          "type": "BED",
-          "azimuth_deg": 0,
-          "span_m": 17.5,
-          "pin_m": 651.34
+          "type": "SHORE",
+          "azimuth_deg": 350,
+          "span_m": 67,
+          "pin_m": 662.78
         },
         {
           "code": "B8-D12",
-          "type": "BED",
-          "azimuth_deg": 180,
-          "span_m": 17.5,
-          "pin_m": 652.79
+          "type": "SHORE",
+          "azimuth_deg": 145,
+          "span_m": 63.01,
+          "pin_m": 662.42
         },
         {
           "code": "B8-D13",
@@ -2063,10 +2063,10 @@
         },
         {
           "code": "B8-D16",
-          "type": "BED",
-          "azimuth_deg": 270,
-          "span_m": 17.5,
-          "pin_m": 651.43
+          "type": "SHORE",
+          "azimuth_deg": 305,
+          "span_m": 75.51,
+          "pin_m": 662.75
         },
         {
           "code": "B8-D17",
@@ -2126,10 +2126,10 @@
         },
         {
           "code": "B8-D25",
-          "type": "BED",
-          "azimuth_deg": 0,
-          "span_m": 17.5,
-          "pin_m": 651.6
+          "type": "SHORE",
+          "azimuth_deg": 330,
+          "span_m": 64.5,
+          "pin_m": 662.46
         },
         {
           "code": "B8-D26",
@@ -2140,17 +2140,17 @@
         },
         {
           "code": "B8-D27",
-          "type": "BED",
-          "azimuth_deg": 90,
-          "span_m": 17.5,
-          "pin_m": 650.36
+          "type": "SHORE",
+          "azimuth_deg": 42.5,
+          "span_m": 79.5,
+          "pin_m": 662.56
         },
         {
           "code": "B8-D28",
           "type": "SHORE",
-          "azimuth_deg": 15,
-          "span_m": 45,
-          "pin_m": 662.53
+          "azimuth_deg": 57.5,
+          "span_m": 60.51,
+          "pin_m": 664.43
         },
         {
           "code": "B8-D29",
@@ -2161,17 +2161,17 @@
         },
         {
           "code": "B8-D30",
-          "type": "BED",
-          "azimuth_deg": 270,
-          "span_m": 17.5,
-          "pin_m": 651.76
+          "type": "SHORE",
+          "azimuth_deg": 300,
+          "span_m": 67.5,
+          "pin_m": 662.48
         },
         {
           "code": "B8-D31",
-          "type": "BED",
-          "azimuth_deg": 180,
-          "span_m": 17.5,
-          "pin_m": 651.46
+          "type": "SHORE",
+          "azimuth_deg": 140,
+          "span_m": 72.5,
+          "pin_m": 662.38
         },
         {
           "code": "B8-D32",
@@ -2190,27 +2190,27 @@
       ]
     },
     "cableCount": 33,
-    "shoreAnchors": 15,
-    "bedAnchors": 18,
-    "selectedCable": "PES-32",
+    "shoreAnchors": 22,
+    "bedAnchors": 11,
+    "selectedCable": "PES-36",
     "waterDepth_m": 13.6,
     "bedAnchorDist_m": 14,
     "shoreAnchorDist_m": 39.5,
     "shorePileD_m": 0.35,
     "shorePileL_m": 6.5,
     "bedPileD_m": 0.35,
-    "bedPileL_m": 8,
+    "bedPileL_m": 9.5,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
     "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
-    "bedRebarDia_mm": 28,
+    "bedRebarDia_mm": 32,
     "shorePilesPerPoint": 2,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.6,
-      "maxTension_kN": 178
+      "drift_m": 5.7,
+      "maxTension_kN": 210
     }
   }
 ]

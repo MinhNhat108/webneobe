@@ -92,7 +92,7 @@ describe('Hồ Bản Mòng tab', () => {
     }
     for (const l of MOORING_LINES_V2.filter((q) => q.type === 'SHORE')) {
       expect(groundAt(l.xAnchor, l.yAnchor)!, l.code).toBeGreaterThanOrEqual(MNDB_M - 0.5 - 1e-6);
-      expect(l.span, l.code).toBeLessThanOrEqual(60);
+      expect(l.span, l.code).toBeLessThanOrEqual(80); // Bản Mòng reach (lakeConfig maxShoreSpan, 2026-10-24); Huổi Vanh 60
     }
     // a base stands on the IFC ground at its own point, under water at MNDB (scripts/lakeConfig.mjs, bedOnTerrain)
     for (const b of bedAnchorsOf()) {

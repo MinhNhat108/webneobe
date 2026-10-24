@@ -34,6 +34,11 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
       expect(r.tMax_kN / (perPoint > 1 ? perPoint * 0.9 : 1) / r.Hallow_kN, r.name).toBeCloseTo(r.bp1, 2);
       expect((r.loadFactor * r.Mmax_kNm) / r.Mrd_kNm, r.name).toBeCloseTo(r.bp2, 2);
       expect(r.shoreLines + r.bedLines, r.name).toBe(r.lines);
+      // the Broms equation and the moment written in the note give the engine values
+      const pk = 9 * r.cuShore_kPa * r.pileD_m, g = r.pileL_m - 1.5 * r.pileD_m, e = r.arm_m;
+      const qa = 0.5 / pk, qb = e + 1.5 * r.pileD_m + g, qc = -0.5 * pk * g * g;
+      expect((-qb + Math.sqrt(qb * qb - 4 * qa * qc)) / (2 * qa), r.name).toBeCloseTo(r.Hu_kN, 1);
+      expect(r.pileLoad_kN * (e + 1.5 * r.pileD_m + (0.5 * r.pileLoad_kN) / pk), r.name).toBeCloseTo(r.Mmax_kNm, 1);
     }
   });
 
@@ -86,6 +91,9 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     expect(text).toContain('GIẢ ĐỊNH');
     expect(text).toContain('đã trừ lực đẩy nổi');
     expect(text).toContain('B7-D01, B7-D09, B8-D13');
+    // every check is written as a formula with the numbers put in
+    for (const f of ['p = 9 × c_u × D', 'M_max = P × (e + 1,5D + 0,5 × P / p)', 'M_rd = A_1 thanh × R_s × r × k(n)', 'T = (EA / L_0) × (d − L_0)',
+      'T_h = T × cos θ', 'M_lật = T_h × (t + h_tai)', 'N_1 = max[', '5,14 × c_u', 'A_s = M / (0,9 × h_0 × R_s)', 'C9, khoảng cách', 'C8, khoảng hở']) expect(text, f).toContain(f);
   });
 });
 

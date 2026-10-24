@@ -135,7 +135,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thuyet_minh_docx',
         name: '7. Thuyết minh tính toán hệ neo — hồ sơ để xem xét 24/10/2026, chưa chốt phương án (HOBANMONG_THUYET_MINH_TINH_TOAN.docx)',
         mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 23228,
+        size: 25125,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx'
       },
@@ -143,7 +143,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_bang_tinh_xlsx',
         name: '8. Bảng tính Excel hệ neo, cân bằng theo mực nước — 24/10/2026 (HOBANMONG_BANG_TINH_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 629842,
+        size: 633896,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_TINH_NEO.xlsx'
       },

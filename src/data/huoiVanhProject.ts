@@ -263,7 +263,7 @@ export const HUOI_VANH_PROJECT = {
       id: 'doc_huoi_vanh_docx',
       name: '1. Thuyết minh tính toán phương án chốt — tính lại 23/10/2026 (HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx)',
       mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      size: 19042,
+      size: 20926,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx'
     },
@@ -271,7 +271,7 @@ export const HUOI_VANH_PROJECT = {
       id: 'doc_bang_tinh_chot_xlsx',
       name: '2. Bảng tính Excel phương án chốt — tính lại 23/10/2026, lực dây cân bằng theo mực nước (HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 604841,
+      size: 608893,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx'
     },

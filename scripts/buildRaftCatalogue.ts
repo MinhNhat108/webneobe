@@ -150,16 +150,20 @@ if (PANELS_BY_RAFT) polygons.forEach((p, i) => {
 // `--wind=20` sizes a WHAT-IF catalogue at another wind speed; it is never written to disk.
 const windArg = process.argv.find((a) => a.startsWith('--wind='));
 const WHAT_IF_WIND = windArg ? Number(windArg.split('=')[1]) : undefined;
-// Bản Mòng what-ifs (never written): `--adjust=<m>` re-tension step (0 = continuous), `--fixed` cables cut once.
+// What-ifs (never written): `--adjust=<m>` re-tension step (0 = continuous), `--fixed` cables cut once,
+// `--ea=<k>` rope stiffness EA = k × MBL (assumed 15).
 const adjustArg = process.argv.find((a) => a.startsWith('--adjust='));
 const WHAT_IF_ADJUST = adjustArg ? Number(adjustArg.split('=')[1]) : undefined;
+const eaArg = process.argv.find((a) => a.startsWith('--ea='));
+const WHAT_IF_EA = eaArg ? Number(eaArg.split('=')[1]) : undefined;
 const WHAT_IF_FIXED = process.argv.includes('--fixed');
-const WHAT_IF = WHAT_IF_WIND !== undefined || WHAT_IF_ADJUST !== undefined || WHAT_IF_FIXED;
+const WHAT_IF = WHAT_IF_WIND !== undefined || WHAT_IF_ADJUST !== undefined || WHAT_IF_FIXED || WHAT_IF_EA !== undefined;
 const base = () => {
   const p = JSON.parse(JSON.stringify(PROJECT)) as ProjectState;
   if (WHAT_IF_WIND) p.env.windSpeed_ms = WHAT_IF_WIND;
   if (WHAT_IF_ADJUST !== undefined) p.line.adjustStep_m = WHAT_IF_ADJUST;
   if (WHAT_IF_FIXED) p.line.levelCompensation = 'fixed';
+  if (WHAT_IF_EA !== undefined) p.line.eaPerMbl = WHAT_IF_EA;
   return p;
 };
 function run(row: RaftSummaryItem, option: 'PA1_PILE' | 'PA3_SCREW_BASE' = 'PA1_PILE') {

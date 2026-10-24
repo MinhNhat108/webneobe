@@ -9,6 +9,7 @@ import { buildCableCuttingSchedule, appendCableCuttingSheet } from './cableCutti
 import { buildLiveCalcSheets, LIVE_SHEETS } from './liveCalcSheets';
 import type { EqResult } from '../calc/mooringEquilibrium';
 import { lakeCaveats } from '../../data/lakeCaveats';
+import { DEFAULT_REBAR_COVER_MM } from '../calc/broms';
 import { ACTIVE_LAKE_ID } from '../../data/lakes';
 
 /**
@@ -86,6 +87,18 @@ export interface FinalRaftRow {
   Mrd_kNm: number;
   bp2: number;
   Pmax_kN: number;
+  /** Bank soil strength, pin height above the ground, face-to-bar-centre cover and the load on ONE pile (twin points share T). */
+  cuShore_kPa: number;
+  arm_m: number;
+  cover_mm: number;
+  pileLoad_kN: number;
+  /** C8 clearance under the raft and its limit; C9 mean line spacing and its limit, m. */
+  bedClearance_m: number | null;
+  minClearance_m: number;
+  lineSpacing_m: number | null;
+  maxSpacing_m: number;
+  /** Rope stiffness EA of the equilibrium analysis, kN. */
+  ea_kN: number;
   concretePerPile_m3: number;
   steelPerPile_kg: number;
   verdict: string;
@@ -156,7 +169,13 @@ export function buildFinalDesign(
       rebarCount: p0?.cage.totalBars ?? 0, rebarDia_mm: p0?.rebarDia_mm ?? 0, rebarRs_MPa: A.pileRebarRs_MPa ?? 350,
       Hu_kN: sp?.Hu ?? 0, Hallow_kN: sp?.H_allow ?? 0, bp1: sp?.utilization_H ?? 0,
       Mmax_kNm: sp?.Mmax ?? 0, loadFactor: A.pileBendingLoadFactor ?? 1.2, Mrd_kNm: sp?.Mrd ?? 0, bp2: sp?.utilization_M ?? 0,
-      Pmax_kN: p0?.Pmax_kN ?? 0, concretePerPile_m3: p0?.cage.concreteVol_m3 ?? 0, steelPerPile_kg: p0?.cage.steel_kg ?? 0,
+      Pmax_kN: p0?.Pmax_kN ?? 0,
+      cuShore_kPa: A.cuShore_kPa ?? 40, arm_m: A.shoreArm_e_m ?? 0.1, cover_mm: A.pileRebarCover_mm ?? DEFAULT_REBAR_COVER_MM,
+      pileLoad_kN: r.shorePileTension_kN ?? r.t_max_intact_kN,
+      bedClearance_m: r.bedClearance_m, minClearance_m: st.criteria.minBedClearance_m ?? st.env.minWaterDepthUnderRaft_m ?? 1.0,
+      lineSpacing_m: r.avgLineSpacing_m, maxSpacing_m: st.criteria.maxLineSpacing_m ?? 15,
+      ea_kN: (L.eaPerMbl ?? 15) * L.mbl_kN,
+      concretePerPile_m3: p0?.cage.concreteVol_m3 ?? 0, steelPerPile_kg: p0?.cage.steel_kg ?? 0,
       verdict: r.overallVerdict
     };
   });
@@ -208,6 +227,9 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
   const cut = buildCableCuttingSchedule(st);
   const perPoint = Math.round(r.pileCount / r.shoreLines);
   const pileLoad = perPoint > 1 ? r.tMax_kN / (perPoint * (A.pileGroupEfficiency ?? 0.9)) : r.tMax_kN;
+  // Broms (short pile in clay) and the bar-ring bending resistance, written out with the raft's numbers
+  const pP = 9 * r.cuShore_kPa * r.pileD_m, gP = Math.max(0.1, r.pileL_m - 1.5 * r.pileD_m);
+  const aBar = (Math.PI * r.rebarDia_mm ** 2) / 4, rRing = r.pileD_m / 2 - r.cover_mm / 1000, kRing = 2 / Math.tan(Math.PI / Math.max(2, r.rebarCount));
   if (r.analysis) return lakeAnalysisNote(d, r, cut);
   return [
     {
@@ -253,8 +275,11 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
       lines: [
         `Cọc tròn D${Math.round(r.pileD_m * 1000)} đổ tại chỗ, ngàm L_tk = ${vn(r.pileL_m)} m, dài cả cọc ${vn(r.pileLtotal_m)} m; thép chủ ${r.cage} ${r.grade}, ${r.stirrup}. Cáp móc cách mặt đất ${vn(A.shoreArm_e_m ?? 0.1, 1)} m.`,
         ...(perPoint > 1 ? [`Điểm neo CỌC ĐÔI: ${perPoint} cọc cạnh nhau, vuông góc phương cáp, cách nhau ≥ 3D; mỗi cọc chịu P = T / (${perPoint} × ${vn(A.pileGroupEfficiency ?? 0.9, 1)}) = ${vn(pileLoad)} kN (hệ số nhóm là GIẢ ĐỊNH); đài BTCT nối hai đầu cọc: thiết kế sơ bộ ở bảng thống kê vật tư neo (twinPileCap.ts).`] : []),
-        `BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét): H_u = ${vn(r.Hu_kN)} kN; cho phép H_u / ${vn(A.sfPile ?? 2.5, 1)} = ${vn(r.Hallow_kN)} kN ≥ ${perPoint > 1 ? 'P' : 'T'} = ${vn(pileLoad)} kN; mức sử dụng ${vn(r.bp1, 2)}.`,
-        `BP-2, uốn thân cọc (TCVN 5574:2018): ${vn(r.loadFactor, 1)} × M_max = ${vn(r.loadFactor, 1)} × ${vn(r.Mmax_kNm)} = ${vn(r.loadFactor * r.Mmax_kNm)} kNm ≤ M_rd = ${vn(r.Mrd_kNm)} kNm; mức sử dụng ${vn(r.bp2, 2)}.`,
+        `BP-1, sức chịu ngang theo Broms (cọc ngắn trong đất sét). Sức kháng của đất trên 1 m cọc: p = 9 × c_u × D = 9 × ${vn(r.cuShore_kPa, 0)} × ${vn(r.pileD_m, 2)} = ${vn(pP)} kN/m; đoạn 1,5D = ${vn(1.5 * r.pileD_m, 3)} m dưới mặt đất không tính, phần ngàm làm việc g = L_tk − 1,5D = ${vn(r.pileL_m)} − ${vn(1.5 * r.pileD_m, 3)} = ${vn(gP, 3)} m; tim chốt cáp cao e = ${vn(r.arm_m, 2)} m trên mặt đất.`,
+        `H_u là nghiệm dương của (0,5 / p) × H_u² + (e + 1,5D + g) × H_u − 0,5 × p × g² = 0, tức (0,5 / ${vn(pP)}) × H_u² + ${vn(r.arm_m + 1.5 * r.pileD_m + gP, 3)} × H_u − ${vn(0.5 * pP * gP * gP, 1)} = 0 → H_u = ${vn(r.Hu_kN)} kN. Cho phép H_u / ${vn(A.sfPile ?? 2.5, 1)} = ${vn(r.Hallow_kN)} kN ≥ ${perPoint > 1 ? 'P' : 'T'} = ${vn(pileLoad)} kN; mức sử dụng = ${vn(pileLoad)} / ${vn(r.Hallow_kN)} = ${vn(r.bp1, 2)}.`,
+        `BP-2, uốn thân cọc (TCVN 5574:2018). Mô-men lớn nhất trong cọc: M_max = P × (e + 1,5D + 0,5 × P / p) = ${vn(pileLoad)} × (${vn(r.arm_m, 2)} + ${vn(1.5 * r.pileD_m, 3)} + 0,5 × ${vn(pileLoad)} / ${vn(pP)}) = ${vn(r.Mmax_kNm)} kNm.`,
+        `Khả năng chịu uốn của lồng ${r.rebarCount} thanh Φ${r.rebarDia_mm} đặt trên vòng tròn: M_rd = A_1 thanh × R_s × r × k(n) = ${vn(aBar, 1)} mm² × ${vn(r.rebarRs_MPa, 0)} MPa × ${vn(rRing, 3)} m × ${vn(kRing, 2)} = ${vn(r.Mrd_kNm)} kNm (r = D/2 − ${vn(r.cover_mm, 0)} mm tới tim thép; k(n) = 2 / tan(π/n) là cánh tay đòn của n thanh ở hướng BẤT LỢI nhất, vì lồng thả vào lỗ khoan không định hướng được; bỏ qua bê tông chịu kéo).`,
+        `Kiểm tra: ${vn(r.loadFactor, 1)} × M_max = ${vn(r.loadFactor, 1)} × ${vn(r.Mmax_kNm)} = ${vn(r.loadFactor * r.Mmax_kNm)} kNm ≤ M_rd = ${vn(r.Mrd_kNm)} kNm; mức sử dụng ${vn(r.bp2, 2)} (${vn(r.loadFactor, 1)} là hệ số tải trọng khi kiểm tra uốn).`,
         `Cả hệ: ${T.shorePiles} cọc, tổng dài ${vn(T.shoreLength_m)} m, ${vn(T.shoreConcrete_m3)} m³ bê tông, ${vn(T.shoreSteel_kg / 1000)} tấn thép. Lực kiểm tra cọc là toàn bộ lực dây (không giảm theo góc xiên), thiên về an toàn.`
       ]
     },
@@ -263,12 +288,15 @@ export function finalDesignNote(d: FinalDesign): NoteSection[] {
       lines: [
         `Một vít: ống Ø${Math.round(p.tubeDia_m * 1000)}×${Math.round(p.tubeThk_m * 1000)}, ren Ø${Math.round(p.threadDia_m * 1000)}, ngàm ${vn(p.screwLength_m)} m. Sức chịu nhổ cực hạn Q_u = α × c_u × π × D_ren × L = ${vn(p.alphaShaft, 1)} × ${vn(p.cuAverage_kPa, 0)} × π × ${vn(p.threadDia_m, 3)} × ${vn(p.screwLength_m)} = ${vn(g.screwQu_kN)} kN; cho phép Q_a = Q_u / ${vn(p.sfScrewUplift, 0)} = ${vn(g.screwQa_kN)} kN. Sức chịu ngang cực hạn H_u = ${vn(g.screwHu_kN)} kN.`,
         `Đế ${base.baseId} giữ hai dây ${base.lines.map((l) => `${l.code} (${l.raft}, T = ${vn(l.tension_kN)} kN, dài ${vn(l.span_m, 2)} m)`).join(' và ')}. Bích bè cao hơn mặt nước ${vn(p.cleatHeight_m, 2)} m.`,
+        `Mỗi dây tách thành lực ngang T_h = T × cos θ và lực nhổ T_v = T × sin θ, θ là góc dốc của dây (tan θ = chênh cao bích bè – chốt đế / khoảng cách ngang): dây thoải khi nước thấp (trượt chi phối), dốc khi nước cao (nhổ, lật chi phối).`,
         `Tổ hợp chi phối: ${base.governing}. Lực nhổ T_v = ${vn(c.Tv_kN)} kN (hai dây cộng lại), lực ngang T_h = ${vn(c.Th_kN)} kN (cộng véc-tơ).`,
         `Đế ${vn(g.side_m, 2)} × ${vn(g.side_m, 2)} × ${vn(g.thickness_m, 1)} m: thể tích ${vn(g.volume_m3, 2)} m³, nặng ${vn(g.weightAir_kN)} kN trên cạn, W' = ${vn(g.volume_m3, 2)} × (${vn(p.gammaConcrete_kNm3, 0)} − ${vn(p.gammaWater_kNm3, 0)}) = ${vn(g.weightSub_kN)} kN trong nước (đã trừ lực đẩy nổi).`,
         `SV-1 nhổ: T_v ≤ ${vn(p.weightFactor, 1)} × W' + ${p.screwCount} × Q_a = ${vn(c.upliftResistance_kN)} kN; mức sử dụng ${vn(base.upliftUtil, 2)}.`,
-        `SV-2 trượt: ${vn(p.sfSlide, 1)} × T_h ≤ bám dính đáy + gờ + ${p.screwCount} × H_u; mức sử dụng ${vn(base.slideUtil, 2)} (bám dính đáy lấy bằng 0 khi T_v > W').`,
-        `SV-3 lật quanh mép đế: ${vn(p.sfOverturn, 1)} × M_lật = ${vn(p.sfOverturn, 1)} × ${vn(c.overturningMoment_kNm)} ≤ M_giữ = ${vn(c.resistingMoment_kNm)} kNm; mức sử dụng ${vn(base.overturnUtil, 2)}.`,
-        `SV-4 một vít: N_1 = ${vn(c.screwPull_kN)} kN ≤ Q_a; mức sử dụng ${vn(base.screwUtil, 2)}. SV-5 nền: ${vn(base.bearingUtil, 2)}. SV-6 thép bản (lưới Ø${g.rebarDia_mm} a${Math.round(g.rebarSpacing_m * 1000)}, hai lớp): ${vn(base.rebarUtil, 2)}.`,
+        `SV-2 trượt: ${vn(p.sfSlide, 1)} × T_h ≤ bám dính đáy + gờ + ${p.screwCount} × H_u. Bám dính đáy = ${vn(p.alphaBase, 1)} × c_u × B² = ${vn(c.adhesion_kN)} kN (lấy bằng 0 khi T_v > W': đế bị nhấc khỏi bùn); gờ sâu z = ${vn(p.skirtDepth_m, 2)} m: B × (0,5 × γ' × z² + 2 × c_u × z) = ${vn(g.skirtResistance_kN)} kN; H_u một vít = ${vn(g.screwHu_kN)} kN (Broms, đầu tự do ở mặt bùn). ${vn(p.sfSlide, 1)} × ${vn(c.Th_kN)} = ${vn(p.sfSlide * c.Th_kN)} ≤ ${vn(c.slideResistance_kN)} kN; mức sử dụng ${vn(base.slideUtil, 2)}.`,
+        `SV-3 lật quanh mép đáy phía xa dây: M_lật = T_h × (t + h_tai) + T_v × B / 2 = ${vn(c.Th_kN)} × (${vn(g.thickness_m, 1)} + ${vn(p.padeyeHeight_m, 2)}) + ${vn(c.Tv_kN)} × ${vn(g.side_m, 2)} / 2 = ${vn(c.overturningMoment_kNm)} kNm; M_giữ = W' × B / 2 + (n/2) × Q_u × (B − c) + (n/2) × Q_u × c = ${vn(c.resistingMoment_kNm)} kNm (c = ${vn(p.holeEdge_m, 2)} m từ mép đế tới tim lỗ vít). ${vn(p.sfOverturn, 1)} × ${vn(c.overturningMoment_kNm)} = ${vn(p.sfOverturn * c.overturningMoment_kNm)} ≤ ${vn(c.resistingMoment_kNm)} kNm; mức sử dụng ${vn(base.overturnUtil, 2)}.`,
+        `SV-4 một vít: lực nhổ lên vít chịu nặng nhất N_1 = max[(T_v − ${vn(p.weightFactor, 1)} × W') / n ; (M_lật − ${vn(p.weightFactor, 1)} × W' × B / 2) / (B − c) / (n/2)] = ${vn(c.screwPull_kN)} kN ≤ Q_a = ${vn(g.screwQa_kN)} kN; mức sử dụng ${vn(base.screwUtil, 2)}.`,
+        `SV-5 áp lực lên nền bùn: W' / B² = ${vn(g.bearingPressure_kPa)} kPa ≤ 5,14 × c_u / ${vn(p.sfBearing, 1)} = ${vn(g.bearingAllow_kPa)} kPa (sức chịu tải giới hạn của nền sét mềm); mức sử dụng ${vn(base.bearingUtil, 2)}.`,
+        `SV-6 thép bản đế: tai neo kéo lên ở giữa, ${p.screwCount} vít giữ ở các góc; mô-men trên 1 m bản M = (n/2) × Q_u × (s/2) / B = ${vn(g.slabMoment_kNm_m, 2)} kNm/m (s = B − 2c); thép cần A_s = M / (0,9 × h_0 × R_s) = ${vn(g.rebarRequired_mm2, 0)} mm²/m, tối thiểu 0,1% = ${vn(g.rebarMin_mm2, 0)} mm²/m; bố trí lưới Ø${g.rebarDia_mm} a${Math.round(g.rebarSpacing_m * 1000)} hai lớp = ${vn(g.rebarProvided_mm2, 0)} mm²/m; mức sử dụng ${vn(base.rebarUtil, 2)}.`,
         `Cả hệ: ${T.bases} đế (${sides}), ${vn(T.baseConcrete_m3)} m³ bê tông, ${vn(T.baseRebar_kg / 1000)} tấn thép bản, ${T.screws} vít (${vn(T.screwLength_m, 0)} m), đế nặng nhất khi cẩu ${vn(T.maxLift_t)} tấn.`,
         `Tổng lực nhổ lên ${T.bases} đế ${vn(T.upliftDemand_kN, 0)} kN, tổng sức chống nhổ ${vn(T.upliftResistance_kN, 0)} kN. Mức sử dụng lớn nhất: nhổ ${vn(T.worst.uplift, 2)}, trượt ${vn(T.worst.slide, 2)}, lật ${vn(T.worst.overturn, 2)}, một vít ${vn(T.worst.screw, 2)}.`
       ]
@@ -337,9 +365,18 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
           ? `Mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m trong khi dây đáy chỉ dài ${vn(Math.min(...bedSpans), 1)}–${vn(Math.max(...bedSpans), 1)} m: chiều dài cần của dây đổi theo mực nước, dây chùng – căng khác nhau, nên số dây thật sự chịu lực thay đổi theo hướng tải và mực nước. Cách góc dây 30° + hệ số tập trung (coi mọi dây cùng làm việc) cho lực dây thấp hơn thực tế nên không dùng nữa.`
           : `Hồ sâu, mực nước dao động ${vn(lv.mnlkt_m - lv.mnc_m, 2)} m: góc dốc thật của dây thay đổi theo mực nước (dây đáy dốc tới 70°), nên KHÔNG dùng góc dây cố định 30° và hệ số tập trung.`,
         `Mỗi bè: tải môi trường F đặt lần lượt theo 24 hướng (15°/hướng), ở mọi mực nước từ mức bè còn nổi tới MNLKT (bước 1 m, thêm MNDB và MNLKT). Bè tịnh tiến tới khi tổng lực các dây đang căng cân bằng F. Dây thẳng, đàn hồi EA = ${vn(L.eaPerMbl ?? 15, 0)} × lực đứt (GIẢ ĐỊNH cho polyester), dây chùng không chịu lực; không xét xoay bè và tải động.`,
+        `Lực một dây: T = (EA / L_0) × (d − L_0) khi d > L_0, T = 0 khi d ≤ L_0 (dây chùng). d là khoảng cách thẳng bích bè – chốt neo khi bè đã dịch đi, L_0 là chiều dài dây lúc vừa căng. Cáp ${r.cable}: EA = ${vn(r.ea_kN / r.mbl_kN, 0)} × ${vn(r.mbl_kN, 0)} = ${vn(r.ea_kN, 0)} kN. Dây càng ngắn (L_0 nhỏ) càng cứng nên nhận càng nhiều lực.`,
+        `Vị trí cân bằng: độ dịch u của bè sao cho tổng thành phần ngang của lực các dây đang căng bằng F theo hướng tải; T thiết kế = T lớn nhất trên mọi hướng, mọi mực nước + lực căng trước T_0 = ${vn(r.pretension_kN, 0)} kN.`,
         `${r.name} (bè có lực dây lớn nhất): F = ${vn(r.fEnv_kN)} kN; chi phối ở mực nước ${vn(g.level_m, 2)} m, tải đẩy về hướng ${g.direction_deg}°, dây ${g.maxLine} chịu ${vn(g.maxTension_kN)} kN, ${g.taut} dây cùng căng; bè trôi ${vn(g.drift_m, 2)} m. Mất dây ${g.maxLine}: dây lớn nhất còn lại ${vn(a.damaged.maxTension_kN)} kN.`,
         `Lực dây thiết kế của ${r.name}: T = ${vn(r.tMax_kN)} kN (đã cộng lực căng trước ${vn(r.pretension_kN, 0)} kN; không nhỏ hơn F / (n × cos α) = ${vn(r.tGeometric_kN)} kN); khi đứt một dây: ${vn(r.tDamaged_kN)} kN. Cáp và cọc bờ của bè kiểm tra với lực này; mỗi đế vít xoắn kiểm tra với lực lớn nhất của chính (các) dây nối vào nó (bao mọi hướng, mọi mực nước).`,
-        `Cáp ${r.cable}, lực đứt ${vn(r.mbl_kN, 0)} kN: hệ số an toàn ${vn(r.sfIntact, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineIntact ?? 3, 1)}); khi đứt một dây ${vn(r.sfDamaged, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineDamaged ?? 2, 1)}).`,
+        `Cáp ${r.cable}, lực đứt ${vn(r.mbl_kN, 0)} kN: hệ số an toàn MBL / T = ${vn(r.mbl_kN, 0)} / ${vn(r.tMax_kN)} = ${vn(r.sfIntact, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineIntact ?? 3, 1)}); khi đứt một dây ${vn(r.mbl_kN, 0)} / ${vn(r.tDamaged_kN)} = ${vn(r.sfDamaged, 2)} (yêu cầu ≥ ${vn(st.criteria.sfLineDamaged ?? 2, 1)}).`,
+        ...(r.lineSpacing_m !== null ? [`C9, khoảng cách trung bình giữa các dây: chu vi / số dây = ${vn(r.perimeter_m)} / ${r.lines} = ${vn(r.lineSpacing_m)} m ≤ ${vn(r.maxSpacing_m, 0)} m (bắt buộc; các bè: ${vn(Math.min(...d.rafts.map((x) => x.lineSpacing_m ?? 0)))}–${vn(Math.max(...d.rafts.map((x) => x.lineSpacing_m ?? 0)))} m).`] : []),
+        ...(r.bedClearance_m !== null ? [(() => {
+          // the engine checks the design depth (MNDB); at MNC the lake is (MNDB − MNC) shallower
+          const atMnc = r.bedClearance_m! - (lv.mndb_m - lv.mnc_m);
+          return `C8, khoảng hở đáy bè – đáy hồ = chiều sâu nước − mớn nước bè = ${vn(r.bedClearance_m!, 2)} m ở MNDB ≥ ${vn(r.minClearance_m, 1)} m; ở MNC còn ${vn(r.bedClearance_m!, 2)} − (${vn(lv.mndb_m, 2)} − ${vn(lv.mnc_m, 2)}) = ${vn(atMnc, 2)} m` +
+            (atMnc >= r.minClearance_m + 0.005 ? ' (đạt).' : atMnc >= r.minClearance_m - 0.005 ? ' (vừa đúng giới hạn).' : atMnc > 0 ? ` — DƯỚI mức ${vn(r.minClearance_m, 1)} m.` : ' — bè CHẠM ĐÁY khi hồ xuống thấp (xem mục 8).');
+        })()] : []),
         `Độ trôi bè lớn nhất (mọi hướng, mọi mực nước): ${vn(Math.min(...drifts), 1)} – ${vn(Math.max(...drifts), 1)} m tùy bè (kiểm tra C12: ≤ nửa khoảng hở nhỏ nhất tới bè bên cạnh).`,
         ...(standby.length ? [`Dây ngắn hơn 4 m (${standby.join(', ')}) không tính vào cân bằng: lắp làm dây dự phòng, cắt dài thêm 0,5 m — bè trôi chưa tới 0,5 m nên chúng không chịu lực.`] : [])
       ]

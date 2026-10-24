@@ -41,7 +41,8 @@ export const LAKES = {
       coords: 'src/data/banMong/coordinates.json',
       piles: 'src/data/banMong/piles.json',
       terrain: 'src/data/banMong/terrainMesh.json',
-      catalogue: 'src/data/banMong/raftCatalogue.json'
+      catalogue: 'src/data/banMong/raftCatalogue.json',
+      ties: 'src/data/banMong/ties.json'
     },
     // Pre-FS "26.11.10 Pre Fs ĐMT nổi hồ Bản Mòng", thông số hồ chứa.
     mndb: 662.76,
@@ -63,6 +64,10 @@ export const LAKES = {
     // anchor to the bank wherever possible, settled on 80 m shore cables (Huổi Vanh 60 m). 100 m gives 48 bases
     // but loads BÈ 8 to 179 kN (short stiff bed lines left among long shore lines: PES-48, 3 piles per point).
     maxShoreSpan: 80,
+    // Rafts tied to each other across a narrow gap (owner 2026-10-24): every shared base of the pair is replaced by a
+    // tie rope cleat to cleat (src/data/banMong/ties.json) and the pair is calculated as ONE group on its outer lines.
+    // BÈ 3 – BÈ 4 (gap 12.9 m): BÈ 3 163 -> ~96 kN, 8 bases fewer; tying the other pairs raises the line forces.
+    raftTies: [['BÈ 3', 'BÈ 4']],
     // Panels of each raft, tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of the sheets CT-BP-01…08 of
     // "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf": 18 240 panels, SETTLED by the owner 2026-10-22 (the Pre-FS had 16 892).
     panelsByRaft: { 'BÈ 1': 2352, 'BÈ 2': 2380, 'BÈ 3': 3136, 'BÈ 4': 2252, 'BÈ 5': 784, 'BÈ 6': 1568, 'BÈ 7': 2884, 'BÈ 8': 2884 }

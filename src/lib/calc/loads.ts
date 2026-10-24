@@ -172,7 +172,8 @@ export function calculateLoads(
   const mooringAnalysis = line.layout && line.layout.lines.length > 0 && line.mbl_kN > 0
     ? analyseMooring({
         lines: line.layout.lines,
-        force_kN: f_env_total_kN,
+        // a tied group: the partners' wind as well (layout.group.forceRatio)
+        force_kN: f_env_total_kN * (1 + (line.layout.group?.forceRatio ?? 0)),
         mnc_m: env.mnc_m ?? env.mndbt_m ?? 0,
         mndb_m: env.mndbt_m ?? 0,
         mnlkt_m: env.mncn_m ?? env.mndbt_m ?? 0,

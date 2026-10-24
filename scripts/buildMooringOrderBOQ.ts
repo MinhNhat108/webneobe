@@ -25,6 +25,7 @@ import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../src/data/huoiVanhProject';
 import { buildFinalDesign } from '../src/lib/io/finalDesignWorkbook';
 import { buildCableCuttingSchedule } from '../src/lib/io/cableCuttingSchedule';
+import { RAFT_TIES } from '../src/data/huoiVanhLayout';
 
 const out = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? 'BANG_THONG_KE_VAT_TU_ORDER_NEO_BE.xlsx';
 const HV = ACTIVE_LAKE.id === 'huoi-vanh';
@@ -213,6 +214,16 @@ if (longShore.length) {
     `Dây bờ đổi chiều dài quá hành trình tăng đơ (${tx(TURNBUCKLE_M)} m) theo mực nước, tới ${tx(Math.max(...longShore.map(travelOf)))} m: thêm đoạn xích nối tiếp tăng đơ`);
 }
 it('Phao treo cáp đáy (TÙY CHỌN)', `Phao xốp đặc chịu ngập ≥ ${maxDepth} m, sức nổi 15–20 kg`, 'quả', 0, 'tùy chọn', `Không bắt buộc, chưa tính toán; nếu dùng: ${nBed} quả, treo cách đế 3 m`);
+if (RAFT_TIES.length) {
+  // tie ropes raft to raft (Hồ Bản Mòng BÈ 3 – BÈ 4): fixed length, cleat to cleat, smallest PES with MBL / design ≥ 3
+  const tieDesign = HUOI_VANH_RAFTS.find((r) => r.mooringLayout?.group)?.mooringLayout?.group?.tieDesign_kN ?? 0;
+  const tieCable = Object.keys(MBL).sort((p, q) => MBL[p] - MBL[q]).find((c) => MBL[c] / tieDesign >= 3) ?? 'PES-40';
+  const tieLen = sum(RAFT_TIES, (t) => t.length_m + 2 * EYE_ROPE_M);
+  it(`Cáp dây nối hai bè ${tieCable}`, `Polyester ${tieCable}, MBL ${MBL[tieCable]} kN; ${RAFT_TIES.length} dây ${tx(Math.min(...RAFT_TIES.map((t) => t.length_m)))}–${tx(Math.max(...RAFT_TIES.map((t) => t.length_m)))} m bích – bích`, 'md', tieLen, WASTE,
+    `Nối ${[...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(' – ')} thay cho ${RAFT_TIES.length} đế dùng chung; mỗi dây kiểm tra ${tx(tieDesign, 0)} kN (GIẢ ĐỊNH), HSAT ${tx(MBL[tieCable] / tieDesign, 2)}; dài cố định, không cần bù mực nước`);
+  it('Ma-nê dây nối hai bè', `Thép rèn mạ kẽm, WLL ≥ ${wll(tieDesign)} t`, 'cái', 2 * RAFT_TIES.length, 0.03, '2 cái mỗi dây nối, tại hai bích bè');
+  it('Đệm chống va giữa hai bè (fender)', 'Đệm cao su / phao đệm treo mép bè, theo nhà sản xuất bè', 'bộ', RAFT_TIES.length, 0.1, 'Khi gió đẩy hai bè lại gần nhau dây nối chùng: đệm giữ hai bè không va nhau — CHƯA chọn loại');
+}
 it('Phao đánh dấu vị trí đế', 'Phao nhỏ có số hiệu, dây buộc riêng (không nối vào dây neo)', 'quả', T.bases, 0.1, 'Định vị khi thi công, bảo dưỡng; báo cho thuyền bè');
 if (compensated) {
   sec('VI', 'THIẾT BỊ BÙ DAO ĐỘNG MỰC NƯỚC (BẮT BUỘC — CHỈ MỚI CÓ YÊU CẦU KỸ THUẬT, CHƯA CHỌN LOẠI: KHÔNG ĐẶT HÀNG THEO MỤC NÀY)');

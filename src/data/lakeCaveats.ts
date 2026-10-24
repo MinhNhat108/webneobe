@@ -5,7 +5,7 @@
  * tension (2026-10-23); its other open issues are in CLAUDE.md and the report.
  */
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from './lakes';
-import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf } from './huoiVanhLayout';
+import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf, RAFT_TIES } from './huoiVanhLayout';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from './huoiVanhProject';
 import { CABLE_MBL_KN } from '../lib/calc/raftState';
 import { STANDBY_SLACK_M } from '../lib/calc/mooringEquilibrium';
@@ -124,6 +124,15 @@ export function lakeCaveats(): string[] {
       `Theo địa hình IFC (lưới ~10 m), ${slope.length}/${MOORING_LINES_V2.length} dây tì lên sườn dốc giữa bè và neo khi nước ở ${vn(lo, 0)}–${vn(hi, 0)} m ` +
       `(${slope.map((r) => r.code).join(', ')}; sâu nhất ${vn(Math.max(...slope.map((r) => r.depth_m)), 1)} m dưới mặt đất): mô hình coi dây thẳng — ` +
       'cần ống / con lăn chống mài mòn ở đoạn tì, hoặc dời cọc theo khảo sát địa hình.'
+    );
+  }
+  if (RAFT_TIES.length) {
+    const g = HUOI_VANH_RAFTS.find((r) => r.mooringLayout?.group)?.mooringLayout?.group;
+    const pair = [...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(' – ');
+    out.push(
+      `${RAFT_TIES.length} dây nối ${pair} thay cho ${RAFT_TIES.length} đế dùng chung ở khe hẹp (dài ${vn(Math.min(...RAFT_TIES.map((t) => t.length_m)), 1)}–${vn(Math.max(...RAFT_TIES.map((t) => t.length_m)), 1)} m): hai bè tính như MỘT cụm trên các dây phía ngoài. ` +
+      `Mỗi dây nối kiểm tra với ${vn(g?.tieDesign_kN ?? 0, 0)} kN (GIẢ ĐỊNH: một bè truyền toàn bộ lực của nó sang bè kia, một nửa số dây nối cùng làm việc) — chưa mô hình riêng. ` +
+      'Dây nối dài cố định (hai bè cùng nổi, không cần bù mực nước); cần đệm chống va giữa hai bè và nhà sản xuất bè xác nhận khung chịu được lực tập trung tại điểm nối.'
     );
   }
   const single = LAYOUT_COUNTS.bedBases - LAYOUT_COUNTS.sharedBases;

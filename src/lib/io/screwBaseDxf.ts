@@ -5,6 +5,7 @@ import { buildScrewBaseSchedule, baseCorners, ScrewBaseRow, ScrewBaseSchedule } 
 import { ACI, Pt, line, circle, point, square, closedPolyline, dxfStampedName, downloadDxf } from './dxfExport';
 import { vnText as text, dxfDocumentVn } from './dxfVn';
 import { designWindCaveat } from '../calc/designWind';
+import { RAFT_TIES } from '../../data/huoiVanhLayout';
 
 /**
  * Setting-out drawing of the 9-raft plan: shore anchors on bored piles D350,
@@ -25,7 +26,8 @@ export const DXF_LAYERS_PA3 = {
   text: { name: '06_TOA_DO_TEXT', color: ACI.white },
   shoreTable: { name: '07_BANG_THONG_KE_COC_BO', color: ACI.white },
   baseTable: { name: '08_BANG_THONG_KE_DE_NEO', color: ACI.white },
-  detail: { name: '09_CHI_TIET_DE_NEO', color: ACI.yellow }
+  detail: { name: '09_CHI_TIET_DE_NEO', color: ACI.yellow },
+  tie: { name: '10_DAY_NOI_HAI_BE', color: ACI.cyan }
 } as const;
 
 interface Column<T> { title: string; width: number; value: (r: T) => string }
@@ -254,6 +256,12 @@ export function buildMooringScrewBaseDxf(
     e += circle(L.shorePile.name, p, shoreR) + point(L.shorePile.name, p);
     e += text(L.text.name, { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 }, h,
       `${r.pileId} (${r.code}) ${r.pileCount > 1 ? `${r.pileCount}×` : ''}D${Math.round(r.D_m * 1000)}`);
+  }
+
+  // Tie ropes raft to raft across a narrow gap (Hồ Bản Mòng BÈ 3 – BÈ 4), in place of shared bases
+  for (const t of RAFT_TIES) {
+    e += line(L.tie.name, { x: t.a.x, y: t.a.y }, { x: t.b.x, y: t.b.y });
+    e += text(L.tie.name, { x: (t.a.x + t.b.x) / 2 + 0.6, y: (t.a.y + t.b.y) / 2 + 0.6 }, h, `${t.code} DÂY NỐI ${t.rafts.join(' – ')} L = ${vn(t.length_m)} m`);
   }
 
   // Lake-bed bases at true plan size, one side along the first cable, with the four screw holes.

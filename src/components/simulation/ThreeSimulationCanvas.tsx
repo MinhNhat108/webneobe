@@ -33,6 +33,7 @@ import {
 import { evaluateDeadweightBlock, deadweightOk } from '../../lib/calc/deadweight';
 import { recheckScrewBase, screwBaseUtilisation, type ScrewBaseResult } from '../../lib/calc/screwAnchorBed';
 import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
+import { RAFT_TIES } from '../../data/huoiVanhLayout';
 
 export interface ThreeCanvasRef {
   resetCamera: () => void;
@@ -99,6 +100,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
     const raftsGroupRef = useRef<THREE.Group>(new THREE.Group());
     const pilesGroupRef = useRef<THREE.Group>(new THREE.Group());
     const cablesRef = useRef<THREE.LineSegments | null>(null);
+    const tiesRef = useRef<THREE.LineSegments | null>(null);
     const windParticlesRef = useRef<THREE.Points | null>(null);
     const particlePositionsRef = useRef<Float32Array | null>(null);
     const ifcGroupRef = useRef<THREE.Group | null>(null);
@@ -504,6 +506,24 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       lines.visible = layers.mooringLines;
       scene.add(lines);
       cablesRef.current = lines;
+      // tie ropes raft to raft across a narrow gap (Hồ Bản Mòng): cleat to cleat at the waterline, not pickable
+      if (tiesRef.current) { scene.remove(tiesRef.current); tiesRef.current.geometry.dispose(); tiesRef.current = null; }
+      if (RAFT_TIES.length) {
+        const tp = new Float32Array(RAFT_TIES.length * 6);
+        RAFT_TIES.forEach((t, i) => {
+          const wa = raftLines.get(t.a.raft), wb = raftLines.get(t.b.raft);
+          if (!wa || !wb) return;
+          const a = toScene(t.a.x, t.a.y, wa.waterline_m + CLEAT_ABOVE_WATERLINE_M), b = toScene(t.b.x, t.b.y, wb.waterline_m + CLEAT_ABOVE_WATERLINE_M);
+          tp.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6);
+        });
+        const tg = new THREE.BufferGeometry();
+        tg.setAttribute('position', new THREE.BufferAttribute(tp, 3));
+        const tl = new THREE.LineSegments(tg, new THREE.LineBasicMaterial({ color: 0x22d3ee }));
+        tl.userData = { type: 'ties' };
+        tl.visible = layers.mooringLines;
+        scene.add(tl);
+        tiesRef.current = tl;
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cables, raftLines, mooringStates, selectedElement]);
 
@@ -512,6 +532,7 @@ export const ThreeSimulationCanvas = forwardRef<ThreeCanvasRef, ThreeSimulationC
       raftsGroupRef.current.visible = layers.rafts;
       panelMeshesRef.current.forEach((p) => { p.visible = layers.solarPanels; });
       if (cablesRef.current) cablesRef.current.visible = layers.mooringLines;
+      if (tiesRef.current) tiesRef.current.visible = layers.mooringLines;
       const pm = pileMeshesRef.current;
       if (pm.shoreAbove) pm.shoreAbove.visible = layers.shorePiles;
       if (pm.shoreEmbed) pm.shoreEmbed.visible = layers.shorePiles;

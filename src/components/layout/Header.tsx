@@ -215,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           >
             🔵 Đế BTCT + vít xoắn (PHƯƠNG ÁN CHỐT 12/10/2026)
           </button>
-          <button
+          {ACTIVE_LAKE_ID !== 'ban-mong' && <button
             type="button"
             onClick={() => setMooringOption('PA1_PILE')}
             className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
@@ -225,7 +225,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
             }`}
           >
             🟢 Cọc đóng BTCT 350×350
-          </button>
+          </button>}
           <button
             type="button"
             onClick={() => setMooringOption('PA2_DEADWEIGHT')}

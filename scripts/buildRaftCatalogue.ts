@@ -95,7 +95,39 @@ const ringGap = (A: Pt[], B: Pt[]) => {
   for (const [P, Q] of [[A, B], [B, A]]) for (const p of P) for (let i = 0; i < Q.length; i++) m = Math.min(m, segDist(p, Q[i], Q[(i + 1) % Q.length]));
   return m;
 };
+// Raft ties (lakeConfig raftTies, src/data/banMong/ties.json): a tied group is calculated as ONE body on its outer lines.
+const TIES: Array<{ code: string; rafts: string[]; length_m: number }> = LAKE.abs.ties && fs.existsSync(LAKE.abs.ties) ? JSON.parse(fs.readFileSync(LAKE.abs.ties, 'utf8')) : [];
+const groupOf = (name: string): string[] => {
+  const g = new Set([name]);
+  for (let grew = true; grew;) { grew = false; for (const t of TIES) if (t.rafts.some((r) => g.has(r)) && t.rafts.some((r) => !g.has(r))) { t.rafts.forEach((r) => g.add(r)); grew = true; } }
+  return [...g];
+};
+const tiesOf = (name: string) => TIES.filter((t) => t.rafts.includes(name));
+/** Wind + current + wave on each raft alone (no layout needed), for the share of a tied group. */
+const fEnvOf: Record<string, number> = {};
 function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
+  const grp = groupOf(poly.name);
+  if (grp.length > 1) {
+    // the group: its outer lines, the gap to rafts outside it, the partners' wind as a ratio of the raft's own
+    const outer = lines.filter((l) => grp.includes(l.raft));
+    const fSelf = fEnvOf[poly.name], fAll = grp.reduce((s, n) => s + fEnvOf[n], 0);
+    const gIn = polygons.filter((q) => grp.includes(q.name));
+    const beds = gIn.map((q) => q.designBed_m ?? LAKE.mndb - (WATER_DEPTH[q.name] ?? DEFAULT_DEPTH_M));
+    const ties = TIES.filter((t) => t.rafts.every((r) => grp.includes(r)));
+    // tie design load (ASSUMED, not modelled): one raft may hand its whole load to the partner; the ties of the gap
+    // share it, half of them pulling at a time
+    const tieDesign = Math.max(...grp.map((n) => fEnvOf[n])) / Math.max(1, ties.length / 2);
+    return {
+      floatLevel_m: Math.round((Math.max(...beds) + DRAFT_M) * 100) / 100,
+      minGap_m: Math.round(Math.min(...polygons.filter((q) => !grp.includes(q.name)).flatMap((q) => gIn.map((g) => ringGap(g.points, q.points)))) * 100) / 100,
+      lines: outer.filter((l) => l.span >= STANDBY_SPAN_M).map((l) => ({
+        code: l.code, type: l.type, azimuth_deg: l.azimuth, span_m: l.span,
+        pin_m: Math.round((l.zAnchor + (l.type === 'SHORE' ? SHORE_ARM_M : BASE_PIN_M)) * 100) / 100
+      })),
+      ...(outer.some((l) => l.span < STANDBY_SPAN_M) ? { standbyLines: outer.filter((l) => l.span < STANDBY_SPAN_M).map((l) => l.code) } : {}),
+      group: { rafts: grp, forceRatio: Math.round(((fAll - fSelf) / fSelf) * 10000) / 10000, ties: ties.map((t) => t.code), tieDesign_kN: Math.round(tieDesign * 10) / 10 }
+    };
+  }
   const own = lines.filter((l) => l.raft === poly.name);
   // Huổi Vanh: no IFC median per raft, the design bed is MNDB - the raft's design depth
   const bed = poly.designBed_m ?? LAKE.mndb - (WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M);
@@ -180,6 +212,14 @@ SHORE_CAGES.sort((a, b) => a[0] * a[1] * a[1] - b[0] * b[1] * b[1]);
 const BED_BARS = [20, 22, 25, 28, 32];
 
 const notes: string[] = [];
+// the wind on every raft alone, before any layout (needed by the tied groups)
+polygons.forEach((poly, i) => {
+  const rect = minBoundingRect(poly.points);
+  const probe = { id: poly.id, name: poly.name, area_m2: poly.area_m2, perimeter_m: poly.perimeter_m, length_m: up1(rect.L), width_m: up1(rect.W),
+    solarPanelCount: panels[i], focusFactor: 0, cableCount: 1, shoreAnchors: 1, bedAnchors: 0, selectedCable: 'PES-28', waterDepth_m: WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M } as RaftSummaryItem;
+  const b = base();
+  fEnvOf[poly.name] = calculateProject(buildRaftProjectState(b, probe, b.anchor)).f_env_total_kN;
+});
 const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   const own = lines.filter((l) => l.raft === poly.name);
   const shore = own.filter((l) => l.type === 'SHORE'), bed = own.filter((l) => l.type === 'BED');
@@ -191,7 +231,9 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
     solarPanelCount: panels[i],
     focusFactor: Math.ceil((product / own.length) * 1000 - 1e-6) / 1000,
     mooringLayout: mooringLayoutOf(poly),
-    cableCount: own.length, shoreAnchors: shore.length, bedAnchors: bed.length,
+    // C9: a tie restrains the edge of both rafts it joins
+    cableCount: own.length + tiesOf(poly.name).length, shoreAnchors: shore.length, bedAnchors: bed.length,
+    ...(tiesOf(poly.name).length ? { ties: tiesOf(poly.name).length } : {}),
     selectedCable: CABLES[CABLES.length - 1],
     waterDepth_m: WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M,
     bedAnchorDist_m: down1(Math.min(...bed.map((l) => l.span))),
@@ -226,8 +268,9 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   if (!shoreDone) notes.push(`${poly.name}: NO shore pile D350 passes (up to 3 piles per point, 8D32 CB500-V, L 9 m)`);
 
   // lake-bed pile of option PA1 (kept as the alternative to the screw base), with the steel grade chosen above
-  let bedDone = false;
-  bedSearch: for (const perPoint of [1, 2, 3]) {
+  // Hồ Bản Mòng: no driven lake-bed piles (PA1), owner 2026-10-24 — the search is skipped
+  let bedDone = BAN_MONG;
+  bedSearch: for (const perPoint of BAN_MONG ? [] : [1, 2, 3]) {
     for (let L = 8; L <= 12 + 1e-9; L += 0.5) {
       for (const d of BED_BARS) {
         const cand: RaftSummaryItem = { ...row, bedPilesPerPoint: perPoint, bedPileL_m: L, bedRebarDia_mm: d };

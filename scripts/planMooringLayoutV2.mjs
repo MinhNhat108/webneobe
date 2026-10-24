@@ -101,6 +101,18 @@ function groundAt(x, y) {
 
 const polygons = JSON.parse(fs.readFileSync(POLYS, 'utf8'));
 const coords = JSON.parse(fs.readFileSync(COORDS, 'utf8'));
+// Raft ties (lakeConfig raftTies): a tie is a shared base of a tied pair turned into a rope cleat to cleat. The
+// plan runs on the expanded form (the two lake-bed lines on their base) so that every step and invariant sees
+// the same state on every run; the ties are formed again at the end (idempotent).
+const TIES_FILE = LAKE.abs.ties;
+const TIED = (LAKE.raftTies ?? []).map((p) => new Set(p));
+const oldTies = TIES_FILE && fs.existsSync(TIES_FILE) ? JSON.parse(fs.readFileSync(TIES_FILE, 'utf8')) : [];
+for (const t of oldTies) {
+  for (const [me, other] of [[t.a, t.b], [t.b, t.a]]) {
+    coords.push({ raft: me.raft, type: 'BED', xRaft: me.x, yRaft: me.y, xAnchor: t.base.x, yAnchor: t.base.y, zAnchor: t.base.z,
+      span: 0, azimuth: 0, code: me.code, sharedWith: other.code });
+  }
+}
 
 // ------------------------------------------------------------------ geometry
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -522,7 +534,8 @@ function shoreLineFeasible(cleat, pile, c) {
   }
   for (const o of coords) {
     if (o === c) continue;
-    if (dist(anchorOf(o), pile) < MIN_PILE_GAP) return false;
+    // + 0.02 m: the pile is rounded to 0.01 m when it is placed (setAnchor), the final G4 check must still hold
+    if (dist(anchorOf(o), pile) < MIN_PILE_GAP + 0.02) return false;
     if (segCross(cleat, pile, cleatOf(o), anchorOf(o))) return false;
   }
   return true;
@@ -1084,6 +1097,35 @@ for (const c of coords) {
   if (distToRing(cleatOf(c), ringOf[c.raft]) > CLEAT_TOL) errors.push(`cleat off edge ${c.code}`);
 }
 
+// ---- Raft ties: the shared bases of a tied pair become ropes cleat to cleat --------------------------
+const ties = [];
+for (const pair of TIED) {
+  const [A, B] = [...pair];
+  const prefix = `T${A.replace('BÈ ', '')}${B.replace('BÈ ', '')}`;
+  for (const c of coords.filter((q) => q.type === 'BED' && q.raft === A && q.sharedWith)) {
+    const o = coords.find((q) => q.code === c.sharedWith);
+    if (!o || o.raft !== B) continue;
+    ties.push({ code: '', rafts: [A, B], length_m: r2(dist(cleatOf(c), cleatOf(o))),
+      a: { code: c.code, raft: A, x: c.xRaft, y: c.yRaft }, b: { code: o.code, raft: B, x: o.xRaft, y: o.yRaft },
+      base: { x: c.xAnchor, y: c.yAnchor, z: c.zAnchor } });
+  }
+  ties.filter((t) => t.rafts[0] === A).sort((p, q) => p.a.code.localeCompare(q.a.code, 'en', { numeric: true }))
+    .forEach((t, i) => { t.code = `${prefix}-${String(i + 1).padStart(2, '0')}`; });
+}
+const tiedCodes = new Set(ties.flatMap((t) => [t.a.code, t.b.code]));
+for (let i = coords.length - 1; i >= 0; i--) if (tiedCodes.has(coords[i].code)) coords.splice(i, 1);
+if (ties.length) {
+  // base ids again, without the bases that became ties
+  let n = 0;
+  for (const c of coords) if (c.type === 'BED') delete c.anchorId;
+  for (const c of coords) {
+    if (c.type !== 'BED' || c.anchorId) continue;
+    c.anchorId = `DV-${String(++n).padStart(3, '0')}`;
+    if (c.sharedWith) coords.find((o) => o.code === c.sharedWith).anchorId = c.anchorId;
+  }
+  console.log(`ties ${ties.length}: ${ties.map((t) => `${t.code} ${t.a.code}–${t.b.code} ${t.length_m} m`).join('; ')}`);
+}
+
 // ---- Anchor schedule, derived from the lines -----------------------------
 let iS = 0, iB = 0;
 const shore = coords.filter((c) => c.type === 'SHORE');
@@ -1110,5 +1152,6 @@ console.log('\nall invariants hold (C9, G1..G4)');
 if (!dryRun) {
   fs.writeFileSync(COORDS, JSON.stringify(coords, null, 2) + '\n');
   fs.writeFileSync(PILES, JSON.stringify(piles, null, 2) + '\n');
+  if (TIES_FILE) fs.writeFileSync(TIES_FILE, JSON.stringify(ties, null, 2) + '\n');
   console.log('written', path.relative(ROOT, COORDS), path.relative(ROOT, PILES));
 }

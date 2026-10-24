@@ -20,7 +20,7 @@ vi.hoisted(() => {
 
 import { ACTIVE_LAKE_ID, ACTIVE_LAKE, LAKES } from '../lakes';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS, BAN_MONG_PROJECT } from '../huoiVanhProject';
-import { MOORING_LINES_V2, RAFT_POLYGONS_V2, LAYOUT_COUNTS, bedAnchorsOf } from '../huoiVanhLayout';
+import { MOORING_LINES_V2, RAFT_POLYGONS_V2, LAYOUT_COUNTS, bedAnchorsOf, RAFT_TIES } from '../huoiVanhLayout';
 import { lakeCaveats, raftsAgroundAtMnc, linesOnSlope } from '../lakeCaveats';
 import { LAKES as SCRIPT_LAKES } from '../../../scripts/lakeConfig.mjs';
 import { calculateProject } from '../../lib/calc';
@@ -87,11 +87,15 @@ describe('Hồ Bản Mòng tab', () => {
     expect(LAYOUT_COUNTS.lines).toBe(MOORING_LINES_V2.length);
     for (const r of HUOI_VANH_RAFTS) {
       const own = MOORING_LINES_V2.filter((l) => l.raft === r.name);
-      expect(own.length, r.name).toBe(r.cableCount);
-      expect(r.perimeter_m / own.length, r.name).toBeLessThanOrEqual(15);
+      // a tie restrains the edge of both rafts it joins (C9 counts it for both)
+      const ties = RAFT_TIES.filter((t) => t.rafts.includes(r.name)).length;
+      expect(own.length + ties, r.name).toBe(r.cableCount);
+      expect(ties, r.name).toBe(r.ties ?? 0);
+      expect(r.perimeter_m / (own.length + ties), r.name).toBeLessThanOrEqual(15);
     }
     for (const l of MOORING_LINES_V2.filter((q) => q.type === 'SHORE')) {
-      expect(groundAt(l.xAnchor, l.yAnchor)!, l.code).toBeGreaterThanOrEqual(MNDB_M - 0.5 - 1e-6);
+      // 2 cm: the pile is rounded to 0.01 m on a steep slope of the 5 m survey grid
+      expect(groundAt(l.xAnchor, l.yAnchor)!, l.code).toBeGreaterThanOrEqual(MNDB_M - 0.5 - 0.02);
       expect(l.span, l.code).toBeLessThanOrEqual(80); // Bản Mòng reach (lakeConfig maxShoreSpan, 2026-10-24); Huổi Vanh 60
     }
     // a base stands on the IFC ground at its own point, under water at MNDB (scripts/lakeConfig.mjs, bedOnTerrain)
@@ -100,6 +104,23 @@ describe('Hồ Bản Mòng tab', () => {
       expect(b.z, b.id).toBeLessThanOrEqual(MNDB_M - 0.5);
       expect(b.lines.length, b.id).toBe(b.shared ? 2 : 1);
     }
+  });
+
+  it('BÈ 3 and BÈ 4 are tied across their narrow gap: no base in it, one group on the outer lines', () => {
+    expect(RAFT_TIES.length).toBe(LAYOUT_COUNTS.ties);
+    expect(RAFT_TIES.length).toBeGreaterThan(0);
+    for (const t of RAFT_TIES) {
+      expect([...t.rafts].sort(), t.code).toEqual(['BÈ 3', 'BÈ 4']);
+      // the tie lines are gone from the line file, so no base is left in the gap
+      expect(MOORING_LINES_V2.some((l) => l.code === t.a.code || l.code === t.b.code), t.code).toBe(false);
+    }
+    const r3 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3')!, r4 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 4')!;
+    expect(r3.mooringLayout!.group!.rafts.sort()).toEqual(['BÈ 3', 'BÈ 4']);
+    // the same group: the same outer lines and the same total load, so the same line tension
+    expect(r3.mooringLayout!.lines.length).toBe(r4.mooringLayout!.lines.length);
+    const T = (r: typeof r3) => { const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor); return calculateProject(st).t_max_intact_kN; };
+    expect(T(r3)).toBeCloseTo(T(r4), 0);
+    expect(T(r3)).toBeLessThan(110); // was 163 kN with the shared bases in the gap
   });
 
   it('every raft passes at the 20 m/s default (screw-base option)', () => {

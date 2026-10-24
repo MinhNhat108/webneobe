@@ -24,6 +24,7 @@ import { CostEstimateView } from '../cost/CostEstimateView';
 import { ShorePileHeadDetail } from '../results/ShorePileHeadDetail';
 import { MooringLevelPanel } from '../results/MooringLevelPanel';
 import { useProjectStore } from '../../store/useProjectStore';
+import { ACTIVE_LAKE_ID } from '../../data/lakes';
 
 interface AppShellProps {
   onLock?: () => void;
@@ -132,7 +133,8 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'compare' && (
             <div className="section-stack">
               <ScrewBasePanel />
-              <OptionComparisonView />
+              {/* Hồ Bản Mòng: PA1 (driven lake-bed piles) dropped by the owner 2026-10-24 */}
+              {ACTIVE_LAKE_ID !== 'ban-mong' && <OptionComparisonView />}
             </div>
           )}
 

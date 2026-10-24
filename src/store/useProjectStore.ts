@@ -8,7 +8,7 @@ import type { MooringOption } from '../lib/calc/technicalComparison';
 import type { DeadweightParams } from '../lib/calc/deadweight';
 import type { ScrewBaseParams } from '../lib/calc/screwAnchorBed';
 import { CostParams, DEFAULT_COST_PARAMS } from '../lib/calc/costEstimate';
-import { ACTIVE_LAKE } from '../data/lakes';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../data/lakes';
 
 
 const DEFAULT_ANCHOR = (HUOI_VANH_DEFAULT_PROJECT as unknown as ProjectState).anchor;
@@ -121,7 +121,8 @@ export const useProjectStore = create<ProjectStore>()(
       costParams: DEFAULT_COST_PARAMS,
       updateCostParams: (params) => set({ costParams: { ...get().costParams, ...params } }),
       resetCostParams: () => set({ costParams: DEFAULT_COST_PARAMS }),
-      setMooringOption: (option) => get().updateAnchor({ bedAnchorOption: option }),
+      // Hồ Bản Mòng: no driven lake-bed piles (PA1), owner 2026-10-24
+      setMooringOption: (option) => get().updateAnchor({ bedAnchorOption: ACTIVE_LAKE_ID === 'ban-mong' && option === 'PA1_PILE' ? 'PA3_SCREW_BASE' : option }),
       updateDeadweightParams: (params) =>
         get().updateAnchor({ deadweight: { ...(get().currentProject.anchor.deadweight ?? {}), ...params } }),
       updateScrewBaseParams: (params) =>
@@ -593,6 +594,9 @@ export const useProjectStore = create<ProjectStore>()(
             if (key(saved) !== key(builtIn)) {
               state.currentProject.attachments = [...builtIn, ...saved.filter((a) => !a.remoteUrl)];
             }
+          }
+          if (ACTIVE_LAKE_ID === 'ban-mong' && state.currentProject.anchor?.bedAnchorOption === 'PA1_PILE') {
+            state.currentProject = { ...state.currentProject, anchor: { ...state.currentProject.anchor, bedAnchorOption: 'PA3_SCREW_BASE' } };
           }
           state.results = calculateProject(state.currentProject);
         }

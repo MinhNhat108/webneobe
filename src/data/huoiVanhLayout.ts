@@ -26,6 +26,7 @@ import polygonsV2 from './huoiVanhRaftPolygons_v2.json';
 import linesV2 from './huoiVanhCoordinates_v2.json';
 import banMongPolygons from './banMong/raftPolygons.json';
 import banMongLines from './banMong/coordinates.json';
+import banMongTies from './banMong/ties.json';
 import type { MooringCoordinate } from './huoiVanhProject';
 import { ACTIVE_LAKE_ID } from './lakes';
 
@@ -45,6 +46,19 @@ export interface RaftPolygonV2 {
 /** The active lake's raft outlines and mooring lines. */
 export const RAFT_POLYGONS_V2: RaftPolygonV2[] = (BAN_MONG ? banMongPolygons : polygonsV2) as RaftPolygonV2[];
 export const MOORING_LINES_V2: MooringCoordinate[] = (BAN_MONG ? banMongLines : linesV2) as MooringCoordinate[];
+
+/** A tie rope joining two rafts cleat to cleat across a narrow gap, in place of a shared lake-bed base (Hồ Bản Mòng, lakeConfig raftTies). */
+export interface RaftTie {
+  code: string;
+  rafts: [string, string];
+  length_m: number;
+  a: { code: string; raft: string; x: number; y: number };
+  b: { code: string; raft: string; x: number; y: number };
+  /** Where the shared base stood before the tie replaced it. */
+  base: { x: number; y: number; z: number };
+}
+/** The ties of the active lake (none at Huổi Vanh). */
+export const RAFT_TIES: RaftTie[] = (BAN_MONG ? banMongTies : []) as RaftTie[];
 
 /** One lake-bed base with the line(s) tied to it: one, or two facing lines of two rafts (a shared base). */
 export interface BedAnchor {
@@ -80,6 +94,7 @@ export const LAYOUT_COUNTS = (() => {
     bedLines: MOORING_LINES_V2.length - shore.length,
     bedBases: bases.length,
     sharedBases: bases.filter((b) => b.shared).length,
-    anchorPoints: shore.length + bases.length
+    anchorPoints: shore.length + bases.length,
+    ties: RAFT_TIES.length
   };
 })();

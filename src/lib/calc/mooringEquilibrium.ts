@@ -301,6 +301,12 @@ export interface MooringLayoutInput {
    * under the slack (catalogue script checks it).
    */
   standbyLines?: string[];
+  /**
+   * Raft tied to its neighbours across a narrow gap (Hồ Bản Mòng BÈ 3 – BÈ 4): `lines` are the outer lines of the
+   * whole group, the load is the raft's own times (1 + forceRatio) (the partners' wind, scaled with the raft's own
+   * so a Tab 2 wind change still applies), and `minGap_m` is the gap to the rafts OUTSIDE the group.
+   */
+  group?: { rafts: string[]; forceRatio: number; ties: string[]; tieDesign_kN: number };
 }
 
 /** A line shorter than this in plan is a standby line (installed slack, not counted in the equilibrium), m. */

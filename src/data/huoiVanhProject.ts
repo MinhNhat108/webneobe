@@ -44,6 +44,8 @@ export interface RaftSummaryItem {
    * analysis that gives the line tension (src/lib/calc/mooringEquilibrium.ts).
    */
   mooringLayout?: import('../lib/calc/mooringEquilibrium').MooringLayoutInput;
+  /** Hồ Bản Mòng: tie ropes joining this raft to a neighbour across a narrow gap (src/data/banMong/ties.json); counted in cableCount (C9). */
+  ties?: number;
   /**
    * Hồ Bản Mòng: what happens when the storm lock of the level-compensating
    * devices does NOT engage — every line stays a constant-tension line of

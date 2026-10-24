@@ -84,7 +84,9 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
 
   it('the note states the decision, the worked example and the open issues', () => {
     const note = finalDesignNote(d);
-    expect(note.map((s) => s.title.slice(0, 2))).toEqual(['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.']);
+    expect(note.map((s) => s.title.slice(0, 2))).toEqual(['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.']);
+    // section 9 explains every row of the check table of the example raft
+    expect(note[8].lines.filter((l) => /^(C|BP|SV|DW)-?\d+ — /.test(l))).toHaveLength(d.rafts.reduce((a, b) => (b.tMax_kN > a.tMax_kN ? b : a)).checks.length);
     const text = note.flatMap((s) => s.lines).join('\n');
     expect(text).toContain('Chủ đầu tư chốt ngày 12/10/2026');
     expect(text).toContain('9/9 bè đạt; 231/231 cọc bờ đạt; 32/32 đế đạt');

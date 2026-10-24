@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import type { CalcResults, ProjectState } from '../calc/types';
+import type { CalcResults, CheckItem, ProjectState } from '../calc/types';
 import { designWindCaveat } from '../calc/designWind';
 import { calculateCostEstimate, DEFAULT_COST_PARAMS, type CostEstimateSummary, type CostParams } from '../calc/costEstimate';
 import type { PileScheduleBatchLike, PileScheduleRow } from './pileSchedule';
@@ -102,6 +102,8 @@ export interface FinalRaftRow {
   concretePerPile_m3: number;
   steelPerPile_kg: number;
   verdict: string;
+  /** The check table of the raft (the "Hạng mục kiểm tra" of the web), explained in note section 9. */
+  checks: CheckItem[];
 }
 
 export interface FinalDesign {
@@ -176,7 +178,8 @@ export function buildFinalDesign(
       lineSpacing_m: r.avgLineSpacing_m, maxSpacing_m: st.criteria.maxLineSpacing_m ?? 15,
       ea_kN: (L.eaPerMbl ?? 15) * L.mbl_kN,
       concretePerPile_m3: p0?.cage.concreteVol_m3 ?? 0, steelPerPile_kg: p0?.cage.steel_kg ?? 0,
-      verdict: r.overallVerdict
+      verdict: r.overallVerdict,
+      checks: r.checks
     };
   });
 
@@ -215,8 +218,83 @@ export interface NoteSection { title: string; lines: string[] }
 export const vn = (v: number, d = 1): string =>
   Number.isFinite(v) ? v.toLocaleString('vi-VN', { minimumFractionDigits: d, maximumFractionDigits: d }) : '∞';
 
-/** The calculation note: the method step by step, with the worst raft and the worst base worked out. */
+/**
+ * What every row of the check table means: the symbols of its formula, and why a row may not apply to the
+ * settled design (piles and bases instead of drag anchors). Shown in note section 9 next to the raft's result.
+ */
+const CHECK_EXPLAIN: Record<string, string> = {
+  'C1': 'R_total là tổng sức giữ của các neo, H_line là lực ngang trong dây; [SF] là hệ số an toàn yêu cầu. Dùng cho neo thả kéo lê trên đáy (neo cày, khối thả).',
+  'C2': 'MBL là lực kéo đứt nhỏ nhất của cáp (nhà sản xuất công bố), T_max là lực lớn nhất một dây phải chịu (mô hình cân bằng, đã cộng lực căng trước); [SF] = 3 khi đủ dây.',
+  'C3': 'L_ground là chiều dài xích / cáp nằm trên đáy trước neo, L_ground,min là chiều dài tối thiểu để neo kéo lê không bị nhấc lên. Dùng cho neo thả.',
+  'C4': 'L_total là chiều dài dây, d là chiều sâu nước; tỷ lệ [scope] (thường ≥ 5) bảo đảm dây xích đủ thoải cho neo thả.',
+  'C5': 'Như C1 nhưng với lực ngang H_line,dam khi đứt một dây.',
+  'C6': 'Như C2 nhưng T_max,dam là lực lớn nhất trong các dây còn lại khi dây chịu lực lớn nhất bị đứt (tính lại ở mọi mực nước); [SF] = 2.',
+  'C7': 'X_deficit là phần dây còn thiếu so với chiều dài cần của dây xích chùng (đường dây xích) ở độ trôi cho phép [maxOffset].',
+  'C8': 'h_nước là chiều sâu nước dưới bè ở độ sâu thiết kế, mớn nước là phần bè chìm dưới nước; [min] là khoảng hở tối thiểu để đáy bè không chạm đáy hồ.',
+  'C9': 'P_bè là chu vi đa giác bè đo trên mặt bằng, N_dây là số dây neo của bè; [maxSpacing] = 15 m là yêu cầu bắt buộc để lực phân bố đều quanh bè.',
+  'C12': 'u_max là độ trôi ngang lớn nhất của bè trong mô hình cân bằng (mọi hướng, mọi mực nước); hai bè cạnh nhau có thể cùng trôi về phía nhau nên mỗi bè chỉ được trôi nửa khe hở.',
+  'C10': 'P_max là sức chịu tải cho phép của cọc bờ theo catalogue hoặc thí nghiệm thử tải; chỉ kiểm khi có nhập P_max.',
+  'C11': 'Như C10 cho cọc đóng dưới đáy hồ (phương án PA1).',
+  'BP-1': 'H_applied là lực ngang vào một cọc (T, hoặc T / (2 × 0,9) ở điểm cọc đôi), H_allow = H_u / 2,5 với H_u là sức chịu ngang giới hạn theo Broms (mục 5).',
+  'BP-2': 'M_max là mô-men lớn nhất trong thân cọc, γ = 1,2 là hệ số tải trọng, M_rd là khả năng chịu uốn của lồng thép theo TCVN 5574:2018 (mục 5).',
+  'BP-3': 'Sức chịu ngang của cọc đóng dưới đáy hồ (phương án PA1): T_h lực ngang, H_allow sức chịu cho phép.',
+  'BP-4': 'Sức chịu nhổ của cọc đóng dưới đáy hồ (PA1): T_v lực nhổ, Q_uplift,all sức chịu nhổ cho phép do ma sát thân cọc.',
+  'BP-5': 'Uốn thân cọc đóng dưới đáy hồ (PA1).',
+  'SV-1': "T_v là lực nhổ, W' là trọng lượng đế trong nước (đã trừ lực đẩy nổi, chỉ lấy 0,9), n vít × Q_a là sức chịu nhổ cho phép của các vít (mục 6).",
+  'SV-2': 'T_h là lực ngang nhân hệ số 1,5; chống trượt gồm bám dính đáy α·c_u·B² (bằng 0 khi đế bị nhấc), gờ đế R_gờ và sức chịu ngang của n vít H_u (mục 6).',
+  'SV-3': 'M_o là mô-men lật quanh mép đáy phía xa dây (nhân 1,5), M_r là mô-men giữ do trọng lượng đế và các vít (mục 6).',
+  'SV-4': 'N_1 là lực nhổ lên vít chịu nặng nhất sau khi trừ phần trọng lượng đế gánh, Q_a là sức chịu nhổ cho phép của một vít (mục 6).',
+  'SV-5': "W'/B² là áp lực đế lên nền bùn, 5,14·c_u là sức chịu tải giới hạn của nền sét mềm, chia hệ số an toàn (mục 6).",
+  'SV-6': 'A_s yc là thép bản đế cần theo mô-men uốn, 0,1% là hàm lượng tối thiểu, A_s bố trí là lưới thép đặt trong bản (mục 6).',
+  'DW-1': 'Khối bê tông trọng lực (phương án PA2) chống trượt: μ hệ số ma sát, W_sub trọng lượng trong nước, V lực nhổ, H lực ngang.',
+  'DW-2': 'Khối bê tông trọng lực (PA2) chống nhấc: trọng lượng trong nước W_sub so với lực nhổ V.',
+  'DW-3': 'Khối bê tông trọng lực (PA2) chống lật quanh mép khối.',
+  'DW-4': 'Khối bê tông trọng lực (PA2): áp lực lên nền bùn so với sức chịu cho phép.'
+};
+
+/** Why a row does not apply to the settled design (the engine's own note is written for every option). */
+const NOT_APPLICABLE: Record<string, string> = {
+  'C1': 'hệ này không dùng neo thả: sức giữ là của cọc bờ (BP-1, BP-2) và đế vít xoắn (SV-1…SV-6).',
+  'C5': 'hệ này không dùng neo thả: sức giữ là của cọc bờ (BP-1, BP-2) và đế vít xoắn (SV-1…SV-6).',
+  'C3': 'cọc và đế chịu được lực nhổ (kiểm ở SV-1, SV-4), không cần đoạn dây nằm trên đáy.',
+  'C4': 'dây căng thẳng tới cọc / đế, chiều dài dây do mặt bằng quyết định.',
+  'C7': 'không có đoạn dây xích dự trữ; cáp cắt theo bảng chiều dài cắt cáp (mục 7).',
+  'C10': 'chưa có catalogue hoặc thí nghiệm thử tải nên chưa có P_max; sức chịu cọc bờ đã kiểm bằng tính toán ở BP-1, BP-2.',
+  'C11': 'neo đáy hồ là đế BTCT + vít xoắn (SV-1…SV-6), không phải cọc đóng.',
+  'BP-3': 'neo đáy hồ là đế BTCT + vít xoắn (SV-1…SV-6), không phải cọc đóng.',
+  'BP-4': 'neo đáy hồ là đế BTCT + vít xoắn (SV-1…SV-6), không phải cọc đóng.',
+  'BP-5': 'neo đáy hồ là đế BTCT + vít xoắn (SV-1…SV-6), không phải cọc đóng.'
+};
+
+/** Note section 9: every row of the check table of the example raft, formula, symbols and result. */
+function checksSection(d: FinalDesign): NoteSection {
+  const r = d.rafts.reduce((a, b) => (b.tMax_kN > a.tMax_kN ? b : a), d.rafts[0]);
+  const status = (c: CheckItem) => c.status === 'PASS' ? 'ĐẠT' : c.status === 'FAIL' ? 'KHÔNG ĐẠT' : c.status === 'SKIP' ? 'KHÔNG ÁP DỤNG' : 'KHÔNG TÍNH ĐƯỢC';
+  // the engine writes decimal points; the note is Vietnamese
+  const dec = (v: unknown) => String(v).replace(/(\d)\.(\d)/g, '$1,$2');
+  return {
+    title: `9. Giải thích bảng hạng mục kiểm tra (ví dụ ${r.name})`,
+    lines: [
+      'Mỗi dòng của bảng kiểm tra trên web: công thức, ý nghĩa các ký hiệu và kết quả của bè ví dụ. Mức sử dụng = tải trọng phải chịu / khả năng chịu (đã chia hệ số an toàn): ≤ 1,00 là đạt. Dòng "KHÔNG ÁP DỤNG" là phép kiểm của loại neo khác, không dùng cho phương án cọc khoan nhồi + đế vít xoắn.',
+      ...r.checks.map((c) => {
+        const why = c.status === 'SKIP' ? NOT_APPLICABLE[c.id] ?? c.note : c.note;
+        const result = c.status === 'SKIP' || c.status === 'NA'
+          ? `${status(c)}${why ? ` — ${dec(why)}` : ''}`
+          : `${status(c)}: giá trị ${dec(c.displayActual)}${c.threshold !== '' ? `, yêu cầu ${dec(c.threshold)}` : ''}${c.utilization !== null && Number.isFinite(c.utilization) ? `, mức sử dụng ${vn(c.utilization, 2)}` : ''}.` +
+            (c.id === 'C8' ? ' Khoảng hở khi hồ xuống MNC: xem mục 4.' : '');
+        return `${c.id} — ${c.label}: ${dec(c.formula)}. ${CHECK_EXPLAIN[c.id] ?? ''} Kết quả ${r.name}: ${result}`;
+      })
+    ]
+  };
+}
+
+/** The calculation note: sections 1–8 (the method step by step) and 9 (the check table explained). */
 export function finalDesignNote(d: FinalDesign): NoteSection[] {
+  return [...noteSections(d), checksSection(d)];
+}
+
+/** Sections 1–8: the method step by step, with the worst raft and the worst base worked out. */
+function noteSections(d: FinalDesign): NoteSection[] {
   const st = d.state, A = st.anchor, E = st.env;
   const r = d.rafts.reduce((a, b) => (b.tMax_kN > a.tMax_kN ? b : a), d.rafts[0]);
   const base = d.schedule.bases.reduce((a, b) => (Math.max(b.overturnUtil, b.upliftUtil) > Math.max(a.overturnUtil, a.upliftUtil) ? b : a), d.schedule.bases[0]);
@@ -337,7 +415,7 @@ export function compensationText(mode: 'fixed' | 'seasonal' | undefined, step_m:
  */
 function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeof buildCableCuttingSchedule>): NoteSection[] {
   const st = d.state, L = st.line, P = d.points.totals, lv = d.points.levels;
-  const hv = finalDesignNote({ ...d, rafts: d.rafts.map((x) => ({ ...x, analysis: undefined })) });
+  const hv = noteSections({ ...d, rafts: d.rafts.map((x) => ({ ...x, analysis: undefined })) });
   const a = r.analysis!, g = a.governing;
   const comp = compensationText(L.levelCompensation, L.adjustStep_m);
   const drifts = d.rafts.map((x) => x.analysis!.maxDrift_m);

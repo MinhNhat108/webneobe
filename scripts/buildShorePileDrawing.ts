@@ -53,21 +53,24 @@ const vn = (v: number, d = 1) => v.toFixed(d).replace('.', ',');
 interface RaftRow { raft: string; points: number; piles: number; perPoint: number; D: number; Ltk: number; Ltot: number; bars: number; dia: number; label: string; grade: string; T: number; pullPerPile: number; util: number | null; conc: number; steel: number; clearCover: number; clearGap: number; }
 const rows: RaftRow[] = [];
 for (const b of batch) {
-  const rs = shore.filter((r) => r.raft === b.raft.name);
-  if (rs.length === 0) continue;
-  const r: PileScheduleRow = rs[0];
-  const bp = (b.results as any).checks?.find((c: any) => c.id === 'BP-2');
-  const ringR = (r.D_m * 1000) / 2 - cover_mm;
-  rows.push({
-    raft: r.raft, points: rs.length, perPoint: r.pileCount, piles: rs.reduce((s, q) => s + q.pileCount, 0),
-    D: Math.round(r.D_m * 1000), Ltk: r.Linput_m, Ltot: r.Ltotal_m,
-    bars: r.cage.totalBars, dia: r.rebarDia_mm, label: r.cage.label, grade: r.cage.grade,
-    T: r.Tmax_kN, pullPerPile: (r.Preq_kN / (sf > 0 ? sf : 1)) * gamma,
-    util: typeof bp?.utilization === 'number' ? bp.utilization : null,
-    conc: r.cage.concreteVol_m3, steel: r.cage.steel_kg,
-    clearCover: cover_mm - r.rebarDia_mm / 2 - SPIRAL_MM,
-    clearGap: (2 * Math.PI * ringR) / r.cage.totalBars - r.rebarDia_mm
-  });
+  // one row per pile type of the raft: its own pile, and the lighter single pile of the points whose line pulls less
+  for (const light of [false, true]) {
+    const rs = shore.filter((r) => r.raft === b.raft.name && r.light === light);
+    if (rs.length === 0) continue;
+    const r: PileScheduleRow = rs[0];
+    const ringR = (r.D_m * 1000) / 2 - cover_mm;
+    rows.push({
+      raft: light ? `${r.raft} (cọc đơn, dây ≤ ${vn(r.Tmax_kN)} kN)` : rs.length < shore.filter((q) => q.raft === b.raft.name).length ? `${r.raft} (${r.pileCount > 1 ? 'cọc đôi' : 'cọc của bè'})` : r.raft,
+      points: rs.length, perPoint: r.pileCount, piles: rs.reduce((s, q) => s + q.pileCount, 0),
+      D: Math.round(r.D_m * 1000), Ltk: r.Linput_m, Ltot: r.Ltotal_m,
+      bars: r.cage.totalBars, dia: r.rebarDia_mm, label: r.cage.label, grade: r.cage.grade,
+      T: r.Tmax_kN, pullPerPile: (r.Preq_kN / (sf > 0 ? sf : 1)) * gamma,
+      util: r.bp2,
+      conc: r.cage.concreteVol_m3, steel: r.cage.steel_kg,
+      clearCover: cover_mm - r.rebarDia_mm / 2 - SPIRAL_MM,
+      clearGap: (2 * Math.PI * ringR) / r.cage.totalBars - r.rebarDia_mm
+    });
+  }
 }
 const totalPoints = rows.reduce((s, r) => s + r.points, 0);
 const totalPiles = rows.reduce((s, r) => s + r.piles, 0);
@@ -233,9 +236,9 @@ const title = (x: number, y: number, s: string, sub?: string) => { tx(LY.note, x
 // ------------------------------------------------------------------ E. schedule table
 {
   const ox = -7000, oy = -11500, rowH = 420;
-  const cols: Array<[string, number]> = [['Bè', 1500], ['Điểm neo', 1400], ['Cọc/điểm', 1400], ['Số cọc', 1200], ['D (mm)', 1200], ['L_tk (m)', 1400], ['Thép chủ', 1500], ['Mác thép', 1500], ['T dây (kN)', 1600], ['γ·T/cọc (kN)', 2000], ['HSSD uốn', 1500], ['BT/cọc (m³)', 1800], ['Thép/cọc (kg)', 1900]];
+  const cols: Array<[string, number]> = [['Bè / loại cọc', 5200], ['Điểm neo', 1400], ['Cọc/điểm', 1400], ['Số cọc', 1200], ['D (mm)', 1200], ['L_tk (m)', 1400], ['Thép chủ', 1500], ['Mác thép', 1500], ['T dây (kN)', 1600], ['γ·T/cọc (kN)', 2000], ['HSSD uốn', 1500], ['BT/cọc (m³)', 1800], ['Thép/cọc (kg)', 1900]];
   const W = cols.reduce((s, c) => s + c[1], 0);
-  title(ox, oy + 1100, `E. BẢNG THỐNG KÊ CỌC KHOAN NHỒI VEN BỜ (mặt bằng ${rows.length} bè, bản 08/10/2026)`, `γ = ${vn(gamma)}; cọc đôi: mỗi cọc chịu T / (2 × ${vn(groupEff)}). HSSD uốn = γ·M_max / M_rd (TCVN 5574:2018, hướng lồng thép bất lợi nhất).`);
+  title(ox, oy + 1100, `E. BẢNG THỐNG KÊ CỌC KHOAN NHỒI VEN BỜ (mặt bằng ${new Set(shore.map((r) => r.raft)).size} bè, bản 28/10/2026)`, `γ = ${vn(gamma)}; cọc đôi: mỗi cọc chịu T / (2 × ${vn(groupEff)}). HSSD uốn = γ·M_max / M_rd (TCVN 5574:2018, hướng lồng thép bất lợi nhất).`);
   const cells = (y: number, vals: string[]) => { let x = ox; vals.forEach((v, i) => { tx(LY.note, x + 80, y + 110, v); x += cols[i][1]; }); };
   cells(oy, cols.map((c) => c[0]));
   rows.forEach((r, i) => cells(oy - (i + 1) * rowH, [r.raft, String(r.points), String(r.perPoint), String(r.piles), String(r.D), vn(r.Ltk), r.label, r.grade, vn(r.T), vn(r.pullPerPile), r.util === null ? '–' : vn(r.util, 2), vn(r.conc, 2), vn(r.steel, 0)]));

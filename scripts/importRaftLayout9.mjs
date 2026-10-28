@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 /**
- * importRaftLayout9.mjs — switch the project to the 9-raft plan of 2026-10-08.
+ * importRaftLayout9.mjs — switch the project to a new client raft plan.
  *
- *   node scripts/importRaftLayout9.mjs "Tài liệu hồ Huổi Vanh/HỒ HUỔI VANH.dxf" [--dry]
+ *   node scripts/importRaftLayout9.mjs "<plan.dxf>" [--dry]
  *
- * 1. Reads the nine raft outlines from the client's floor plan (layer
- *    A-DETL-THIN, LINE segments chained into closed loops, mm -> m) and names
- *    each one after the label drawn inside it (layer A-ANNO-NOTE):
- *    1, 2, 3, 3A (old 4+5), 5A (old 6+7), 6 (old 8), 7 (old 9), 8 (old 10+11),
- *    9 (old 12). Writes src/data/huoiVanhRaftPolygons_v2.json.
- * 2. Carries the SHORE lines over: a shore pile is a staked point on the bank
- *    and does not move; each line is handed to the raft whose new outline is
- *    nearest to its old cleat and is re-coded B<raft>-Dnn. Every LAKE-BED line
- *    is dropped: the bed anchors are design output and are laid out again by
+ * Plans so far: 2026-10-08 "HỒ HUỔI VANH.dxf" (9 rafts 1, 2, 3, 3A, 5A, 6, 7, 8, 9);
+ * 2026-10-27 "CHUGIAP-HOHUOIVANH ver 3 - Floor Plan - BỐ TRÍ PHAO BÈ.dwg" (4 rafts:
+ * 1 = old 1+2+3, 2 = old 3A+5A, 3 = old 6 cut down, 4 = old 7+8; old 9 dropped).
+ *
+ * 1. Reads the raft outlines from the client's floor plan (layer A-DETL-THIN,
+ *    LINE segments chained into closed loops, mm -> m) and names each one after
+ *    the label drawn inside it (layer A-ANNO-NOTE), in natural label order.
+ *    Writes src/data/huoiVanhRaftPolygons_v2.json.
+ * 2. Carries the staked SHORE lines over where they still fit: a shore pile is a
+ *    staked point on the bank and does not move. A line is kept when its old
+ *    cleat lies within CLEAT_SNAP of the new outline of the nearest raft (the
+ *    cleat is moved onto the outline), its pile is outside every raft and the
+ *    cable crosses no raft; it is re-coded B<raft>-Dnn. The other staked lines
+ *    belonged to an edge that no longer exists and are dropped. Every LAKE-BED
+ *    line is dropped: the bed anchors are design output and are laid out again by
  *    scripts/planMooringLayoutV2.mjs, which must be run next.
  *
  * The file names keep their "_v2" suffix (they are imported all over the app);
@@ -28,7 +34,8 @@ const COORDS = path.join(ROOT, 'src/data/huoiVanhCoordinates_v2.json');
 const dxfPath = process.argv[2];
 const dry = process.argv.includes('--dry');
 if (!dxfPath) { console.error('usage: node scripts/importRaftLayout9.mjs "<plan.dxf>" [--dry]'); process.exit(1); }
-const ORDER = ['1', '2', '3', '3A', '5A', '6', '7', '8', '9'];
+/** m, an old cleat this close to the new outline keeps its staked shore pile. */
+const CLEAT_SNAP = 1.0;
 
 // ------------------------------------------------------------------ DXF
 const L = fs.readFileSync(dxfPath, 'utf8').split(/\r?\n/);
@@ -98,9 +105,8 @@ const rafts = loops.filter((r) => Math.abs(signedArea(r)) > 500).map((ring) => {
   const pts = signedArea(ring) > 0 ? ring : [...ring].reverse();
   return { label: label.text, ring: pts };
 });
-if (rafts.length !== ORDER.length || ORDER.some((n) => !rafts.find((r) => r.label === n))) {
-  throw new Error(`expected rafts ${ORDER.join(', ')}; found ${rafts.map((r) => r.label).sort().join(', ')}`);
-}
+const ORDER = rafts.map((r) => r.label).sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+if (new Set(ORDER).size !== ORDER.length) throw new Error(`two outlines carry the same label: ${ORDER.join(', ')}`);
 const polygons = ORDER.map((label, i) => {
   const r = rafts.find((q) => q.label === label).ring;
   const c = centroid(r);
@@ -116,14 +122,34 @@ const polygons = ORDER.map((label, i) => {
 
 // ------------------------------------------------------------------ shore lines
 const old = JSON.parse(fs.readFileSync(COORDS, 'utf8'));
-const already = old.every((c) => polygons.some((p) => p.name === c.raft));
 const counters = {};
 // A shore line marked `converted` was a lake-bed line turned into a bored pile by the layout
 // script: design output, dropped here and re-planned like the lake-bed lines.
-const lines = old.filter((c) => c.type === 'SHORE' && !c.converted).map((c) => {
+const closest = (p, a, b) => {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy)));
+  return { x: a.x + t * dx, y: a.y + t * dy };
+};
+const snapToRing = (p, ring) => ring.map((q, i) => closest(p, q, ring[(i + 1) % ring.length]))
+  .reduce((best, q) => (Math.hypot(q.x - p.x, q.y - p.y) < Math.hypot(best.x - p.x, best.y - p.y) ? q : best));
+const orient = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+const segCross = (a, b, c, d) => orient(a, b, c) * orient(a, b, d) < -1e-9 && orient(c, d, a) * orient(c, d, b) < -1e-9;
+const crossesRaft = (a, b) => polygons.some((p) => p.points.some((q, i) => segCross(a, b, q, p.points[(i + 1) % p.points.length])));
+const dropped = [];
+const lines = old.filter((c) => c.type === 'SHORE' && !c.converted).flatMap((c) => {
   const cleat = { x: c.xRaft, y: c.yRaft };
   const owner = polygons.reduce((best, p) => (distToRing(cleat, p.points) < distToRing(cleat, best.points) ? p : best), polygons[0]);
-  return { ...c, raft: owner.name, _old: c.code };
+  const anchor = { x: c.xAnchor, y: c.yAnchor };
+  const snap = snapToRing(cleat, owner.points);
+  // nudge the cable end 1 cm off the outline so the crossing test does not see the edge it starts on
+  const span = Math.hypot(anchor.x - snap.x, anchor.y - snap.y);
+  const start = { x: snap.x + ((anchor.x - snap.x) / span) * 0.01, y: snap.y + ((anchor.y - snap.y) / span) * 0.01 };
+  const why = distToRing(cleat, owner.points) > CLEAT_SNAP ? 'edge gone'
+    : polygons.some((p) => inRing(anchor, p.points)) ? 'pile inside a raft'
+      : inRing(start, owner.points) || crossesRaft(start, anchor) ? 'cable over a raft' : null;
+  if (why) { dropped.push(`${c.code} (${why})`); return []; }
+  const azimuth = Math.round((((Math.atan2(anchor.x - snap.x, anchor.y - snap.y) * 180) / Math.PI + 360) % 360) * 10) / 10;
+  return [{ ...c, raft: owner.name, xRaft: Math.round(snap.x * 100) / 100, yRaft: Math.round(snap.y * 100) / 100, span: Math.round(span * 100) / 100, azimuth, _old: c.code }];
 });
 // keep the rafts in catalogue order and re-code
 const out = [];
@@ -137,8 +163,8 @@ for (const p of polygons) {
 }
 
 console.log(polygons.map((p) => `${p.name}: ${p.area_m2} m2, P ${p.perimeter_m} m, ${p.points.length} pts, ${counters[p.name] ?? 0} shore lines`).join('\n'));
-console.log(`total area ${polygons.reduce((s, p) => s + p.area_m2, 0)} m2; shore lines ${out.length}; bed lines dropped ${old.length - out.length}`);
-if (already) console.log('note: the line file already used the 9-raft names (re-import)');
+console.log(`total area ${polygons.reduce((s, p) => s + p.area_m2, 0)} m2; staked shore lines kept ${out.length}, dropped ${dropped.length}; other lines dropped ${old.length - out.length - dropped.length}`);
+if (dropped.length) console.log(`dropped staked shore lines: ${dropped.join(', ')}`);
 if (!dry) {
   fs.writeFileSync(POLYS, JSON.stringify(polygons, null, 2) + '\n');
   fs.writeFileSync(COORDS, JSON.stringify(out, null, 2) + '\n');

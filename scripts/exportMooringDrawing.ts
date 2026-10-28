@@ -1,10 +1,10 @@
 /**
  * Writes the mooring layout drawing and the anchor schedule of the design as
- * it stands in the repository (9 rafts, shore bored piles D350, lake-bed RC
+ * it stands in the repository (shore bored piles D350, lake-bed RC
  * bases with screw piles) — the same files the web buttons "Xuất CAD" and
  * "Bảng Neo" download, produced without a browser.
  *
- *   npx vite-node scripts/exportMooringDrawing.ts [outDir]                    (Hồ Huổi Vanh, docs/mat-bang-neo-9-be)
+ *   npx vite-node scripts/exportMooringDrawing.ts [outDir]                    (Hồ Huổi Vanh, docs/mat-bang-neo-huoi-vanh)
  *   npx vite-node scripts/exportMooringDrawing.ts -- [outDir] --lake=ban-mong (Hồ Bản Mòng, docs/mat-bang-neo-ban-mong)
  */
 import './selectLake';
@@ -24,7 +24,7 @@ import { ACTIVE_LAKE_ID } from '../src/data/lakes';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const HV = ACTIVE_LAKE_ID === 'huoi-vanh';
-const outDir = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? path.join(here, HV ? '../docs/mat-bang-neo-9-be' : `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}`);
+const outDir = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? path.join(here, HV ? '../docs/mat-bang-neo-huoi-vanh' : `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}`);
 const dflt = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
 const state = buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[0], dflt().anchor);
 const batch = HUOI_VANH_RAFTS.map((raft) => {

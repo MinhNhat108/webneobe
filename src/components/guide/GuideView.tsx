@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { ActiveSection } from '../layout/Sidebar';
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
+import { LAYOUT_COUNTS, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
 import {
   BookOpen,
   FolderKanban,
@@ -97,6 +98,12 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
         <div className="p-3 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
           ⚠️ Các ví dụ số trong hướng dẫn này (số bè, số cọc, cao trình MNC 380,0 / MNDB 384,5 / MNLKT 386,0 m, độ chùng cáp…) là của Hồ Huổi Vanh.
           Với {ACTIVE_LAKE.name}, cách tính giống hệt; số liệu đúng của hồ xem ở các Mục 1–10 (MNC {ACTIVE_LAKE.levels.mnc_m} / MNDB {ACTIVE_LAKE.levels.mndb_m} / MNLKT {ACTIVE_LAKE.levels.mnlkt_m} m).
+        </div>
+      )}
+      {ACTIVE_LAKE_ID === 'huoi-vanh' && (
+        <div className="p-3 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
+          ⚠️ Các ví dụ số trong hướng dẫn này (9 bè, 295 tuyến cáp, 231 cọc bờ, 32 đế, tên dây B6-D04…) là của mặt bằng 9 bè ngày 08/10/2026.
+          Mặt bằng hiện tại (27/10/2026) có {RAFT_POLYGONS_V2.length} bè ({RAFT_POLYGONS_V2.map((p) => p.name).join(', ')}), {LAYOUT_COUNTS.lines} tuyến cáp, {LAYOUT_COUNTS.shorePoints} điểm cọc bờ, {LAYOUT_COUNTS.bedBases} đế đáy; cách dùng phần mềm không đổi, số liệu đúng xem ở các Mục 1–10.
         </div>
       )}
       {/* Modern Header Banner */}

@@ -23,19 +23,19 @@ describe('resolveRaftState — one rule for every multi-raft view', () => {
   });
 
   it('the active raft IS the edited project; a project-wide edit is not a raft deviation', () => {
-    const start = buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[4], anchor());
+    const start = buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[3], anchor());
     const edited: ProjectState = {
       ...start,
       env: { ...start.env, windSpeed_ms: 35 },
       anchor: { ...start.anchor, shoreL_m: start.anchor.shoreL_m + 1 }
     };
-    const r = resolveRaftState(edited, 5, HUOI_VANH_RAFTS[4], anchor());
+    const r = resolveRaftState(edited, 4, HUOI_VANH_RAFTS[3], anchor());
     expect(r.state).toBe(edited);
     expect(r.deviations).toEqual([
       { label: 'L_tk cọc bờ (m)', design: start.anchor.shoreL_m, current: start.anchor.shoreL_m + 1 }
     ]);
     // Another raft takes the wind edit but keeps its own design piles.
-    const other = resolveRaftState(edited, 5, HUOI_VANH_RAFTS[0], anchor());
+    const other = resolveRaftState(edited, 4, HUOI_VANH_RAFTS[0], anchor());
     expect(other.state.env.windSpeed_ms).toBe(35);
     expect(other.state.anchor.shoreL_m).toBe(HUOI_VANH_RAFTS[0].shorePileL_m);
   });

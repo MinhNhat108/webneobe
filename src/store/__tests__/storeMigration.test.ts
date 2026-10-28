@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
+import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2 } from '../../data/huoiVanhLayout';
 import { buildScrewBaseSchedule } from '../../lib/io/screwBaseSchedule';
 import { buildPileSchedule } from '../../lib/io/pileSchedule';
@@ -25,6 +25,8 @@ vi.hoisted(() => {
 });
 const { useProjectStore } = await import('../useProjectStore');
 
+/** The 4 rafts of the plan of 2026-10-27. */
+const FOUR = ['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4'];
 const NINE = ['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9'];
 const opts = () => useProjectStore.persist.getOptions();
 const migrate = (state: any, version: number) => opts().migrate!(JSON.parse(JSON.stringify(state)), version) as any;
@@ -46,16 +48,16 @@ const legacy12 = () => {
 };
 
 describe('A browser holding the old 12-raft project', () => {
-  it('the store ships the 9-raft design, lake-bed anchors on screw-pile bases', () => {
+  it('the store ships the 4-raft design, lake-bed anchors on screw-pile bases', () => {
     const s = useProjectStore.getState();
-    expect(s.raftsSummary.map((r) => r.name)).toEqual(NINE);
+    expect(s.raftsSummary.map((r) => r.name)).toEqual(FOUR);
     expect(mooringOptionOf(s.currentProject)).toBe('PA3_SCREW_BASE');
     expect(opts().version).toBeGreaterThanOrEqual(18);
   });
 
-  it('is migrated to the 9 rafts, and keeps the quotation prices the user typed', () => {
+  it('is migrated to the 4 rafts, and keeps the quotation prices the user typed', () => {
     const s = rehydrate(legacy12(), 15);
-    expect(s.raftsSummary.map((r: any) => r.name)).toEqual(NINE);
+    expect(s.raftsSummary.map((r: any) => r.name)).toEqual(FOUR);
     expect(s.activeRaftId).toBe(1);
     expect(s.currentProject.anchor.bedAnchorOption).toBe('PA3_SCREW_BASE');
     expect(s.currentProject.env.windSpeed_ms).toBe(20);
@@ -65,12 +67,20 @@ describe('A browser holding the old 12-raft project', () => {
   it('is repaired on load even when its stored version number is already current', () => {
     // e.g. a cache written by an intermediate build: the version check alone would let it through
     const s = rehydrate(legacy12(), opts().version ?? 18);
-    expect(s.raftsSummary.map((r: any) => r.name)).toEqual(NINE);
+    expect(s.raftsSummary.map((r: any) => r.name)).toEqual(FOUR);
     expect(s.currentProject.anchor.bedAnchorOption).toBe('PA3_SCREW_BASE');
     expect(HUOI_VANH_RAFTS.some((r) => r.id === s.activeRaftId)).toBe(true);
   });
 
-  it('a 9-raft cache with OLD catalogue values takes the shipped catalogue but keeps the Tab 2 inputs', () => {
+  it('a browser holding the 9-raft plan (2026-10-08, BÈ 3A … BÈ 9) restarts from the 4-raft design', () => {
+    const now = useProjectStore.getState();
+    const nine = NINE.map((name, i) => ({ ...HUOI_VANH_RAFTS[0], id: i + 1, name }));
+    const s = rehydrate({ currentProject: JSON.parse(JSON.stringify(now.currentProject)), projectList: now.projectList, activeRaftId: 5, raftsSummary: nine, costParams: now.costParams }, opts().version ?? 18);
+    expect(s.raftsSummary.map((r: any) => r.name)).toEqual(FOUR);
+    expect(s.activeRaftId).toBe(1);
+  });
+
+  it('a 4-raft cache with OLD catalogue values takes the shipped catalogue but keeps the Tab 2 inputs', () => {
     const now = useProjectStore.getState();
     const stale = {
       currentProject: { ...JSON.parse(JSON.stringify(now.currentProject)), env: { ...now.currentProject.env, windSpeed_ms: 27 } },
@@ -81,6 +91,22 @@ describe('A browser holding the old 12-raft project', () => {
     const s = rehydrate(stale, opts().version ?? 18);
     expect(s.raftsSummary).toEqual(HUOI_VANH_RAFTS);
     expect(s.currentProject.env.windSpeed_ms).toBe(27); // the user's own input survives
+  });
+
+  it('a Huổi Vanh project saved with the old 12° panel tilt takes the 10° of 2026-10-28; another tilt the user typed is kept', () => {
+    const now = useProjectStore.getState();
+    const saved = (tilt: number) => ({ currentProject: { ...JSON.parse(JSON.stringify(now.currentProject)), raft: { ...now.currentProject.raft, solarTilt_deg: tilt } }, projectList: now.projectList, activeRaftId: 1, raftsSummary: HUOI_VANH_RAFTS, costParams: now.costParams });
+    expect(HUOI_VANH_DEFAULT_PROJECT.raft.solarTilt_deg).toBe(10);
+    expect(rehydrate(saved(12), 18).currentProject.raft.solarTilt_deg).toBe(10);
+    expect(rehydrate(saved(15), 18).currentProject.raft.solarTilt_deg).toBe(15);
+  });
+
+  it('a Huổi Vanh project saved with the old panel count (18.354 shared by area) takes the count of the 28/10 drawing; a count the user typed is kept', () => {
+    const now = useProjectStore.getState();
+    const saved = (n: number) => ({ currentProject: { ...JSON.parse(JSON.stringify(now.currentProject)), raft: { ...now.currentProject.raft, solarPanelCount: n } }, projectList: now.projectList, activeRaftId: 1, raftsSummary: HUOI_VANH_RAFTS, costParams: now.costParams });
+    expect(HUOI_VANH_RAFTS.find((r) => r.id === 1)!.name).toBe('BÈ 1');
+    expect(rehydrate(saved(2696), 19).currentProject.raft.solarPanelCount).toBe(2800);
+    expect(rehydrate(saved(2500), 19).currentProject.raft.solarPanelCount).toBe(2500);
   });
 
   it('does not write into the shared design constants while migrating', () => {
@@ -100,21 +126,21 @@ describe('What the export buttons write after that migration', () => {
   const batch = useProjectStore.getState().calculateAllRafts();
   const { currentProject, results } = useProjectStore.getState();
 
-  it('the batch covers exactly the 9 rafts of the layout file', () => {
-    expect(batch.map((b) => b.raft.name)).toEqual(NINE);
-    expect([...new Set(MOORING_LINES_V2.map((l) => l.raft))].sort()).toEqual([...NINE].sort());
+  it('the batch covers exactly the 4 rafts of the layout file', () => {
+    expect(batch.map((b) => b.raft.name)).toEqual(FOUR);
+    expect([...new Set(MOORING_LINES_V2.map((l) => l.raft))].sort()).toEqual([...FOUR].sort());
   });
 
-  it('"Bảng Neo" and "Xuất CAD": 231 shore piles + 32 lake-bed bases for 295 lines, every anchor on one of the 9 rafts', () => {
+  it('"Bảng Neo" and "Xuất CAD": 175 shore piles + 36 lake-bed bases for 222 lines, every anchor on one of the 4 rafts', () => {
     const schedule = buildScrewBaseSchedule(currentProject, results, batch);
-    expect([schedule.shorePiles.length, schedule.bases.length]).toEqual([231, 32]);
+    expect([schedule.shorePiles.length, schedule.bases.length]).toEqual([175, 36]);
     const piles = buildPileSchedule(currentProject, results, batch);
-    expect(piles).toHaveLength(295);
-    for (const p of piles) expect(NINE, p.pileId).toContain(p.raft);
+    expect(piles).toHaveLength(222);
+    for (const p of piles) expect(FOUR, p.pileId).toContain(p.raft);
     const dxf = buildMooringScrewBaseDxf(currentProject, results, batch);
-    expect([dxf.raftCount, dxf.shorePileCount, dxf.baseCount]).toEqual([9, 231, 32]);
-    for (const gone of ['B\\U+00C8 10', 'B\\U+00C8 11', 'B\\U+00C8 12']) expect(dxf.dxf).not.toContain(gone); // "BÈ 10" … as escaped in the file
-    expect(dxf.dxf).toContain('B\\U+00C8 3A');
+    expect([dxf.raftCount, dxf.shorePileCount, dxf.baseCount]).toEqual([4, 175, 36]);
+    for (const gone of ['B\\U+00C8 3A', 'B\\U+00C8 5A', 'B\\U+00C8 9']) expect(dxf.dxf).not.toContain(gone); // "BÈ 3A" … as escaped in the file
+    expect(dxf.dxf).toContain('B\\U+00C8 4');
   });
 
   it('every anchor takes its values from its OWN raft, not from the active raft as a fallback', () => {
@@ -122,7 +148,8 @@ describe('What the export buttons write after that migration', () => {
     for (const b of batch) {
       const rows = piles.filter((p) => p.raft === b.raft.name);
       expect(rows.length, b.raft.name).toBe(b.raft.cableCount);
-      for (const p of rows) expect(p.Tmax_kN, p.pileId).toBeCloseTo(b.results.t_max_intact_kN, 2);
+      // the lighter single shore pile of the raft is designed for its own tension (catalogue shorePileLight)
+      for (const p of rows) expect(p.Tmax_kN, p.pileId).toBeCloseTo(p.light ? b.raft.shorePileLight!.tension_kN : b.results.t_max_intact_kN, 2);
     }
   });
 });

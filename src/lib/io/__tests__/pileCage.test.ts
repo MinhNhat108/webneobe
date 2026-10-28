@@ -91,31 +91,40 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
       // shore cable shackled 0.1 m above the ground; lake-bed pile 1.0 m above the bed
       expect(r.Ltotal_m, r.pileId).toBeCloseTo(r.Linput_m + (r.type === 'SHORE' ? 0.1 : 1.0), 9);
       expect(r.cage.segments_m, r.pileId).toEqual([r.Ltotal_m]);
-      expect(r.cage.grade, r.pileId).toBe('CB400-V'); // no raft needs CB500-V at the 20 m/s default
+      // at the 20 m/s default (tilt 10°, 18.914 panels) the piles of BÈ 2 and the shore piles of BÈ 4 use CB500-V:
+      // 6Φ28 is the largest cage within 4 % of D350; BÈ 1 (single 6Φ28, twin 6Φ25), BÈ 3 (6Φ25) and the lake-bed piles
+      // of BÈ 4 stay CB400-V
+      expect(r.cage.grade, r.pileId).toBe(r.raft === 'BÈ 2' || (r.raft === 'BÈ 4' && r.type === 'SHORE') ? 'CB500-V' : 'CB400-V');
     }
-    expect(rows.find((r) => r.raft === 'BÈ 2' && r.type === 'BED')!.cage.label).toBe('4Φ25');
-    expect(rows.find((r) => r.raft === 'BÈ 2' && r.type === 'SHORE')!.cage.label).toBe('6Φ28');
-    expect(rows.find((r) => r.raft === 'BÈ 3A' && r.type === 'SHORE')!.cage.label).toBe('8Φ25');
-    expect(rows.find((r) => r.raft === 'BÈ 3A' && r.type === 'SHORE')!.pileCount).toBe(2);
-    expect(rows.find((r) => r.raft === 'BÈ 5A' && r.type === 'SHORE')!.cage.label).toBe('6Φ32');
-    expect(rows.find((r) => r.raft === 'BÈ 5A' && r.type === 'SHORE')!.pileCount).toBe(1);
+    expect(rows.find((r) => r.raft === 'BÈ 3' && r.type === 'BED')!.cage.label).toBe('4Φ22');
+    expect(rows.find((r) => r.raft === 'BÈ 3' && r.type === 'SHORE')!.cage.label).toBe('6Φ25');
+    expect(rows.find((r) => r.raft === 'BÈ 3' && r.type === 'SHORE')!.pileCount).toBe(1);
+    expect(rows.find((r) => r.raft === 'BÈ 4' && r.type === 'SHORE')!.cage.label).toBe('6Φ28');
+    expect(rows.find((r) => r.raft === 'BÈ 1' && r.type === 'SHORE')!.cage.label).toBe('6Φ28');
+    expect(rows.find((r) => r.raft === 'BÈ 1' && r.type === 'SHORE')!.pileCount).toBe(1);
+    // twin piles only where the line's own tension needs them: B1-D15, B1-D16 (6Φ25) and B2-D29 (6Φ28), within 4 % of
+    // D350; every other shore point of BÈ 1, 2 and 4 takes the lighter single pile 6Φ28 (catalogue shorePileLight)
+    const twin = rows.filter((r) => r.type === 'SHORE' && r.pileCount > 1);
+    expect(twin.map((r) => [r.code, r.cage.label, r.light])).toEqual([['B1-D15', '6Φ25', false], ['B1-D16', '6Φ25', false], ['B2-D29', '6Φ28', false]]);
+    expect(rows.filter((r) => r.light).every((r) => r.pileCount === 1 && r.cage.label === '6Φ28')).toBe(true);
+    expect(rows.filter((r) => r.light)).toHaveLength(44 + 46 + 55);
   });
 
-  it('bill of materials at the 20 m/s default (shore piles + PA1 lake-bed piles): 345 piles (262 bored + 83 driven) at 295 points, 2 502.2 m, 261 m3, about 75.7 t of steel, and the steel adds up', () => {
+  it('bill of materials at the 20 m/s default (shore piles + PA1 lake-bed piles): 256 piles (178 bored + 78 driven) at 222 points, 1 933.8 m, 206 m3, about 52 t of steel, and the steel adds up', () => {
     const { state, results, batch } = setup();
     const rows = buildPileSchedule(state, results, batch);
     const m = summarisePileMaterials(rows);
-    expect([m.anchorPoints, m.piles, m.shorePiles, m.bedPiles]).toEqual([295, 345, 262, 83]);
-    expect(m.totalLength_m).toBeCloseTo(2502.2, 6);
-    expect(m.concrete_m3).toBeCloseTo(261.06, 1);
+    expect([m.anchorPoints, m.piles, m.shorePiles, m.bedPiles]).toEqual([222, 256, 178, 78]);
+    expect(m.totalLength_m).toBeCloseTo(1933.8, 6);
+    expect(m.concrete_m3).toBeCloseTo(206.01, 1);
     const main = Object.values(m.mainSteelByDia_kg).reduce((s, v) => s + v, 0);
     expect(m.steel_kg).toBeCloseTo(main + m.stirrupSteel_kg + m.hookSteel_kg, 6);
     expect(m.steel_kg).toBeCloseTo(rows.reduce((s, r) => s + r.pileCount * r.cage.steel_kg, 0), 6);
-    expect(Object.keys(m.mainSteelByDia_kg).map(Number).sort((a, b) => a - b)).toEqual([25, 28, 32]);
-    expect(m.steel_kg / 1000).toBeGreaterThan(75);
-    expect(m.steel_kg / 1000).toBeLessThan(76.5);
-    // lifting hooks only on the 83 precast lake-bed piles
-    expect(m.hookSteel_kg).toBeCloseTo(83 * 3.8, 6);
+    expect(Object.keys(m.mainSteelByDia_kg).map(Number).sort((a, b) => a - b)).toEqual([22, 25, 28, 32]);
+    expect(m.steel_kg / 1000).toBeGreaterThan(51.3);
+    expect(m.steel_kg / 1000).toBeLessThan(52.0);
+    // lifting hooks only on the 78 precast lake-bed piles
+    expect(m.hookSteel_kg).toBeCloseTo(78 * 3.8, 6);
   });
 
   it('the workbook lists the cage of every pile and the materials table', () => {
@@ -138,10 +147,10 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     expect(first[col('KL THÉP 1 CỌC (kg)')]).toBe(Number(rows[0].cage.steel_kg.toFixed(1)));
     const find = (label: string) => data.find((r) => r[0] === label);
     expect(find('BẢNG TỔNG HỢP VẬT TƯ CỌC TOÀN HỒ')).toBeDefined();
-    expect(find('Tổng số cọc')![1]).toBe(345);
-    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(2502.2);
-    expect(find('Tổng bê tông B25')![1]).toBe(261.1);
-    for (const d of [25, 28, 32]) expect(find(`Thép chủ Φ${d}`)![1]).toBeGreaterThan(0);
+    expect(find('Tổng số cọc')![1]).toBe(256);
+    expect(find('Tổng chiều dài cọc (L_tk + đoạn nhô)')![1]).toBe(1933.8);
+    expect(find('Tổng bê tông B25')![1]).toBe(206);
+    for (const d of [22, 25, 28]) expect(find(`Thép chủ Φ${d}`)![1]).toBeGreaterThan(0);
     expect(find('TỔNG THÉP')![1]).toBe(Number((summarisePileMaterials(rows).steel_kg / 1000).toFixed(2)));
   });
 
@@ -153,26 +162,26 @@ describe('Pile schedule with reinforcement — Huổi Vanh', () => {
     const texts = (layer: string) => doc.entities.filter((e: any) => e.layer === layer && e.type === 'TEXT').map((e: any) => e.text as string);
     const table = texts(DXF_LAYERS.schedule.name);
     for (const c of ['THEP CHU', 'THEP DAI', 'DOAN COC', 'L_tong (m)']) expect(table, c).toContain(c);
-    expect(table).toContain('4D25 CB400-V'); // a square lake-bed pile
-    expect(table).toContain('6D32 CB400-V'); // BÈ 5A round shore pile
+    expect(table).toContain('4D22 CB400-V'); // a square lake-bed pile (BÈ 3)
+    expect(table).toContain('6D28 CB500-V'); // BÈ 2 round shore pile
     expect(table).toContain('D350 KHOAN NHOI');
     expect(table).toContain('350x350 DUC SAN');
-    expect(table.filter((x) => x === '1 DOAN')).toHaveLength(64);
-    expect(table.filter((x) => x === 'DO TAI CHO')).toHaveLength(231);
+    expect(table.filter((x) => x === '1 DOAN')).toHaveLength(47);
+    expect(table.filter((x) => x === 'DO TAI CHO')).toHaveLength(175);
     const detail = texts(DXF_LAYERS.detail.name);
-    expect(detail.filter((x) => x.includes('COC KHOAN NHOI TRON D350'))).toHaveLength(2); // 6 and 8 bars
+    expect(detail.filter((x) => x.includes('COC KHOAN NHOI TRON D350'))).toHaveLength(1); // every shore pile has 6 bars
     expect(detail.filter((x) => x.includes('COC VUONG 350x350 - 4 THANH'))).toHaveLength(1);
     expect(detail.some((x) => x.includes('BAT LOI NHAT'))).toBe(true);
-    expect(detail.some((x) => x.includes('CUM 2 COC'))).toBe(true); // BÈ 3A has twin piles at the 20 m/s default
+    expect(detail.some((x) => x.includes('CUM 2 COC'))).toBe(true); // B1-D15, B1-D16, B2-D29 have twin piles at the 20 m/s default
     expect(detail.some((x) => x.includes('NGUYEN MOT DOAN'))).toBe(true);
     // the condition the 4-bar design depends on is written on the sheet
     expect(detail.some((x) => x.includes('YEU CAU THI CONG: cap coc bo moc sat co coc, cach mat dat <= 0.1 m'))).toBe(true);
-    expect(detail.some((x) => x.includes('345 coc tai 295 diem neo'))).toBe(true);
-    // round sections: concrete + spiral circles and 6 + 8 bars; the square section: 4 bars
+    expect(detail.some((x) => x.includes('256 coc tai 222 diem neo'))).toBe(true);
+    // round sections: concrete + spiral circles and 4 + 6 bars; the square section: 4 bars
     const circles = doc.entities.filter((e: any) => e.layer === DXF_LAYERS.detail.name && e.type === 'CIRCLE');
     // + the shore pile head detail: pin hole, shackle, pile outline on plan, 4 anchor bars
-    // + the twin-pile cluster of BÈ 3A: 2 pile circles
-    expect(circles).toHaveLength(2 * 2 + (6 + 8) + 4 + 7 + 2);
+    // + the twin-pile cluster: 2 pile circles
+    expect(circles).toHaveLength(2 * 1 + 6 + 4 + 7 + 2); // one round section (every shore pile has 6 bars)
     // without the option the details are left out
     const plain = buildMooringPileDxf(state, results, batch, { includeDetails: false });
     expect(plain.dxf).not.toContain('CHI TIET CAU TAO COC');

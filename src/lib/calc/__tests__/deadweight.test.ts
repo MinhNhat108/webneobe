@@ -8,9 +8,10 @@ import { buildPileModels, buildBlockAnchors, blockUtilisation, computeRaftMoorin
 import type { ProjectState } from '../types';
 
 const dflt = () => JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)) as ProjectState;
-const start = () => buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[0], dflt().anchor);
+// BÈ 2: BÈ 1 of the 4-raft plan has no lake-bed line
+const start = () => buildRaftProjectState(dflt(), HUOI_VANH_RAFTS[1], dflt().anchor);
 const pa2 = (s: ProjectState = start()): ProjectState => ({ ...s, anchor: { ...s.anchor, bedAnchorOption: 'PA2_DEADWEIGHT' } });
-const compare = (s: ProjectState = start()) => compareMooringOptions(s, 1, HUOI_VANH_RAFTS, dflt().anchor);
+const compare = (s: ProjectState = start()) => compareMooringOptions(s, 2, HUOI_VANH_RAFTS, dflt().anchor);
 
 describe('Gravity block (PA2) sizing', () => {
   it('reproduces the hand calculation: T = 100 kN at 30°, μ = 0.35, SF 1.5 / 1.5', () => {
@@ -158,6 +159,7 @@ describe('PA2 in the calculation engine (checks DW-1..DW-4)', () => {
       const pa1 = calculateProject({ ...s, anchor: { ...s.anchor, bedAnchorOption: 'PA1_PILE' } });
       const status = (id: string) => r.checks.find((c) => c.id === id)?.status;
       for (const id of ['BP-3', 'BP-4', 'BP-5', 'C11']) expect(status(id), `${item.name} ${id}`).toBe('SKIP');
+      if (!item.bedAnchors) { expect(r.bedBlock, item.name).toBeUndefined(); expect(status('DW-1'), item.name).toBeUndefined(); continue; }
       const verdict = 'PASS';
       for (const id of ['DW-1', 'DW-2', 'DW-3', 'DW-4']) expect(status(id), `${item.name} ${id}`).toBe('PASS');
       for (const id of ['BP-1', 'BP-2']) {
@@ -184,14 +186,15 @@ describe('PA2 in the calculation engine (checks DW-1..DW-4)', () => {
 describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
   it('uses the engine tension and bed cable angle of every raft, whichever option is selected', () => {
     const c = compare();
-    expect(c.rows).toHaveLength(9);
-    expect(c.shoreCount).toBe(231);
-    expect(c.bedCount).toBe(64);
+    expect(c.rows).toHaveLength(4);
+    expect(c.shoreCount).toBe(175);
+    expect(c.bedCount).toBe(47);
     for (const row of c.rows) {
       const item = HUOI_VANH_RAFTS.find((r) => r.name === row.name)!;
       const r = calculateProject(buildRaftProjectState(dflt(), item, dflt().anchor));
       expect(row.tension_kN, row.name).toBe(r.t_max_intact_kN);
-      expect(row.bedCableAngle_deg, row.name).toBe(r.bedCableAngle_deg);
+      expect(row.bedCableAngle_deg, row.name).toBe(r.bedCableAngle_deg ?? 0);
+      if (!row.bedCount) { expect(row.bedPileUtil, row.name).toBeNull(); continue; } // BÈ 1: moored to the bank only
       expect(row.block.ok, row.name).toBe(true);
       expect(row.bedPileUtil, row.name).toBeLessThanOrEqual(1);
     }
@@ -203,25 +206,30 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     const a = dflt().anchor;
     // piles per anchor point: 2 or 3 on the two largest rafts, 1 elsewhere
     const bed = HUOI_VANH_RAFTS.reduce((s, r) => s + r.bedAnchors * (r.bedPilesPerPoint ?? 1) * r.bedPileD_m! ** 2 * (r.bedPileL_m! + (a.bed1Stickup_m ?? 0)), 0);
-    // shore piles are ROUND (bored D350): area = pi D^2 / 4
-    const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + r.shoreAnchors * (r.shorePilesPerPoint ?? 1) * (Math.PI * r.shorePileD_m! ** 2 / 4) * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
-    expect(c.shorePileCount).toBe(262); // 31 twin-pile points at BÈ 3A
-    expect(c.pa1BedPileCount).toBe(83);
+    // shore piles are ROUND (bored D350): area = pi D^2 / 4; the raft's (twin) pile only at the lines that need it,
+    // one pile elsewhere (catalogue shorePileLight, same D350 and L_tk)
+    const piles = (r: (typeof HUOI_VANH_RAFTS)[number]) => {
+      const heavy = r.shorePileLight ? r.shorePileLight.heavyLines.length : r.shoreAnchors;
+      return heavy * (r.shorePilesPerPoint ?? 1) + (r.shoreAnchors - heavy);
+    };
+    const shore = HUOI_VANH_RAFTS.reduce((s, r) => s + piles(r) * (Math.PI * r.shorePileD_m! ** 2 / 4) * (r.shorePileL_m! + (a.shoreArm_e_m ?? 0)), 0);
+    expect(c.shorePileCount).toBe(178); // twin piles at B1-D15, B1-D16 and B2-D29 only
+    expect(c.pa1BedPileCount).toBe(78);
     expect(c.pa1BedConcrete_m3).toBeCloseTo(bed, 6);
     expect(c.shoreConcrete_m3).toBeCloseTo(shore, 6);
   });
 
-  it('pins the computed quantities at the 20 m/s default: blocks 49–109 t against 350 mm piles of 2.6–3.2 t, ~1 940 m³ against ~95 m³ (64 lake-bed lines)', () => {
+  it('pins the computed quantities at the 20 m/s default (tilt 10°): blocks 40–109 t against 350 mm piles of 2.6–3.1 t, ~1 840 m³ against ~93 m³ (47 lake-bed lines)', () => {
     const c = compare();
-    expect(c.blockMass_t[0]).toBeGreaterThan(45);
-    expect(c.blockMass_t[0]).toBeLessThan(53);
-    expect(c.blockMass_t[1]).toBeGreaterThan(100);
-    expect(c.blockMass_t[1]).toBeLessThan(118);
+    expect(c.blockMass_t[0]).toBeGreaterThan(38);
+    expect(c.blockMass_t[0]).toBeLessThan(42);
+    expect(c.blockMass_t[1]).toBeGreaterThan(105);
+    expect(c.blockMass_t[1]).toBeLessThan(114);
     expect(c.bedPileSide_m).toEqual([0.35, 0.35]);
     expect(c.bedPileMass_t[1]).toBeLessThan(3.5);
-    expect(c.pa1BedConcrete_m3).toBeCloseTo(94.7, 0);
-    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1800);
-    expect(c.pa2BedConcrete_m3).toBeLessThan(2100);
+    expect(c.pa1BedConcrete_m3).toBeCloseTo(93.0, 0);
+    expect(c.pa2BedConcrete_m3).toBeGreaterThan(1780);
+    expect(c.pa2BedConcrete_m3).toBeLessThan(1900);
     expect(c.concreteRatio).toBeCloseTo(c.pa2BedConcrete_m3 / c.pa1BedConcrete_m3, 9);
     expect(c.pa2BedFootprint_m2).toBeGreaterThan(50 * c.pa1BedFootprint_m2);
     expect(c.params.slidingModel).toBe('friction'); // the default: a flat block, friction only
@@ -230,11 +238,11 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
     expect(c.failingRafts).toEqual([]);
   });
 
-  it('with shear keys the same 64 anchors need 8–24 t blocks instead of 49–109 t — if the surface mud has c_u = 10 kPa', () => {
+  it('with shear keys the same 47 anchors need 6–20 t blocks instead of 40–109 t — if the surface mud has c_u = 10 kPa', () => {
     const s = start();
     const keyed = compare({ ...s, anchor: { ...s.anchor, deadweight: { slidingModel: 'shear_key', cuSurface_kPa: 10 } } });
     expect(keyed.allBlocksOk).toBe(true);
-    expect(keyed.blockMass_t[0]).toBeGreaterThan(8);
+    expect(keyed.blockMass_t[0]).toBeGreaterThan(6);
     expect(keyed.blockMass_t[1]).toBeLessThan(26);
     expect(keyed.pa2BedConcrete_m3).toBeLessThan(compare().pa2BedConcrete_m3 / 3);
     // and it is very sensitive to that strength
@@ -253,11 +261,11 @@ describe('PA1 / PA2 technical comparison for Huổi Vanh', () => {
 });
 
 describe('PA2 in the 3D scene', () => {
-  it('turns the 64 lake-bed anchors into blocks on the bed and leaves the 231 shore piles alone', () => {
-    const blocks = buildBlockAnchors(pa2(), 1);
+  it('turns the 36 lake-bed anchors into blocks on the bed and leaves the 175 shore piles alone', () => {
+    const blocks = buildBlockAnchors(pa2(), 2);
     const p1 = buildPileModels();
     const p2 = buildPileModels({}, undefined, blocks);
-    expect(p2).toHaveLength(263);
+    expect(p2).toHaveLength(211);
     p2.forEach((p, i) => {
       expect([p.x, p.y, p.ground_m], p.code).toEqual([p1[i].x, p1[i].y, p1[i].ground_m]);
       if (p.type === 'SHORE') {
@@ -270,25 +278,25 @@ describe('PA2 in the 3D scene', () => {
         expect(p.head_m - p.ground_m, p.code).toBeCloseTo(b.H_m, 9);
       }
     });
-    expect(p2.filter((p) => p.block)).toHaveLength(32); // one per lake-bed POINT; all carry two lines carry two lines
+    expect(p2.filter((p) => p.block)).toHaveLength(36); // one per lake-bed POINT (11 carry two lines)
   });
 
   it('the 3D blocks are the blocks the engine checks', () => {
     const s = pa2();
-    const blocks = buildBlockAnchors(s, 1);
-    for (const item of HUOI_VANH_RAFTS) {
+    const blocks = buildBlockAnchors(s, 2);
+    for (const item of HUOI_VANH_RAFTS.filter((q) => q.bedAnchors)) {
       const r = calculateProject(pa2(buildRaftProjectState(dflt(), item, dflt().anchor)));
       const b = blocks.get(item.name)!.block;
       expect([b.L_m, b.H_m], item.name).toEqual([r.bedBlock!.L_m, r.bedBlock!.H_m]);
       expect(b.mass_t, item.name).toBeCloseTo(r.bedBlock!.mass_t, 6);
     }
-    const states = computeRaftMooringStates(s, s.env.windSpeed_ms, 1);
+    const states = computeRaftMooringStates(s, s.env.windSpeed_ms, 2);
     for (const st of states.values()) expect(st.verdict, st.name).toBe('PASS');
   });
 
   it('block utilisation is ≤ 1 at the design tension and grows with the load', () => {
-    const blocks = buildBlockAnchors(pa2(), 1);
-    for (const row of compare().rows) {
+    const blocks = buildBlockAnchors(pa2(), 2);
+    for (const row of compare().rows.filter((q) => q.bedCount)) {
       const b = blocks.get(row.name)!;
       expect(blockUtilisation(b, row.tension_kN), row.name).toBeLessThanOrEqual(1);
       expect(blockUtilisation(b, row.tension_kN * 1.3), row.name).toBeGreaterThan(1);

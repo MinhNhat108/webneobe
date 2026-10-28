@@ -45,7 +45,7 @@ export interface ProjectStore {
   // All projects list (for multi-project management)
   projectList: Array<{ id: string; name: string; code: string; location: string; date: string; systemType: SystemType }>;
 
-  // For multi-raft projects (Huổi Vanh: 9 cụm bè, BÈ 1 đến BÈ 9)
+  // For multi-raft projects (Huổi Vanh: 4 cụm bè, BÈ 1 đến BÈ 4, mặt bằng 27/10/2026)
   activeRaftId: number;
   raftsSummary: RaftSummaryItem[];
 
@@ -393,7 +393,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: ACTIVE_LAKE.storageKey,
-      version: 18,
+      version: 20,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -529,6 +529,23 @@ export const useProjectStore = create<ProjectStore>()(
             persistedState.raftsSummary = HUOI_VANH_RAFTS;
             persistedState.activeRaftId = HUOI_VANH_RAFTS[0].id;
             persistedState.currentProject = HUOI_VANH_START;
+          }
+
+          // v19 (2026-10-28): Huổi Vanh panel tilt 10° (owner); a saved 12° is the old default, not a user's choice
+          if (version < 19 && ACTIVE_LAKE_ID === 'huoi-vanh' && persistedState.currentProject?.id === BUILT_IN_ID
+            && persistedState.currentProject.raft?.solarTilt_deg === 12) {
+            persistedState.currentProject = { ...persistedState.currentProject, raft: { ...persistedState.currentProject.raft, solarTilt_deg: 10 } };
+          }
+
+          // v20 (2026-10-28): Huổi Vanh panel counts from the raft drawing (18.914); a saved count equal to the old
+          // share by area of 18.354 is the old default of that raft, not a user's choice
+          const OLD_PANELS: Record<string, number> = { 'BÈ 1': 2696, 'BÈ 2': 8847, 'BÈ 3': 1355, 'BÈ 4': 5456 };
+          const cp = persistedState.currentProject;
+          if (version < 20 && ACTIVE_LAKE_ID === 'huoi-vanh' && cp?.id === BUILT_IN_ID) {
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId);
+            if (item && cp.raft?.solarPanelCount === OLD_PANELS[item.name]) {
+              persistedState.currentProject = { ...cp, raft: { ...cp.raft, solarPanelCount: item.solarPanelCount } };
+            }
           }
 
           // Whatever the history, never leave the app pointing at a raft that

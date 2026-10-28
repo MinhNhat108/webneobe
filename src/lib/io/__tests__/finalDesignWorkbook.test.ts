@@ -19,7 +19,7 @@ const d = buildFinalDesign(state, calculateProject(state), batch);
 
 describe('Calculation workbook of the settled design (bored shore piles + screw-pile bases)', () => {
   it('every raft row is a hand calculation of the engine formulas', () => {
-    expect(d.rafts).toHaveLength(9);
+    expect(d.rafts).toHaveLength(4);
     // the engine rounds its results to 0.01 for display, hence the 0.05 tolerance
     for (const r of d.rafts) {
       const fPanel = (r.q_Pa * r.cdPanel * r.areaProjected_m2 * r.shield) / 1000;
@@ -29,9 +29,19 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
       // equilibrium of the raft on its real lines (2026-10-23), the single-angle method as a floor
       expect(Math.max(tGeo, r.analysis!.governing.maxTension_kN + r.pretension_kN), r.name).toBeCloseTo(r.tMax_kN, 1);
       expect(r.sfIntact, r.name).toBeGreaterThanOrEqual(3);
-      // a twin-pile point (BÈ 3A): each pile takes T / (2 x 0.9)
-      const perPoint = r.pileCount / r.shoreLines;
-      expect(r.tMax_kN / (perPoint > 1 ? perPoint * 0.9 : 1) / r.Hallow_kN, r.name).toBeCloseTo(r.bp1, 2);
+      // a twin-pile point (BÈ 1, 2): each pile takes T / (2 x 0.9); a raft whose every line takes the single pile
+      // (BÈ 4) is checked with that pile and the largest tension of its own lines
+      const gov = r.pileTypes.find((t) => !t.light) ?? r.pileTypes[0], perPoint = gov.perPoint;
+      expect(gov.light ? gov.tension_kN : r.tMax_kN, r.name).toBeLessThanOrEqual(r.tMax_kN);
+      expect((gov.light ? gov.tension_kN : r.tMax_kN) / (perPoint > 1 ? perPoint * 0.9 : 1) / r.Hallow_kN, r.name).toBeCloseTo(r.bp1, 2);
+      // every pile type of the raft: its own design tension on one pile, the lighter single pile under 4 % steel
+      expect(r.pileTypes.reduce((a, t) => a + t.points, 0), r.name).toBe(r.shoreLines);
+      expect(r.pileTypes.reduce((a, t) => a + t.piles, 0), r.name).toBe(r.pileCount);
+      for (const t of r.pileTypes) {
+        expect(t.tension_kN / (t.perPoint > 1 ? t.perPoint * 0.9 : 1) / t.Hallow_kN, `${r.name} ${t.light}`).toBeCloseTo(t.bp1, 2);
+        expect(Math.max(t.bp1, t.bp2), `${r.name} ${t.light}`).toBeLessThanOrEqual(0.95);
+        if (t.light) expect([t.perPoint, t.tension_kN < r.tMax_kN], r.name).toEqual([1, true]);
+      }
       expect((r.loadFactor * r.Mmax_kNm) / r.Mrd_kNm, r.name).toBeCloseTo(r.bp2, 2);
       expect(r.shoreLines + r.bedLines, r.name).toBe(r.lines);
       // the Broms equation and the moment written in the note give the engine values
@@ -42,12 +52,12 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     }
   });
 
-  it('totals: 262 bored piles (231 points) and 32 bases that all pass, uplift resistance above the demand', () => {
+  it('totals: 178 bored piles (175 points) and 36 bases that all pass, uplift resistance above the demand', () => {
     const T = d.totals;
-    expect([T.lines, T.shorePiles, T.bases, T.screws]).toEqual([295, 262, 32, 128]);
+    expect([T.lines, T.shorePiles, T.bases, T.screws]).toEqual([222, 178, 36, 144]);
     expect(T.allOk).toBe(true);
-    expect(T.shoreLength_m).toBeCloseTo(1729.2, 1);
-    expect(T.baseConcrete_m3).toBeCloseTo(84.7, 1);
+    expect(T.shoreLength_m).toBeCloseTo(1174.8, 1);
+    expect(T.baseConcrete_m3).toBeCloseTo(89.3, 1);
     expect(T.upliftResistance_kN).toBeGreaterThan(T.upliftDemand_kN);
     for (const k of ['uplift', 'slide', 'overturn', 'screw'] as const) expect(T.worst[k], k).toBeLessThanOrEqual(1);
     // one base: uplift resistance = 0.9 W' + 4 Q_a
@@ -69,11 +79,12 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     // the line tension is the equilibrium: no CT_ sheets (single-angle formulas), the level-by-level sheet instead
     expect(wb.SheetNames).toEqual([...FINAL_DESIGN_SHEETS.filter((n) => !n.startsWith('CT_')), 'CanBangNeo_MucNuoc']);
     const rows = (name: string) => XLSX.utils.sheet_to_json<any[]>(wb.Sheets[name], { header: 1 });
-    expect(rows('CocKhoanNhoi_TungCoc').filter((r) => /^HV-P\d+$/.test(String(r[1])))).toHaveLength(231);
-    expect(rows('DeNeoDay_TungDe').filter((r) => /^HV-DV\d+$/.test(String(r[1])))).toHaveLength(32);
-    expect(rows('VitXoan').filter((r) => /^HV-DV\d+$/.test(String(r[0])))).toHaveLength(32);
-    expect(rows('LucDay').filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(9);
-    expect(rows('CocKhoanNhoi_TheoBe').filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(9);
+    expect(rows('CocKhoanNhoi_TungCoc').filter((r) => /^HV-P\d+$/.test(String(r[1])))).toHaveLength(175);
+    expect(rows('DeNeoDay_TungDe').filter((r) => /^HV-DV\d+$/.test(String(r[1])))).toHaveLength(36);
+    expect(rows('VitXoan').filter((r) => /^HV-DV\d+$/.test(String(r[0])))).toHaveLength(36);
+    expect(rows('LucDay').filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(4);
+    // one row per pile type: BÈ 1 and BÈ 2 have their twin pile (one point each) and a single pile for the rest
+    expect(rows('CocKhoanNhoi_TheoBe').filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(6);
     expect(String(rows('LucDay')[1][0])).toContain('THẤP HƠN gió tiêu chuẩn');
     const price = rows('KhoiLuong_BaoGia');
     expect(price.filter((r) => String(r[6] ?? '').startsWith('CHƯA CÓ ĐƠN GIÁ'))).toHaveLength(4);
@@ -89,10 +100,12 @@ describe('Calculation workbook of the settled design (bored shore piles + screw-
     expect(note[8].lines.filter((l) => /^(C|BP|SV|DW)-?\d+ — /.test(l))).toHaveLength(d.rafts.reduce((a, b) => (b.tMax_kN > a.tMax_kN ? b : a)).checks.length);
     const text = note.flatMap((s) => s.lines).join('\n');
     expect(text).toContain('Chủ đầu tư chốt ngày 12/10/2026');
-    expect(text).toContain('9/9 bè đạt; 231/231 cọc bờ đạt; 32/32 đế đạt');
+    expect(text).toContain('4/4 bè đạt; 175/175 cọc bờ đạt; 36/36 đế đạt');
+    expect(text).toContain('Cọc ĐƠN theo lực của chính dây');
     expect(text).toContain('GIẢ ĐỊNH');
     expect(text).toContain('đã trừ lực đẩy nổi');
-    expect(text).toContain('B7-D01, B7-D09, B8-D13');
+    expect(text).toContain('4 dây bờ lệch quá 60°');
+    expect(text).toContain('B2-D34 (72°)');
     // every check is written as a formula with the numbers put in
     for (const f of ['p = 9 × c_u × D', 'M_max = P × (e + 1,5D + 0,5 × P / p)', 'M_rd = A_1 thanh × R_s × r × k(n)', 'T = (EA / L_0) × (d − L_0)',
       'T_h = T × cos θ', 'M_lật = T_h × (t + h_tai)', 'N_1 = max[', '5,14 × c_u', 'A_s = M / (0,9 × h_0 × R_s)', 'C9, khoảng cách', 'C8, khoảng hở']) expect(text, f).toContain(f);

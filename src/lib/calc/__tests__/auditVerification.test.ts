@@ -36,14 +36,15 @@ describe('The design sized at the 20 m/s default against the code wind', () => {
       expect(storm.f_wind_total_kN / calm.f_wind_total_kN, raft.name).toBeCloseTo(2.25, 1);
       // the shore pile reinforcement chosen at 20 m/s is what gives way first
       expect(check(storm, 'BP-2')?.status, raft.name).toBe('FAIL');
-      // the screw base is re-sized by the engine, so it still reports a passing (larger) base
-      expect(storm.bedScrewBase!.side_m, raft.name).toBeGreaterThanOrEqual(calm.bedScrewBase!.side_m);
+      // the screw base is re-sized by the engine, so it still reports a passing (larger) base (BÈ 1: no lake-bed line)
+      if (raft.bedAnchors) expect(storm.bedScrewBase!.side_m, raft.name).toBeGreaterThanOrEqual(calm.bedScrewBase!.side_m);
+      else expect(storm.bedScrewBase, raft.name).toBeUndefined();
     }
   });
 });
 
-describe('Technical audit of the 9 Huoi Vanh rafts', () => {
-  it('all 9 rafts pass every mandatory check with bored shore piles D350 and screw-pile bases on the lake bed (the design)', () => {
+describe('Technical audit of the 4 Huoi Vanh rafts', () => {
+  it('all 4 rafts pass every mandatory check with bored shore piles D350 and screw-pile bases on the lake bed (the design)', () => {
     const batchResults: any[] = [];
     for (const raft of HUOI_VANH_RAFTS) {
       const base = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
@@ -66,9 +67,13 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
         expect(check(r, id)?.utilization, `${raft.name} ${id}`).toBeLessThanOrEqual(0.95);
       }
 
-      // Lake bed: the pile rows do not apply, the six base checks do
+      // Lake bed: the pile rows do not apply, the six base checks do — none of them for BÈ 1, moored to the bank only
       for (const id of ['C11', 'BP-3', 'BP-4', 'BP-5']) expect(check(r, id)?.status, `${raft.name} ${id}`).toBe('SKIP');
-      for (const id of ['SV-1', 'SV-2', 'SV-3', 'SV-4', 'SV-5', 'SV-6']) {
+      if (!raft.bedAnchors) {
+        expect(raft.name).toBe('BÈ 1');
+        expect(check(r, 'BP-3')?.note).toContain('không có dây đáy');
+        expect(r.checks.filter((c) => c.id.startsWith('SV-')), raft.name).toEqual([]);
+      } else for (const id of ['SV-1', 'SV-2', 'SV-3', 'SV-4', 'SV-5', 'SV-6']) {
         expect(check(r, id)?.status, `${raft.name} ${id}`).toBe('PASS');
         expect(check(r, id)?.utilization, `${raft.name} ${id}`).toBeLessThanOrEqual(1.0);
       }
@@ -84,27 +89,31 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(s.anchor.sfPile).toBeGreaterThanOrEqual(2.0);
     }
 
-    // Shore piles: 231 points, 262 piles — at the 20 m/s default only BÈ 3A (31 points) needs twin piles
-    // (line tension from the equilibrium of the raft, re-tensioned every 1 m of level change).
+    // Shore piles: 175 points, 178 piles — at the 20 m/s default (panel tilt 10°) BÈ 1, 2 and 4 need twin piles for
+    // their governing tension, but every other line of theirs pulls less than a single pile carries (catalogue
+    // shorePileLight): twin piles only at B1-D15, B1-D16 and B2-D29 (line tension from the equilibrium of the raft,
+    // re-tensioned every 1 m of level change).
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildScrewBaseSchedule(baseState, baseResults, batchResults, coordinates as any);
-    expect(schedule.shorePiles).toHaveLength(231);
-    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(262);
+    expect(schedule.shorePiles).toHaveLength(175);
+    expect(schedule.shorePiles.reduce((s, p) => s + p.pileCount, 0)).toBe(178);
     for (const p of schedule.shorePiles) {
-      expect(p.pileCount, p.pileId).toBe(p.raft === 'BÈ 3A' ? 2 : 1);
+      expect(p.pileCount, p.pileId).toBe(['B1-D15', 'B1-D16', 'B2-D29'].includes(p.code) ? 2 : 1);
+      expect(p.bp1!, p.pileId).toBeLessThanOrEqual(0.95);
+      expect(p.bp2!, p.pileId).toBeLessThanOrEqual(0.95);
       expect(p.Lopt_m, p.pileId).not.toBeNull();
       expect(p.Linput_m).toBeGreaterThanOrEqual(p.Lopt_m!);
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
-    // Lake bed: 32 bases (all shared by two rafts), all passing, none overlapping a neighbour.
-    expect(schedule.bases).toHaveLength(32);
-    expect(schedule.totals.okBases).toBe(32);
+    // Lake bed: 36 bases (11 shared by two rafts), all passing, none overlapping a neighbour.
+    expect(schedule.bases).toHaveLength(36);
+    expect(schedule.totals.okBases).toBe(36);
     expect(schedule.clashes).toEqual([]);
-    expect(schedule.totals.screws).toBe(32 * 4);
+    expect(schedule.totals.screws).toBe(36 * 4);
   });
 
-  it('the alternative PA1 (driven 350 x 350 lake-bed piles) also passes on all 9 rafts', () => {
+  it('the alternative PA1 (driven 350 x 350 lake-bed piles) also passes on all 4 rafts', () => {
     const batchResults: any[] = [];
     for (const raft of HUOI_VANH_RAFTS) {
       const base = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
@@ -114,8 +123,8 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       batchResults.push({ raft, state: s, results: r });
       expect(r.overallVerdict, raft.name).toBe('PASS');
       for (const id of ['BP-3', 'BP-4', 'BP-5']) {
-        expect(check(r, id)?.status, `${raft.name} ${id}`).toBe('PASS');
-        expect(check(r, id)?.utilization, `${raft.name} ${id}`).toBeLessThanOrEqual(0.95);
+        expect(check(r, id)?.status, `${raft.name} ${id}`).toBe(raft.bedAnchors ? 'PASS' : 'SKIP');
+        if (raft.bedAnchors) expect(check(r, id)?.utilization, `${raft.name} ${id}`).toBeLessThanOrEqual(0.95);
       }
       expect(s.anchor.bedPileShape).toBe('square');
       expect(s.anchor.bed1D_m).toBe(0.35);
@@ -124,7 +133,7 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
     const baseState = JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT));
     const baseResults = calculateProject(baseState);
     const schedule = buildPileSchedule(baseState, baseResults, batchResults, coordinates as any);
-    expect(schedule).toHaveLength(295);
+    expect(schedule).toHaveLength(222);
     for (const p of schedule) {
       expect(p.Pmax_kN).toBeGreaterThan(0);
       expect(p.Lopt_m, p.pileId).not.toBeNull();
@@ -132,13 +141,13 @@ describe('Technical audit of the 9 Huoi Vanh rafts', () => {
       expect(p.isPmaxOk, p.pileId).toBe(true);
     }
     const piles = (type: string) => schedule.filter((p) => p.type === type).reduce((s, p) => s + p.pileCount, 0);
-    expect(piles('SHORE')).toBe(262);
-    expect(piles('BED')).toBe(83); // two piles per point at BÈ 3A (19 lines), one elsewhere, at the 20 m/s default
+    expect(piles('SHORE')).toBe(178);
+    expect(piles('BED')).toBe(78); // two piles per point at BÈ 2 (31 lines), one at BÈ 3 (3) and BÈ 4 (13), at the 20 m/s default
 
     const wb = buildPileScheduleWorkbook(baseState, baseResults, batchResults, coordinates as any);
     expect(wb.SheetNames).toContain('BangThongKeCoc');
     const dxfResult = buildMooringPileDxf(baseState, baseResults, batchResults, coordinates as any);
     expect(dxfResult.dxf).toContain('SECTION');
-    expect(dxfResult.pileCount).toBe(295);
+    expect(dxfResult.pileCount).toBe(222);
   });
 });

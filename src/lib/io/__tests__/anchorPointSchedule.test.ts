@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import { buildAnchorPointSchedule } from '../anchorPointSchedule';
 import { buildScrewBaseScheduleWorkbook } from '../screwBaseExcel';
 import { calculateProject } from '../../calc';
-import { buildRaftProjectState } from '../../calc/raftState';
+import { buildRaftProjectState, lightShorePileState } from '../../calc/raftState';
 import { designScrewBase, designScrewBaseForLines } from '../../calc/screwAnchorBed';
 import type { ProjectState } from '../../calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
@@ -26,15 +26,15 @@ describe('Anchor-by-anchor calculation', () => {
   const { state, results, batch } = setup();
   const s = buildAnchorPointSchedule(state, results, batch);
 
-  it('has one row for each of the 263 anchor points: 231 shore piles and 32 lake-bed bases (all shared) holding the 295 lines', () => {
-    expect([s.totals.points, s.shore.length, s.bed.length]).toEqual([263, 231, 32]);
-    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([295, 64, 32, 102]);
-    expect(new Set([...s.shore.map((p) => p.code), ...s.bed.flatMap((b) => b.base.lines.map((l) => l.code))]).size).toBe(295);
+  it('has one row for each of the 211 anchor points: 175 shore piles and 36 lake-bed bases (11 shared) holding the 222 lines', () => {
+    expect([s.totals.points, s.shore.length, s.bed.length]).toEqual([211, 175, 36]);
+    expect([s.totals.lines, s.totals.bedLines, s.totals.sharedBases, s.totals.convertedShorePoints]).toEqual([222, 47, 11, 157]);
+    expect(new Set([...s.shore.map((p) => p.code), ...s.bed.flatMap((b) => b.base.lines.map((l) => l.code))]).size).toBe(222);
     expect(s.shore.filter((p) => p.converted).every((p) => p.note.includes('Chuyển từ neo đáy'))).toBe(true);
     expect(s.levels).toEqual({ mnc_m: 380, mndb_m: 384.5, mnlkt_m: 386 });
   });
 
-  it('every lake-bed base is designed with the span of ITS line(s), standing on the DESIGN lake bed (always under water)', () => {
+  it('every lake-bed base is designed with the span of ITS line(s), standing on the design lake bed or the IFC ground where that is higher', () => {
     for (const row of s.bed) {
       const b = row.base;
       expect(b.lines.length, b.baseId).toBe(b.shared ? 2 : 1);
@@ -47,20 +47,20 @@ describe('Anchor-by-anchor calculation', () => {
         // the largest tension of THAT line in the equilibrium + the pretension, capped by the raft's governing tension
         expect(l.tension_kN, l.code).toBe(Math.min(raft.results.t_max_intact_kN, raft.results.mooringAnalysis!.lineMax_kN[l.code] + 5));
       }
-      expect(b.z, b.baseId).toBeLessThan(MNC_M);
-      expect(b.depthLow_m, b.baseId).toBeCloseTo(MNC_M - b.z, 9);
-      expect(b.depthLow_m, b.baseId).toBeGreaterThanOrEqual(1.5); // under water even at the dead water level
+      // a base on ground above MNC (gap BÈ 2 – BÈ 3, top of BÈ 4) is dry at the dead level: no water depth there
+      expect(b.depthLow_m, b.baseId).toBeCloseTo(Math.max(0, MNC_M - b.z), 9);
       expect(b.depthHigh_m, b.baseId).toBeCloseTo(MNLKT_M - b.z, 9);
+      expect(b.z, b.baseId).toBeLessThan(384.0); // never on the bank (shore level MNDB - 0.5)
       expect(row.util, b.baseId).toBe(Math.max(b.upliftUtil, b.slideUtil, b.overturnUtil, b.screwUtil, b.bearingUtil, b.rebarUtil));
     }
   });
 
   it('a base under ONE line is exactly the base of the single-line design rule', () => {
-    // every base of the layout is shared, so split the first two shared bases: their four lines get a base each
-    expect(s.bed.filter((r) => !r.base.shared)).toHaveLength(0);
-    const split = new Set(s.bed.slice(0, 2).flatMap((r) => r.base.lines.map((l) => l.code)));
+    // the layout has 25 single bases (south edge of BÈ 2, top edge of BÈ 4); split two shared bases too: 4 more
+    expect(s.bed.filter((r) => !r.base.shared)).toHaveLength(25);
+    const split = new Set(s.bed.filter((r) => r.base.shared).slice(0, 2).flatMap((r) => r.base.lines.map((l) => l.code)));
     const lone = MOORING_LINES_V2.map((l) => (split.has(l.code) ? { ...l, anchorId: undefined, sharedWith: undefined } : l));
-    const single = buildAnchorPointSchedule(state, results, batch, lone).bed.filter((r) => !r.base.shared);
+    const single = buildAnchorPointSchedule(state, results, batch, lone).bed.filter((r) => !r.base.shared && split.has(r.base.lines[0].code));
     expect(single).toHaveLength(4);
     for (const row of single) {
       const b = row.base, l = b.lines[0];
@@ -77,7 +77,7 @@ describe('Anchor-by-anchor calculation', () => {
 
   it('a SHARED base is checked for one line taut + the other at the pretension, and for both taut; uplifts add, horizontal pulls add as vectors', () => {
     const shared = s.bed.filter((r) => r.base.shared);
-    expect(shared).toHaveLength(32);
+    expect(shared).toHaveLength(11);
     for (const row of shared) {
       const b = row.base, [l1, l2] = b.lines;
       expect(l1.raft, b.baseId).not.toBe(l2.raft);
@@ -112,9 +112,12 @@ describe('Anchor-by-anchor calculation', () => {
   it('never reports a failing base as passing, and adds the bases up', () => {
     expect(s.totals.bedOk).toBe(s.bed.filter((b) => b.base.ok).length);
     for (const b of s.bed) expect(b.base.ok ? b.util <= 1 + 1e-9 : true, b.base.baseId).toBe(true);
-    expect(s.totals.bedOk).toBe(32); // at the 20 m/s default every base passes
-    expect(s.totals.basesBySide).toEqual({ '2.50': 28, '2.75': 2, '3.00': 1, '3.75': 1 });
-    expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(32);
+    expect(s.totals.bedOk).toBe(36); // at the 20 m/s default every base passes
+    expect(s.totals.basesBySide).toEqual({ '2.50': 36 });
+    expect(Object.values(s.totals.basesBySide).reduce((a, n) => a + n, 0)).toBe(36);
+    // a FINDING, pinned: 8 bases stand on ground at or above MNC 380.0 m and are dry at the dead level
+    expect(s.totals.dryAtLowWater).toBe(8);
+    for (const b of s.bed.filter((x) => x.base.depthLow_m <= 0)) expect(b.note, b.base.baseId).toContain('lộ khô khi nước chết');
     expect(s.totals.bedConcrete_m3).toBeCloseTo(s.bed.reduce((a, b) => a + b.base.concrete_m3, 0), 9);
   });
 
@@ -125,7 +128,7 @@ describe('Anchor-by-anchor calculation', () => {
     expect(long.volume_m3).toBeLessThanOrEqual(short.volume_m3);
   });
 
-  it('reports, for information only, where the IFC terrain reads higher than the design lake bed', () => {
+  it('a base never stands below the IFC ground: the level follows the terrain where it is higher than the design bed', () => {
     for (const b of s.bed) {
       const terrain = groundAt(b.base.x, b.base.y);
       expect(b.terrain_m, b.base.baseId).toBe(terrain);
@@ -133,19 +136,21 @@ describe('Anchor-by-anchor calculation', () => {
     }
     const higher = s.bed.filter((b) => (b.terrainAboveBed_m ?? 0) > 0.5);
     expect(s.totals.terrainHigherPoints).toBe(higher.length);
-    expect(higher.length).toBeGreaterThan(0); // the terrain model does rise towards the banks
-    for (const b of higher) expect(b.note).toContain('Địa hình IFC tại điểm này cao hơn đáy thiết kế');
-    // and it never enters the calculation: the depths come from the design lake bed alone
-    for (const b of higher) expect(b.base.depthLow_m, b.base.baseId).toBeCloseTo(MNC_M - b.base.z, 9);
+    // since 2026-10-28 (Huổi Vanh) the base level is max(design bed, IFC ground), rounded to 0.01 m
+    expect(higher).toEqual([]);
+    for (const b of s.bed) if (b.terrain_m !== null) expect(b.base.z, b.base.baseId).toBeGreaterThanOrEqual(b.terrain_m - 0.006);
   });
 
-  it('every shore point repeats the pile checks of its raft and has its own cable slope', () => {
+  it('every shore point repeats the pile checks of its pile type (the raft pile, or its lighter single pile) and has its own cable slope', () => {
     for (const p of s.shore) {
       const raft = batch.find((x) => x.raft.name === p.raft)!;
-      const check = (id: string) => raft.results.checks.find((c) => c.id === id)!.utilization;
+      const light = raft.raft.shorePileLight && !raft.raft.shorePileLight.heavyLines.includes(p.code) ? raft.raft.shorePileLight : undefined;
+      const res = light ? calculateProject(lightShorePileState(raft.state, light)) : raft.results;
+      const check = (id: string) => res.checks.find((c) => c.id === id)!.utilization;
       expect(p.bp1, p.code).toBe(check('BP-1'));
       expect(p.bp2, p.code).toBe(check('BP-2'));
-      expect(p.pileTension_kN, p.code).toBeCloseTo(raft.results.shorePileTension_kN!, 1);
+      expect(p.pileTension_kN, p.code).toBeCloseTo(res.shorePileTension_kN!, 1);
+      expect(p.pileCount, p.code).toBe(light ? 1 : raft.raft.shorePilesPerPoint ?? 1);
       const ground = groundAt(p.x, p.y)!;
       expect(p.ground_m, p.code).toBeCloseTo(ground, 9);
       // higher water lifts the raft: the cable points further up (or less far down) at MNLKT than at MNC
@@ -162,12 +167,12 @@ describe('Anchor-by-anchor calculation', () => {
     const bed = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoDay, { header: 1 });
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.TungDiemNeoBo, { header: 1 });
     const bedRows = bed.filter((r) => /^HV-DV\d{3}$/.test(String(r[1])));
-    expect(bedRows).toHaveLength(32);
-    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(32);
+    expect(bedRows).toHaveLength(36);
+    expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG')).toHaveLength(11);
     expect(bedRows.filter((r) => r[2] === 'DÙNG CHUNG').every((r) => /^B\w+-D\d+$/.test(String(r[7])))).toBe(true); // the second line is named
     const shoreRows = shore.filter((r) => /^HV-P\d{3}$/.test(String(r[1])));
-    expect(shoreRows).toHaveLength(231);
-    expect(shoreRows.filter((r) => r[4] === 'Chuyển từ neo đáy')).toHaveLength(102);
+    expect(shoreRows).toHaveLength(175);
+    expect(shoreRows.filter((r) => r[4] === 'Chuyển từ neo đáy')).toHaveLength(157);
     const head = bed[5];
     for (const col of ['Tổ hợp chi phối', 'Lực nhổ (kN)', 'SV-1 nhổ', 'SV-2 trượt', 'SV-3 lật', 'SV-4 một vít', 'SV-5 nền', 'SV-6 thép bản', 'Cao độ đáy thiết kế (m)', 'Địa hình IFC (m)', 'Sâu nước MNC (m)', 'Sâu nước MNLKT (m)']) {
       expect(head, col).toContain(col);

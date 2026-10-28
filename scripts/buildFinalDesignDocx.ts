@@ -6,7 +6,7 @@
  *   npx vite-node scripts/buildFinalDesignDocx.ts
  *   npx vite-node scripts/buildFinalDesignDocx.ts -- --lake=ban-mong
  *
- * Output (Huổi Vanh): docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx and the web
+ * Output (Huổi Vanh): docs/mat-bang-neo-huoi-vanh/THUYET_MINH_TINH_TOAN.docx and the web
  * attachment public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx;
  * (Bản Mòng): docs/mat-bang-neo-ban-mong/ and public/docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx.
  */
@@ -122,7 +122,7 @@ const doc = new Document({
 });
 const buf = await Packer.toBuffer(doc);
 const out = HV
-  ? [path.join(here, '../docs/mat-bang-neo-9-be/THUYET_MINH_TINH_TOAN.docx'), path.join(here, '../public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx')]
+  ? [path.join(here, '../docs/mat-bang-neo-huoi-vanh/THUYET_MINH_TINH_TOAN.docx'), path.join(here, '../public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx')]
   : [path.join(here, `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}/THUYET_MINH_TINH_TOAN.docx`), path.join(here, '../public/docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx')];
 fs.mkdirSync(path.dirname(out[0]), { recursive: true });
 for (const f of out) fs.writeFileSync(f, buf);

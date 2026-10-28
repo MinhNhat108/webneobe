@@ -2,14 +2,15 @@
  * The Huổi Vanh V2 mooring layout — the SINGLE entry point every consumer
  * (calculation catalogue, layout map, pile schedule, Excel, CAD export) reads.
  *
- *  - `RAFT_POLYGONS_V2`: the 9 raft-cluster outlines (95.873 m²). This is the
- *    only information taken from the client's CAD/Revit export.
+ *  - `RAFT_POLYGONS_V2`: the raft-cluster outlines — 4 rafts, 98.803 m², plan of
+ *    2026-10-27 ("CHUGIAP-HOHUOIVANH ver 3 - Floor Plan - BỐ TRÍ PHAO BÈ.dwg"). This
+ *    is the only information taken from the client's CAD/Revit export.
  *  - `MOORING_LINES_V2`: the mooring network, a DESIGN OUTPUT of
  *    `scripts/planMooringLayoutV2.mjs` (the pile objects in the Revit DXF are
- *    placeholders and are never read). 295 lines, so every raft meets C9
- *    (P / N <= 15 m): 231 to bored shore piles and 64 to 32 lake-bed bases, every one
- *    of them shared by two facing rafts (owner's rule of 2026-10-08: bored
- *    piles near the shore, lake-bed bases only between two rafts).
+ *    placeholders and are never read). 219 lines, so every raft meets C9
+ *    (P / N <= 15 m): 201 to bored shore piles and 18 to 11 lake-bed bases, 7 of
+ *    them shared by the two facing rafts BÈ 2 – BÈ 4 (owner's rule of 2026-10-08:
+ *    bored piles near the shore).
  *
  * The V1 files (`huoiVanhCoordinates.json`, `huoiVanhRaftPolygons.json`, 298
  * lines) are no longer read by any code: the 3D simulation's V1/V2 toggle was
@@ -98,3 +99,30 @@ export const LAYOUT_COUNTS = (() => {
     ties: RAFT_TIES.length
   };
 })();
+
+/**
+ * Angle in plan between a line and the outward normal of the raft edge its cleat is on, degrees (0 for a cleat
+ * on a convex corner whose cable leaves inside the corner's wedge).
+ */
+export function lineObliquity(l: MooringCoordinate, polygons: RaftPolygonV2[] = RAFT_POLYGONS_V2): number {
+  const ring = polygons.find((p) => p.name === l.raft)?.points;
+  if (!ring) return 0;
+  const area = ring.reduce((s, a, i) => { const b = ring[(i + 1) % ring.length]; return s + a.x * b.y - b.x * a.y; }, 0);
+  const L = Math.hypot(l.xAnchor - l.xRaft, l.yAnchor - l.yRaft);
+  const d = { x: (l.xAnchor - l.xRaft) / L, y: (l.yAnchor - l.yRaft) / L };
+  const dots: number[] = [];
+  ring.forEach((a, i) => {
+    const b = ring[(i + 1) % ring.length], len = Math.hypot(b.x - a.x, b.y - a.y), ux = (b.x - a.x) / len, uy = (b.y - a.y) / len;
+    const u = Math.max(0, Math.min(len, (l.xRaft - a.x) * ux + (l.yRaft - a.y) * uy));
+    if (Math.hypot(l.xRaft - a.x - ux * u, l.yRaft - a.y - uy * u) < 0.05) dots.push(area > 0 ? d.x * uy - d.y * ux : -d.x * uy + d.y * ux);
+  });
+  if (!dots.length) return 0;
+  if (dots.length > 1 && dots.every((v) => v >= 0)) return 0;
+  return (Math.acos(Math.max(-1, Math.min(1, Math.max(...dots)))) * 180) / Math.PI;
+}
+
+/** Shore lines more than `limit_deg` off the normal of their raft edge (the planner straightens new piles to 60° where the bank allows). */
+export function obliqueShoreLines(limit_deg = 60, lines: MooringCoordinate[] = MOORING_LINES_V2): Array<{ code: string; deg: number; staked: boolean }> {
+  return lines.filter((l) => l.type === 'SHORE').map((l) => ({ code: l.code, deg: lineObliquity(l), staked: !l.converted }))
+    .filter((x) => x.deg > limit_deg + 0.05);
+}

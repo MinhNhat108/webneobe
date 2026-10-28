@@ -372,13 +372,16 @@ export function runChecks(
   // (C11, BP-3..BP-5) do not apply and DW-1..DW-4 take their place.
   const block = results.bedBlock;
   const base = results.bedScrewBase;
-  const NOT_PILE = base
-    ? 'Không áp dụng (neo đáy hồ bằng đế BTCT + vít xoắn, xem SV-1…SV-6).'
-    : 'Không áp dụng (PA2: neo đáy hồ bằng khối bê tông trọng lực, xem DW-1…DW-4).';
+  const noBed = (state.line.bedLineCount ?? 1) === 0;
+  const NOT_PILE = noBed
+    ? 'Không áp dụng: bè không có dây đáy, toàn bộ dây neo vào cọc bờ.'
+    : base
+      ? 'Không áp dụng (neo đáy hồ bằng đế BTCT + vít xoắn, xem SV-1…SV-6).'
+      : 'Không áp dụng (PA2: neo đáy hồ bằng khối bê tông trọng lực, xem DW-1…DW-4).';
 
   if (results.shorePileOpt || results.bedPileOpt) {
     pushPmax('C10', 'Sức chịu tải cho phép của cọc BỜ (P_max)', results.shorePileOpt);
-    if (block || base) {
+    if (block || base || noBed) {
       checks.push(skipped({
         id: 'C11', label: 'Sức chịu tải cho phép của cọc LÒNG HỒ (P_max)', formula: 'P_req = T_dây × SF ≤ P_max',
         unit: 'kN', threshold: '≤ P_max', isMandatory: true
@@ -426,7 +429,7 @@ export function runChecks(
         `(${bars(anchor.shoreRebarFaceCount, anchor.shoreRebarDia_mm)})`);
   }
 
-  if (block || base) {
+  if (block || base || noBed) {
     for (const [id, label, formula] of [
       ['BP-3', 'Sức chịu ngang cọc LÒNG HỒ (Cách 1)', 'Th / H_allow ≤ 1.0'],
       ['BP-4', 'Sức chịu NHỔ cọc LÒNG HỒ (ma sát thân)', 'Tv / Q_uplift,all ≤ 1.0'],

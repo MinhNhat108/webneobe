@@ -76,7 +76,9 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
     raft: {
       ...hv.raft,
       // Trina TSM-740NEG21C.20: 2,384 × 1,303 m
-      solarPanelArea_m2: 3.106
+      solarPanelArea_m2: 3.106,
+      // Huổi Vanh went to 10° on 2026-10-28; Bản Mòng keeps 12° until told otherwise
+      solarTilt_deg: 12.0
     },
     env,
     line,

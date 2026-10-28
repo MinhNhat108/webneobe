@@ -234,7 +234,13 @@ export function buildLiveCalcSheets(d: FinalDesign): LiveSheets {
       const T1 = c.taut[0] ? C(3) : `MIN(${r('T0')},${C(3)})`, T2 = c.taut[1] ? C(8) : `MIN(${r('T0')},${C(8)})`;
       const h1 = `${T1}*COS(${a1})`, h2 = `${T2}*COS(${a2})`;
       const az1 = `RADIANS(${C(5)})`, az2 = `RADIANS(${C(10)})`;
-      const eng = b.combinations[k];
+      // a base under ONE line (4-raft plan, 2026-10-27): the engine checks one combination per level; the sheet keeps
+      // its six columns, line 2 pulling nothing, so the values follow the sheet's own reading of each column
+      const one = (lv: 0 | 1) => {
+        const t = c.taut[0] ? l1.tension_kN : Math.min(R0.pretension_kN ?? 0, l1.tension_kN), a = Math.atan(rise[lv] / Math.max(0.1, l1.span_m));
+        return { Th_kN: t * Math.cos(a), Tv_kN: t * Math.sin(a) };
+      };
+      const eng = l2 ? b.combinations[k] : one(c.level);
       const Th = C(o), Tv = C(o + 1), Wc = C(14), B = C(12);
       const Mo = `(${Th}*(${C(13)}+${r('bPad')})+${Tv}*${B}/2)`;
       // values of this combination, from the engine formulas

@@ -167,6 +167,11 @@ export interface AnchorInput {
    * T / (n × pileGroupEfficiency).
    */
   shorePilesPerPoint?: number;
+  /**
+   * Line tension the SHORE pile is designed for, kN, instead of the raft's governing tension. Set only for the
+   * lighter pile of a raft (catalogue `shorePileLight`): the points whose own line never pulls more than this.
+   */
+  shoreDesignTension_kN?: number;
   bedPilesPerPoint?: number;
   /**
    * Share of the ideal equal split a grouped pile can be relied on for

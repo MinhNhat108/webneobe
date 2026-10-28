@@ -114,7 +114,6 @@ export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
   const padeyeThk_mm = 25;
   const padeyeWidth_mm = 200;
   const padeyeHeight_mm = holeAbovePlate_mm + 50;
-  const weldLeg_mm = 10;
   const anchorBarDia_mm = 22, anchorBarCount = 4, anchorBarSpacing_mm = 180;
   const anchorBarLength_mm = Math.min(600, input.anchorLengthLimit_mm ?? 600);
   const collarSide_mm = Math.max(400, pileDia_mm + 50), collarDepth_mm = 300;
@@ -124,11 +123,16 @@ export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
   const edge_mm = padeyeWidth_mm / 2 - holeDia_mm / 2;
   const tearOut = (2 * edge_mm * padeyeThk_mm * PLATE_FV_MPA) / 1000;
 
-  // Fillet weld on both sides of the padeye: shear Ph, normal Pv and moment Ph · arm.
-  const throat = 0.7 * weldLeg_mm;
-  const weldArea = 2 * throat * padeyeWidth_mm;
-  const weldW = (2 * throat * padeyeWidth_mm * padeyeWidth_mm) / 6;
-  const weldStress = Math.hypot((Ph * 1000) / weldArea, (Pv * 1000) / weldArea + (Ph * 1000 * holeAbovePlate_mm) / weldW);
+  // Fillet weld on both sides of the padeye: shear Ph, normal Pv and moment Ph · arm. Leg 10 mm, raised to 12 / 14 mm
+  // (≤ 0.6 of the 25 mm padeye) where 10 mm is not enough (Huổi Vanh bases on high ground, 2026-10-28).
+  const weldStressOf = (leg: number) => {
+    const throat = 0.7 * leg;
+    const weldArea = 2 * throat * padeyeWidth_mm;
+    const weldW = (2 * throat * padeyeWidth_mm * padeyeWidth_mm) / 6;
+    return Math.hypot((Ph * 1000) / weldArea, (Pv * 1000) / weldArea + (Ph * 1000 * holeAbovePlate_mm) / weldW);
+  };
+  const weldLeg_mm = [10, 12, 14].find((leg) => weldStressOf(leg) <= WELD_F_MPA) ?? 14;
+  const weldStress = weldStressOf(weldLeg_mm);
 
   // Anchor bars: the couple Ph · (pin above the concrete) on two bars in tension plus the uplift Pv on all four,
   // the shear Ph on all four.

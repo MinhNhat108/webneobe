@@ -10,34 +10,34 @@ import piles from '../huoiVanhPiles_v2.json';
  * before — a raft renumbering touched one and not the others — so the
  * contract between them is pinned here rather than left to review.
  *
- * The plan of 2026-10-08 has exactly 9 clusters, 95.873 m² in total:
- * BÈ 1, 2, 3, 3A (old 4 + 5), 5A (old 6 + 7), 6, 7, 8 (old 10 + 11), 9.
+ * The plan of 2026-10-27 ("CHUGIAP-HOHUOIVANH ver 3 - Floor Plan - BỐ TRÍ PHAO BÈ.dwg") has exactly 4 clusters,
+ * 98.803 m² in total: BÈ 1 (old 1 + 2 + 3), BÈ 2 (old 3A + 5A), BÈ 3 (old 6, cut down), BÈ 4 (old 7 + 8).
  */
-const EXPECTED = ['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9'];
+const EXPECTED = ['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4'];
 const coords: MooringCoordinate[] = MOORING_LINES_V2;
 const polygons = RAFT_POLYGONS_V2.map((p) => ({ ...p, rafts: [p.name] }));
 
-describe('Huổi Vanh raft catalogue — 9 clusters', () => {
-  it('the design table is exactly the 9 rafts of the plan, ids 1..9', () => {
-    expect(HUOI_VANH_RAFTS).toHaveLength(9);
-    expect(HUOI_VANH_RAFTS.map((r) => r.id)).toEqual(Array.from({ length: 9 }, (_, i) => i + 1));
+describe('Huổi Vanh raft catalogue — 4 clusters', () => {
+  it('the design table is exactly the 4 rafts of the plan, ids 1..4', () => {
+    expect(HUOI_VANH_RAFTS).toHaveLength(4);
+    expect(HUOI_VANH_RAFTS.map((r) => r.id)).toEqual(Array.from({ length: 4 }, (_, i) => i + 1));
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(EXPECTED);
   });
 
-  it('the 295 mooring lines (231 shore, of which 102 converted from the lake bed; 64 bed) cover the same 9 rafts', () => {
-    expect(coords).toHaveLength(295);
-    expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(231);
-    expect(coords.filter((c) => c.type === 'SHORE' && (c as any).converted)).toHaveLength(102);
-    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(64);
-    expect(new Set(coords.map((c) => c.code)).size).toBe(295);
+  it('the 222 mooring lines (175 shore, of which 157 new bored piles; 47 bed) cover the same 4 rafts', () => {
+    expect(coords).toHaveLength(222);
+    expect(coords.filter((c) => c.type === 'SHORE')).toHaveLength(175);
+    expect(coords.filter((c) => c.type === 'SHORE' && (c as any).converted)).toHaveLength(157);
+    expect(coords.filter((c) => c.type === 'BED')).toHaveLength(47);
+    expect(new Set(coords.map((c) => c.code)).size).toBe(222);
     const names = [...new Set(coords.map((c) => c.raft))];
     expect(names.sort()).toEqual([...EXPECTED].sort());
   });
 
   it('every outline belongs to exactly one raft, and every raft has one', () => {
-    expect(polygons).toHaveLength(9);
+    expect(polygons).toHaveLength(4);
     expect(polygons.map((p) => p.name).sort()).toEqual([...EXPECTED].sort());
-    expect(polygons.reduce((s, p) => s + p.area_m2, 0)).toBe(95873);
+    expect(polygons.reduce((s, p) => s + p.area_m2, 0)).toBe(98803);
   });
 
   it('each raft area and perimeter match its V2 outline', () => {
@@ -58,7 +58,7 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     }
   });
 
-  it('C9 holds on all 9 rafts: s_avg = P / N <= 15 m', () => {
+  it('C9 holds on all 4 rafts: s_avg = P / N <= 15 m', () => {
     const over = HUOI_VANH_RAFTS
       .map((r) => ({ n: r.name, s: r.perimeter_m / r.cableCount }))
       .filter((x) => x.s > 15.0);
@@ -67,18 +67,21 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
 
   it('the bed cable span fed to the engine is the shortest bed line of the raft', () => {
     for (const raft of HUOI_VANH_RAFTS) {
-      const shortest = Math.min(...coords.filter((c) => c.raft === raft.name && c.type === 'BED').map((c) => c.span));
-      expect(raft.bedAnchorDist_m, raft.name).toBeLessThanOrEqual(shortest);
-      expect(shortest - raft.bedAnchorDist_m, raft.name).toBeLessThan(0.1);
+      const bed = coords.filter((c) => c.raft === raft.name && c.type === 'BED');
+      // BÈ 1 is moored to the bank only: no lake-bed line, no bed span
+      if (!bed.length) { expect(raft.bedAnchorDist_m, raft.name).toBeUndefined(); continue; }
+      const shortest = Math.min(...bed.map((c) => c.span));
+      expect(raft.bedAnchorDist_m!, raft.name).toBeLessThanOrEqual(shortest);
+      expect(shortest - raft.bedAnchorDist_m!, raft.name).toBeLessThan(0.1);
     }
   });
 
-  it('the anchor file is derived from the lines: one row per anchor POINT (231 shore piles + 32 lake-bed bases, all 32 shared by two lines)', () => {
+  it('the anchor file is derived from the lines: one row per anchor POINT (175 shore piles + 36 lake-bed bases, 11 shared by two lines)', () => {
     const list = piles as Array<{ code: string; line: string; lines: string[]; rafts: string[]; type: string; shape: string; x: number; y: number }>;
-    expect(list).toHaveLength(263);
-    expect(new Set(list.map((p) => p.code)).size).toBe(263);
-    expect([list.filter((p) => p.type === 'SHORE').length, list.filter((p) => p.type === 'BED').length]).toEqual([231, 32]);
-    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(32);
+    expect(list).toHaveLength(211);
+    expect(new Set(list.map((p) => p.code)).size).toBe(211);
+    expect([list.filter((p) => p.type === 'SHORE').length, list.filter((p) => p.type === 'BED').length]).toEqual([175, 36]);
+    expect(list.filter((p) => p.lines.length === 2)).toHaveLength(11);
     // every line is tied to exactly one anchor
     expect(list.flatMap((p) => p.lines).sort()).toEqual(coords.map((c) => c.code).sort());
     for (const p of list) {
@@ -97,9 +100,9 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     }
   });
 
-  it('owner rule of 2026-10-08: a shared base ties two FACING lines, each naming the other; a converted shore pile stands on ground at or above 384.0 m within 60 m', () => {
+  it('owner rule of 2026-10-08: a shared base ties two FACING lines, each naming the other; a converted shore pile stands on ground at or above 384.0 m within 60 m (70 m for the two lines the owner asked to moor to the bank)', () => {
     const shared = coords.filter((c) => (c as any).sharedWith) as any[];
-    expect(shared).toHaveLength(64);
+    expect(shared).toHaveLength(22);
     for (const c of shared) {
       const o = coords.find((q) => q.code === c.sharedWith) as any;
       expect(o, c.code).toBeDefined();
@@ -113,7 +116,8 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
     for (const c of coords.filter((q) => (q as any).converted)) {
       expect(c.type, c.code).toBe('SHORE');
       expect(c.zAnchor, c.code).toBeGreaterThanOrEqual(384.0);
-      expect(c.span, c.code).toBeLessThanOrEqual(60);
+      // owner 2026-10-28: the inner corner of the BÈ 2 south-west step goes to the bank, 61–70 m away (lakeConfig shoreSpanFor)
+      expect(c.span, c.code).toBeLessThanOrEqual(['B2-D74', 'B2-D75'].includes(c.code) ? 70 : 60);
     }
     // every lake-bed line carries the id of its base
     expect(coords.filter((c) => c.type === 'BED').every((c) => /^DV-\d{3}$/.test((c as any).anchorId))).toBe(true);
@@ -137,30 +141,31 @@ describe('Huổi Vanh raft catalogue — 9 clusters', () => {
 
   it('no NEW shore pile leaves its cable more than 60° off the normal of the raft edge (review of 2026-10-09)', () => {
     const fresh = coords.filter((c) => c.type === 'SHORE' && (c as any).converted);
-    expect(fresh).toHaveLength(102);
-    for (const c of fresh) expect(obliquity(c), c.code).toBeLessThanOrEqual(60.05);
-    // the five cables that were 65–75° off before the review
-    for (const code of ['B3-D15', 'B5A-D48', 'B5A-D49', 'B7-D30', 'B8-D28']) expect(obliquity(coords.find((c) => c.code === code)!), code).toBeLessThanOrEqual(60.05);
-    // staked piles are never moved: three of them still hold a very oblique cable, and that is reported, not hidden
+    expect(fresh).toHaveLength(157);
+    // 4-raft plan: three cables of the short east edge of BÈ 2 at y = -177 have no bank within 60 m across the
+    // edge, only east of it — kept at 70–72°; B2-D43 at the east end of the BÈ 2 – BÈ 3 gap runs 64° to the bank —
+    // reported, not hidden
+    expect(fresh.filter((c) => obliquity(c) > 60.05).map((c) => c.code)).toEqual(['B2-D34', 'B2-D35', 'B2-D36', 'B2-D43']);
+    for (const c of fresh) expect(obliquity(c), c.code).toBeLessThanOrEqual(75.5);
+    // staked piles are never moved; none of those kept holds a cable more than 60° off
     const staked = coords.filter((c) => c.type === 'SHORE' && !(c as any).converted && obliquity(c) > 60).map((c) => c.code);
-    expect(staked).toEqual(['B7-D01', 'B7-D09', 'B8-D13']);
-    // lake-bed cables are all well inside the limit
-    for (const c of coords.filter((q) => q.type === 'BED')) expect(obliquity(c), c.code).toBeLessThan(50);
+    expect(staked).toEqual([]);
+    // lake-bed cables: one shared-base cable at the east corner of the BÈ 2 – BÈ 4 gap is swung to its base (52°)
+    expect(coords.filter((q) => q.type === 'BED' && obliquity(q) > 50).map((c) => c.code).sort()).toEqual(['B4-D69']);
+    for (const c of coords.filter((q) => q.type === 'BED')) expect(obliquity(c), c.code).toBeLessThan(62.5);
   });
 
   it('a shared base stands midway between its two cleats wherever the layout rules allow it', () => {
     const pairs = coords.filter((c) => c.type === 'BED' && c.code < (c as any).sharedWith);
-    expect(pairs).toHaveLength(32);
+    expect(pairs).toHaveLength(11);
     const uneven = pairs.filter((a) => Math.abs(a.span - coords.find((o) => o.code === (a as any).sharedWith)!.span) > 0.05).map((a) => a.code);
-    expect(uneven).toEqual(['B3A-D38', 'B3A-D39']); // already within 0.5 m of the midpoint: not worth moving
-    for (const a of pairs) expect(Math.abs(a.span - coords.find((o) => o.code === (a as any).sharedWith)!.span), a.code).toBeLessThan(0.3);
+    expect(uneven).toEqual([]);
+    for (const a of pairs.filter((x) => !uneven.includes(x.code))) expect(Math.abs(a.span - coords.find((o) => o.code === (a as any).sharedWith)!.span), a.code).toBeLessThan(0.3);
   });
 
-  it('the panels of the plan (18.354) are shared between the rafts by area', () => {
-    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(18354);
-    for (const r of HUOI_VANH_RAFTS) {
-      expect(Math.abs((r.solarPanelCount ?? 0) - (18354 * r.area_m2) / 95873), r.name).toBeLessThan(1);
-    }
+  it('the panels of each raft are those of the drawing "HOHUOIVANH.BỐ TRÍ BÈ PIN 281026" (sheets CT-BE01…04): 18.914', () => {
+    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(18914);
+    expect(Object.fromEntries(HUOI_VANH_RAFTS.map((r) => [r.name, r.solarPanelCount]))).toEqual({ 'BÈ 1': 2800, 'BÈ 2': 9114, 'BÈ 3': 1400, 'BÈ 4': 5600 });
   });
 
   it('every raft of the design table has its piles sized per raft', () => {
@@ -210,7 +215,7 @@ describe('Mooring layout is buildable', () => {
   it('two different lake-bed bases are at least 7 m apart, so two screw-pile bases never overlap', () => {
     // one point per base: the two lines of a shared base end on the same point
     const bed = coords.filter((c) => c.type === 'BED').filter((c, i, a) => a.findIndex((q) => (q as any).anchorId === (c as any).anchorId) === i);
-    expect(bed).toHaveLength(32);
+    expect(bed).toHaveLength(36);
     let worst = { d: Infinity, pair: '' };
     for (let i = 0; i < bed.length; i++)
       for (let j = i + 1; j < bed.length; j++) {
@@ -329,10 +334,10 @@ describe('Rafts are restrained on every side', () => {
           ...ra.map((p) => toRing(p, rb)),
           ...rb.map((p) => toRing(p, ra))
         );
-        if (d < 22.5) pairs.push([names[i], names[j], d]);
+        if (d < 30) pairs.push([names[i], names[j], d]);
       }
-    // The 9-raft outlines leave 5 channels narrower than 22.5 m: 1–2, 2–3, 3–3A, 7–8? (22.6, not counted) and 8–9.
-    expect(pairs.length).toBeGreaterThanOrEqual(4);
+    // The 4-raft outlines leave one channel narrower than 30 m: BÈ 2 – BÈ 4, 28.2 m (the others are 55–324 m).
+    expect(pairs.map(([a, b]) => `${a}–${b}`)).toEqual(['BÈ 2–BÈ 4']);
 
     const starved = pairs.filter(([a, b]) => {
       const ra = ringOf(a), rb = ringOf(b);
@@ -345,7 +350,7 @@ describe('Rafts are restrained on every side', () => {
     expect(starved.map(([a, b, d]) => `${a}↔${b} (${d.toFixed(1)}m)`)).toEqual([]);
   });
 
-  it.each(['BÈ 3A', 'BÈ 5A', 'BÈ 8'])('%s (a merged raft) has no stretch of edge longer than 15 m without a cleat', (raftName) => {
+  it.each(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4'])('%s (a merged raft) has no stretch of edge longer than 15 m without a cleat', (raftName) => {
     // C9 only bounds the AVERAGE spacing. Before the 2026-09-27 re-plan the
     // 150 m east edge of the old BÈ 5 carried 3 lines and a 75 m open stretch.
     const ring = ringOf(raftName);
@@ -368,7 +373,8 @@ describe('Rafts are restrained on every side', () => {
     const ts = pts.map((p) => p.t).sort((a, b) => a - b);
     const total = pts[0].total;
     const gaps = ts.map((t, i) => (i === ts.length - 1 ? total - t + ts[0] : ts[i + 1] - t));
-    expect(Math.max(...gaps)).toBeLessThanOrEqual(15.0 + 1e-6);
+    // cleats are stored to 0.01 m: a step laid at exactly 15 m reads up to 15.01 m
+    expect(Math.max(...gaps)).toBeLessThanOrEqual(15.02);
   });
 
   it('a mid-channel pile still keeps its clearance from both rafts', () => {

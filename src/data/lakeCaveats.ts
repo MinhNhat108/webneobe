@@ -1,15 +1,15 @@
 /**
  * Open issues of the ACTIVE lake that must stay in front of whoever reads a
  * result (header bar, report). Every number comes from the data files; none is
- * typed in here. Huổi Vanh: only the line-operation rule of the equilibrium
- * tension (2026-10-23); its other open issues are in CLAUDE.md and the report.
+ * typed in here. Huổi Vanh: the line-operation rule of the equilibrium tension
+ * (2026-10-23) and the findings on the 4-raft plan (2026-10-27).
  */
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from './lakes';
-import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf, RAFT_TIES } from './huoiVanhLayout';
+import { RAFT_POLYGONS_V2, LAYOUT_COUNTS, MOORING_LINES_V2, bedAnchorsOf, RAFT_TIES, obliqueShoreLines } from './huoiVanhLayout';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from './huoiVanhProject';
 import { CABLE_MBL_KN } from '../lib/calc/raftState';
 import { STANDBY_SLACK_M } from '../lib/calc/mooringEquilibrium';
-import { groundAt } from '../components/simulation/sceneModel';
+import { groundAt, RAFT_MODELS } from '../components/simulation/sceneModel';
 
 const vn = (x: number, d = 2) => x.toFixed(d).replace('.', ',');
 
@@ -78,6 +78,33 @@ function huoiVanhCaveats(): string[] {
   if (standby.length) {
     out.push(`${standby.length} dây quá ngắn (${standby.join(', ')}) lắp làm DÂY DỰ PHÒNG: cắt dài thêm ${vn(STANDBY_SLACK_M, 1)} m, không tính chịu lực (dây ngắn như vậy cứng tới mức hút gần hết tải của bè).`);
   }
+  // mặt bằng 4 bè (27/10/2026)
+  const ground = [...RAFT_MODELS].filter((r) => r.groundingLevel_m > ACTIVE_LAKE.levels.mnc_m).sort((a, b) => b.groundingLevel_m - a.groundingLevel_m);
+  if (ground.length) {
+    out.push(
+      `Theo địa hình IFC, ${ground.length}/${RAFT_MODELS.length} bè chạm đáy một phần khi nước xuống thấp: ` +
+      ground.map((r) => `${r.name} từ ${vn(r.groundingLevel_m, 1)} m`).join(', ') + ` (MNDB ${vn(ACTIVE_LAKE.levels.mndb_m, 1)}, MNC ${vn(ACTIVE_LAKE.levels.mnc_m, 1)} m). ` +
+      'Cần nhà sản xuất bè xác nhận bè chịu được nằm trên đáy, hoặc thu mép bè / nạo vét theo khảo sát.'
+    );
+  }
+  const dense = HUOI_VANH_RAFTS.filter((r) => (r.shoreRebarCount ?? 0) * (r.shoreRebarDia_mm ?? 0) ** 2 > 0.04 * 350 ** 2 + 1e-6);
+  if (dense.length) {
+    out.push(`Cọc bờ ${dense.map((r) => `${r.name} ${r.shoreRebarCount}Φ${r.shoreRebarDia_mm}`).join(', ')}: hàm lượng thép vượt 4% tiết diện D350 (khó đổ bê tông); muốn dưới 4% phải dùng 3 cọc mỗi điểm — đài 3 cọc CHƯA thiết kế.`);
+  }
+  const ob = obliqueShoreLines();
+  if (ob.length) out.push(`${ob.length} dây bờ lệch quá 60° so với pháp tuyến mép bè (${ob.map((x) => `${x.code} ${vn(x.deg, 0)}°`).join(', ')}): trong tầm 60 m không có bờ theo phương vuông góc mép.`);
+  // Chủ đầu tư 28/10/2026: đế vít xoắn dọc mép nam BÈ 2 và mép trên cùng BÈ 4; chỗ nào neo bờ được thì neo bờ, đế chỉ ở
+  // chỗ không neo bờ được (khe BÈ 2 – BÈ 4, giữa khe BÈ 2 – BÈ 3), dùng chung giữa hai bè khi được
+  const bases = bedAnchorsOf();
+  const dry = bases.filter((b) => b.z >= ACTIVE_LAKE.levels.mnc_m);
+  if (dry.length) {
+    out.push(
+      `${dry.length}/${bases.length} đế vít xoắn đứng trên nền cao hơn MNC ${vn(ACTIVE_LAKE.levels.mnc_m, 1)} m theo địa hình IFC (khe BÈ 2 – BÈ 3, mép trên cùng BÈ 4; cao nhất ${vn(Math.max(...dry.map((b) => b.z)), 2)} m): ` +
+      'đế lộ khô khi nước chết, nước nông khi thi công — cao độ đặt đế lấy theo địa hình IFC, CHƯA khảo sát.'
+    );
+  }
+  const single = LAYOUT_COUNTS.bedBases - LAYOUT_COUNTS.sharedBases;
+  if (single > 0) out.push(`${single}/${LAYOUT_COUNTS.bedBases} đế vít xoắn là đế ĐƠN (một dây): dọc mép nam BÈ 2 và mép trên cùng BÈ 4.`);
   return out;
 }
 

@@ -1,5 +1,5 @@
 import { AnchorInput, ProjectState } from './types';
-import type { RaftSummaryItem } from '../../data/huoiVanhProject';
+import type { RaftSummaryItem, ShorePileLight } from '../../data/huoiVanhProject';
 
 /** Minimum breaking load (kN) of the Polyester cables used by the raft catalogue. */
 export const CABLE_MBL_KN: Record<string, number> = {
@@ -65,6 +65,22 @@ export function buildRaftProjectState(
       pileRebarRs_MPa: raftItem.pileRebarRs_MPa ?? defaultAnchor.pileRebarRs_MPa,
       shorePilesPerPoint: raftItem.shorePilesPerPoint ?? 1,
       bedPilesPerPoint: raftItem.bedPilesPerPoint ?? 1
+    }
+  };
+}
+
+/** The state of the lighter shore pile of a raft (catalogue `shorePileLight`): ONE pile, its cage, its design tension. */
+export function lightShorePileState(st: ProjectState, light: ShorePileLight): ProjectState {
+  return {
+    ...st,
+    anchor: {
+      ...st.anchor,
+      shorePilesPerPoint: 1,
+      shoreL_m: light.shorePileL_m,
+      shoreRebarCount: light.shoreRebarCount,
+      shoreRebarDia_mm: light.shoreRebarDia_mm,
+      pileRebarRs_MPa: light.pileRebarRs_MPa,
+      shoreDesignTension_kN: light.tension_kN
     }
   };
 }

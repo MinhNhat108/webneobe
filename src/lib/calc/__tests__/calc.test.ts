@@ -24,7 +24,8 @@ import {
 } from '../broms';
 import { ProjectState, CheckItem, PileSectionInput } from '../types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../../../data/huoiVanhProject';
-import { buildRaftProjectState } from '../raftState';
+import { buildRaftProjectState, lightShorePileState } from '../raftState';
+import { MOORING_LINES_V2 } from '../../../data/huoiVanhLayout';
 
 /** Deep clone so no test can leak state into another. */
 const base = (): ProjectState =>
@@ -438,9 +439,9 @@ describe('Full project', () => {
     expect(['PASS', 'FAIL', 'NA']).toContain(r.overallVerdict);
   });
 
-  it.each(['PA3_SCREW_BASE', 'PA1_PILE'] as const)('verifies all 9 Huoi Vanh rafts calculate and pass (lake-bed anchors: %s)', (option) => {
-    expect(HUOI_VANH_RAFTS).toHaveLength(9);
-    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9']);
+  it.each(['PA3_SCREW_BASE', 'PA1_PILE'] as const)('verifies all 4 Huoi Vanh rafts calculate and pass (lake-bed anchors: %s)', (option) => {
+    expect(HUOI_VANH_RAFTS).toHaveLength(4);
+    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4']);
     expect(base().anchor.bedAnchorOption).toBe('PA3_SCREW_BASE'); // the design since 2026-10-08
 
     for (const raft of HUOI_VANH_RAFTS) {
@@ -454,7 +455,9 @@ describe('Full project', () => {
       }
       // D350 bored shore piles; lake-bed anchors on screw-pile bases (or 350 x 350 piles under PA1).
       expect(r.overallVerdict, `Raft ${raft.name} should pass`).toBe('PASS');
-      expect(!!r.bedScrewBase, raft.name).toBe(option === 'PA3_SCREW_BASE');
+      // BÈ 1 is moored to the bank only: no lake-bed anchor of either kind
+      expect(!!r.bedScrewBase, raft.name).toBe(option === 'PA3_SCREW_BASE' && raft.bedAnchors > 0);
+      expect(!!r.bedPile1, raft.name).toBe(raft.bedAnchors > 0);
       if (r.bedScrewBase) expect(r.bedScrewBase.ok, raft.name).toBe(true);
       expect(s.anchor.shoreD_m, raft.name).toBe(0.35);
       expect(s.anchor.bed1D_m, raft.name).toBe(0.35);
@@ -462,9 +465,9 @@ describe('Full project', () => {
   });
 
   it('twin piles: each pile of a 2-pile point is checked for T / (2 x 0.9); one pile takes the whole tension', () => {
-    // At the 20 m/s default only BÈ 3A has twin piles (equilibrium tension, 2026-10-23): two piles per point
-    // with the catalogue cage.
-    const be3a = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3A')!;
+    // At the 20 m/s default (panel tilt 10°) only BÈ 2 has twin piles: two piles per point with the catalogue
+    // cage. BÈ 2 also has twin lake-bed piles under PA1.
+    const be3a = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 2')!;
     const mapped = buildRaftProjectState(base(), be3a, base().anchor);
     expect(mapped.anchor.shorePilesPerPoint).toBe(2);
     expect(mapped.anchor.bedPilesPerPoint).toBe(2);
@@ -485,8 +488,25 @@ describe('Full project', () => {
     const weak = calculateProject({ ...s, anchor: { ...s.anchor, pileGroupEfficiency: 0.7 } });
     expect(weak.shorePileTension_kN!).toBeGreaterThan(twin.shorePileTension_kN!);
 
-    // At the 20 m/s default every other raft has one shore pile per point.
-    expect(HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1).map((r) => r.name)).toEqual(['BÈ 3A']);
+    // At the 20 m/s default BÈ 1, 2 and 4 have twin piles for their governing tension; BÈ 3 one pile.
+    expect(HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1).map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 4']);
+    // ... but only where the line's OWN tension needs them: every other shore point of theirs takes one pile, checked
+    // with the engine for its design tension (catalogue shorePileLight)
+    for (const raft of HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) > 1)) {
+      const light = raft.shorePileLight!;
+      // BÈ 4: the twin pile is for the floor F/(6 cos 30°) of the raft only, no line of its own pulls that much
+      expect(light.heavyLines, raft.name).toEqual({ 'BÈ 1': ['B1-D15', 'B1-D16'], 'BÈ 2': ['B2-D29'], 'BÈ 4': [] }[raft.name]);
+      const st = buildRaftProjectState(base(), raft, base().anchor);
+      const own = calculateProject(st), r = calculateProject(lightShorePileState(st, light));
+      expect(r.shorePileTension_kN, raft.name).toBeCloseTo(light.tension_kN, 1);
+      expect(light.tension_kN, raft.name).toBeLessThan(own.t_max_intact_kN);
+      for (const id of ['BP-1', 'BP-2']) expect(r.checks.find((c) => c.id === id)!.utilization!, `${raft.name} ${id}`).toBeLessThanOrEqual(0.95);
+      // every light line pulls no more than the light pile's design tension
+      const lineMax = own.mooringAnalysis!.lineMax_kN;
+      for (const l of MOORING_LINES_V2.filter((q) => q.raft === raft.name && q.type === 'SHORE' && !light.heavyLines.includes(q.code))) {
+        expect(Math.min(own.t_max_intact_kN, lineMax[l.code] + (st.line.pretension_kN ?? 0)), l.code).toBeLessThanOrEqual(light.tension_kN + 0.05);
+      }
+    }
     for (const raft of HUOI_VANH_RAFTS.filter((r) => (r.shorePilesPerPoint ?? 1) === 1)) {
       const r = calculateProject(buildRaftProjectState(base(), raft, base().anchor));
       expect(r.shorePileTension_kN, raft.name).toBe(r.t_max_intact_kN);
@@ -586,7 +606,7 @@ describe('Broms — pile shape / section helpers', () => {
       expect(r.checks.find((c) => c.id === 'BP-2')!.status, raft.name).toBe('PASS');
       expect(r.shorePile!.utilization_M, raft.name).toBeLessThanOrEqual(0.95);
     }
-    const be6 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 6')!;
+    const be6 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3')!;
     const s6 = buildRaftProjectState(base(), be6, base().anchor);
     const four = calculateProject({ ...s6, env: { ...s6.env, windSpeed_ms: 30 }, anchor: { ...s6.anchor, shoreRebarCount: 4, shoreRebarDia_mm: 32 } });
     expect(four.checks.find((c) => c.id === 'BP-2')!.status).toBe('FAIL');

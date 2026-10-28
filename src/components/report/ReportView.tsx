@@ -8,6 +8,7 @@ import { FinalDesignSection } from './FinalDesignSection';
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import { lakeCaveats } from '../../data/lakeCaveats';
 import { buildCableCuttingSchedule, type CableCutRow } from '../../lib/io/cableCuttingSchedule';
+import { STANDBY_SLACK_M } from '../../lib/calc/mooringEquilibrium';
 import type { ProjectState } from '../../lib/calc/types';
 import { CABLE_MBL_KN } from '../../lib/calc/raftState';
 
@@ -46,7 +47,7 @@ const HuoiVanhCableNote: React.FC<{ state: ProjectState }> = ({ state }) => {
         <div className="p-2.5 rounded bg-emerald-50/60 border border-emerald-200">
           <span className="font-bold text-emerald-900">• {shore.length} dây cọc bờ:</span> chùng {rangeOf(shore, 'slackNormal_m')} m ở MNDB nếu không chỉnh;
           dây dài chỉ cần tăng đơ ±300 mm, {s.totals.shortShoreLines} dây ngắn dưới 10 m cần thêm đoạn xích chỉnh.
-          {standby.length > 0 && <> {standby.length} dây quá ngắn ({standby.map((r) => r.code).join(', ')}) là dây dự phòng: cắt dài thêm 0,5 m, lắp chùng.</>}
+          {standby.length > 0 && <> {standby.length} dây quá ngắn ({standby.map((r) => r.code).join(', ')}) là dây dự phòng: cắt dài thêm {STANDBY_SLACK_M.toFixed(1).replace('.', ',')} m, lắp chùng.</>}
         </div>
       </div>
       {na.length > 0 && (

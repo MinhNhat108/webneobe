@@ -115,7 +115,10 @@ export function compareMooringOptions(
 
     const perShore = Math.max(1, Math.floor(state.anchor.shorePilesPerPoint ?? 1));
     const perBed = Math.max(1, Math.floor(state.anchor.bedPilesPerPoint ?? 1));
-    shoreN += nShore; shorePiles += nShore * perShore; shoreVol += nShore * perShore * shorePile.volume_m3;
+    // the raft's lighter single shore pile at the points whose own line pulls less (catalogue shorePileLight)
+    const heavyShore = item.shorePileLight && !deviations.length ? item.shorePileLight.heavyLines.length : nShore;
+    const nShorePiles = heavyShore * perShore + (nShore - heavyShore);
+    shoreN += nShore; shorePiles += nShorePiles; shoreVol += nShorePiles * shorePile.volume_m3;
     bedN += nBed; bedPiles += nBed * perBed; bedVol += nBed * perBed * bedPile.volume_m3; bedFoot += nBed * perBed * bedPile.footprint_m2;
     blockVol += nBed * block.volume_m3; blockFoot += nBed * block.baseArea_m2;
 

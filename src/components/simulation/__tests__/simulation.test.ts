@@ -31,27 +31,27 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     const coordsV2 = (await import('../../../data/huoiVanhCoordinates_v2.json')).default;
     const terrain = (await import('../../../data/huoiVanhTerrainMesh.json')).default;
 
-    // 9 raft clusters (plan of 2026-10-08)
-    expect(raftsV2).toHaveLength(9);
+    // 4 raft clusters (plan of 2026-10-27)
+    expect(raftsV2).toHaveLength(4);
     const totalArea = raftsV2.reduce((acc: number, r: any) => acc + r.area_m2, 0);
-    expect(totalArea).toBe(95873);
+    expect(totalArea).toBe(98803);
 
-    const be9 = raftsV2.find((r: any) => r.name === 'BÈ 9');
-    expect(be9?.area_m2).toBe(4018); // the old BÈ 12, unchanged
+    const be2 = raftsV2.find((r: any) => r.name === 'BÈ 2');
+    expect(be2?.area_m2).toBe(47627); // old 3A + 5A merged: the largest raft
 
-    const be5a = raftsV2.find((r: any) => r.name === 'BÈ 5A');
-    expect(be5a?.area_m2).toBe(23037); // old 6 + 7 merged: the largest raft
+    const be3 = raftsV2.find((r: any) => r.name === 'BÈ 3');
+    expect(be3?.area_m2).toBe(7293); // the old BÈ 6, cut down
 
-    // 263 anchor points for 295 lines: all 32 lake-bed bases are shared by two lines
-    expect(pilesV2).toHaveLength(263);
+    // 211 anchor points for 222 lines: 11 of the 36 lake-bed bases are shared by two lines
+    expect(pilesV2).toHaveLength(211);
     const shorePiles = pilesV2.filter((p: any) => p.type === 'SHORE');
     const bedPiles = pilesV2.filter((p: any) => p.type === 'BED');
-    expect(shorePiles).toHaveLength(231);
-    expect(bedPiles).toHaveLength(32);
+    expect(shorePiles).toHaveLength(175);
+    expect(bedPiles).toHaveLength(36);
     expect(shorePiles.every((p: any) => p.shape === 'circular')).toBe(true);
 
-    // 295 mooring lines
-    expect(coordsV2).toHaveLength(295);
+    // 222 mooring lines
+    expect(coordsV2).toHaveLength(222);
 
     // 3D terrain height-field, extracted by scripts/extractTerrainFromIfc.mjs
     expect(terrain.rowOrder).toBe('south-to-north');
@@ -60,13 +60,13 @@ describe('Huoi Vanh 3D Simulation & IFC Generation', () => {
     expect(terrain.elevations[0]).toHaveLength(terrain.nx);
   });
 
-  it('the sample IFC carries the 263 anchor points and the 295 lines of the 9-raft layout', () => {
+  it('the sample IFC carries the 211 anchor points and the 222 lines of the 4-raft layout', () => {
     const ifc = generateHuoiVanhSampleIfc();
-    expect((ifc.match(/=IFCPILE\(/g) || []).length).toBe(263);
-    expect((ifc.match(/=IFCMEMBER\(/g) || []).length).toBe(295);
-    expect((ifc.match(/Shore bored pile D350mm/g) || []).length).toBe(231);
-    expect((ifc.match(/Lake-bed anchor point/g) || []).length).toBe(32);
-    expect((ifc.match(/, shared by lines /g) || []).length).toBe(32);
+    expect((ifc.match(/=IFCPILE\(/g) || []).length).toBe(211);
+    expect((ifc.match(/=IFCMEMBER\(/g) || []).length).toBe(222);
+    expect((ifc.match(/Shore bored pile D350mm/g) || []).length).toBe(175);
+    expect((ifc.match(/Lake-bed anchor point/g) || []).length).toBe(36);
+    expect((ifc.match(/, shared by lines /g) || []).length).toBe(11);
     expect(ifc).not.toMatch(/Pile D0\.\d+m/); // the old round-pile wording
     // every GlobalId is exactly 22 characters
     for (const m of ifc.matchAll(/=IFC(?:PILE|MEMBER|ELEMENTASSEMBLY)\('([^']*)'/g)) expect(m[1]).toHaveLength(22);

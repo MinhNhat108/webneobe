@@ -3,6 +3,8 @@ import { RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
 import { buildPileCage, PileCage, STIRRUP_DIA_MM, barUnitWeight_kg_m } from '../calc/pileCage';
 import { ACTIVE_LAKE } from '../../data/lakes';
+import { calculateProject } from '../calc';
+import { lightShorePileState } from '../calc/raftState';
 
 /** A surveyed raft-cluster boundary, site-local metres. */
 export interface RaftPolygon {
@@ -47,7 +49,7 @@ export interface PileScheduleRow {
   Lopt_m: number | null;
   /** Design embedment — the depth this pile is actually built to, m. */
   Linput_m: number;
-  /** Governing line tension of the raft this pile belongs to, kN (the whole line, not per pile). */
+  /** Governing line tension of the raft this pile belongs to, kN (the whole line, not per pile); for a light pile, its design tension. */
   Tmax_kN: number;
   /** P_req = T_max * SF, kN. */
   Preq_kN: number;
@@ -75,6 +77,11 @@ export interface PileScheduleRow {
   cage: PileCage;
   /** T_dây <= P_max. */
   isPmaxOk: boolean;
+  /** The raft's lighter single shore pile (catalogue `shorePileLight`), designed for its own design tension. */
+  light: boolean;
+  /** BP-1 (Broms lateral) and BP-2 (bending) of THIS pile type, null for a lake-bed point. */
+  bp1: number | null;
+  bp2: number | null;
   note?: string;
 }
 
@@ -98,11 +105,23 @@ export function buildPileSchedule(
   const coords = coordinates ?? MOORING_LINES_V2;
   const byRaft = new Map<string, PileScheduleBatchLike>();
   for (const b of batchResults ?? []) byRaft.set(b.raft.name, b);
+  // the lighter single shore pile of a raft, calculated once per raft
+  const lightCache = new Map<string, { state: ProjectState; results: CalcResults }>();
+  const lightOf = (batch: PileScheduleBatchLike) => {
+    const hit = lightCache.get(batch.raft.name);
+    if (hit) return hit;
+    const st = lightShorePileState(batch.state ?? state, batch.raft.shorePileLight!);
+    const out = { state: st, results: calculateProject(st) };
+    lightCache.set(batch.raft.name, out);
+    return out;
+  };
 
   return coords.map((c, i) => {
-    const batch = byRaft.get(c.raft);
-    const res = batch?.results ?? results;
+    const raftBatch = byRaft.get(c.raft);
     const isShore = c.type === 'SHORE';
+    const light = isShore && !!raftBatch?.raft.shorePileLight && !raftBatch.raft.shorePileLight.heavyLines.includes(c.code);
+    const batch: PileScheduleBatchLike | undefined = light ? { raft: raftBatch!.raft, ...lightOf(raftBatch!) } : raftBatch;
+    const res = batch?.results ?? results;
 
     const opt = isShore ? res.shorePileOpt : res.bedPileOpt;
     const D_m = isShore
@@ -129,7 +148,7 @@ export function buildPileSchedule(
       totalLength_m: Ltotal_m
     });
 
-    const Tmax_kN = res.t_max_intact_kN;
+    const Tmax_kN = light ? raftBatch!.raft.shorePileLight!.tension_kN : res.t_max_intact_kN;
     const Preq_kN = opt ? opt.Preq_kN : Tmax_kN * (state.anchor.sfPileCapacity ?? 1.0);
 
     // Capacity AT THE DESIGN DEPTH — what this pile will really hold once built.
@@ -168,6 +187,9 @@ export function buildPileSchedule(
       cage,
       // Checked against the as-built capacity, so this column can actually fail.
       isPmaxOk: Pmax_kN > 0 && Preq_kN <= Pmax_kN,
+      light,
+      bp1: isShore ? res.checks.find((k) => k.id === 'BP-1')?.utilization ?? null : null,
+      bp2: isShore ? res.checks.find((k) => k.id === 'BP-2')?.utilization ?? null : null,
       note: opt?.converged === false ? opt.note : undefined
     };
   });

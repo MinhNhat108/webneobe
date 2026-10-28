@@ -132,7 +132,7 @@ export function calculateProject(state: ProjectState): CalcResults {
     };
     const shoreShare = perPile(state.anchor.shorePilesPerPoint);
     const bedShare = perPile(state.anchor.bedPilesPerPoint);
-    shorePileTension_kN = loads.t_max_intact_kN * shoreShare;
+    shorePileTension_kN = (state.anchor.shoreDesignTension_kN ?? loads.t_max_intact_kN) * shoreShare;
     bedPileTension_kN = loads.t_max_intact_kN * bedShare;
 
     shorePile = calculateBromsPile(state.anchor.soilShore ?? 'clay', {
@@ -299,25 +299,29 @@ export function calculateProject(state: ProjectState): CalcResults {
   const bedClearanceRaw = (state.env.waterDepth_m ?? 0) - (state.raft.draft_m ?? 0);
   const bedClearance_m = Number.isFinite(bedClearanceRaw) ? bedClearanceRaw : null;
 
+  // A raft moored to the bank only (Huổi Vanh BÈ 1 of the 4-raft plan, 2026-10-27) has no lake-bed anchor:
+  // nothing of the bed pile / block / base is reported for it.
+  const hasBed = (state.line.bedLineCount ?? 1) > 0;
+
   // Unrounded intermediate state — this is what the checks are computed from.
   const raw: Omit<CalcResults, 'checks' | 'overallVerdict' | 'governingCheck'> = {
     ...loads,
     ...catenary,
     ...anchor,
     shorePile,
-    bedPile1,
-    bedPile2,
-    bedCableAngle_deg,
-    bedCableTh_kN,
-    bedCableTv_kN,
+    bedPile1: hasBed ? bedPile1 : undefined,
+    bedPile2: hasBed ? bedPile2 : undefined,
+    bedCableAngle_deg: hasBed ? bedCableAngle_deg : undefined,
+    bedCableTh_kN: hasBed ? bedCableTh_kN : undefined,
+    bedCableTv_kN: hasBed ? bedCableTv_kN : undefined,
     shorePileOpt,
-    bedPileOpt,
+    bedPileOpt: hasBed ? bedPileOpt : undefined,
     shorePileCapacity,
-    bedPileCapacity,
+    bedPileCapacity: hasBed ? bedPileCapacity : undefined,
     shorePileTension_kN,
-    bedPileTension_kN,
-    bedBlock,
-    bedScrewBase,
+    bedPileTension_kN: hasBed ? bedPileTension_kN : undefined,
+    bedBlock: hasBed ? bedBlock : undefined,
+    bedScrewBase: hasBed ? bedScrewBase : undefined,
     bedClearance_m,
     avgLineSpacing_m
   };

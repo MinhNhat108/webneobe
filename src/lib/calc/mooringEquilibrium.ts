@@ -312,4 +312,4 @@ export interface MooringLayoutInput {
 /** A line shorter than this in plan is a standby line (installed slack, not counted in the equilibrium), m. */
 export const STANDBY_SPAN_M = 4;
 /** Slack of a standby line at every level, m. */
-export const STANDBY_SLACK_M = 0.5;
+export const STANDBY_SLACK_M = 1.0;

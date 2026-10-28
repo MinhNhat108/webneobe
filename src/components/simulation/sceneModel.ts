@@ -429,6 +429,8 @@ export function buildPileModels(
       stickup_m: stickup,
       pilesAtPoint: Math.max(1, Math.floor(
         (edited ? (isShore ? anchor.shorePilesPerPoint : anchor.bedPilesPerPoint) : undefined)
+          // the lighter single shore pile of the raft at the points whose own line pulls less (catalogue shorePileLight)
+          ?? (isShore && r.shorePileLight && !r.shorePileLight.heavyLines.includes(p.line) ? 1 : undefined)
           ?? (isShore ? r.shorePilesPerPoint : r.bedPilesPerPoint) ?? 1
       )),
       ground_m: ground,

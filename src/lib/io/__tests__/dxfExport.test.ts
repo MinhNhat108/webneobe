@@ -58,11 +58,11 @@ describe('DXF document structure', () => {
     expect(/[^\x00-\x7F]/.test(dxf)).toBe(false);
   });
 
-  it('draws every one of the 295 anchor points at its design coordinate', () => {
+  it('draws every one of the 222 anchor points at its design coordinate', () => {
     const { dxf, pileCount, raftCount } = built();
     expect(pileCount).toBe(coordinates.length);
-    expect(pileCount).toBe(295);
-    expect(raftCount).toBe(9);
+    expect(pileCount).toBe(222);
+    expect(raftCount).toBe(4);
 
     const first = (coordinates as any[])[0];
     expect(dxf).toContain(`\n${first.xAnchor}\n`);
@@ -157,7 +157,7 @@ describe('convexHull / raft outlines', () => {
 
   it('builds one closed outline per raft', () => {
     const outlines = buildRaftOutlines();
-    expect(outlines.length).toBeGreaterThanOrEqual(9);
+    expect(outlines.length).toBeGreaterThanOrEqual(4);
     for (const o of outlines) {
       expect(o.points.length).toBeGreaterThanOrEqual(3);
     }
@@ -165,7 +165,7 @@ describe('convexHull / raft outlines', () => {
 
   it('uses the surveyed CAD polygons for every raft, not the hull fallback', () => {
     const outlines = buildRaftOutlines();
-    expect(outlines).toHaveLength(9);
+    expect(outlines).toHaveLength(4);
     expect(outlines.every((o) => o.source === 'surveyed')).toBe(true);
 
     // Every raft in the coordinate set is covered by exactly one outline.
@@ -174,9 +174,9 @@ describe('convexHull / raft outlines', () => {
     expect(new Set(labelled)).toEqual(rafts);
     expect(labelled).toHaveLength(rafts.size);
 
-    // Exactly the 9 rafts of the 2026-10-08 plan — one polygon per raft, none of the retired names.
-    expect(new Set(labelled)).toEqual(new Set(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9']));
-    for (const gone of ['BÈ 4', 'BÈ 5', 'BÈ 10', 'BÈ 11', 'BÈ 12']) expect(labelled).not.toContain(gone);
+    // Exactly the 4 rafts of the 2026-10-27 plan — one polygon per raft, none of the retired names.
+    expect(new Set(labelled)).toEqual(new Set(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4']));
+    for (const gone of ['BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 9', 'BÈ 12']) expect(labelled).not.toContain(gone);
   });
 
   it('falls back to the hull, flagged as such, for a raft with no polygon', () => {
@@ -189,7 +189,7 @@ describe('convexHull / raft outlines', () => {
     const outlines = buildRaftOutlines(extra as any);
     const fallback = outlines.find((o) => o.raft === 'BÈ 99');
     expect(fallback?.source).toBe('hull');
-    expect(outlines.filter((o) => o.source === 'surveyed')).toHaveLength(9);
+    expect(outlines.filter((o) => o.source === 'surveyed')).toHaveLength(4);
   });
 
   it('keeps the raft outlines in the same frame as the anchor points', () => {

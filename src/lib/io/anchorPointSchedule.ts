@@ -105,6 +105,8 @@ export interface AnchorPointSchedule {
     maxLiftMass_t: number;
     /** Lake-bed bases where the IFC terrain is more than 0.5 m above the design lake bed (to be checked on site). */
     terrainHigherPoints: number;
+    /** Bases standing on ground at or above the dead water level (dry at MNC). */
+    dryAtLowWater: number;
     shoreBelowNormalWater: number;
     floodedShoreHeads: number;
     longestShoreSpan_m: number;
@@ -147,6 +149,7 @@ export function buildAnchorPointSchedule(
       note: [
         b.shared ? 'Đế dùng chung hai bè: hai tai neo' : '',
         above !== null && above > TERRAIN_NOTE_M ? `Địa hình IFC tại điểm này cao hơn đáy thiết kế ${above.toFixed(1).replace('.', ',')} m: kiểm tra khảo sát / nạo vét trước khi đặt đế` : '',
+        b.depthLow_m <= 0 ? 'Nền đế cao hơn MNC: đế lộ khô khi nước chết (dây thoải, bè ở gần cũng có thể chạm đáy)' : '',
         b.design.enlarged ? 'Đế lớn hơn đế mẫu' : '',
         b.ok ? '' : 'KHÔNG có đế nào (đến 8 m) đạt',
         b.clashWith.length ? `Chồng lấn với ${b.clashWith.join(', ')}` : ''
@@ -171,7 +174,7 @@ export function buildAnchorPointSchedule(
     const worst = head?.checks.reduce((a, b) => (b.utilization > a.utilization ? b : a), head.checks[0]);
     const pin = ground === null ? null : ground + (st.anchor.shoreArm_e_m ?? 0.1);
     const slope = (level: number) => (pin === null ? null : (Math.atan2(level + CLEAT_ABOVE_WATERLINE_M - pin, Math.max(0.1, p.span_m)) * 180) / Math.PI);
-    const bp1 = util(res, 'BP-1'), bp2 = util(res, 'BP-2');
+    const bp1 = p.bp1 ?? util(res, 'BP-1'), bp2 = p.bp2 ?? util(res, 'BP-2');
     const flooded = pin !== null && pin < BASE_HIGH_WATER_M;
     const wet = ground !== null && ground < MNDB_M;
     const ok = p.isPmaxOk && (bp1 ?? 0) <= 1 && (bp2 ?? 0) <= 1 && (head?.ok ?? true);
@@ -206,6 +209,7 @@ export function buildAnchorPointSchedule(
       basesBySide: Object.fromEntries(Object.entries(bySide).sort((a, b) => Number(a[0]) - Number(b[0]))),
       maxLiftMass_t: bases.totals.maxLiftMass_t,
       terrainHigherPoints: bed.filter((b) => (b.terrainAboveBed_m ?? 0) > TERRAIN_NOTE_M).length,
+      dryAtLowWater: bed.filter((b) => b.base.depthLow_m <= 0).length,
       shoreBelowNormalWater: shore.filter((s) => s.belowNormalWater).length,
       floodedShoreHeads: shore.filter((s) => s.floodedAtHighWater).length,
       longestShoreSpan_m: shore.reduce((m, s) => Math.max(m, s.span_m), 0)
@@ -223,7 +227,7 @@ export function appendAnchorPointSheets(wb: XLSX.WorkBook, s: AnchorPointSchedul
   const caveat = designWindCaveat(wind);
   const head = [
     `Gió tính toán V = ${wind} m/s. Mực nước: MNC ${lv.mnc_m} m (dây thoải nhất), MNLKT ${lv.mnlkt_m} m (dây dốc nhất). Đế neo đáy đặt ở cao độ ĐÁY HỒ THIẾT KẾ (MNDB − độ sâu thiết kế của bè); mặt đất tại cọc bờ lấy từ địa hình IFC quy về cao độ dự án.` + (caveat ? ` CHÚ Ý: ${caveat}` : ''),
-    'Lực dây = lực dây bất lợi nhất của BÈ chứa dây đó (chưa có mô hình phân bố lực theo từng dây). Hình học (tầm vươn, cao độ, góc cáp) là của riêng từng điểm.'
+    'Lực dây: đế neo đáy theo lực lớn nhất của CHÍNH dây (mọi mực nước, mọi hướng gió, cộng lực căng trước, không vượt lực của bè). Cọc bờ theo loại cọc: cọc của bè kiểm với lực bất lợi nhất của BÈ; bè có cọc đôi còn có một loại CỌC ĐƠN kiểm với lực thiết kế của nó, chỉ dùng ở điểm mà lực của chính dây không vượt lực này. Hình học (tầm vươn, cao độ, góc cáp) là của riêng từng điểm.'
   ];
   const T = s.totals;
 
@@ -263,6 +267,7 @@ export function appendAnchorPointSheets(wb: XLSX.WorkBook, s: AnchorPointSchedul
   bed.push(['Đế nặng nhất khi cẩu', num(T.maxLiftMass_t, 1), 'tấn']);
   for (const [side, n] of Object.entries(T.basesBySide)) bed.push([`Số đế cạnh B = ${side.replace('.', ',')} m`, n, 'đế']);
   bed.push([`Số đế mà địa hình IFC cao hơn đáy thiết kế trên ${String(TERRAIN_NOTE_M).replace('.', ',')} m (cần kiểm tra khảo sát / nạo vét)`, T.terrainHigherPoints, 'đế']);
+  bed.push(['Số đế có nền cao hơn MNC (lộ khô khi nước chết)', T.dryAtLowWater, 'đế']);
   const wsBed = XLSX.utils.aoa_to_sheet(bed);
   wsBed['!cols'] = [5, 11, 12, 10, 8, 9, 11, 10, 8, 9, 11, 10, 10, 13, 12, 11, 12, 34, 11, 10, 7, 7, 9, 10, 8, 11, 9, 9, 9, 10, 9, 11, 11, 12, 60].map((wch) => ({ wch }));
   XLSX.utils.book_append_sheet(wb, wsBed, 'TungDiemNeoDay');
@@ -270,7 +275,7 @@ export function appendAnchorPointSheets(wb: XLSX.WorkBook, s: AnchorPointSchedul
   const shore: any[][] = [
     [`TÍNH TOÁN TỪNG ĐIỂM NEO BỜ: CỌC KHOAN NHỒI (${T.shorePoints} ĐIỂM, trong đó ${T.convertedShorePoints} điểm chuyển từ neo đáy) — ${code}`],
     [head[0]], [head[1]],
-    ['BP-1 (Broms ngang), BP-2 (uốn, TCVN 5574:2018) và đầu cọc (H-1…H-8) không phụ thuộc vị trí nên lặp lại theo bè; riêng từng điểm là góc cáp tại đầu cọc, mặt đất tại cọc so với MNDB và việc đầu cọc có ngập ở MNLKT hay không. Thông số đất là GIẢ ĐỊNH; vị trí cọc mới lấy theo địa hình IFC, chưa phải khảo sát.'],
+    ['BP-1 (Broms ngang), BP-2 (uốn, TCVN 5574:2018) và đầu cọc (H-1…H-8) không phụ thuộc vị trí nên lặp lại theo loại cọc của bè; riêng từng điểm là góc cáp tại đầu cọc, mặt đất tại cọc so với MNDB và việc đầu cọc có ngập ở MNLKT hay không. Thông số đất là GIẢ ĐỊNH; vị trí cọc mới lấy theo địa hình IFC, chưa phải khảo sát.'],
     [''],
     ['STT', 'MÃ CỌC', 'KÝ HIỆU', 'BÈ', 'NGUỒN GỐC', 'X (m)', 'Y (m)', 'Cao độ mặt đất (m)', 'Tầm vươn (m)', 'Phương vị (°)', 'Số cọc', 'D (m)', 'L_tk (m)', 'Thép chủ', 'Mác thép',
       'T dây (kN)', 'T một cọc (kN)', 'BP-1 ngang', 'BP-2 uốn', 'Đầu cọc (HSSD lớn nhất)', 'Kiểm tra đầu cọc chi phối',

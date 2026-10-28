@@ -7,10 +7,13 @@ import { buildScrewBaseSchedule, type ScrewBaseRow, type ScrewBaseSchedule } fro
 import { buildAnchorPointSchedule, type AnchorPointSchedule, type ShorePointRow } from './anchorPointSchedule';
 import { buildCableCuttingSchedule, appendCableCuttingSheet } from './cableCuttingSchedule';
 import { buildLiveCalcSheets, LIVE_SHEETS } from './liveCalcSheets';
-import type { EqResult } from '../calc/mooringEquilibrium';
+import { STANDBY_SLACK_M, type EqResult } from '../calc/mooringEquilibrium';
 import { lakeCaveats } from '../../data/lakeCaveats';
 import { DEFAULT_REBAR_COVER_MM } from '../calc/broms';
 import { ACTIVE_LAKE_ID } from '../../data/lakes';
+import { obliqueShoreLines } from '../../data/huoiVanhLayout';
+import { calculateProject } from '../calc';
+import { lightShorePileState } from '../calc/raftState';
 
 /**
  * The calculation workbook and the calculation note of the design the owner
@@ -26,6 +29,33 @@ import { ACTIVE_LAKE_ID } from '../../data/lakes';
 export const FINAL_MOORING_OPTION = 'PA3_SCREW_BASE' as const;
 export const FINAL_OPTION_DATE = '12/10/2026';
 export const FINAL_OPTION_TITLE = 'Cọc khoan nhồi D350 ven bờ + đế BTCT giữ bằng vít xoắn dưới đáy hồ';
+
+/** One shore pile type of a raft: its own pile, or the lighter single pile of the points whose line pulls less. */
+export interface PileTypeRow {
+  /** The raft's lighter single pile (catalogue `shorePileLight`). */
+  light: boolean;
+  points: number;
+  piles: number;
+  perPoint: number;
+  D_m: number;
+  L_m: number;
+  Ltotal_m: number;
+  cage: string;
+  grade: string;
+  stirrup: string;
+  /** Design line tension of the type, kN, and the load on one pile, kN. */
+  tension_kN: number;
+  pileLoad_kN: number;
+  Hu_kN: number;
+  Hallow_kN: number;
+  bp1: number;
+  Mmax_kNm: number;
+  Mrd_kNm: number;
+  bp2: number;
+  Pmax_kN: number;
+  concretePerPile_m3: number;
+  steelPerPile_kg: number;
+}
 
 export interface FinalRaftRow {
   name: string;
@@ -67,7 +97,9 @@ export interface FinalRaftRow {
   mbl_kN: number;
   sfIntact: number;
   sfDamaged: number;
-  // shore pile of the raft
+  // shore pile of the raft (the first pile type; `pileTypes` holds every type, `pileCount` / `pileLength_m` all piles)
+  pileTypes: PileTypeRow[];
+  pileLength_m: number;
   pileCount: number;
   pileD_m: number;
   pileL_m: number;
@@ -151,7 +183,22 @@ export function buildFinalDesign(
   const rafts: FinalRaftRow[] = batch.map((b) => {
     const st = b.state ?? state, r = b.results, R = st.raft, L = st.line, A = st.anchor;
     const own = shoreRows.filter((p) => p.raft === b.raft.name);
-    const p0: PileScheduleRow | undefined = own[0];
+    const pileTypes = [false, true].flatMap((light): PileTypeRow[] => {
+      const rows = own.filter((p) => p.light === light);
+      if (!rows.length) return [];
+      const q = rows[0], rr = light ? calculateProject(lightShorePileState(st, b.raft.shorePileLight!)) : r, s = rr.shorePile;
+      const piles = sum(rows, (p) => p.pileCount);
+      return [{
+        light, points: rows.length, piles, perPoint: Math.round(piles / rows.length), D_m: q.D_m, L_m: q.Linput_m, Ltotal_m: q.Ltotal_m,
+        cage: q.cage.label, grade: q.cage.grade, stirrup: q.cage.stirrupLabel, tension_kN: q.Tmax_kN, pileLoad_kN: rr.shorePileTension_kN ?? q.Tmax_kN,
+        Hu_kN: s?.Hu ?? 0, Hallow_kN: s?.H_allow ?? 0, bp1: s?.utilization_H ?? 0, Mmax_kNm: s?.Mmax ?? 0, Mrd_kNm: s?.Mrd ?? 0, bp2: s?.utilization_M ?? 0,
+        Pmax_kN: q.Pmax_kN, concretePerPile_m3: q.cage.concreteVol_m3, steelPerPile_kg: q.cage.steel_kg
+      }];
+    });
+    const p0: PileScheduleRow | undefined = own.find((p) => !p.light) ?? own[0];
+    // the raft's checks are those of the pile type of p0: when every line takes the single pile (BÈ 4 at 10°: the
+    // raft's twin pile is sized for the floor F/(6 cos 30°), no line pulls that much) its BP-1 / BP-2 are the single pile's
+    const gov = pileTypes.find((t) => !t.light) ?? pileTypes[0];
     const panels = R.solarPanelCount ?? 0, a1 = R.solarPanelArea_m2 ?? 2.701, tilt = R.solarTilt_deg ?? 12;
     const sp = r.shorePile;
     const bedLines = sum(schedule.bases, (x) => x.lines.filter((l) => l.raft === b.raft.name).length);
@@ -166,14 +213,15 @@ export function buildFinalDesign(
       focusFactor: L.focusFactor ?? 0, nEff: L.effectiveCount ?? 1, alpha_deg: L.horizontalAngle_deg ?? 30, pretension_kN: L.pretension_kN ?? 0,
       tFocus_kN: r.t_focus_kN, tGeometric_kN: r.t_geometric_kN, method: r.tensionMethod, analysis: r.mooringAnalysis, tMax_kN: r.t_max_intact_kN, tDamaged_kN: r.t_max_damaged_kN,
       cable: L.cableCode ?? '', mbl_kN: L.mbl_kN, sfIntact: L.mbl_kN / r.t_max_intact_kN, sfDamaged: L.mbl_kN / r.t_max_damaged_kN,
+      pileTypes, pileLength_m: sum(own, (p) => p.pileCount * p.Ltotal_m),
       pileCount: sum(own, (p) => p.pileCount), pileD_m: p0?.D_m ?? A.shoreD_m ?? 0.35, pileL_m: p0?.Linput_m ?? A.shoreL_m ?? 6.5, pileLtotal_m: p0?.Ltotal_m ?? 0,
       cage: p0?.cage.label ?? '-', grade: p0?.cage.grade ?? '-', stirrup: p0?.cage.stirrupLabel ?? '-',
-      rebarCount: p0?.cage.totalBars ?? 0, rebarDia_mm: p0?.rebarDia_mm ?? 0, rebarRs_MPa: A.pileRebarRs_MPa ?? 350,
-      Hu_kN: sp?.Hu ?? 0, Hallow_kN: sp?.H_allow ?? 0, bp1: sp?.utilization_H ?? 0,
-      Mmax_kNm: sp?.Mmax ?? 0, loadFactor: A.pileBendingLoadFactor ?? 1.2, Mrd_kNm: sp?.Mrd ?? 0, bp2: sp?.utilization_M ?? 0,
+      rebarCount: p0?.cage.totalBars ?? 0, rebarDia_mm: p0?.rebarDia_mm ?? 0, rebarRs_MPa: gov?.light ? b.raft.shorePileLight!.pileRebarRs_MPa : A.pileRebarRs_MPa ?? 350,
+      Hu_kN: gov?.Hu_kN ?? sp?.Hu ?? 0, Hallow_kN: gov?.Hallow_kN ?? sp?.H_allow ?? 0, bp1: gov?.bp1 ?? sp?.utilization_H ?? 0,
+      Mmax_kNm: gov?.Mmax_kNm ?? sp?.Mmax ?? 0, loadFactor: A.pileBendingLoadFactor ?? 1.2, Mrd_kNm: gov?.Mrd_kNm ?? sp?.Mrd ?? 0, bp2: gov?.bp2 ?? sp?.utilization_M ?? 0,
       Pmax_kN: p0?.Pmax_kN ?? 0,
       cuShore_kPa: A.cuShore_kPa ?? 40, arm_m: A.shoreArm_e_m ?? 0.1, cover_mm: A.pileRebarCover_mm ?? DEFAULT_REBAR_COVER_MM,
-      pileLoad_kN: r.shorePileTension_kN ?? r.t_max_intact_kN,
+      pileLoad_kN: gov?.pileLoad_kN ?? r.shorePileTension_kN ?? r.t_max_intact_kN,
       bedClearance_m: r.bedClearance_m, minClearance_m: st.criteria.minBedClearance_m ?? st.env.minWaterDepthUnderRaft_m ?? 1.0,
       lineSpacing_m: r.avgLineSpacing_m, maxSpacing_m: st.criteria.maxLineSpacing_m ?? 15,
       ea_kN: (L.eaPerMbl ?? 15) * L.mbl_kN,
@@ -303,7 +351,8 @@ function noteSections(d: FinalDesign): NoteSection[] {
   const sides = Object.entries(P.basesBySide).map(([s, n]) => `${n} đế ${s.replace('.', ',')} m`).join(', ');
   const lv = d.points.levels;
   const cut = buildCableCuttingSchedule(st);
-  const perPoint = Math.round(r.pileCount / r.shoreLines);
+  const perPoint = r.pileTypes.find((t) => !t.light)?.perPoint ?? 1;
+  const lightTypes = d.rafts.flatMap((x) => x.pileTypes.filter((t) => t.light).map((t) => ({ raft: x, t })));
   const pileLoad = perPoint > 1 ? r.tMax_kN / (perPoint * (A.pileGroupEfficiency ?? 0.9)) : r.tMax_kN;
   // Broms (short pile in clay) and the bar-ring bending resistance, written out with the raft's numbers
   const pP = 9 * r.cuShore_kPa * r.pileD_m, gP = Math.max(0.1, r.pileL_m - 1.5 * r.pileD_m);
@@ -358,6 +407,7 @@ function noteSections(d: FinalDesign): NoteSection[] {
         `BP-2, uốn thân cọc (TCVN 5574:2018). Mô-men lớn nhất trong cọc: M_max = P × (e + 1,5D + 0,5 × P / p) = ${vn(pileLoad)} × (${vn(r.arm_m, 2)} + ${vn(1.5 * r.pileD_m, 3)} + 0,5 × ${vn(pileLoad)} / ${vn(pP)}) = ${vn(r.Mmax_kNm)} kNm.`,
         `Khả năng chịu uốn của lồng ${r.rebarCount} thanh Φ${r.rebarDia_mm} đặt trên vòng tròn: M_rd = A_1 thanh × R_s × r × k(n) = ${vn(aBar, 1)} mm² × ${vn(r.rebarRs_MPa, 0)} MPa × ${vn(rRing, 3)} m × ${vn(kRing, 2)} = ${vn(r.Mrd_kNm)} kNm (r = D/2 − ${vn(r.cover_mm, 0)} mm tới tim thép; k(n) = 2 / tan(π/n) là cánh tay đòn của n thanh ở hướng BẤT LỢI nhất, vì lồng thả vào lỗ khoan không định hướng được; bỏ qua bê tông chịu kéo).`,
         `Kiểm tra: ${vn(r.loadFactor, 1)} × M_max = ${vn(r.loadFactor, 1)} × ${vn(r.Mmax_kNm)} = ${vn(r.loadFactor * r.Mmax_kNm)} kNm ≤ M_rd = ${vn(r.Mrd_kNm)} kNm; mức sử dụng ${vn(r.bp2, 2)} (${vn(r.loadFactor, 1)} là hệ số tải trọng khi kiểm tra uốn).`,
+        ...(lightTypes.length ? [`Cọc ĐƠN theo lực của chính dây (như đế neo đáy): ở ${lightTypes.map(({ raft, t }) => `${raft.name} ${t.points}/${raft.shoreLines} điểm`).join(', ')}, lực lớn nhất của CHÍNH dây (mọi mực nước, mọi hướng gió, cộng lực căng trước) không quá ${lightTypes.map(({ raft, t }) => `${vn(t.tension_kN)} kN (${raft.name})`).join(', ')} nên dùng một cọc ${lightTypes.map(({ t }) => `${t.cage} ${t.grade}, L_tk ${vn(t.L_m)} m`).filter((x, i, a) => a.indexOf(x) === i).join('; ')} (BP-1 ${lightTypes.map(({ t }) => vn(t.bp1, 2)).join(' / ')}, BP-2 ${lightTypes.map(({ t }) => vn(t.bp2, 2)).join(' / ')}); chỉ các dây lực lớn hơn mới dùng cọc của bè. Lực bè T ở trên là lực bất lợi nhất của bè, có sàn F/(6 cos 30°).`] : []),
         `Cả hệ: ${T.shorePiles} cọc, tổng dài ${vn(T.shoreLength_m)} m, ${vn(T.shoreConcrete_m3)} m³ bê tông, ${vn(T.shoreSteel_kg / 1000)} tấn thép. Lực kiểm tra cọc là toàn bộ lực dây (không giảm theo góc xiên), thiên về an toàn.`
       ]
     },
@@ -394,7 +444,14 @@ function noteSections(d: FinalDesign): NoteSection[] {
         'Hệ số che chắn 0,55 và diện tích chiếu của tấm nghiêng quyết định lực gió; lực gió trên một m² bè ở đây thấp hơn một số hồ sơ tham khảo.',
         'Sức chịu nhổ và sức chịu ngang của vít tính độc lập, chưa xét tương tác. Đầu cọc, đài cọc đôi, tai neo mặt đế mới có thiết kế sơ bộ (bảng thống kê vật tư neo, sheet KiemTra_DauCoc_De); chưa thiết kế: khóa đầu vít, móc cẩu, chống ăn mòn.',
         `Cao độ đáy đặt đế là đáy thiết kế, chưa phải khảo sát; tại ${P.terrainHigherPoints} đế địa hình IFC cao hơn đáy thiết kế trên 0,5 m. ${P.shoreBelowNormalWater}/${P.shorePoints} cọc bờ đứng ở chỗ mặt đất thấp hơn MNDB (thi công mùa nước thấp, có ống vách).`,
-        'Ba dây của cọc bờ đã định vị còn rất xiên so với mép bè: B7-D01, B7-D09, B8-D13.',
+        ...(() => {
+          const ob = obliqueShoreLines();
+          if (!ob.length) return [];
+          const list = (xs: typeof ob) => xs.map((x) => `${x.code} (${vn(x.deg, 0)}°)`).join(', ');
+          const staked = ob.filter((x) => x.staked), fresh = ob.filter((x) => !x.staked);
+          return [`${ob.length} dây bờ lệch quá 60° so với pháp tuyến mép bè (giữ bè theo phương vuông góc mép kém; lực dây đã tính theo đúng phương vị): ` +
+            [staked.length ? `cọc đã định vị (không dời) ${list(staked)}` : '', fresh.length ? `cọc mới — trong tầm 60 m không có bờ theo phương vuông góc mép — ${list(fresh)}` : ''].filter(Boolean).join('; ') + '.'];
+        })(),
         'Lớp bê tông bảo vệ cọc bờ tới đai chỉ 26–30 mm (tính với 50 mm tới tim thép chủ).'
       ]
     }
@@ -430,6 +487,9 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
           ? `Chủ đầu tư chốt ngày ${FINAL_OPTION_DATE}: ${FINAL_OPTION_TITLE}. Lực dây tính lại ngày 23/10/2026 bằng cân bằng tĩnh của bè trên từng dây theo mực nước (thay cách góc dây 30° + hệ số tập trung); cáp, cọc, đế định cỡ lại theo lực này.`
           : `Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày ${FINAL_OPTION_DATE} (${FINAL_OPTION_TITLE}); CHƯA chốt riêng cho hồ này.`,
         `Hệ neo: ${d.totals.lines} tuyến cáp tại ${P.points} điểm neo = ${P.shorePoints} cọc khoan nhồi ven bờ + ${P.bedBases} đế đáy hồ (${P.sharedBases} đế dùng chung hai bè).`,
+        ...(HV
+          ? [`Mặt bằng bè: bản vẽ CAD 27/10/2026, ${d.rafts.length} bè, ${vn(sum(d.rafts, (x) => x.area_m2), 0)} m²; số tấm pin theo bản vẽ bố trí bè pin 28/10/2026: ${d.rafts.map((x) => `${x.name} ${vn(x.panels, 0)}`).join(', ')}, tổng ${vn(sum(d.rafts, (x) => x.panels), 0)} tấm.`]
+          : []),
         d.windCaveat ?? `Gió tính toán V = ${vn(d.wind_ms, 0)} m/s.`,
         `Vận hành dây: ${comp}.`,
         `Kết quả: ${d.rafts.filter((x) => x.verdict === 'PASS').length}/${d.rafts.length} bè đạt; ${P.shoreOk}/${P.shorePoints} cọc bờ đạt; ${P.bedOk}/${P.bedBases} đế đạt.`
@@ -456,7 +516,7 @@ function lakeAnalysisNote(d: FinalDesign, r: FinalRaftRow, cut: ReturnType<typeo
             (atMnc >= r.minClearance_m + 0.005 ? ' (đạt).' : atMnc >= r.minClearance_m - 0.005 ? ' (vừa đúng giới hạn).' : atMnc > 0 ? ` — DƯỚI mức ${vn(r.minClearance_m, 1)} m.` : ' — bè CHẠM ĐÁY khi hồ xuống thấp (xem mục 8).');
         })()] : []),
         `Độ trôi bè lớn nhất (mọi hướng, mọi mực nước): ${vn(Math.min(...drifts), 1)} – ${vn(Math.max(...drifts), 1)} m tùy bè (kiểm tra C12: ≤ nửa khoảng hở nhỏ nhất tới bè bên cạnh).`,
-        ...(standby.length ? [`Dây ngắn hơn 4 m (${standby.join(', ')}) không tính vào cân bằng: lắp làm dây dự phòng, cắt dài thêm 0,5 m — bè trôi chưa tới 0,5 m nên chúng không chịu lực.`] : [])
+        ...(standby.length ? [`Dây ngắn hơn 4 m (${standby.join(', ')}) không tính vào cân bằng: lắp làm dây dự phòng, cắt dài thêm ${vn(STANDBY_SLACK_M, 1)} m — bè trôi chưa tới ${vn(STANDBY_SLACK_M, 1)} m nên chúng không chịu lực.`] : [])
       ]
     },
     hv[4], hv[5],
@@ -584,9 +644,12 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
     ['BÈ', 'Số cọc', 'D (m)', 'L_tk (m)', 'L cả cọc (m)', 'Thép chủ', 'Mác thép', 'Cốt đai', 'T dây (kN)', 'H_u (kN)', 'H cho phép (kN)', 'BP-1 ngang', 'M_max (kNm)', 'γ × M_max (kNm)', 'M_rd (kNm)', 'BP-2 uốn', 'P_max (kN)',
       'Bê tông 1 cọc (m³)', 'Thép 1 cọc (kg)', 'Tổng dài (m)', 'Tổng bê tông (m³)', 'Tổng thép (kg)', 'KẾT LUẬN']];
   for (const r of d.rafts) {
-    pr.push([r.name, r.pileCount, num(r.pileD_m, 2), num(r.pileL_m, 1), num(r.pileLtotal_m, 2), r.cage, r.grade, r.stirrup, num(r.tMax_kN, 1), num(r.Hu_kN, 1), num(r.Hallow_kN, 1), num(r.bp1, 2),
-      num(r.Mmax_kNm, 1), num(r.loadFactor * r.Mmax_kNm, 1), num(r.Mrd_kNm, 1), num(r.bp2, 2), num(r.Pmax_kN, 1), num(r.concretePerPile_m3, 3), num(r.steelPerPile_kg, 1),
-      num(r.pileCount * r.pileLtotal_m, 1), num(r.pileCount * r.concretePerPile_m3, 1), num(r.pileCount * r.steelPerPile_kg, 0), r.bp1 <= 1 && r.bp2 <= 1 ? 'ĐẠT' : 'KHÔNG ĐẠT']);
+    for (const t of r.pileTypes) {
+      const label = r.pileTypes.length > 1 ? `${r.name} (${t.light ? `cọc đơn, dây ≤ ${vn(t.tension_kN, 1)} kN` : t.perPoint > 1 ? 'cọc đôi' : 'cọc của bè'}, ${t.points} điểm)` : r.name;
+      pr.push([label, t.piles, num(t.D_m, 2), num(t.L_m, 1), num(t.Ltotal_m, 2), t.cage, t.grade, t.stirrup, num(t.tension_kN, 1), num(t.Hu_kN, 1), num(t.Hallow_kN, 1), num(t.bp1, 2),
+        num(t.Mmax_kNm, 1), num(r.loadFactor * t.Mmax_kNm, 1), num(t.Mrd_kNm, 1), num(t.bp2, 2), num(t.Pmax_kN, 1), num(t.concretePerPile_m3, 3), num(t.steelPerPile_kg, 1),
+        num(t.piles * t.Ltotal_m, 1), num(t.piles * t.concretePerPile_m3, 1), num(t.piles * t.steelPerPile_kg, 0), t.bp1 <= 1 && t.bp2 <= 1 ? 'ĐẠT' : 'KHÔNG ĐẠT']);
+    }
   }
   const T = d.totals;
   pr.push(['TỔNG', T.shorePiles, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', num(T.shoreLength_m, 1), num(T.shoreConcrete_m3, 1), num(T.shoreSteel_kg, 0), '']);
@@ -595,7 +658,7 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
   // 5. every shore pile
   const pileById = new Map(d.schedule.shorePiles.map((p) => [p.pileId, p]));
   const sp: any[][] = [title(`THỐNG KÊ VÀ TÍNH TOÁN TỪNG CỌC KHOAN NHỒI VEN BỜ (${T.shorePiles} CỌC)`), caveat,
-    ['Sức chịu của cọc không phụ thuộc vị trí (cùng giả định đất) nên BP-1, BP-2 lặp lại theo bè; riêng từng cọc là tọa độ, cao độ mặt đất (địa hình IFC), chiều dài dây và góc cáp ở hai mực nước.'], [''],
+    ['Sức chịu của cọc không phụ thuộc vị trí (cùng giả định đất) nên BP-1, BP-2 lặp lại theo loại cọc của bè (cọc của bè, hoặc cọc đơn ở điểm mà lực của chính dây nhỏ); riêng từng cọc là tọa độ, cao độ mặt đất (địa hình IFC), chiều dài dây và góc cáp ở hai mực nước.'], [''],
     ['STT', 'MÃ CỌC', 'DÂY NEO', 'BÈ', 'NGUỒN GỐC', 'X (m)', 'Y (m)', 'Cao độ mặt đất (m)', 'D (m)', 'L_tk (m)', 'L cả cọc (m)', 'Thép chủ', 'Mác thép', 'Cốt đai', 'Bê tông (m³)', 'Thép (kg)',
       'Dây dài (m)', 'Phương vị (°)', 'T dây (kN)', 'P_max (kN)', 'BP-1 ngang', 'BP-2 uốn', 'Đầu cọc', 'Góc cáp MNC (°)', 'Góc cáp MNLKT (°)', 'Mặt đất thấp hơn MNDB', 'KẾT LUẬN', 'GHI CHÚ']];
   d.points.shore.forEach((p: ShorePointRow) => {
@@ -674,7 +737,7 @@ export function buildFinalDesignWorkbook(d: FinalDesign): XLSX.WorkBook {
   kl.push(['BÈ', 'Số cọc bờ', 'Cọc bờ (md)', 'Số đế', 'Bê tông đế (m³)', 'Thép bản (kg)', 'Vít (md)']);
   for (const r of d.rafts) {
     const q = d.schedule.byRaft.find((x) => x.name === r.name);
-    kl.push([r.name, r.pileCount, num(r.pileCount * r.pileLtotal_m, 1), num(q?.bases ?? 0, 1), num(q?.concrete_m3 ?? 0, 1), num(q?.rebar_kg ?? 0, 0), num(q?.screwLength_m ?? 0, 1)]);
+    kl.push([r.name, r.pileCount, num(r.pileLength_m, 1), num(q?.bases ?? 0, 1), num(q?.concrete_m3 ?? 0, 1), num(q?.rebar_kg ?? 0, 0), num(q?.screwLength_m ?? 0, 1)]);
   }
   const wsK = XLSX.utils.aoa_to_sheet(kl);
   wsK['!cols'] = [8, 70, 12, 16, 16, 18, 36].map((wch) => ({ wch }));

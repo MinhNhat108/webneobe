@@ -22,6 +22,7 @@ import { computeRaftMooringStates, MNDB_M, MNC_M, MNLKT_M } from './sceneModel';
 import { WATER_LEVEL_MIN_M, WATER_LEVEL_MAX_M } from './SimulationControls';
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import { LAYOUT_COUNTS, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
+import { HUOI_VANH_RAFTS } from '../../data/huoiVanhProject';
 import { useProjectStore } from '../../store/useProjectStore';
 
 export const SimulationView: React.FC = () => {
@@ -119,7 +120,7 @@ export const SimulationView: React.FC = () => {
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
               {ACTIVE_LAKE_ID === 'ban-mong'
                 ? <>Mô hình 3D của {RAFT_POLYGONS_V2.length} cụm bè điện mặt trời nổi trên địa hình IFC thật của {ACTIVE_LAKE.name}: {LAYOUT_COUNTS.shorePoints} điểm neo bờ bằng cọc khoan nhồi D350, {LAYOUT_COUNTS.bedBases} điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, {LAYOUT_COUNTS.sharedBases} đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), {LAYOUT_COUNTS.lines} tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>
-                : <>Mô hình 3D của 9 cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: 231 điểm neo bờ bằng cọc khoan nhồi D350 (BÈ 3A, BÈ 5A dùng cọc đôi, mô hình vẽ một cọc đại diện mỗi điểm), 32 điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, cả 32 đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), 295 tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>}
+                : <>Mô hình 3D của {RAFT_POLYGONS_V2.length} cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: {LAYOUT_COUNTS.shorePoints} điểm neo bờ bằng cọc khoan nhồi D350 (cọc đôi ở {HUOI_VANH_RAFTS.reduce((n, r) => n + ((r.shorePilesPerPoint ?? 1) > 1 ? (r.shorePileLight ? r.shorePileLight.heavyLines.length : r.shoreAnchors) : 0), 0)} điểm, mô hình vẽ một cọc đại diện mỗi điểm), {LAYOUT_COUNTS.bedBases} điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, {LAYOUT_COUNTS.sharedBases} đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), {LAYOUT_COUNTS.lines} tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>}
             </p>
           </div>
 

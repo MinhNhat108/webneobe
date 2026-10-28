@@ -63,8 +63,11 @@ describe('Shore pile head and cable connection', () => {
   it('for Huổi Vanh it is sized for the most loaded shore pile and the heaviest cable, and every check passes', () => {
     const { state, rows, batch } = setup();
     const h = buildShorePileHead(state, rows, batch)!;
-    const maxPerPile = Math.max(...batch.map((b) => b.results.shorePileTension_kN!));
+    // per pile of every point: a twin point shares its line, a single pile of a twin-pile raft takes its line's own
+    // tension (catalogue shorePileLight: BÈ 2 single pile, 91.4 kN, is the most loaded at the 20 m/s default)
+    const maxPerPile = Math.max(...rows.filter((r) => r.type === 'SHORE').map((r) => r.Tmax_kN / (r.pileCount > 1 ? r.pileCount * 0.9 : 1)));
     expect(h.designPull_kN).toBeCloseTo(1.2 * maxPerPile, 1);
+    expect(maxPerPile).toBeCloseTo(91.4, 1);
     expect(h.pileDia_mm).toBe(350);
     expect(h.pinAboveGround_mm).toBe(100);
     expect(h.checks.every((c) => c.ok)).toBe(true);

@@ -28,15 +28,15 @@ const setup = (option: 'PA1_PILE' | 'PA3_SCREW_BASE' = 'PA3_SCREW_BASE') => {
 const parse = (dxf: string) => new DxfParser().parseSync(dxf)!;
 const decode = (t: string) => t.replace(/\\U\+([0-9A-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
 
-describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared by two rafts)', () => {
+describe('Option 3 schedule (175 shore points + 36 screw-pile bases, 11 shared by two rafts)', () => {
   it('has one row per anchor POINT, at the layout coordinates; a shared base lists its two lines', () => {
     const { state, results, batch } = setup();
     const s = buildScrewBaseSchedule(state, results, batch);
-    expect(s.shorePiles).toHaveLength(231);
-    expect(s.bases).toHaveLength(32);
-    expect(s.bases.filter((b) => b.shared)).toHaveLength(32);
+    expect(s.shorePiles).toHaveLength(175);
+    expect(s.bases).toHaveLength(36);
+    expect(s.bases.filter((b) => b.shared)).toHaveLength(11);
     expect(s.bases[0].baseId).toBe('HV-DV001');
-    expect(s.bases[31].baseId).toBe('HV-DV032');
+    expect(s.bases[35].baseId).toBe('HV-DV036');
     expect(s.bases.flatMap((b) => b.lines.map((l) => l.code)).sort()).toEqual(MOORING_LINES_V2.filter((l) => l.type === 'BED').map((l) => l.code).sort());
     for (const b of s.bases) {
       expect(b.code, b.baseId).toBe(b.lines.map((l) => l.code).join(' + '));
@@ -67,9 +67,9 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared 
   it('shares the quantities of a shared base half and half between its two rafts', () => {
     const { state, results, batch } = setup();
     const s = buildScrewBaseSchedule(state, results, batch);
-    expect(s.byRaft.reduce((a, r) => a + r.bases, 0)).toBeCloseTo(32, 9);
+    expect(s.byRaft.reduce((a, r) => a + r.bases, 0)).toBeCloseTo(36, 9);
     expect(s.byRaft.reduce((a, r) => a + r.concrete_m3, 0)).toBeCloseTo(s.totals.concrete_m3, 9);
-    expect(s.byRaft.find((r) => r.name === 'BÈ 9')!.bases).toBe(0.5); // one line, on a base shared with BÈ 8
+    expect(Object.fromEntries(s.byRaft.map((r) => [r.name, r.bases]))).toEqual({ 'BÈ 2': 25.5, 'BÈ 3': 1.5, 'BÈ 4': 9 }); // BÈ 1 is moored to the bank only
   });
 
   it('gives the same bases when handed option 1 results (it recalculates, never invents)', () => {
@@ -83,26 +83,26 @@ describe('Option 3 schedule (231 shore points + 32 screw-pile bases, all shared 
       .toEqual(buildPileSchedule(state, results, batch).filter((r) => r.type === 'SHORE'));
   });
 
-  it('totals: 32 bases for 64 lines, 128 screws, and the same quantities as the Tab 9 summary', () => {
+  it('totals: 36 bases for 47 lines, 144 screws, and the same quantities as the Tab 9 summary', () => {
     const { state, results, batch } = setup();
     const T = buildScrewBaseSchedule(state, results, batch).totals;
     const sum = summariseScrewBases(state, 1, HUOI_VANH_RAFTS, dflt().anchor);
-    expect([T.bases, T.sharedBases, T.lines, T.screws, T.okBases]).toEqual([32, 32, 64, 128, 32]);
-    expect([sum.bases, sum.sharedBases, sum.lines]).toEqual([32, 32, 64]);
+    expect([T.bases, T.sharedBases, T.lines, T.screws, T.okBases]).toEqual([36, 11, 47, 144, 36]);
+    expect([sum.bases, sum.sharedBases, sum.lines]).toEqual([36, 11, 47]);
     expect(T.concrete_m3).toBeCloseTo(sum.concrete_m3, 6);
     expect(T.rebar_kg).toBeCloseTo(sum.rebar_kg, 6);
     expect(T.screwLength_m).toBeCloseTo(sum.screwLength_m, 6);
     expect(T.maxLiftMass_t).toBeCloseTo(sum.maxLiftMass_t, 9);
-    // At the 20 m/s default (each base sized for the largest equilibrium tension of its own lines) 28 bases are the
-    // workbook base 2.5 m; the others need 2.75–3.75 m, up to 14.3 t to lift. The raft-level engine base (every bed
-    // line at the raft's governing tension, shortest bed line) is larger on every raft but BÈ 1.
-    expect(sum.basesBySide).toEqual({ '2.50': 28, '2.75': 2, '3.00': 1, '3.75': 1 });
-    expect(sum.enlargedRafts).toEqual(['BÈ 2', 'BÈ 3', 'BÈ 3A', 'BÈ 5A', 'BÈ 6', 'BÈ 7', 'BÈ 8', 'BÈ 9']);
-    expect(sum.side_m).toEqual([2.5, 3.75]);
-    expect(sum.maxLiftMass_t).toBeGreaterThan(14);
-    expect(sum.maxLiftMass_t).toBeLessThan(14.6);
-    expect(sum.concrete_m3).toBeGreaterThan(82);
-    expect(sum.concrete_m3).toBeLessThan(88);
+    // At the 20 m/s default, tilt 10° (each base sized for the largest equilibrium tension of its own lines) all 36
+    // bases are the workbook base 2.5 m, up to 6.4 t to lift. The raft-level engine base (every bed line at the raft's
+    // governing tension, shortest bed line) is larger on BÈ 2 and 4.
+    expect(sum.basesBySide).toEqual({ '2.50': 36 });
+    expect(sum.enlargedRafts).toEqual(['BÈ 2', 'BÈ 4']);
+    expect(sum.side_m).toEqual([2.5, 2.5]);
+    expect(sum.maxLiftMass_t).toBeGreaterThan(6.2);
+    expect(sum.maxLiftMass_t).toBeLessThan(6.5);
+    expect(sum.concrete_m3).toBeGreaterThan(88);
+    expect(sum.concrete_m3).toBeLessThan(91);
     expect(sum.allOk).toBe(true);
   });
 });
@@ -124,7 +124,7 @@ describe('Bases that would overlap', () => {
     expect(findBaseClashes([at('a', 0, 0), at('b', 4.5, 0, 45)])).toHaveLength(1);
   });
 
-  it('none of the 32 bases overlaps a neighbour in the 9-raft layout', () => {
+  it('none of the 36 bases overlaps a neighbour in the 4-raft layout', () => {
     const { state, results, batch } = setup();
     expect(buildScrewBaseSchedule(state, results, batch).clashes).toEqual([]);
   });
@@ -157,7 +157,7 @@ describe('Option 3 DXF drawing', () => {
     expect(out.dxf.split('\n').slice(0, -1).length % 2).toBe(0);
     const doc = parse(out.dxf);
     expect(Object.keys(doc.tables.layer.layers)).toEqual(expect.arrayContaining(Object.values(DXF_LAYERS_PA3).map((l) => l.name)));
-    expect([out.shorePileCount, out.baseCount, out.raftCount]).toEqual([231, 32, 9]);
+    expect([out.shorePileCount, out.baseCount, out.raftCount]).toEqual([175, 36, 4]);
   });
 
   it('writes Vietnamese WITH diacritics: Unicode escapes and a TrueType text style', () => {
@@ -166,23 +166,23 @@ describe('Option 3 DXF drawing', () => {
     expect(out.dxf).toContain('\nSTYLE\n2\nVN\n');
     expect(out.dxf).toContain('arial.ttf');
     const texts = parse(out.dxf).entities.filter((e: any) => e.type === 'TEXT').map((e: any) => decode(e.text as string));
-    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (231 ĐIỂM NEO, 262 CỌC)'))).toBe(true);
-    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (32 ĐẾ, 32 ĐẾ DÙNG CHUNG, 64 TUYẾN CÁP)'))).toBe(true);
+    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (175 ĐIỂM NEO, 178 CỌC)'))).toBe(true);
+    expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (36 ĐẾ, 11 ĐẾ DÙNG CHUNG, 47 TUYẾN CÁP)'))).toBe(true);
     expect(texts.some((t) => t.includes('CHI TIẾT ĐẾ NEO ĐÁY HỒ'))).toBe(true);
     // every TEXT entity uses the Vietnamese style
     expect((out.dxf.match(/\n7\nVN\n/g) || []).length).toBe(texts.length);
   });
 
-  it('draws the 32 bases at their true size, turned to their cable, with four screw holes each; a shared base has two padeyes and two cables', () => {
+  it('draws the 36 bases at their true size, turned to their cable, with four screw holes each; a shared base has two padeyes and two cables', () => {
     const { out } = built();
     const doc = parse(out.dxf);
     const onLayer = (name: string) => doc.entities.filter((e: any) => e.layer === name);
     const base = onLayer(DXF_LAYERS_PA3.base.name);
-    expect(base.filter((e: any) => e.type === 'POINT')).toHaveLength(32);
-    expect(base.filter((e: any) => e.type === 'CIRCLE')).toHaveLength(32 * 4);
+    expect(base.filter((e: any) => e.type === 'POINT')).toHaveLength(36);
+    expect(base.filter((e: any) => e.type === 'CIRCLE')).toHaveLength(36 * 4);
     const lines = base.filter((e: any) => e.type === 'LINE') as any[];
-    // 4 edges per base, plus two 0.3 m padeye squares (4 edges each) on each of the 32 shared bases
-    expect(lines).toHaveLength(32 * 4 + 32 * 2 * 4);
+    // 4 edges per base, plus two 0.3 m padeye squares (4 edges each) on each of the 11 shared bases
+    expect(lines).toHaveLength(36 * 4 + 11 * 2 * 4);
     let k = 0;
     for (const b of out.schedule.bases) {
       const own = lines.slice(k, k + 4);
@@ -194,15 +194,15 @@ describe('Option 3 DXF drawing', () => {
         k += 8;
       }
     }
-    expect(onLayer(DXF_LAYERS_PA3.shoreLine.name)).toHaveLength(231);
+    expect(onLayer(DXF_LAYERS_PA3.shoreLine.name)).toHaveLength(175);
     // one cable per lake-bed LINE: two of them end on each shared base
     const bedLines = onLayer(DXF_LAYERS_PA3.bedLine.name) as any[];
-    expect(bedLines).toHaveLength(64);
+    expect(bedLines).toHaveLength(47);
     const sharedBase = out.schedule.bases.find((b) => b.shared)!;
     expect(bedLines.filter((l) => Math.hypot(l.vertices[1].x - sharedBase.x, l.vertices[1].y - sharedBase.y) < 0.01)).toHaveLength(2);
-    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(231);
-    // 231 locating circles + 262 piles (the 31 twin-pile points of BÈ 3A add a circle each)
-    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'CIRCLE')).toHaveLength(231 + 262);
+    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'POINT')).toHaveLength(175);
+    // 175 locating circles + 178 piles (the 3 twin-pile points B1-D15, B1-D16, B2-D29 add a circle each)
+    expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'CIRCLE')).toHaveLength(175 + 178);
   });
 
   it('states the assumptions and what is not designed, and carries no money', () => {
@@ -211,7 +211,7 @@ describe('Option 3 DXF drawing', () => {
     expect(text).toContain('GIẢ ĐỊNH, chưa có khảo sát đáy hồ');
     expect(text).toContain('CHƯA THIẾT KẾ: tai neo cáp');
     // the shared bases, how they are checked, and what is not designed for them
-    expect(text).toContain('0. ĐẾ DÙNG CHUNG (32 / 32 đế)');
+    expect(text).toContain('0. ĐẾ DÙNG CHUNG (11 / 36 đế)');
     expect(text).toContain('cả hai dây cùng căng');
     expect(text).toContain('Tai neo đôi CHƯA thiết kế');
     expect(text).toContain('Quy tắc của Chủ đầu tư (08/10/2026)');
@@ -237,17 +237,17 @@ describe('Option 3 schedule workbook', () => {
     const shore = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeCocBo, { header: 1 });
     const bases = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.ThongKeDeNeoVit, { header: 1 });
     const per = XLSX.utils.sheet_to_json<any[]>(wb.Sheets.DeTheoBe, { header: 1 });
-    expect(shore.filter((r) => /^HV-P\d{3}$/.test(String(r[0])))).toHaveLength(231);
+    expect(shore.filter((r) => /^HV-P\d{3}$/.test(String(r[0])))).toHaveLength(175);
     const rows = bases.filter((r) => /^HV-DV\d{3}$/.test(String(r[0])));
-    expect(rows).toHaveLength(32);
-    expect(rows.filter((r) => r[3] === 'DÙNG CHUNG')).toHaveLength(32);
+    expect(rows).toHaveLength(36);
+    expect(rows.filter((r) => r[3] === 'DÙNG CHUNG')).toHaveLength(11);
     const s = buildScrewBaseSchedule(state, results, batch);
     expect(rows[0][1]).toBe(s.bases[0].code);
     expect(rows[0][9]).toBe(Number(s.bases[0].side_m.toFixed(2)));
     expect(rows.every((r) => r[22] === 'ĐẠT' && r[23] === '-')).toBe(true);
-    expect(bases.find((r) => r[0] === 'Tổng số vít xoắn')![1]).toBe(128);
-    expect(bases.find((r) => r[0] === 'Số tuyến cáp neo vào đế')![1]).toBe(64);
-    expect(per.filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(9);
+    expect(bases.find((r) => r[0] === 'Tổng số vít xoắn')![1]).toBe(144);
+    expect(bases.find((r) => r[0] === 'Số tuyến cáp neo vào đế')![1]).toBe(47);
+    expect(per.filter((r) => /^BÈ /.test(String(r[0])))).toHaveLength(3); // BÈ 1 has no base;
     expect(screwBaseScheduleExcelFileName(state, new Date(2026, 9, 8))).toBe(`bang-thong-ke-neo-de-vit-xoan_${state.meta.code}_20261008.xlsx`);
   });
 });

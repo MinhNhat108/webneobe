@@ -102,15 +102,14 @@ describe('Reservoir water', () => {
 });
 
 describe('Rafts float, or ground when the water is too low', () => {
-  it('8 of the 9 rafts float at MNDB; the east corner of BÈ 6 touches the bank of the IFC terrain', () => {
-    // A FINDING about the 2026-10-08 plan, pinned so it is not lost: the terrain under the
-    // east corner of BÈ 6 (x = 460.6, y = -27.4) is at the normal water level, i.e. that
-    // corner sits on the shoreline. The raft outline must be pulled back or the terrain confirmed.
-    expect(RAFT_MODELS).toHaveLength(9);
-    expect(RAFT_MODELS.filter((r) => raftWaterline(r, MNDB_M).aground).map((r) => r.name)).toEqual(['BÈ 6']);
-    const be6 = RAFT_MODELS.find((r) => r.name === 'BÈ 6')!;
-    expect(be6.shallowestGround_m).toBeGreaterThan(MNDB_M - 0.2);
-    expect(be6.shallowestGround_m).toBeLessThan(MNDB_M + 0.2);
+  it('the 4 rafts float at MNDB; BÈ 3 touches ground as soon as the lake drops 0.4 m below it', () => {
+    // A FINDING about the 2026-10-27 plan, pinned so it is not lost: by the IFC terrain the shallowest ground
+    // under BÈ 3 is 383.9 m, so it grounds at 384.1 m; BÈ 1 at 383.4 m, BÈ 2 and BÈ 4 at 382.5 m — all four
+    // rest partly on the ground at MNC 380.0 m.
+    expect(RAFT_MODELS).toHaveLength(4);
+    expect(RAFT_MODELS.filter((r) => raftWaterline(r, MNDB_M).aground).map((r) => r.name)).toEqual([]);
+    const level = Object.fromEntries(RAFT_MODELS.map((r) => [r.name, Math.round(r.groundingLevel_m * 10) / 10]));
+    expect(level).toEqual({ 'BÈ 1': 383.4, 'BÈ 2': 382.5, 'BÈ 3': 384.1, 'BÈ 4': 382.5 });
     for (const r of RAFT_MODELS) expect(raftWaterline(r, MNLKT_M).aground, r.name).toBe(false);
   });
 
@@ -123,15 +122,17 @@ describe('Rafts float, or ground when the water is too low', () => {
   });
 });
 
-describe('Piles — 263 anchor points for 295 lines, piles embedded by the design L_tk', () => {
+describe('Piles — 211 anchor points for 222 lines, piles embedded by the design L_tk', () => {
   const piles = buildPileModels();
 
-  it('has 231 shore + 32 lake-bed points; all 32 hold two lines (shared bases)', () => {
-    expect(piles).toHaveLength(263);
-    expect(piles.filter((p) => p.type === 'SHORE')).toHaveLength(231);
-    expect(piles.filter((p) => p.type === 'BED')).toHaveLength(32);
-    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(32);
-    expect(new Set(piles.flatMap((p) => p.lines)).size).toBe(295);
+  it('has 175 shore + 36 lake-bed points; 11 hold two lines (shared bases)', () => {
+    expect(piles).toHaveLength(211);
+    expect(piles.filter((p) => p.type === 'SHORE')).toHaveLength(175);
+    expect(piles.filter((p) => p.type === 'BED')).toHaveLength(36);
+    expect(piles.filter((p) => p.lines.length === 2)).toHaveLength(11);
+    expect(new Set(piles.flatMap((p) => p.lines)).size).toBe(222);
+    // twin piles only where the line's own tension needs them (catalogue shorePileLight)
+    expect(piles.filter((p) => p.type === 'SHORE' && p.pilesAtPoint > 1).map((p) => p.line).sort()).toEqual(['B1-D15', 'B1-D16', 'B2-D29']);
   });
 
   it('uses each raft\'s design side a and embedment L_tk from the catalogue', () => {
@@ -160,7 +161,7 @@ describe('Piles — 263 anchor points for 295 lines, piles embedded by the desig
 
   it('cables run from the layout cleat to the head of their own pile', () => {
     const cables = buildCableModels(piles);
-    expect(cables).toHaveLength(295);
+    expect(cables).toHaveLength(222);
     for (const c of cables) {
       expect(c.pile.lines, c.code).toContain(c.code);
       expect(c.pile.rafts, c.code).toContain(c.raft);
@@ -175,14 +176,14 @@ describe('Cable and pile colours come from the calculation engine', () => {
   it('reproduces calculateProject for every raft at the design wind', () => {
     const b = base();
     const states = computeRaftMooringStates(b, b.env.windSpeed_ms);
-    expect(states.size).toBe(9);
+    expect(states.size).toBe(4);
     for (const item of HUOI_VANH_RAFTS) {
       const r = calculateProject(buildRaftProjectState(b, item, b.anchor));
       const st = states.get(item.name)!;
       expect(st.tension_kN).toBe(r.t_max_intact_kN);
       expect(st.safetyFactor).toBeCloseTo(st.mbl_kN / st.tension_kN, 9);
       expect(st.verdict).toBe(r.overallVerdict);
-      // D350 bored shore piles and screw-pile bases; the two largest rafts pass with twin shore piles.
+      // D350 bored shore piles and screw-pile bases; BÈ 1, 2 and 4 pass with twin shore piles.
       expect(st.verdict, item.name).toBe('PASS');
     }
   });
@@ -202,7 +203,7 @@ describe('Cable and pile colours come from the calculation engine', () => {
 
   it('responds to the wind: tension grows with speed', () => {
     const b = base();
-    const t = (v: number) => computeRaftMooringStates(b, v).get('BÈ 5A')!.tension_kN;
+    const t = (v: number) => computeRaftMooringStates(b, v).get('BÈ 2')!.tension_kN;
     expect(t(35)).toBeGreaterThan(t(30));
     expect(t(30)).toBeGreaterThan(t(15));
   });
@@ -236,7 +237,7 @@ describe('The raft being edited in Tab 2 is simulated with its Tab 2 inputs', ()
     expect(st.deviations.map((d) => d.label)).toEqual(expect.arrayContaining(['Loại cáp', 'MBL cáp (kN)']));
   });
 
-  it('keeps the other 8 rafts on the frozen design', () => {
+  it('keeps the other 3 rafts on the frozen design', () => {
     const p = trial();
     const trialStates = computeRaftMooringStates(p, 30, 1);
     const designStates = computeRaftMooringStates(base(), 30, 1);
@@ -251,7 +252,7 @@ describe('The raft being edited in Tab 2 is simulated with its Tab 2 inputs', ()
   it('draws the piles of the active raft with the side and L_tk entered in Tab 2, at the same CAD positions', () => {
     const design = buildPileModels();
     const edited = buildPileModels({ shoreD_m: 0.5, shoreL_m: 9.0, bed1D_m: 0.55, bed1L_m: 13.0 }, 'BÈ 1');
-    expect(edited).toHaveLength(263);
+    expect(edited).toHaveLength(211);
     edited.forEach((p, i) => {
       expect([p.x, p.y], p.code).toEqual([design[i].x, design[i].y]);
       if (p.raft === 'BÈ 1') {

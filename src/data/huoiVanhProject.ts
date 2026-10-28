@@ -323,17 +323,17 @@ export const HUOI_VANH_PROJECT = {
     },
     {
       id: 'doc_tk_be_pin_xlsx',
-      name: '6. Thống kê vật tư bè pin và cấu kiện bè pin — 4 bè, theo bản vẽ bè pin 28/10/2026, có hộp 40x60 gia cường tai neo (HOHUOIVANH_THONG_KE_VAT_TU_BE_PIN.xlsx)',
+      name: '6. Thống kê vật tư bè pin và cấu kiện bè pin — 4 bè, khung đo trên bản vẽ CAD kết cấu 28/10/2026, có hộp 40x60 gia cường tại vị trí neo (HOHUOIVANH_THONG_KE_VAT_TU_BE_PIN.xlsx)',
       mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      size: 946671,
+      size: 608668,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_THONG_KE_VAT_TU_BE_PIN.xlsx'
     },
     {
       id: 'doc_gia_cuong_dxf',
-      name: '7. Sơ đồ bố trí hộp 40x60 gia cường tại các vị trí neo GC-01 — 4 bè, 28/10/2026 (HOHUOIVANH_GIA_CUONG_40x60_TAI_NEO.dxf)',
+      name: '7. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01 — 4 bè, theo bản vẽ khung kết cấu 28/10/2026 (HOHUOIVANH_GIA_CUONG_40x60_TAI_NEO.dxf)',
       mime: 'application/dxf',
-      size: 349124,
+      size: 379287,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_GIA_CUONG_40x60_TAI_NEO.dxf'
     },
@@ -344,6 +344,38 @@ export const HUOI_VANH_PROJECT = {
       size: 8326932,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BO_TRI_BE_PIN_281026.pdf'
+    },
+    {
+      id: 'doc_khung_be_1_gia_cuong_dwg',
+      name: '9. Khung kết cấu BÈ 1 có hộp 40x60 gia cường tại vị trí neo — bản vẽ CAD khung của Chủ đầu tư 28/10/2026, lớp GC-* thêm 29/10/2026 (HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_1_GIA_CUONG_TAI_NEO.dwg)',
+      mime: 'application/acad',
+      size: 12314547,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_1_GIA_CUONG_TAI_NEO.dwg'
+    },
+    {
+      id: 'doc_khung_be_2_gia_cuong_dwg',
+      name: '10. Khung kết cấu BÈ 2 có hộp 40x60 gia cường tại vị trí neo — bản vẽ CAD khung của Chủ đầu tư 28/10/2026, lớp GC-* thêm 29/10/2026 (HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_2_GIA_CUONG_TAI_NEO.dwg)',
+      mime: 'application/acad',
+      size: 18478539,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_2_GIA_CUONG_TAI_NEO.dwg'
+    },
+    {
+      id: 'doc_khung_be_3_gia_cuong_dwg',
+      name: '11. Khung kết cấu BÈ 3 có hộp 40x60 gia cường tại vị trí neo — bản vẽ CAD khung của Chủ đầu tư 28/10/2026, lớp GC-* thêm 29/10/2026 (HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_3_GIA_CUONG_TAI_NEO.dwg)',
+      mime: 'application/acad',
+      size: 2438172,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_3_GIA_CUONG_TAI_NEO.dwg'
+    },
+    {
+      id: 'doc_khung_be_4_gia_cuong_dwg',
+      name: '12. Khung kết cấu BÈ 4 có hộp 40x60 gia cường tại vị trí neo — bản vẽ CAD khung của Chủ đầu tư 28/10/2026, lớp GC-* thêm 29/10/2026 (HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_4_GIA_CUONG_TAI_NEO.dwg)',
+      mime: 'application/acad',
+      size: 13768362,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_4_GIA_CUONG_TAI_NEO.dwg'
     }
   ],
   raftsSummary: HUOI_VANH_RAFT_CATALOGUE

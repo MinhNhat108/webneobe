@@ -416,6 +416,14 @@ export const HUOI_VANH_PROJECT = {
       size: 1024631,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BV_DE_NEO_VIT_XOAN_NEO01-04.dxf'
+    },
+    {
+      id: 'doc_gia_cuong_40x60_dwg',
+      name: '18. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01, bản DWG — 4 bè, 29/10/2026 (HOHUOIVANH_GIA_CUONG_40x60_TAI_NEO.dwg)',
+      mime: 'application/acad',
+      size: 79989,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_GIA_CUONG_40x60_TAI_NEO.dwg'
     }
   ],
   raftsSummary: HUOI_VANH_RAFT_CATALOGUE

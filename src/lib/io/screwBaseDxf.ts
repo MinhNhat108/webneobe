@@ -31,9 +31,13 @@ export const DXF_LAYERS_PA3 = {
 } as const;
 
 interface Column<T> { title: string; width: number; value: (r: T) => string }
+/** Mark written beside the anchor on the plan (owner 2026-10-29: "neo bờ C1, C2, …, neo đáy D1, D2, …" so labels do not overlap). */
+const shoreMark = (i: number) => `C${i + 1}`;
+const baseMark = (i: number) => `D${i + 1}`;
 const vn = (v: number, d = 2) => (Number.isFinite(v) ? v.toFixed(d).replace('.', ',') : '∞');
 
-const SHORE_COLUMNS: Column<PileScheduleRow>[] = [
+const SHORE_COLUMNS: Column<PileScheduleRow & { mark: string }>[] = [
+  { title: 'KH BV', width: 8, value: (r) => r.mark },
   { title: 'MÃ CỌC', width: 14, value: (r) => r.pileId },
   { title: 'KÝ HIỆU', width: 12, value: (r) => r.code },
   { title: 'BÈ', width: 9, value: (r) => r.raft },
@@ -50,7 +54,8 @@ const SHORE_COLUMNS: Column<PileScheduleRow>[] = [
   { title: 'ĐAI', width: 14, value: (r) => (r.cage.shape === 'circular' ? 'XOẮN Φ8 a150' : 'Φ8 a100/200') }
 ];
 
-const BASE_COLUMNS: Column<ScrewBaseRow>[] = [
+const BASE_COLUMNS: Column<ScrewBaseRow & { mark: string }>[] = [
+  { title: 'KH BV', width: 8, value: (r) => r.mark },
   { title: 'MÃ ĐẾ', width: 14, value: (r) => r.baseId },
   { title: 'DÂY NEO', width: 20, value: (r) => r.code },
   { title: 'BÈ', width: 15, value: (r) => r.raft },
@@ -205,6 +210,7 @@ export interface ScrewBaseDxfOptions {
   labelHeight_m?: number;
   shorePileRadius_m?: number;
   includeTables?: boolean;
+  /** Draw the enlarged base plan / section, per-raft table and notes (default off). */
   includeDetail?: boolean;
   coordinates?: MooringCoordinate[];
 }
@@ -241,7 +247,7 @@ export function buildMooringScrewBaseDxf(
   }
 
   // Shore piles at true size, plus a locating circle so they stay visible when zoomed out.
-  for (const r of schedule.shorePiles) {
+  for (const [i, r] of schedule.shorePiles.entries()) {
     const p = { x: r.x, y: r.y };
     e += line(L.shoreLine.name, { x: r.xRaft, y: r.yRaft }, p);
     const mark = (c: Pt) => (r.cage.shape === 'circular' ? circle(L.shorePile.name, c, r.D_m / 2) : square(L.shorePile.name, c, r.D_m));
@@ -254,8 +260,7 @@ export function buildMooringScrewBaseDxf(
       }
     } else e += mark(p);
     e += circle(L.shorePile.name, p, shoreR) + point(L.shorePile.name, p);
-    e += text(L.text.name, { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 }, h,
-      `${r.pileId} (${r.code}) ${r.pileCount > 1 ? `${r.pileCount}×` : ''}D${Math.round(r.D_m * 1000)}`);
+    e += text(L.text.name, { x: p.x + shoreR + 0.4, y: p.y + shoreR + 0.4 }, h, shoreMark(i));
   }
 
   // Tie ropes raft to raft across a narrow gap (Hồ Bản Mòng BÈ 3 – BÈ 4), in place of shared bases
@@ -266,7 +271,7 @@ export function buildMooringScrewBaseDxf(
 
   // Lake-bed bases at true plan size, one side along the first cable, with the four screw holes.
   // A shared base carries two padeyes, one towards each raft, and both cables are drawn to it.
-  for (const b of schedule.bases) {
+  for (const [i, b] of schedule.bases.entries()) {
     const p = { x: b.x, y: b.y };
     const prm = b.design.params;
     for (const l of b.lines) e += line(L.bedLine.name, { x: l.xRaft, y: l.yRaft }, p);
@@ -279,8 +284,7 @@ export function buildMooringScrewBaseDxf(
       }
     }
     e += point(L.base.name, p);
-    e += text(L.text.name, { x: p.x + b.side_m * 0.75, y: p.y + b.side_m * 0.75 }, h,
-      `${b.baseId} (${b.code}) ${vn(b.side_m)}×${vn(b.side_m)}×${vn(b.thickness_m)}${b.shared ? ' DÙNG CHUNG' : ''}`);
+    e += text(L.text.name, { x: p.x + b.side_m * 0.75, y: p.y + b.side_m * 0.75 }, h, baseMark(i));
   }
 
   const xs = [...schedule.shorePiles.flatMap((r) => [r.x, r.xRaft]), ...schedule.bases.flatMap((b) => [b.x, ...b.lines.map((l) => l.xRaft)])];
@@ -295,8 +299,9 @@ export function buildMooringScrewBaseDxf(
       `BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (${schedule.shorePiles.length} ĐIỂM NEO, ${piles} CỌC) — ${code}`,
       'Quy tắc của Chủ đầu tư (08/10/2026): gần bờ, kể cả chỗ mấp mé nước, neo bằng cọc khoan nhồi; đế vít xoắn chỉ dùng giữa hai bè. Vị trí cọc mới lấy theo địa hình IFC (≥ 384,0 m), chưa phải khảo sát.',
       'D: đường kính cọc khoan nhồi | L_tk: chiều sâu thiết kế | P_max: sức chịu tải cho phép của MỘT cọc tại L_tk | SỐ CỌC > 1: cụm cọc đặt vuông góc phương cáp, cách nhau ≥ 3D',
-      `Cáp móc sát cổ cọc, tim chốt cách mặt đất ≤ ${Math.round((state.anchor.shoreArm_e_m ?? 0.1) * 1000)} mm (điều kiện của thiết kế cốt thép).`
-    ], SHORE_COLUMNS, schedule.shorePiles, { x: cursorX, y: top }, h);
+      `Cáp móc sát cổ cọc, tim chốt cách mặt đất ≤ ${Math.round((state.anchor.shoreArm_e_m ?? 0.1) * 1000)} mm (điều kiện của thiết kế cốt thép).`,
+      'KH BV: ký hiệu ghi cạnh cọc trên mặt bằng (C1, C2, …).'
+    ], SHORE_COLUMNS, schedule.shorePiles.map((r, i) => ({ ...r, mark: shoreMark(i) })), { x: cursorX, y: top }, h);
     e += t1.dxf;
     cursorX += t1.width + 30;
     const t2 = table(L.baseTable.name, [
@@ -305,12 +310,14 @@ export function buildMooringScrewBaseDxf(
       schedule.clashes.length > 0
         ? `CẢNH BÁO: ${schedule.clashes.length} cặp đế CHỒNG LẤN nhau trên mặt bằng — xem cột cuối.`
         : 'Không có đế nào chồng lấn nhau trên mặt bằng.',
+      'KH BV: ký hiệu ghi cạnh đế trên mặt bằng (D1, D2, …). c_u bùn, γ\' và các hệ số bám dính là GIẢ ĐỊNH, chưa có khảo sát đáy hồ. CHƯA THIẾT KẾ: tai neo cáp, khóa đầu vít, móc cẩu, chống ăn mòn vít.',
       ...(designWindCaveat(state.env.windSpeed_ms) ? [`CHÚ Ý: ${designWindCaveat(state.env.windSpeed_ms)}`] : [])
-    ], BASE_COLUMNS, schedule.bases, { x: cursorX, y: top }, h);
+    ], BASE_COLUMNS, schedule.bases.map((b, i) => ({ ...b, mark: baseMark(i) })), { x: cursorX, y: top }, h);
     e += t2.dxf;
     cursorX += t2.width + 30;
   }
-  if (options.includeDetail !== false && schedule.bases.length > 0) e += baseDetail(schedule, { x: cursorX, y: top }, h, state.env.windSpeed_ms);
+  // The base detail block is off by default (owner 2026-10-29: "không cần thiết lắm, có thể bỏ đi").
+  if (options.includeDetail === true && schedule.bases.length > 0) e += baseDetail(schedule, { x: cursorX, y: top }, h, state.env.windSpeed_ms);
 
   return { dxf: dxfDocumentVn(Object.values(L), e), schedule, shorePileCount: schedule.shorePiles.length, baseCount: schedule.bases.length, raftCount: outlines.length };
 }

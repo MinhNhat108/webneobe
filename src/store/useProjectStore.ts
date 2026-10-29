@@ -393,7 +393,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: ACTIVE_LAKE.storageKey,
-      version: 20,
+      version: 21,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -546,6 +546,12 @@ export const useProjectStore = create<ProjectStore>()(
             if (item && cp.raft?.solarPanelCount === OLD_PANELS[item.name]) {
               persistedState.currentProject = { ...cp, raft: { ...cp.raft, solarPanelCount: item.solarPanelCount } };
             }
+          }
+
+          // v21 (2026-10-29): Bản Mòng panel tilt 10° (owner); a saved 12° is the old default, not a user's choice
+          if (version < 21 && ACTIVE_LAKE_ID === 'ban-mong' && persistedState.currentProject?.id === BUILT_IN_ID
+            && persistedState.currentProject.raft?.solarTilt_deg === 12) {
+            persistedState.currentProject = { ...persistedState.currentProject, raft: { ...persistedState.currentProject.raft, solarTilt_deg: 10 } };
           }
 
           // Whatever the history, never leave the app pointing at a raft that

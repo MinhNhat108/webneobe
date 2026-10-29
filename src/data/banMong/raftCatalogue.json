@@ -279,8 +279,8 @@
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.5,
-      "maxTension_kN": 131
+      "drift_m": 5.4,
+      "maxTension_kN": 119
     }
   },
   {
@@ -557,14 +557,14 @@
     "bedPileL_m": 8,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 28,
+    "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 6.1,
-      "maxTension_kN": 155
+      "maxTension_kN": 140
     }
   },
   {
@@ -1028,7 +1028,7 @@
           "BÈ 3",
           "BÈ 4"
         ],
-        "forceRatio": 0.7221,
+        "forceRatio": 0.7229,
         "ties": [
           "T34-01",
           "T34-02",
@@ -1039,7 +1039,7 @@
           "T34-07",
           "T34-08"
         ],
-        "tieDesign_kN": 88
+        "tieDesign_kN": 74.1
       }
     },
     "cableCount": 43,
@@ -1056,15 +1056,15 @@
     "bedPileL_m": 8,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 25,
+    "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
-    "shorePilesPerPoint": 2,
+    "pileRebarRs_MPa": 435,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 4.3,
-      "maxTension_kN": 167
+      "drift_m": 4.1,
+      "maxTension_kN": 155
     }
   },
   {
@@ -1528,7 +1528,7 @@
           "BÈ 4",
           "BÈ 3"
         ],
-        "forceRatio": 1.3848,
+        "forceRatio": 1.3833,
         "ties": [
           "T34-01",
           "T34-02",
@@ -1539,7 +1539,7 @@
           "T34-07",
           "T34-08"
         ],
-        "tieDesign_kN": 88
+        "tieDesign_kN": 74.1
       }
     },
     "cableCount": 36,
@@ -1556,15 +1556,15 @@
     "bedPileL_m": 8,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 25,
+    "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
-    "shorePilesPerPoint": 2,
+    "pileRebarRs_MPa": 435,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 4,
-      "maxTension_kN": 144
+      "drift_m": 3.9,
+      "maxTension_kN": 134
     }
   },
   {
@@ -1726,7 +1726,7 @@
     "cableCount": 20,
     "shoreAnchors": 18,
     "bedAnchors": 2,
-    "selectedCable": "PES-32",
+    "selectedCable": "PES-28",
     "waterDepth_m": 14.1,
     "bedAnchorDist_m": 12.1,
     "shoreAnchorDist_m": 10,
@@ -1739,12 +1739,11 @@
     "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
-    "pileRebarRs_MPa": 435,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 5.6,
-      "maxTension_kN": 113
+      "maxTension_kN": 94
     }
   },
   {
@@ -1963,16 +1962,16 @@
     "shorePileL_m": 6.5,
     "bedPileD_m": 0.35,
     "bedPileL_m": 8,
-    "shoreRebarCount": 6,
+    "shoreRebarCount": 4,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 25,
+    "shoreRebarDia_mm": 28,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.2,
-      "maxTension_kN": 122
+      "drift_m": 5.1,
+      "maxTension_kN": 109
     }
   },
   {
@@ -2274,7 +2273,7 @@
     "cableCount": 40,
     "shoreAnchors": 30,
     "bedAnchors": 10,
-    "selectedCable": "PES-40",
+    "selectedCable": "PES-36",
     "waterDepth_m": 13.9,
     "bedAnchorDist_m": 14,
     "shoreAnchorDist_m": 24,
@@ -2284,7 +2283,7 @@
     "bedPileL_m": 8,
     "shoreRebarCount": 6,
     "shoreRebarFaceCount": 2,
-    "shoreRebarDia_mm": 28,
+    "shoreRebarDia_mm": 25,
     "bedRebarFaceCount": 2,
     "bedRebarDia_mm": 25,
     "shorePilesPerPoint": 2,
@@ -2292,7 +2291,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 5.3,
-      "maxTension_kN": 282
+      "maxTension_kN": 235
     }
   },
   {
@@ -2562,8 +2561,8 @@
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.6,
-      "maxTension_kN": 242
+      "drift_m": 5.5,
+      "maxTension_kN": 224
     }
   }
 ]

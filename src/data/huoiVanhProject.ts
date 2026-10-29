@@ -301,7 +301,7 @@ export const HUOI_VANH_PROJECT = {
       id: 'doc_mb_neo_dxf',
       name: '3. Bản vẽ CAD bố trí neo 4 bè — 18.914 tấm pin nghiêng 10°, 28/10/2026 (HOHUOIVANH_MAT_BANG_NEO_4_BE_PA3_DE_VIT.dxf)',
       mime: 'application/dxf',
-      size: 409264,
+      size: 404475,
       kind: 'dxf' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_4_BE_PA3_DE_VIT.dxf'
     },

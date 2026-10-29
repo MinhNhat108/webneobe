@@ -168,7 +168,8 @@ describe('Option 3 DXF drawing', () => {
     const texts = parse(out.dxf).entities.filter((e: any) => e.type === 'TEXT').map((e: any) => decode(e.text as string));
     expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ CỌC KHOAN NHỒI NEO BỜ (175 ĐIỂM NEO, 178 CỌC)'))).toBe(true);
     expect(texts.some((t) => t.includes('BẢNG THỐNG KÊ ĐẾ NEO ĐÁY HỒ: ĐẾ BTCT + VÍT XOẮN (36 ĐẾ, 11 ĐẾ DÙNG CHUNG, 47 TUYẾN CÁP)'))).toBe(true);
-    expect(texts.some((t) => t.includes('CHI TIẾT ĐẾ NEO ĐÁY HỒ'))).toBe(true);
+    // the enlarged base detail is left off unless asked for (owner 2026-10-29)
+    expect(texts.some((t) => t.includes('CHI TIẾT ĐẾ NEO ĐÁY HỒ'))).toBe(false);
     // every TEXT entity uses the Vietnamese style
     expect((out.dxf.match(/\n7\nVN\n/g) || []).length).toBe(texts.length);
   });
@@ -205,8 +206,20 @@ describe('Option 3 DXF drawing', () => {
     expect(onLayer(DXF_LAYERS_PA3.shorePile.name).filter((e: any) => e.type === 'CIRCLE')).toHaveLength(175 + 178);
   });
 
-  it('states the assumptions and what is not designed, and carries no money', () => {
+  it('labels the plan with short marks C1… (shore piles) and D1… (bases), listed in the tables', () => {
     const { out } = built();
+    const texts = parse(out.dxf).entities.filter((e: any) => e.type === 'TEXT' && e.layer === DXF_LAYERS_PA3.text.name).map((e: any) => decode(e.text as string));
+    expect(texts).toHaveLength(175 + 36);
+    expect(texts.slice(0, 175)).toEqual(Array.from({ length: 175 }, (_, i) => `C${i + 1}`));
+    expect(texts.slice(175)).toEqual(Array.from({ length: 36 }, (_, i) => `D${i + 1}`));
+    const all = decode(out.dxf);
+    expect(all).toContain('KH BV: ký hiệu ghi cạnh cọc');
+    expect(all).toContain('GIẢ ĐỊNH, chưa có khảo sát đáy hồ');
+  });
+
+  it('states the assumptions and what is not designed, and carries no money', () => {
+    const { state, results, batch } = setup();
+    const out = buildMooringScrewBaseDxf(state, results, batch, { includeDetail: true });
     const text = decode(out.dxf);
     expect(text).toContain('GIẢ ĐỊNH, chưa có khảo sát đáy hồ');
     expect(text).toContain('CHƯA THIẾT KẾ: tai neo cáp');

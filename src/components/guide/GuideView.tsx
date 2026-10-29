@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { ActiveSection } from '../layout/Sidebar';
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
-import { LAYOUT_COUNTS, RAFT_POLYGONS_V2 } from '../../data/huoiVanhLayout';
+import { buildGuideFacts } from './guideFacts';
 import {
   BookOpen,
   FolderKanban,
@@ -37,42 +37,59 @@ import {
 
 interface GuideViewProps {
   onSelectSection: (section: ActiveSection) => void;
+  /** Opening tab / step (default: field installation, step 1). */
+  initialTab?: GuideTab;
+  initialStep?: number;
 }
 
-type GuideTab = 'overview' | 'steps' | 'diagram' | 'formulas' | 'installation' | 'troubleshooting' | 'faq';
+export type GuideTab = 'overview' | 'steps' | 'diagram' | 'formulas' | 'installation' | 'troubleshooting' | 'faq';
 
-export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
-  const [activeTab, setActiveTab] = useState<GuideTab>('installation');
+export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection, initialTab = 'installation', initialStep = 1 }) => {
+  const [activeTab, setActiveTab] = useState<GuideTab>(initialTab);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [selectedStep, setSelectedStep] = useState<number>(1);
+  const [selectedStep, setSelectedStep] = useState<number>(initialStep);
   const [activeForceInfo, setActiveForceInfo] = useState<string | null>('wind');
+  // every number of the page comes from the current design (owner 2026-10-29: no more 9-raft examples)
+  const F = useMemo(buildGuideFacts, []);
+  const E = F.example;
+  const C = F.counts;
+  const n = (v: number, d = 1) => v.toFixed(d).replace('.', ',');
+  const raftList = F.rafts.join(', ');
+  const L = F.levels;
+  const shoreLines = F.cut.shore.count, bedLines = F.cut.bed.count;
+  const note = (id: string) => E.check(id)?.note ?? '';
+  const util = (id: string) => n(E.check(id)?.utilization ?? 0, 2);
 
   // FAQ list
   const faqList = [
     {
       q: 'Khi căng cáp thì cho cáp căng hay chùng dây như thế nào theo các mùa nước hồ?',
-      a: '• NGUYÊN TẮC CỐT TỬ: Tuyệt đối không kéo căng cứng đét (như dây đàn) và KHÔNG lắp đặt bằng cách đo lực kéo T0 ở mùa nước bình thường MNDB. Bắt buộc phải CẮT CÁP ĐÚNG CHIỀU DÀI TÍNH TOÁN THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY.\n• DÂY ĐÁY (64 dây / 32 đế chung): Dài nhất ở mùa lũ MNLKT (386,0m) -> BẮT BUỘC CẮT THEO MNLKT. Vào mùa cạn MNC (380,0m), nước tụt sâu làm dây chùng 1,2 ~ 2,6m nằm tiếp đáy. (Nếu cắt căng ở mùa cạn, khi lũ dâng lực đẩy nổi bè sẽ giật đứt tung cáp hoặc nhổ đế).\n• DÂY BỜ (231 dây cọc bờ D350): Do cọc bờ nằm trên đồi cao (+384,0 ~ +386,5 m), khi nước rút về mùa cạn MNC bè hạ thấp làm khoảng cách chéo xa nhất -> DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC -> CẮT THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 ~ 0,3m.\n• CƠ CHẾ BÙ TRỪ & CHỐNG VA ĐẬP: Ở mùa cạn MNC, dây bờ căng đét giữ bè không trôi; ở mùa lũ MNLKT, dây đáy căng giữ bè. Khe hở giữa 2 bè (10 ~ 13m) luôn giữ an toàn, độ dịch chuyển ngang tối đa < 0,8m.\n• BIỆN PHÁP THI CÔNG: Cắt cáp chốt-tới-chốt + đoạn phụ kiện theo quy định NCC và vạch dấu sơn trước khi thả, đầu bích bè dùng xích/tăng đơ vi chỉnh, dây đáy buộc 1 phao nổi nhỏ (15-20 kg) cách đế 3m để nhấc nhẹ bụng cáp tránh vùi bùn khi mùa cạn.'
+      a: `• ĐIỀU KIỆN BẮT BUỘC CỦA THIẾT KẾ: lực dây tính theo mô hình cân bằng ở mọi mực nước với điều kiện ${F.adjustStep_m > 0 ? `CHỈNH LẠI MỌI DÂY CHO VỪA CĂNG MỖI KHI MỰC NƯỚC ĐỔI ${n(F.adjustStep_m, 0)} m` : 'mọi dây luôn được giữ vừa căng (thiết bị bù mực nước)'}. Cắt cáp một lần rồi để nguyên thì lực dây vượt nhiều so với thiết kế.
+• Không kéo căng cứng như dây đàn: dây chỉ cần vừa căng (lực căng trước T₀ = ${n(E.pretension_kN, 0)} kN).
+• DÂY ĐÁY (${bedLines} dây vào ${C.bedBases} đế, ${C.sharedBases} đế dùng chung): dài nhất khi nước cao — ${F.cut.bedGovernedHigh}/${bedLines} dây dài nhất ở MNLKT ${n(L.mnlkt)} m, nên chiều dài cắt lấy theo MNLKT. Ở MNC ${n(L.mnc)} m dây đáy chùng tới ${n(F.cut.bed.slackLow.max, 2)} m.
+• DÂY BỜ (${shoreLines} dây vào cọc khoan nhồi D350): chốt cọc ở trên bờ (${n(F.cut.shore.pin.min, 1)}–${n(F.cut.shore.pin.max, 1)} m) nên dây bờ dài nhất khi nước xuống MNC — ${F.cut.shoreGovernedLow}/${shoreLines} dây cắt theo MNC. Ở MNDB dây bờ chùng ${n(F.cut.shore.slackNormal.min, 2)}–${n(F.cut.shore.slackNormal.max, 2)} m (trung vị ${n(F.cut.shore.slackNormal.med, 2)} m).
+• Chiều dài cắt từng dây: sheet ChieuDaiCatCap của bảng neo Excel (chốt tới chốt, chưa gồm phụ kiện đầu dây). Đầu bích bè dùng xích / tăng đơ để chỉnh dây theo mực nước.`
     },
     {
       q: 'Khi bảng kết quả báo "KHÔNG ĐẠT" (Màu đỏ), tôi cần điều chỉnh thông số nào trước?',
-      a: 'Hãy nhìn vào dòng "Hạng mục vi phạm" trên thanh kết luận:\n• Nếu vi phạm sức bền kéo cáp (C2 hoặc C6): Vào mục "2. Thông Số Đầu Vào" -> Tab Dây Cáp -> Chọn mã cáp lớn hơn (ví dụ nâng từ PES-28 lên PES-32 hoặc PES-36) hoặc tăng thêm số lượng dây neo.\n• Nếu vi phạm sức chịu cọc bờ (C1 hoặc C7): Vào tab Cọc & Mỏ Neo -> Tăng chiều sâu ngàm cọc L hoặc tăng số lượng thép chủ trong lồng cọc D350.\n• Nếu vi phạm neo đáy lòng hồ: Với phương án đế vít xoắn (PA3), hệ thống tự động tăng kích thước cạnh đế B và chiều dài vít L để đạt 100%; với phương án cọc đóng (PA1), tăng chiều sâu cọc ngàm L trong đất.'
+      a: 'Hãy nhìn vào dòng "Hạng mục vi phạm" trên thanh kết luận:\n• Nếu vi phạm sức bền kéo cáp (C2 hoặc C6): Vào mục "2. Thông Số Đầu Vào" -> Tab Dây Cáp -> Chọn mã cáp lớn hơn (ví dụ nâng từ PES-28 lên PES-32 hoặc PES-36) hoặc tăng thêm số lượng dây neo.\n• Nếu vi phạm cọc bờ (BP-1 sức chịu ngang hoặc BP-2 uốn): Vào tab Cọc & Neo -> tăng chiều sâu cọc L, tăng thép chủ / mác thép lồng cọc D350, hoặc dùng cọc đôi.\n• Nếu vi phạm neo đáy lòng hồ: Với phương án đế vít xoắn (PA3), hệ thống tự động tăng kích thước cạnh đế B và chiều dài vít L để đạt 100%; nếu đế đã lớn mà vẫn không đạt thì dời đế xa bè để dây thoải hơn và khảo sát lại c_u bùn đáy.'
     },
     {
       q: 'Dữ liệu tôi nhập có bị mất khi đóng trình duyệt hay tải lại trang web không?',
       a: 'Không bị mất. Toàn bộ thông số dự án, dữ liệu hình học bè, môi trường, cáp và cọc được tự động lưu tức thì (Auto-save) vào LocalStorage của trình duyệt máy bạn. Khi bạn mở lại trang web, mọi thông số sẽ giữ nguyên trạng thái làm việc gần nhất.'
     },
     {
-      q: 'Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của Dự án Hồ Huổi Vanh?',
-      a: 'Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc Huổi Vanh" (có biểu tượng làm mới). Phần mềm sẽ nạp lại toàn bộ thông số chuẩn của 9 cụm bè (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9; gộp từ 12 bè cũ theo bản vẽ CAD và PDF hồ sơ mới nhất).'
+      q: `Làm thế nào để khôi phục lại dữ liệu chuẩn ban đầu của dự án ${ACTIVE_LAKE.name}?`,
+      a: `Vào mục "1. Dự Án & Cụm Bè" ở menu trái, sau đó nhấn nút "Dữ liệu gốc" (có biểu tượng làm mới). Phần mềm nạp lại thông số thiết kế của ${F.rafts.length} bè (${raftList}) theo mặt bằng hiện hành.`
     },
     {
       q: 'Làm sao để xuất hoặc in báo cáo thuyết minh tính toán sang file PDF đẹp mắt?',
       a: 'Bạn có thể nhấn nút "In Báo Cáo" trên thanh Header hoặc chọn mục "6. Báo Cáo Kỹ Thuật" ở menu trái. Trên màn hình thuyết minh, nhấn nút "In Thuyết Minh / Xuất PDF" (hoặc bấm tổ hợp phím Ctrl + P). Trong hộp thoại in của trình duyệt, chọn "Lưu dưới dạng PDF" (Save as PDF) với khổ giấy A4 dọc.'
     },
     {
-      q: 'Hệ số tập trung tải trọng k_focus có ý nghĩa gì và nên chọn trong khoảng nào?',
-      a: 'k_focus là hệ số phân bố lực bất lợi nhất tác dụng lên cụm dây neo chịu lực chính khi hướng gió thổi chéo góc so với cụm bè. Theo tiêu chuẩn thiết kế hệ neo FPV (DNV-ST-0119 & khuyến nghị chuyên gia), giá trị này thường dao động từ 0.10 đến 0.36 tùy theo hình dạng và độ cứng của sơ đồ liên kết từng cụm bè (dự án Huổi Vanh dùng từ 0.10 đến 0.36; riêng BÈ 1 lấy k_focus = 0.276).'
+      q: 'Lực căng dây T được tính như thế nào?',
+      a: `Bằng mô hình CÂN BẰNG TĨNH theo mực nước: bè tịnh tiến dưới lực gió F_env theo 24 hướng, ở mọi mực nước từ khi bè nổi tới MNLKT; mỗi dây là dây thẳng đàn hồi (EA = 15 × MBL, giả định), dây chùng không chịu lực. Lấy T = max(lực dây lớn nhất + T₀ ; F_env / (6·cos 30°)). Đứt một dây: ở từng mực nước bỏ dây chịu lớn nhất rồi tính lại. Ví dụ ${E.raft}: F_env = ${n(E.fEnv_kN)} kN, dây lớn nhất ${n(E.eq_kN)} kN + T₀ ${n(E.pretension_kN, 0)} kN = ${n(E.t_kN)} kN (sàn ${n(E.floor_kN)} kN ${E.eq_kN + E.pretension_kN >= E.floor_kN ? 'không chi phối' : 'chi phối'}). Hệ số k_focus của cách tính cũ không còn dùng.`
     },
     {
       q: 'Tôi có thể tải file Excel thông số từ máy tính lên để phần mềm tự tính không?',
@@ -94,18 +111,11 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {ACTIVE_LAKE_ID !== 'huoi-vanh' && (
-        <div className="p-3 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
-          ⚠️ Các ví dụ số trong hướng dẫn này (số bè, số cọc, cao trình MNC 380,0 / MNDB 384,5 / MNLKT 386,0 m, độ chùng cáp…) là của Hồ Huổi Vanh.
-          Với {ACTIVE_LAKE.name}, cách tính giống hệt; số liệu đúng của hồ xem ở các Mục 1–10 (MNC {ACTIVE_LAKE.levels.mnc_m} / MNDB {ACTIVE_LAKE.levels.mndb_m} / MNLKT {ACTIVE_LAKE.levels.mnlkt_m} m).
-        </div>
-      )}
-      {ACTIVE_LAKE_ID === 'huoi-vanh' && (
-        <div className="p-3 rounded-xl border border-amber-300 bg-amber-50 text-xs text-amber-900">
-          ⚠️ Các ví dụ số trong hướng dẫn này (9 bè, 295 tuyến cáp, 231 cọc bờ, 32 đế, tên dây B6-D04…) là của mặt bằng 9 bè ngày 08/10/2026.
-          Mặt bằng hiện tại (27/10/2026) có {RAFT_POLYGONS_V2.length} bè ({RAFT_POLYGONS_V2.map((p) => p.name).join(', ')}), {LAYOUT_COUNTS.lines} tuyến cáp, {LAYOUT_COUNTS.shorePoints} điểm cọc bờ, {LAYOUT_COUNTS.bedBases} đế đáy; cách dùng phần mềm không đổi, số liệu đúng xem ở các Mục 1–10.
-        </div>
-      )}
+      <div className="p-3 rounded-xl border border-sky-200 bg-sky-50 text-xs text-sky-900">
+        Số liệu trong hướng dẫn lấy trực tiếp từ thiết kế hiện hành của {ACTIVE_LAKE.name}: {F.rafts.length} bè ({raftList}), {C.lines} tuyến cáp,
+        {' '}{C.anchorPoints} điểm neo ({C.shorePoints} điểm cọc bờ, {C.bedBases} đế đáy{C.ties ? `, ${C.ties} dây nối hai bè` : ''}); gió {n(F.wind_ms, 0)} m/s, tấm pin nghiêng {n(F.tilt_deg, 0)}°; MNC {n(L.mnc)} / MNDB {n(L.mndb)} / MNLKT {n(L.mnlkt)} m.
+        {ACTIVE_LAKE_ID !== 'huoi-vanh' && ' Phần chỉ dẫn thi công (cắt cáp, chỉnh dây) viết cho Huổi Vanh; Bản Mòng dùng thiết bị bù mực nước — xem cảnh báo ở thanh trên cùng.'}
+      </div>
       {/* Modern Header Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 border border-slate-800 text-white p-6 sm:p-8 shadow-xl">
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -215,7 +225,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     1. Quản Lý Dự Án &amp; Chọn Cụm Bè
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Chọn nhanh từ <strong>9 cụm bè (BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9)</strong> của Hồ Huổi Vanh hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
+                    Chọn nhanh từ <strong>{F.rafts.length} bè ({raftList})</strong> của {ACTIVE_LAKE.name} hoặc tạo dự án mới, tự động nạp diện tích, số tấm pin và sơ đồ cáp.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -240,7 +250,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     2. Thiết Lập Thông Số Đầu Vào
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Khai báo kích thước bè, vận tốc gió bão V_wind, chọn mã cáp Polyester (PES-24 đến PES-48), cọc neo Broms L và c_u.
+                    Khai báo kích thước bè, vận tốc gió V_wind (mặc định {n(F.wind_ms, 0)} m/s), mã cáp Polyester (PES-24 đến PES-48), cọc khoan nhồi bờ và đế neo đáy.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -265,7 +275,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     3. Mặt Bằng &amp; Tọa Độ Neo
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Bản đồ số hóa 295 tuyến cáp tại 263 điểm neo (231 cọc khoan nhồi bờ &amp; 32 đế vít xoắn đáy hồ, cả 32 đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
+                    Bản đồ số hóa {C.lines} tuyến cáp tại {C.anchorPoints} điểm neo ({C.shorePoints} điểm cọc khoan nhồi bờ &amp; {C.bedBases} đế vít xoắn đáy hồ, {C.sharedBases} đế dùng chung hai bè), tra cứu tọa độ thực tế X, Y, Z, chiều dài nhịp cáp và góc nghiêng tuyến kéo.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -290,7 +300,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     4. Kết Quả &amp; Kiểm Tra An Toàn
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Kiểm tra 7 tiêu chí an toàn bắt buộc C1 - C7: Bền cáp nguyên vẹn &amp; sự cố đứt 1 dây, sức chịu ngang cọc Broms, chống nhổ cọc bùn đáy &amp; mômen uốn.
+                    Kiểm tra các tiêu chí bắt buộc: bền cáp nguyên vẹn &amp; đứt 1 dây (C2, C6), cọc bờ Broms + uốn (BP-1, BP-2), đế vít xoắn (SV-1…SV-6), khoảng cách dây (C9), độ trôi (C12) &amp; mômen uốn.
                   </p>
                 </div>
                 <div className="mt-4 flex items-center text-xs font-semibold text-brand-600 group-hover:translate-x-1 transition-transform">
@@ -439,7 +449,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Quản Lý Dự Án &amp; Chọn Cụm Bè Tính Toán
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Khởi tạo hồ sơ công trình và chọn cụm bè trong tổng thể 9 cụm bè Hồ Huổi Vanh
+                    Khởi tạo hồ sơ công trình và chọn cụm bè trong {F.rafts.length} bè của {ACTIVE_LAKE.name}
                   </p>
                 </div>
                 <button
@@ -460,10 +470,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </h4>
                   <ul className="list-disc pl-5 space-y-2">
                     <li>
-                      <strong>Chọn cụm bè (9 bè: BÈ 1, 2, 3, 3A, 5A, 6, 7, 8, 9):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa các cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
+                      <strong>Chọn cụm bè ({F.rafts.length} bè: {raftList}):</strong> Thanh nút bấm trên đầu trang cho phép chuyển đổi tức thì giữa các cụm bè. Khi chọn bè nào, toàn bộ kích thước hình học (L x W), số tấm pin, mã cáp và số dây neo của cụm bè đó sẽ được nạp tự động.
                     </li>
                     <li>
-                      <strong>Nút "Dữ liệu gốc Huổi Vanh":</strong> Nhấn nút này khi muốn hủy bỏ các chỉnh sửa thử nghiệm để khôi phục cấu hình chuẩn ban đầu theo hồ sơ thiết kế.
+                      <strong>Nút "Dữ liệu gốc":</strong> Nhấn nút này khi muốn hủy bỏ các chỉnh sửa thử nghiệm để khôi phục cấu hình chuẩn ban đầu theo hồ sơ thiết kế.
                     </li>
                     <li>
                       <strong>Nút "Tạo dự án mới":</strong> Mở một không gian tính toán độc lập để kỹ sư nhập thông số cho dự án FPV hồ chứa khác.
@@ -510,8 +520,8 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <p>
                     • Chiều dài (L) và Chiều rộng (W) cụm bè (m).<br />
                     • Mớn nước (d) và Chiều cao mạn nổi (Freeboard).<br />
-                    • Số lượng tấm pin, Diện tích 1 tấm (A = 2.701 m&sup2;), Góc nghiêng pin (&theta; = 12&deg;), Hệ số che chắn (&eta; = 0.55).<br />
-                    • Khoảng cách 4 cạnh bè tới bờ/cọc đáy lân cận để tự tính chiều dài và góc kéo cáp.
+                    • Số lượng tấm pin, Diện tích 1 tấm (A = {n(F.panelArea_m2, 3)} m&sup2;), Góc nghiêng pin (&theta; = {n(F.tilt_deg, 0)}&deg;), Hệ số che chắn (&eta; = 0,55).<br />
+                    • Vị trí, tầm và cao độ chốt từng dây lấy từ mặt bằng neo (không nhập tay).
                   </p>
                 </div>
 
@@ -522,9 +532,9 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </h4>
                   <p>
                     • Độ sâu nước lớn nhất tại vị trí cụm bè (h, m).<br />
-                    • Vận tốc gió thiết kế (V_wind, m/s). Ví dụ 30 m/s ứng với bão cấp 11.<br />
+                    • Vận tốc gió (V_wind): mặc định {n(F.wind_ms, 0)} m/s theo Chủ đầu tư — THẤP HƠN gió tiêu chuẩn TCVN 2737:2023; kiểm tra bão thì nhập 30 m/s.<br />
                     • Vận tốc dòng chảy (V_current) và Chiều cao sóng (H_s).<br />
-                    • Hệ số tổ hợp tải trọng môi trường đồng thời (1.05).
+                    • Hệ số tổ hợp sóng + dòng chảy với gió (1,05).
                   </p>
                 </div>
 
@@ -536,8 +546,8 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <p>
                     • Tra cứu catalogue cáp PES: <code>PES-24</code> (172 kN) đến <code>PES-48</code> (688 kN).<br />
                     • Lực căng trước ban đầu T_0 (5 kN).<br />
-                    • Hệ số tập trung lực k_focus (dự án Huổi Vanh: 0.10 ~ 0.36, BÈ 1 = 0.276).<br />
-                    • Số lượng dây neo bờ và số lượng dây neo vào cọc lòng hồ.
+                    • Cách giữ dây theo mực nước: {F.adjustStep_m > 0 ? `chỉnh lại dây mỗi ${n(F.adjustStep_m, 0)} m mực nước (Huổi Vanh, bắt buộc)` : 'thiết bị bù mực nước + khóa bão'}; độ cứng cáp EA = 15 × MBL (giả định).<br />
+                    • Số dây bờ / dây đáy của bè lấy từ mặt bằng neo.
                   </p>
                 </div>
 
@@ -547,10 +557,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     4. Cọc Neo Đất Broms (AnchorForm)
                   </h4>
                   <p>
-                    • Cọc bê tông cốt thép vuông đóng ngàm bờ và đáy lòng hồ.<br />
-                    • Sức kháng cắt không thoát nước: c_u bờ (40 kPa) &amp; c_u đáy (20 kPa).<br />
-                    • Kích thước cạnh cọc vuông D (0.45m) và Chiều sâu ngàm L (6.5m bờ / 8.0m đáy).<br />
-                    • Hệ số an toàn cọc neo quy định FS = 2.5.
+                    • Bờ: cọc khoan nhồi tròn D{E.shorePile.D_mm}, sâu L = {n(E.shorePile.L_m)} m, lồng thép theo bè (ví dụ {E.raft}: {E.shorePile.cage}).<br />
+                    • Đáy: đế BTCT + 4 vít xoắn (phương án chốt), cạnh đế tự tăng tới khi đạt.<br />
+                    • c_u đất bờ {n(E.shorePile.cu_kPa, 0)} kPa, c_u bùn đáy {E.base ? n(E.base.cu_kPa, 0) : '20'} kPa — GIẢ ĐỊNH, chưa khảo sát.<br />
+                    • Uốn cọc: γ·M_max ≤ M_rd với γ = 1,2 (TCVN 5574:2018).
                   </p>
                 </div>
               </div>
@@ -565,10 +575,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Bước 3 / 6
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
-                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ 263 Điểm Neo (295 Tuyến Cáp)
+                    Xem &amp; Khai Thác Bản Đồ Mặt Bằng Tọa Độ {C.anchorPoints} Điểm Neo ({C.lines} Tuyến Cáp)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Trực quan hóa vị trí thực địa của 9 cụm bè và hệ thống neo hồ Huổi Vanh
+                    Trực quan hóa vị trí thực địa của {F.rafts.length} bè và hệ thống neo {ACTIVE_LAKE.name}
                   </p>
                 </div>
                 <button
@@ -586,20 +596,20 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-2">
                     <div className="font-bold text-emerald-900 flex items-center gap-2">
                       <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
-                      Cọc Neo Bờ (Màu Xanh Lá)
+                      Cọc Khoan Nhồi Bờ (Màu Xanh Lá)
                     </div>
                     <p className="text-emerald-800">
-                      Cọc bê tông cốt thép vuông đóng ngàm vào taluy bờ hồ tại các cao trình khống chế. Đóng vai trò neo giữ chính cho các cạnh Bắc, Nam, Đông của các cụm bè sát bờ.
+                      {C.shorePoints} điểm cọc khoan nhồi D350 trên bờ: chỗ nào neo bờ được thì dùng cọc bờ. Cáp móc sát cổ cọc (tim chốt cách mặt đất ≤ 100 mm).
                     </p>
                   </div>
 
                   <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl space-y-2">
                     <div className="font-bold text-amber-900 flex items-center gap-2">
                       <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-                      Cọc Neo Đáy Lòng Hồ (Màu Cam)
+                      Đế Neo Đáy Hồ (Màu Cam)
                     </div>
                     <p className="text-amber-800">
-                      Cọc đóng ngàm vào tầng bùn/sét đáy lòng hồ nằm ở khoảng giữa hai cụm bè lân cận. Được dùng chung để neo giữ đồng thời cả 2 cạnh Tây và Đông của 2 cụm bè kế tiếp.
+                      {C.bedBases} đế BTCT + vít xoắn dưới đáy hồ, chỉ ở chỗ không neo bờ được: {C.sharedBases} đế dùng chung đặt giữa khe hai bè (hai tai neo, mỗi tai một dây), còn lại là đế đơn.
                     </p>
                   </div>
                 </div>
@@ -615,10 +625,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Bước 4 / 6
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
-                    Đánh Giá Kết Quả Tính Toán &amp; 7 Tiêu Chí An Toàn
+                    Đánh Giá Kết Quả Tính Toán &amp; Các Tiêu Chí An Toàn
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Huy hiệu kết luận tổng thể ĐẠT/KHÔNG ĐẠT và bảng kiểm tra điều kiện kỹ thuật C1 - C7
+                    Huy hiệu kết luận tổng thể ĐẠT/KHÔNG ĐẠT và bảng kiểm tra từng điều kiện (giá trị ví dụ của {E.raft})
                   </p>
                 </div>
                 <button
@@ -634,7 +644,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div className="space-y-4 text-xs text-slate-700 leading-relaxed">
                 <div>
                   <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 text-brand-800">
-                    A. Hệ Thống Neo Cọc Broms (Phương án chính Hồ Huổi Vanh)
+                    A. Phương Án Chốt: Cọc Khoan Nhồi Bờ + Đế BTCT Vít Xoắn
                   </h4>
                   <div className="table-wrap mb-4">
                     <table className="data-table">
@@ -649,52 +659,82 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                       <tbody>
                         <tr>
                           <td className="font-mono font-bold text-brand-700">C2</td>
-                          <td className="font-medium text-slate-800">Bền cáp PES (Nguyên vẹn)</td>
-                          <td className="font-mono">SF = MBL / T_max &ge; 3.0</td>
-                          <td>Dây cáp chịu lực lớn nhất không bị đứt dưới tác động gió bão thiết kế.</td>
+                          <td className="font-medium text-slate-800">Bền cáp PES (nguyên vẹn)</td>
+                          <td className="font-mono">{E.check('C2')?.formula}</td>
+                          <td>{util('C2')} — {note('C2')}</td>
                         </tr>
                         <tr>
                           <td className="font-mono font-bold text-brand-700">C6</td>
-                          <td className="font-medium text-slate-800">Bền cáp PES (Đứt 1 dây sự cố)</td>
-                          <td className="font-mono">SF = MBL / T_max,dam &ge; 2.0</td>
-                          <td>Hệ thống vẫn an toàn khi xảy ra sự cố đứt 1 dây neo bất lợi nhất.</td>
+                          <td className="font-medium text-slate-800">Bền cáp PES (đứt 1 dây)</td>
+                          <td className="font-mono">{E.check('C6')?.formula}</td>
+                          <td>{util('C6')} — {note('C6')}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-mono font-bold text-brand-700">C9</td>
+                          <td className="font-medium text-slate-800">Khoảng cách trung bình giữa các dây</td>
+                          <td className="font-mono">{E.check('C9')?.formula}</td>
+                          <td>{util('C9')} — {note('C9')}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-mono font-bold text-brand-700">C12</td>
+                          <td className="font-medium text-slate-800">Độ trôi ngang của bè</td>
+                          <td className="font-mono">{E.check('C12')?.formula}</td>
+                          <td>{util('C12')} — {note('C12')}</td>
                         </tr>
                         <tr>
                           <td className="font-mono font-bold text-emerald-700">BP-1</td>
-                          <td className="font-medium text-slate-800">Sức chịu tải ngang cọc BỜ (Broms)</td>
-                          <td className="font-mono">H_applied / H_allow &le; 1.0</td>
-                          <td>Áp lực đất bờ p_u = 9.c_u.D giữ cọc không bị nghiêng đổ (FS = 2.5).</td>
+                          <td className="font-medium text-slate-800">Sức chịu ngang cọc BỜ (Broms)</td>
+                          <td className="font-mono">{E.check('BP-1')?.formula}</td>
+                          <td>{util('BP-1')} — {note('BP-1')}</td>
                         </tr>
                         <tr>
                           <td className="font-mono font-bold text-emerald-700">BP-2</td>
-                          <td className="font-medium text-slate-800">Ứng suất uốn cọc BỜ</td>
-                          <td className="font-mono">M_max / M_rd &le; 1.0</td>
-                          <td>Mômen uốn do lực kéo cáp không làm nứt gãy thân cọc BTCT.</td>
+                          <td className="font-medium text-slate-800">Uốn tiết diện cọc BỜ (TCVN 5574:2018)</td>
+                          <td className="font-mono">{E.check('BP-2')?.formula}</td>
+                          <td>{util('BP-2')} — {note('BP-2')}</td>
                         </tr>
                         <tr>
-                          <td className="font-mono font-bold text-amber-700">BP-3</td>
-                          <td className="font-medium text-slate-800">Sức chịu tải ngang cọc LÒNG HỒ</td>
-                          <td className="font-mono">Th / H_allow &le; 1.0</td>
-                          <td>Cọc cắm bùn đáy giữ được lực kéo ngang tổng hợp từ 2 cụm bè lân cận.</td>
+                          <td className="font-mono font-bold text-amber-700">SV-1</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — chống nhổ</td>
+                          <td className="font-mono">{E.check('SV-1')?.formula}</td>
+                          <td>{util('SV-1')} — {note('SV-1')}</td>
                         </tr>
                         <tr>
-                          <td className="font-mono font-bold text-amber-700">BP-4</td>
-                          <td className="font-medium text-slate-800">Khả năng chống NHỔ cọc LÒNG HỒ</td>
-                          <td className="font-mono">Tv / Q_uplift,all &le; 1.0</td>
-                          <td>Ma sát thành bên bùn sét Q = &alpha;.c_u.(4D).L chống lại lực kéo đứng Tv (FS = 2.0).</td>
+                          <td className="font-mono font-bold text-amber-700">SV-2</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — chống trượt</td>
+                          <td className="font-mono">{E.check('SV-2')?.formula}</td>
+                          <td>{util('SV-2')} — {note('SV-2')}</td>
                         </tr>
                         <tr>
-                          <td className="font-mono font-bold text-amber-700">BP-5</td>
-                          <td className="font-medium text-slate-800">Ứng suất uốn cọc LÒNG HỒ</td>
-                          <td className="font-mono">M_max / M_rd &le; 1.0</td>
-                          <td>Thân cọc lòng hồ đủ khả năng chịu uốn theo tiết diện bê tông cốt thép.</td>
+                          <td className="font-mono font-bold text-amber-700">SV-3</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — chống lật</td>
+                          <td className="font-mono">{E.check('SV-3')?.formula}</td>
+                          <td>{util('SV-3')} — {note('SV-3')}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-mono font-bold text-amber-700">SV-4</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — lực nhổ một vít</td>
+                          <td className="font-mono">{E.check('SV-4')?.formula}</td>
+                          <td>{util('SV-4')} — {note('SV-4')}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-mono font-bold text-amber-700">SV-5</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — áp lực lên nền bùn</td>
+                          <td className="font-mono">{E.check('SV-5')?.formula}</td>
+                          <td>{util('SV-5')} — {note('SV-5')}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-mono font-bold text-amber-700">SV-6</td>
+                          <td className="font-medium text-slate-800">Đế vít xoắn — cốt thép bản đế</td>
+                          <td className="font-mono">{E.check('SV-6')?.formula}</td>
+                          <td>{util('SV-6')} — {note('SV-6')}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
                   <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 text-slate-600">
-                    B. Hệ Thống Mỏ Neo Kéo &amp; Neo Trọng Lực (Drag Anchor / Deadweight)
+                    B. Chỉ Áp Dụng Cho Mỏ Neo Kéo / Neo Trọng Lực (không dùng cho phương án chốt — hiện &quot;Không áp dụng&quot;)
                   </h4>
                   <div className="table-wrap">
                     <table className="data-table">
@@ -776,7 +816,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     Trình Xem Bản Vẽ CAD (.DXF)
                   </div>
                   <p className="text-slate-600">
-                    Vẽ trực tiếp file DXF lên Canvas. Hỗ trợ đầy đủ phóng to, thu nhỏ, di chuyển bản vẽ mặt bằng bố trí hệ neo 9 bè.
+                    Vẽ trực tiếp file DXF lên Canvas. Hỗ trợ phóng to, thu nhỏ, di chuyển bản vẽ mặt bằng hệ neo {F.rafts.length} bè.
                   </p>
                 </div>
 
@@ -831,35 +871,33 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                   <h4 className="font-bold text-slate-900 flex items-center gap-2">
                     <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                    Xuất Workbook Excel 7 Sheet
+                    Bảng Tính Phương Án Chốt (Excel)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Xuất Excel"</strong> trên Header để tạo file <code>.xlsx</code> với 7 sheet chi tiết:
-                    ThongTinDuAn, TongHopCumBe, ToaDoDiemNeo, DuLieuDauVao, KetQuaKiemTraChiTiet,
-                    <strong> ThongKeCoc</strong> (bảng thống kê cọc kèm L_opt, L_tk và P_max tại chiều sâu thiết kế), GhiChu.
+                    Bấm nút <strong>"Bảng Tính"</strong> trên Header: thuyết minh, thông số, lực dây, cọc khoan nhồi theo bè và từng cọc, đế neo từng đế,
+                    vít xoắn, khối lượng – báo giá, chiều dài cắt cáp và <strong>cân bằng neo theo mực nước</strong> — cùng số liệu với mục thuyết minh ở tab Báo cáo.
                   </p>
                 </div>
 
                 <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-2">
                   <h4 className="font-bold text-slate-900 flex items-center gap-2">
                     <DraftingCompass className="w-4 h-4 text-amber-600" />
-                    Xuất Bản Vẽ Đóng Cọc CAD (.DXF)
+                    Xuất Bản Vẽ Mặt Bằng Hệ Neo (.DXF)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Xuất CAD"</strong> trên Header để tạo bản vẽ mặt bằng định vị cọc neo mở trực tiếp
-                    bằng AutoCAD: ranh giới các cụm bè, tim dây neo bờ/đáy, ký hiệu cọc tại đúng tọa độ thực (X, Y) và
-                    <strong> bảng thống kê cọc</strong> (mã cọc, tọa độ, D, chiều sâu ngàm tối thiểu L_opt, chiều sâu đóng cọc thiết kế L_tk, T_max,
-                    P_req, P_max) — phân lớp theo 7 layer chuẩn để bật/tắt khi in.
+                    Bấm nút <strong>"Xuất CAD"</strong> trên Header: đường bao các bè, tuyến cáp, cọc bờ ký hiệu <strong>C1, C2…</strong> và đế đáy
+                    ký hiệu <strong>D1, D2…</strong> tại đúng tọa độ, đế vẽ đúng kích thước, kèm bảng thống kê cọc bờ và đế (cột KH BV tra mã cọc / mã đế).
+                    Chữ tiếng Việt có dấu, mở trực tiếp bằng AutoCAD.
                   </p>
                 </div>
 
                 <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
                   <h4 className="font-bold text-slate-900 flex items-center gap-2">
                     <Table className="w-4 h-4 text-emerald-600" />
-                    Xuất Bảng Thống Kê Cọc Neo (.xlsx)
+                    Xuất Bảng Neo (.xlsx)
                   </h4>
                   <p className="text-slate-600">
-                    Bấm nút <strong>"Bảng Neo Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Neo"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải riêng bảng 295 điểm neo (cọc bờ + neo đáy theo phương án đang chọn) neo vuông BTCT chuẩn xác 100% như bản vẽ CAD (14 cột: Mã cọc HV-P..., Ký hiệu KS, Cụm bè, Loại cọc, X, Y, Z, D, L_opt Broms, L_tk thiết kế, T_max, P_req, P_max, Kết luận) kèm phần tổng hợp khối lượng phục vụ nghiệm thu &amp; thi công.
+                    Bấm nút <strong>"Bảng Neo Excel"</strong> trên Header hoặc nút <strong>"Xuất Excel Bảng Neo"</strong> tại mục "3. Mặt Bằng &amp; Tọa Độ Neo" để tải bảng {C.anchorPoints} điểm neo cùng số liệu với bản vẽ CAD: thống kê cọc bờ, thống kê đế, đế theo bè, tính từng điểm neo đáy / bờ và chiều dài cắt cáp từng dây.
                   </p>
                 </div>
 
@@ -910,11 +948,11 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
 
                   {/* Lake Shore */}
                   <path d="M 0,130 L 180,200 L 180,420 L 0,420 Z" fill="#334155" />
-                  <text x="30" y="160" fill="#94a3b8" fontSize="11" fontWeight="bold">TALUY BỜ ĐẤT (c_u = 40 kPa)</text>
+                  <text x="30" y="160" fill="#94a3b8" fontSize="11" fontWeight="bold">TALUY BỜ ĐẤT (c_u = {n(E.shorePile.cu_kPa, 0)} kPa, giả định)</text>
 
                   {/* Shore Pile */}
                   <rect x="90" y="120" width="24" height="150" rx="3" fill="#10b981" stroke="#059669" strokeWidth="2" />
-                  <text x="75" y="105" fill="#34d399" fontSize="11" fontWeight="bold">CỌC BỜ (D=0.45m, L=6.5m)</text>
+                  <text x="75" y="105" fill="#34d399" fontSize="11" fontWeight="bold">CỌC KHOAN NHỒI D{E.shorePile.D_mm}, L={n(E.shorePile.L_m)} m</text>
 
                   {/* Floating Raft Body */}
                   <g transform="translate(360, 160)">
@@ -930,12 +968,12 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                       <line x1="135" y1="25" x2="170" y2="10" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
                       <line x1="180" y1="25" x2="215" y2="10" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
                     </g>
-                    <text x="50" y="-2" fill="#fbbf24" fontSize="11" fontWeight="bold">DÀN PIN MẶT TRỜI (Góc nghiêng 10°)</text>
+                    <text x="50" y="-2" fill="#fbbf24" fontSize="11" fontWeight="bold">DÀN PIN MẶT TRỜI (Góc nghiêng {n(F.tilt_deg, 0)}°)</text>
                   </g>
 
                   {/* Mooring Cable to Shore */}
                   <path d="M 114,140 Q 230,175 360,190" fill="none" stroke="#38bdf8" strokeWidth="3.5" strokeDasharray="6 3" />
-                  <text x="210" y="160" fill="#7dd3fc" fontSize="11" fontWeight="bold">Cáp PES (T_max &asymp; 61 kN)</text>
+                  <text x="210" y="160" fill="#7dd3fc" fontSize="11" fontWeight="bold">Cáp {E.cable} ({E.raft}: T = {n(E.t_kN)} kN)</text>
 
                   {/* Mooring Cable to Lakebed */}
                   <path d="M 600,190 Q 720,260 780,330" fill="none" stroke="#f97316" strokeWidth="3" strokeDasharray="5 3" />
@@ -943,11 +981,11 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
 
                   {/* Lakebed Soil */}
                   <rect x="180" y="340" width="720" height="80" fill="#1e293b" />
-                  <text x="400" y="385" fill="#64748b" fontSize="11" fontWeight="bold">TẦNG BÙN / SÉT ĐÁY LÒNG HỒ (c_u = 20 kPa)</text>
+                  <text x="400" y="385" fill="#64748b" fontSize="11" fontWeight="bold">BÙN ĐÁY HỒ (c_u = {E.base ? n(E.base.cu_kPa, 0) : 20} kPa, giả định)</text>
 
                   {/* Lakebed Pile */}
-                  <rect x="770" y="300" width="20" height="110" rx="3" fill="#f59e0b" stroke="#d97706" strokeWidth="2" />
-                  <text x="730" y="290" fill="#fbbf24" fontSize="10" fontWeight="bold">CỌC ĐÁY (L=8.0m)</text>
+                  <rect x="745" y="326" width="70" height="14" rx="2" fill="#f59e0b" stroke="#d97706" strokeWidth="2" />
+                  <text x="705" y="300" fill="#fbbf24" fontSize="10" fontWeight="bold">ĐẾ BTCT + VÍT XOẮN</text>
 
                   {/* Force Arrows */}
                   {/* Wind Force Vector */}
@@ -994,7 +1032,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                       Tải Trọng Gió Bão Tác Dụng Lên Bè (F_wind)
                     </div>
                     <p className="text-slate-300">
-                      Gió bão thổi với vận tốc V_wind = 30 m/s tạo áp lực động q = 0.5 x &rho; x V&sup2; = 562.5 Pa. Lực cản tác dụng lên bề mặt dàn pin có xét góc nghiêng 12&deg; và hệ số che chắn &eta; = 0.55, tạo ra tổng lực môi trường F_env = (F_panel + F_float) x 1.05.
+                      Gió V = {n(F.wind_ms, 0)} m/s tạo áp lực q = 0,5 &times; &rho; &times; V&sup2; = {n(E.q_Pa, 0)} Pa. Lực cản lên dàn pin xét góc nghiêng {n(F.tilt_deg, 0)}&deg; và hệ số che chắn &eta; = 0,55; tổng lực môi trường F_env = (F_pin + F_phao) &times; 1,05 ({E.raft}: {n(E.fEnv_kN)} kN).
                     </p>
                   </div>
                 )}
@@ -1003,10 +1041,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <div className="space-y-1">
                     <div className="font-bold text-emerald-400 text-sm flex items-center gap-2">
                       <Anchor className="w-4 h-4" />
-                      Sức Chịu Tải Ngang Của Cọc Bờ Theo Broms (H_allow)
+                      Sức Chịu Tải Ngang Và Uốn Của Cọc Bờ (Broms + TCVN 5574:2018)
                     </div>
                     <p className="text-slate-300">
-                      Cọc bê tông cốt thép vuông 0.45m x 0.45m ngàm sâu 6.5m trong tầng đất bờ (c_u = 40 kPa). Đất sinh ra áp lực kháng p_u = 9 x c_u x D, cân bằng với lực kéo cáp T_max với hệ số an toàn FS = 2.5.
+                      Cọc khoan nhồi tròn D{E.shorePile.D_mm} sâu {n(E.shorePile.L_m)} m trong đất bờ (c_u = {n(E.shorePile.cu_kPa, 0)} kPa). Đất sinh áp lực kháng p_u = 9 &times; c_u &times; D (Broms); thân cọc kiểm tra uốn γ·M_max ≤ M_rd với lồng thép ở hướng bất lợi nhất. Cáp móc sát cổ cọc (tim chốt cách mặt đất ≤ 100 mm).
                     </p>
                   </div>
                 )}
@@ -1015,10 +1053,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <div className="space-y-1">
                     <div className="font-bold text-amber-400 text-sm flex items-center gap-2">
                       <Scale className="w-4 h-4" />
-                      Khả Năng Chống Nhổ Cọc Lòng Hồ (Q_uplift)
+                      Đế BTCT + Vít Xoắn Dưới Đáy Hồ: Chống Nhổ, Trượt, Lật
                     </div>
                     <p className="text-slate-300">
-                      Do cáp neo đáy có góc dốc &theta;, lực kéo sinh ra thành phần hướng đứng T_v = T_max x sin(&theta;). Cọc ngàm 8.0m trong bùn đáy hồ sinh ra sức kháng ma sát thành bên Q_uplift = &alpha; x c_u x (4D) x L, giữ cho cọc không bị nhổ tuột.
+                      Dây đáy dốc góc &theta; nên có thành phần nhổ T_v = T &times; sin &theta; (lớn nhất khi nước cao) và thành phần ngang T_h (lớn nhất khi nước thấp). Đế giữ bằng trọng lượng đẩy nổi 0,9·W' cộng sức nhổ của 4 vít xoắn (SV-1), bám dính đáy + gờ chống trượt + vít (SV-2), chống lật (SV-3); cạnh đế B tự tăng tới khi đạt.
                     </p>
                   </div>
                 )}
@@ -1046,9 +1084,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div>F_env = (F_wind,panel + F_wind,float) &times; 1.05</div>
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-700">
-                <span className="font-bold text-slate-900">Ví dụ tính toán mẫu (BÈ 1 Hồ Huổi Vanh):</span>
-                <div>• V_wind = 30 m/s, &rho; = 1.25 kg/m&sup3; &rarr; q = 562.5 Pa</div>
-                <div>• 790 tấm pin &times; 2.701 m&sup2;, nghiêng 12&deg;, &eta; = 0.55 &rarr; F_env = 202.2 kN</div>
+                <span className="font-bold text-slate-900">Ví dụ tính toán ({E.raft} {ACTIVE_LAKE.name}):</span>
+                <div>• V_wind = {n(F.wind_ms, 0)} m/s, &rho; = 1,25 kg/m&sup3; &rarr; q = {n(E.q_Pa, 0)} Pa</div>
+                <div>• {E.panels.toLocaleString('vi-VN')} tấm &times; {n(F.panelArea_m2, 3)} m&sup2;, nghiêng {n(F.tilt_deg, 0)}&deg;, &eta; = 0,55 &rarr; F_pin = {n(E.fPanel_kN)} kN; F_phao = {n(E.fFloat_kN)} kN</div>
+                <div>• F_env = ({n(E.fPanel_kN)} + {n(E.fFloat_kN)}) &times; 1,05 = {n(E.fEnv_kN)} kN</div>
               </div>
             </div>
 
@@ -1056,17 +1095,18 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
             <div className="card card-pad space-y-3">
               <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm">
                 <Layers className="w-4 h-4" />
-                <span>2. Lực Căng Cáp Lớn Nhất (T_max)</span>
+                <span>2. Lực Căng Cáp Lớn Nhất (cân bằng tĩnh theo mực nước)</span>
               </div>
               <div className="p-3 bg-slate-900 text-brand-300 rounded-lg font-mono text-xs overflow-x-auto space-y-1">
-                <div>T_max = max( F_env &times; k_focus + T_0 ; F_env / (N_eff &times; cos&alpha;) + T_0 )</div>
+                <div>Bè tịnh tiến tới cân bằng dưới F_env, 24 hướng gió, mọi mực nước; dây thẳng đàn hồi EA = 15 &times; MBL</div>
+                <div>T_max = max( T_cân bằng + T_0 ; F_env / (6 &times; cos 30&deg;) )</div>
                 <div>Bền nguyên vẹn: SF = MBL / T_max &ge; 3.0</div>
                 <div>Đứt 1 dây: SF = MBL / T_max,dam &ge; 2.0</div>
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-700">
-                <span className="font-bold text-slate-900">Ví dụ tính toán mẫu (BÈ 1):</span>
-                <div>• k_focus = 0.276, T_0 = 5 kN &rarr; T_max = 202.2 &times; 0.276 + 5 = 60.8 kN (phương pháp tập trung tải governs)</div>
-                <div>• Chọn cáp <strong>PES-28</strong> (MBL = 235 kN) &rarr; SF = 235 / 60.8 = 3.86 &ge; 3.0 &rarr; Dư an toàn: <strong>+28.8% (ĐẠT)</strong></div>
+                <span className="font-bold text-slate-900">Ví dụ tính toán ({E.raft}):</span>
+                <div>• Dây lớn nhất trong cân bằng {n(E.eq_kN)} kN + T_0 = {n(E.pretension_kN, 0)} kN &rarr; {n(E.eq_kN + E.pretension_kN)} kN; sàn F_env / (6 cos 30&deg;) = {n(E.floor_kN)} kN &rarr; T_max = {n(E.t_kN)} kN</div>
+                <div>• Cáp <strong>{E.cable}</strong> (MBL = {n(E.mbl_kN, 0)} kN) &rarr; SF = {n(E.mbl_kN / E.t_kN, 2)} &ge; 3,0 (C2 ĐẠT); đứt 1 dây: T = {n(E.tDamaged_kN)} kN, SF = {n(E.mbl_kN / E.tDamaged_kN, 2)} &ge; 2,0 (C6)</div>
               </div>
             </div>
 
@@ -1074,18 +1114,18 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
             <div className="card card-pad space-y-3">
               <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
                 <Anchor className="w-4 h-4" />
-                <span>3. Sức Chịu Ngang Cọc Bờ Theo Broms</span>
+                <span>3. Cọc Khoan Nhồi Bờ: Broms + Uốn Tiết Diện</span>
               </div>
               <div className="p-3 bg-slate-900 text-brand-300 rounded-lg font-mono text-xs overflow-x-auto space-y-1">
                 <div>p_u = 9 &times; c_u &times; D (Áp lực đất giới hạn); g = L - 1.5D</div>
                 <div>0.5/p_u &times; H_u&sup2; + (e + 1.5D + g) &times; H_u - 0.5 &times; p_u &times; g&sup2; = 0</div>
-                <div>H_allow = H_u / FS_pile (FS = 2.5)</div>
+                <div>P_max = min( sức chịu ngang Broms ; lực gây γ·M_max = M_rd ), γ = 1,2</div>
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-700">
-                <span className="font-bold text-slate-900">Ví dụ tính toán mẫu (Cọc bờ BÈ 1):</span>
-                <div>• Cọc vuông D = 0.45m, ngàm L = 6.5m, đất c_u = 40 kPa, tay đòn e = 0.5m</div>
-                <div>• p_u = 162 kN/m &rarr; giải PT Broms &rarr; H_u = 341.2 kN &rarr; H_allow = 136.5 kN</div>
-                <div>• H_applied = T_max = 60.8 kN &le; 136.5 kN &rarr; <strong>ĐẠT</strong> (dự trữ &asymp; 2.2 lần)</div>
+                <span className="font-bold text-slate-900">Ví dụ tính toán (cọc bờ {E.raft}):</span>
+                <div>• Cọc tròn D{E.shorePile.D_mm}, L = {n(E.shorePile.L_m)} m, lồng {E.shorePile.cage}, c_u = {n(E.shorePile.cu_kPa, 0)} kPa, tay đòn e = 0,1 m</div>
+                <div>• P_max theo đất = {n(E.shorePile.pLateral_kN)} kN; theo uốn = {n(E.shorePile.pMoment_kN)} kN</div>
+                <div>• BP-1 = {util('BP-1')}; BP-2 = {util('BP-2')} ({note('BP-2')})</div>
               </div>
             </div>
 
@@ -1093,18 +1133,18 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
             <div className="card card-pad space-y-3">
               <div className="flex items-center gap-2 text-rose-700 font-bold text-sm">
                 <Scale className="w-4 h-4" />
-                <span>4. Chống Nhổ Cọc Lòng Hồ &amp; Uốn Cọc</span>
+                <span>4. Đế BTCT + Vít Xoắn Dưới Đáy Hồ</span>
               </div>
               <div className="p-3 bg-slate-900 text-brand-300 rounded-lg font-mono text-xs overflow-x-auto space-y-1">
-                <div>T_v = T_max &times; sin(&theta;_line)</div>
-                <div>Q_uplift = &alpha; &times; c_u,bed &times; (4D) &times; L_bed (&alpha; = 0.7)</div>
-                <div>M_rd = R_s &times; A_s(mặt chịu kéo) &times; (a &minus; 2a_s) &ge; &gamma; &times; M_max (TCVN 5574:2018)</div>
+                <div>T_v = T &times; sin &theta;, T_h = T &times; cos &theta; (hai mực nước: thấp &rarr; trượt, cao &rarr; nhổ)</div>
+                <div>SV-1: T_v &le; 0,9&middot;W' + n&middot;Q_a &nbsp;|&nbsp; SV-2: 1,5&middot;T_h &le; &alpha;&middot;c_u&middot;B&sup2; + R_gờ + n&middot;H_u</div>
+                <div>SV-3 lật, SV-4 một vít, SV-5 nền W'/B&sup2; &le; 5,14&middot;c_u/2,5, SV-6 thép bản đế</div>
               </div>
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-700">
-                <span className="font-bold text-slate-900">Ví dụ tính toán mẫu (Cọc đáy BÈ 1):</span>
-                <div>• Cọc đáy D = 0.35m, ngàm L = 8.0m, bùn c_u = 20 kPa</div>
-                <div>• Q_uplift = 0.7 &times; 20 &times; 1.4 &times; 8.0 = 156.8 kN &rarr; Q_allow = 156.8 / 2.0 = 78.4 kN</div>
-                <div>• Góc cáp &theta; &asymp; 24&deg; &rarr; T_v = 60.8 &times; sin(24&deg;) = 24.7 kN &le; 78.4 kN &rarr; <strong>ĐẠT</strong></div>
+                <span className="font-bold text-slate-900">Ví dụ tính toán (đế kiểm tra theo bè {E.raft}):</span>
+                {E.base ? <div>• Đế {n(E.base.side_m, 2)} &times; {n(E.base.side_m, 2)} &times; {n(E.base.thickness_m, 2)} m, {E.base.screws} vít dài {n(E.base.screwL_m, 1)} m, bùn c_u = {n(E.base.cu_kPa, 0)} kPa</div> : <div>• Bè này không có dây đáy.</div>}
+                <div>• SV-1 = {util('SV-1')} ({note('SV-1')})</div>
+                <div>• SV-2 = {util('SV-2')}; SV-3 = {util('SV-3')}; SV-5 = {util('SV-5')}</div>
               </div>
             </div>
           </div>
@@ -1136,9 +1176,9 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     <td>Phương pháp phân tích động lực học hệ neo cố định và tổ hợp tải trọng bão.</td>
                   </tr>
                   <tr>
-                    <td className="font-bold text-brand-900 font-mono">TCVN 11823 / TCVN 10304</td>
-                    <td>Bộ Xây Dựng / Bộ GTVT</td>
-                    <td>Tính toán kết cấu bê tông cốt thép và sức chịu tải của cọc ngàm trong đất.</td>
+                    <td className="font-bold text-brand-900 font-mono">TCVN 5574:2018 / TCVN 2737:2023</td>
+                    <td>Bộ Khoa học và Công nghệ</td>
+                    <td>Uốn tiết diện cọc khoan nhồi bê tông cốt thép; tải trọng gió (gió tiêu chuẩn vùng II-B ≈ 29,7 m/s).</td>
                   </tr>
                   <tr>
                     <td className="font-bold text-brand-900 font-mono">QCVN 02:2022/BXD</td>
@@ -1163,14 +1203,14 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold">
                   <Anchor className="w-3.5 h-3.5 text-brand-400" />
-                  <span>Quy Chuẩn Thi Công Ngoài Hiện Trường · Hồ Chứa Thủy Điện Huổi Vanh</span>
+                  <span>Quy Chuẩn Thi Công Ngoài Hiện Trường · {ACTIVE_LAKE.name}</span>
                 </div>
                 <h3 className="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
                   <Wrench className="w-5 h-5 text-amber-400" />
                   Chỉ Dẫn Thi Công Căng Cáp, Cắt Cáp &amp; Vận Hành Hệ Neo
                 </h3>
                 <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
-                  Nguyên lý cơ học căng / chùng cáp theo biên độ dao động mực nước hồ <strong>6,0 m</strong> (MNC 380,0 m &rarr; MNDB 384,5 m &rarr; MNLKT 386,0 m) và chỉ dẫn lắp đặt thực địa cho toàn bộ <strong>295 tuyến cáp</strong> (231 cọc bờ &amp; 32 đế neo đáy dùng chung).
+                  Nguyên lý căng / chùng cáp theo biên độ dao động mực nước hồ <strong>{n(L.mnlkt - L.mnc)} m</strong> (MNC {n(L.mnc)} m &rarr; MNDB {n(L.mndb)} m &rarr; MNLKT {n(L.mnlkt)} m) và chỉ dẫn lắp đặt cho <strong>{C.lines} tuyến cáp</strong> ({shoreLines} dây cọc bờ &amp; {bedLines} dây vào {C.bedBases} đế neo đáy, {C.sharedBases} đế dùng chung).
                 </p>
               </div>
 
@@ -1193,21 +1233,24 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               </div>
               <div className="text-xs text-slate-700 space-y-2.5 leading-relaxed">
                 <p className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 font-medium">
-                  <strong>Tuyệt đối KHÔNG căng cứng đét (như dây đàn)</strong> và <strong>KHÔNG lắp đặt bằng cách đo lực kéo T₀ ở mùa nước bình thường (MNDB)</strong>.
+                  {F.adjustStep_m > 0
+                    ? <><strong>ĐIỀU KIỆN BẮT BUỘC: chỉnh lại mọi dây cho vừa căng mỗi khi mực nước đổi {n(F.adjustStep_m, 0)} m.</strong> Lực dây, cọc, đế trong hồ sơ chỉ đúng với điều kiện này; cắt một lần rồi để nguyên thì lực dây vượt nhiều. </>
+                    : <><strong>Mọi dây giữ vừa căng bằng thiết bị bù mực nước + khóa bão.</strong> </>}
+                  <strong>Không căng cứng như dây đàn</strong> (lực căng trước T₀ = {n(E.pretension_kN, 0)} kN).
                 </p>
                 <p>
                   <strong>Lý do cơ học nguy hiểm:</strong>
                 </p>
                 <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
                   <li>
-                    Nếu căng cứng dây đáy ở mùa bình thường (MNDB): Khi lũ về (MNLKT 386,0 m), nước dâng thêm 1,5 m khiến dây thiếu hụt <strong>0,5 &ndash; 1,1 m</strong> chiều dài &rarr; Sức đẩy nổi hàng trăm tấn của bè sẽ <strong>kéo dìm mép bè hoặc giật nhổ đế neo đáy</strong>!
+                    Nếu căng cứng dây đáy ở mùa bình thường (MNDB): Khi lũ về (MNLKT {n(L.mnlkt)} m), nước dâng thêm {n(L.mnlkt - L.mndb)} m khiến dây thiếu hụt <strong>{n(F.cut.bed.slackNormal.min, 2)} &ndash; {n(F.cut.bed.slackNormal.max, 2)} m</strong> chiều dài &rarr; Sức đẩy nổi hàng trăm tấn của bè sẽ <strong>kéo dìm mép bè hoặc giật nhổ đế neo đáy</strong>!
                   </li>
                   <li>
-                    Nếu kéo căng cứng dây bờ ngắn ở mùa bình thường (MNDB): Khi nước rút về mùa cạn (MNC 380,0 m), bè hạ thấp sẽ <strong>treo mép bè trên không</strong>, vặn xoắn khung giàn phao.
+                    Nếu kéo căng cứng dây bờ ngắn ở mùa bình thường (MNDB): Khi nước rút về mùa cạn (MNC {n(L.mnc)} m), bè hạ thấp sẽ <strong>treo mép bè trên không</strong>, vặn xoắn khung giàn phao.
                   </li>
                 </ul>
                 <p className="font-semibold text-slate-900 pt-1">
-                  &rArr; Giải pháp chuẩn: <strong>CẮT CÁP ĐỦ CHIỀU DÀI TÍNH TRƯỚC THEO MỰC NƯỚC BẤT LỢI NHẤT CỦA TỪNG LOẠI DÂY</strong> và đánh dấu vạch sơn mốc khóa trên cáp.
+                  &rArr; Giải pháp: <strong>CẮT CÁP THEO MỰC NƯỚC MÀ DÂY DÀI NHẤT</strong>, đánh dấu vạch sơn, rồi <strong>chỉnh dây (xích / tăng đơ ở bích bè) theo mực nước</strong> như điều kiện ở trên.
                 </p>
               </div>
             </div>
@@ -1222,26 +1265,26 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-950 space-y-1">
                   <div className="font-bold flex items-center gap-1.5 text-blue-900">
                     <Anchor className="w-3.5 h-3.5" />
-                    <span>64 DÂY ĐÁY (32 đế neo vít xoắn dùng chung):</span>
+                    <span>{bedLines} DÂY ĐÁY ({C.bedBases} đế vít xoắn, {C.sharedBases} đế dùng chung):</span>
                   </div>
                   <p>
-                    Đế neo nằm sâu ở đáy hồ (~378,3 m). Khi nước dâng lên <strong>MNLKT (386,0 m)</strong> là lúc bè ở cao nhất &rarr; <strong>DÂY ĐÁY DÀI NHẤT Ở MÙA LŨ MNLKT</strong>.
+                    Chốt đế ở cao độ {n(F.cut.bed.pin.min)} &ndash; {n(F.cut.bed.pin.max)} m. Khi nước dâng lên <strong>MNLKT ({n(L.mnlkt)} m)</strong> là lúc bè ở cao nhất &rarr; <strong>DÂY ĐÁY DÀI NHẤT Ở MÙA LŨ MNLKT</strong>.
                   </p>
                   <p className="font-semibold text-blue-900">
-                    &rarr; BẮT BUỘC CẮT CÁP THEO MNLKT. Vào mùa cạn MNC (380,0 m), dây đáy chấp nhận chùng tự nhiên 1,2 &ndash; 2,6 m nằm tiếp đáy.
+                    &rarr; {F.cut.bedGovernedHigh}/{bedLines} dây đáy CẮT THEO MNLKT. Ở MNC ({n(L.mnc)} m) dây đáy chùng tới {n(F.cut.bed.slackLow.max, 2)} m nếu không chỉnh.
                   </p>
                 </div>
 
                 <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1">
                   <div className="font-bold flex items-center gap-1.5 text-emerald-900">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>231 DÂY CỌC BỜ (Cọc khoan nhồi D350):</span>
+                    <span>{shoreLines} DÂY CỌC BỜ (Cọc khoan nhồi D350):</span>
                   </div>
                   <p>
-                    Chốt cọc bờ nằm trên đồi (+384,0 ~ +386,5 m). Khi nước hồ rút về <strong>MNC (380,0 m)</strong>, bè tụt xuống thấp khiến khoảng cách chéo từ bờ xuống bè là xa nhất &rarr; <strong>DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC</strong>.
+                    Chốt cọc bờ ở cao độ {n(F.cut.shore.pin.min)} &ndash; {n(F.cut.shore.pin.max)} m. Khi nước hồ rút về <strong>MNC ({n(L.mnc)} m)</strong>, bè tụt xuống thấp khiến khoảng cách chéo từ bờ xuống bè là xa nhất &rarr; <strong>DÂY BỜ DÀI NHẤT Ở MÙA CẠN MNC</strong>.
                   </p>
                   <p className="font-semibold text-emerald-900">
-                    &rarr; BẮT BUỘC CẮT CÁP THEO MNC. Khi nước dâng lên MNDB và MNLKT, dây bờ chỉ chùng nhẹ 0,1 &ndash; 0,3 m.
+                    &rarr; {F.cut.shoreGovernedLow}/{shoreLines} dây bờ CẮT THEO MNC. Ở MNDB dây bờ chùng {n(F.cut.shore.slackNormal.min, 2)} &ndash; {n(F.cut.shore.slackNormal.max, 2)} m (trung vị {n(F.cut.shore.slackNormal.med, 2)} m) nếu không chỉnh.
                   </p>
                 </div>
               </div>
@@ -1254,14 +1297,14 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div>
                 <h4 className="card-title flex items-center gap-2">
                   <Scale className="w-4 h-4 text-brand-600" />
-                  Bảng Thông Số Hình Học &amp; Trạng Thái Dây Toàn Hồ (295 Tuyến Cáp)
+                  Bảng Thông Số Hình Học &amp; Trạng Thái Dây Toàn Hồ ({C.lines} Tuyến Cáp)
                 </h4>
                 <p className="card-subtitle">
                   Kết quả tính toán hình học 3D chuẩn xác theo cao độ thực tế (Bích bè +0,35 m, chốt cọc bờ +0,1 m, tai đế neo +0,55 m)
                 </p>
               </div>
               <span className="text-xs px-2.5 py-1 rounded bg-slate-100 font-mono text-slate-700 font-bold self-start sm:self-auto">
-                295 Cáp · 9 Bè · 263 Điểm Neo
+                {C.lines} Cáp · {F.rafts.length} Bè · {C.anchorPoints} Điểm Neo
               </span>
             </div>
 
@@ -1271,58 +1314,58 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <tr>
                     <th className="p-2.5 border-r border-b border-slate-200">Đặc tính hình học &amp; Trạng thái làm việc</th>
                     <th className="p-2.5 border-r border-b border-slate-200 text-blue-900 font-bold bg-blue-50/60">
-                      64 Tuyến Dây Đáy (32 Đế Dùng Chung)
+                      {bedLines} Tuyến Dây Đáy ({C.bedBases} Đế)
                     </th>
                     <th className="p-2.5 border-b border-slate-200 text-emerald-900 font-bold bg-emerald-50/60">
-                      231 Tuyến Dây Bờ (Cọc Khoan Nhồi D350)
+                      {shoreLines} Tuyến Dây Bờ (Cọc Khoan Nhồi D350)
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 text-slate-700">
                   <tr>
                     <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Tầm vươn ngang (mặt bằng)</td>
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-blue-800">9,0 &ndash; 21,5 m</td>
-                    <td className="p-2.5 font-bold text-emerald-800">2,1 &ndash; 58,5 m (Trung vị 24,5 m)</td>
+                    <td className="p-2.5 border-r border-slate-200">{n(F.cut.bed.span.min)} &ndash; {n(F.cut.bed.span.max)} m (trung vị {n(F.cut.bed.span.med)} m)</td>
+                    <td className="p-2.5">{n(F.cut.shore.span.min)} &ndash; {n(F.cut.shore.span.max)} m (trung vị {n(F.cut.shore.span.med)} m)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNC (380,0 m)</td>
-                    <td className="p-2.5 border-r border-slate-200">Trung vị 14,4 m (Ngắn nhất)</td>
-                    <td className="p-2.5 font-bold text-rose-700 bg-rose-50/40">Trung vị 25,2 m &rarr; DÀI NHẤT (Chi phối cắt cáp)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNC ({n(L.mnc)} m)</td>
+                    <td className="p-2.5 border-r border-slate-200">Trung vị {n(F.cut.bed.chordLow.med)} m (ngắn nhất)</td>
+                    <td className="p-2.5">Trung vị {n(F.cut.shore.chordLow.med)} m &rarr; DÀI NHẤT (chi phối cắt cáp)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNDB (384,5 m)</td>
-                    <td className="p-2.5 border-r border-slate-200">Trung vị 15,5 m</td>
-                    <td className="p-2.5">Trung vị 24,8 m</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNDB ({n(L.mndb)} m)</td>
+                    <td className="p-2.5 border-r border-slate-200">Trung vị {n(F.cut.bed.chordNormal.med)} m</td>
+                    <td className="p-2.5">Trung vị {n(F.cut.shore.chordNormal.med)} m</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNLKT (386,0 m)</td>
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-rose-700 bg-rose-50/40">Trung vị 16,2 m &rarr; DÀI NHẤT (Chi phối cắt cáp)</td>
-                    <td className="p-2.5">Trung vị 24,9 m</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Chiều dài hình học ở MNLKT ({n(L.mnlkt)} m)</td>
+                    <td className="p-2.5 border-r border-slate-200">Trung vị {n(F.cut.bed.chordHigh.med)} m &rarr; DÀI NHẤT (chi phối cắt cáp)</td>
+                    <td className="p-2.5">Trung vị {n(F.cut.shore.chordHigh.med)} m</td>
                   </tr>
                   <tr>
                     <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Độ biến thiên chiều dài (&Delta;L)</td>
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-purple-700">1,2 &ndash; 2,6 m (Chiếm 5% &ndash; 22% chiều dài cáp)</td>
-                    <td className="p-2.5">0,12 &ndash; 3,0 m (Trung vị 0,33 m; 13 dây ngắn &gt; 0,7 m)</td>
+                    <td className="p-2.5 border-r border-slate-200">{n(F.cut.bed.change.min, 2)} &ndash; {n(F.cut.bed.change.max, 2)} m</td>
+                    <td className="p-2.5">{n(F.cut.shore.change.min, 2)} &ndash; {n(F.cut.shore.change.max, 2)} m (trung vị {n(F.cut.shore.change.med, 2)} m; {F.cut.shortShore} dây ngắn dưới 10 m)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa cạn (MNC 380,0 m)</td>
-                    <td className="p-2.5 border-r border-slate-200 text-amber-700">Chùng hẳn 1,2 &ndash; 2,6 m (Nằm tiếp đáy hồ)</td>
-                    <td className="p-2.5 font-bold text-emerald-700">CĂNG GIỮ BÈ (Độ rơ = 0, khống chế toàn bộ bè)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Độ chùng ở MNC ({n(L.mnc)} m), nếu không chỉnh</td>
+                    <td className="p-2.5 border-r border-slate-200">{n(F.cut.bed.slackLow.min, 2)} &ndash; {n(F.cut.bed.slackLow.max, 2)} m</td>
+                    <td className="p-2.5">CĂNG (dây bờ dài nhất)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa thường (MNDB 384,5 m)</td>
-                    <td className="p-2.5 border-r border-slate-200 text-slate-600">Chùng nhẹ 0,5 &ndash; 1,1 m</td>
-                    <td className="p-2.5 text-slate-600">Chùng nhẹ 0,1 &ndash; 0,3 m (Hệ có độ rơ tự do ngang &lt; 0,8 m)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Độ chùng ở MNDB ({n(L.mndb)} m), nếu không chỉnh</td>
+                    <td className="p-2.5 border-r border-slate-200">{n(F.cut.bed.slackNormal.min, 2)} &ndash; {n(F.cut.bed.slackNormal.max, 2)} m</td>
+                    <td className="p-2.5">{n(F.cut.shore.slackNormal.min, 2)} &ndash; {n(F.cut.shore.slackNormal.max, 2)} m</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Trạng thái ở Mùa lũ (MNLKT 386,0 m)</td>
-                    <td className="p-2.5 border-r border-slate-200 font-bold text-emerald-700">CĂNG GIỮ BÈ (Độ rơ = 0, khống chế mép trong bè)</td>
-                    <td className="p-2.5 text-slate-600">Chùng nhẹ 0,1 &ndash; 0,25 m</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans font-semibold">Độ chùng ở MNLKT ({n(L.mnlkt)} m), nếu không chỉnh</td>
+                    <td className="p-2.5 border-r border-slate-200">CĂNG (dây đáy dài nhất)</td>
+                    <td className="p-2.5">{n(F.cut.shore.slackHigh.min, 2)} &ndash; {n(F.cut.shore.slackHigh.max, 2)} m</td>
                   </tr>
                   <tr className="bg-slate-50 font-bold">
-                    <td className="p-2.5 border-r border-slate-200 font-sans">Mực nước quy chuẩn CẮT CÁP</td>
-                    <td className="p-2.5 border-r border-slate-200 text-blue-900">CẮT THEO MNLKT 386,0 m (+ đoạn bện khuyên)</td>
-                    <td className="p-2.5 text-emerald-900">CẮT THEO MNC 380,0 m (+ đoạn bện khuyên)</td>
+                    <td className="p-2.5 border-r border-slate-200 font-sans">Mực nước lấy chiều dài CẮT CÁP</td>
+                    <td className="p-2.5 border-r border-slate-200 text-blue-900">MNLKT {n(L.mnlkt)} m ({F.cut.bedGovernedHigh}/{bedLines} dây) + đoạn phụ kiện</td>
+                    <td className="p-2.5 text-emerald-900">MNC {n(L.mnc)} m ({F.cut.shoreGovernedLow}/{shoreLines} dây) + đoạn phụ kiện</td>
                   </tr>
                 </tbody>
               </table>
@@ -1331,10 +1374,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
             <div className="p-3 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-950 space-y-1">
               <div className="font-bold flex items-center gap-2 text-sky-900">
                 <ShieldCheck className="w-4 h-4 text-sky-600" />
-                <span>Khẳng định cơ học: Hai bè KHÔNG THỂ va đập nhau trong khe hẹp!</span>
+                <span>Độ trôi của bè được kiểm tra (C12)</span>
               </div>
               <p className="leading-relaxed">
-                Khi nước cạn (MNC), dây đáy chùng nhưng 231 dây cọc bờ căng đét giữ chặt các phía &rarr; bè không thể trôi giạt. Ở mùa thường (MNDB), khi gió xô đẩy, 2 mép bè tiến lại gần nhau tối đa <strong>0,8 m</strong>. Khe hẹp nhất giữa BÈ 2 &ndash; BÈ 3 vẫn còn rộng <strong>9,9 m</strong> (thiết kế 10,75 m); khe 3 &ndash; 3A còn <strong>12,9 m</strong> (thiết kế 13,7 m). Khoảng cách an toàn luôn được duy trì tuyệt đối.
+                Mô hình cân bằng tính độ trôi ngang của từng bè ở mọi mực nước và hướng gió; điều kiện C12: trôi ≤ khe hở nhỏ nhất tới bè / bờ bên cạnh chia 2. Ví dụ {E.raft}: C12 = {util('C12')} ({note('C12')}) Kết quả chỉ đúng khi dây được chỉnh theo mực nước như điều kiện bắt buộc ở trên.
               </p>
             </div>
           </div>
@@ -1437,10 +1480,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
                 <div className="font-bold text-slate-900 flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">1</span>
-                  <span>Đo sâu thực địa 32 vị trí đế trước khi cắt cáp đáy</span>
+                  <span>Đo cao độ đáy thực tại {C.bedBases} vị trí đế trước khi cắt cáp đáy</span>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
-                  Cao độ đáy hồ hiện tính theo khảo sát trung bình (~378,3 m). Nếu đáy hồ thực tế sâu hơn thiết kế 0,5 m thì ở mùa lũ dây đáy sẽ bị thiếu hụt ~0,3 m. <strong>Bắt buộc rà đo sâu tại tim từng đế trước khi cắt loạt cáp đáy.</strong>
+                  Cao độ đế lấy theo đáy thiết kế / địa hình IFC (chốt đế {n(F.cut.bed.pin.min)} &ndash; {n(F.cut.bed.pin.max)} m), chưa phải số đo. Dây đáy rất nhạy với cao độ đáy: <strong>đo cao độ tại tim từng đế trước khi cắt cáp đáy.</strong>
                 </p>
               </div>
 
@@ -1448,10 +1491,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
               <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-1.5">
                 <div className="font-bold text-slate-900 flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-mono font-bold flex items-center justify-center">2</span>
-                  <span>Xử lý 13 tuyến dây bờ ngắn dưới 10 m (BÈ 6 &amp; BÈ 1)</span>
+                  <span>{F.cut.shortShore} tuyến dây bờ ngắn dưới 10 m{F.cut.shortShoreRafts.length ? ` (${F.cut.shortShoreRafts.join(', ')})` : ''}</span>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
-                  BÈ 6 có 9 dây bờ và BÈ 1 có 4 dây bờ rất ngắn (như B6-D04 chỉ dài 2,06 m, B6-D29 dài 3,0 m). Ở mùa cạn chúng chúc dốc 22&deg; &ndash; 66&deg;, ở mùa thường chùng 0,7 &ndash; 3,0 m nên kém hiệu quả. <strong>Khuyến nghị dời cọc lùi xa bờ &gt; 15 m</strong>.
+                  Dây bờ ngắn đổi góc nhiều khi mực nước thay đổi nên chùng nhiều ở MNDB (dây bờ chùng tới {n(F.cut.shore.slackNormal.max, 2)} m) và hút lực khi căng. Cọc bờ mới đã đặt cách bích ≥ 6 m; các dây ngắn này <strong>phải được chỉnh theo mực nước</strong> và được gắn cờ trong bảng cắt cáp.
                 </p>
               </div>
 
@@ -1462,7 +1505,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <span>Kiểm tra sức nổi dự trữ mép bè ở mùa lũ MNLKT</span>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
-                  Ở mùa lũ MNLKT, dây đáy dốc từ 19&deg; &ndash; 40&deg; (8 dây &gt; 35&deg;). Lực căng dây sinh ra thành phần lực kéo đứng dìm mép bè xuống đáy nước (~0,5 &ndash; 0,6 tấn/bích). Cần đảm bảo phao nổi mép bè có đủ sức nổi dự trữ để không bị ngập mép sàn.
+                  Ở MNLKT dây đáy dốc {n(F.cut.bed.slopeHigh.min, 0)}&deg; &ndash; {n(F.cut.bed.slopeHigh.max, 0)}&deg;. Thành phần đứng của lực dây kéo mép bè xuống; cần kiểm tra phao mép bè tại bích neo có đủ sức nổi dự trữ (nhà sản xuất bè xác nhận).
                 </p>
               </div>
 
@@ -1473,7 +1516,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   <span>Tra cứu Bảng Thống Kê Cắt Cáp (Cutting Schedule)</span>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
-                  Toàn bộ chiều dài cắt, mực nước chi phối và độ chùng của từng sợi cáp đã được tích hợp trong file <strong>Excel Thống Kê Neo 9 Bè</strong> (tải ở Tab 5: Tài Liệu Đính Kèm). Đội thợ công trường chỉ việc nhìn bảng để đo cắt chính xác từng mét.
+                  Chiều dài cắt, mực nước chi phối và độ chùng của từng dây ở sheet <strong>ChieuDaiCatCap</strong> của Bảng Neo Excel (nút "Bảng Neo" hoặc tài liệu đính kèm). Chiều dài là chốt tới chốt, chưa gồm phụ kiện đầu dây.
                 </p>
               </div>
             </div>
@@ -1505,7 +1548,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded bg-rose-600 text-white font-mono font-bold text-xs">
-                      C1 / C7
+                      BP-1 / BP-2
                     </span>
                     <span className="font-bold text-rose-950 text-sm">
                       Sức chịu tải ngang hoặc Mômen cọc bờ KHÔNG ĐẠT
@@ -1520,13 +1563,13 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                   </button>
                 </div>
                 <p className="text-xs text-rose-900 leading-relaxed">
-                  <strong>Nguyên nhân:</strong> Lực kéo cáp ngang lớn hơn sức chịu tải ngang H_allow của cọc bờ theo Broms hoặc mômen uốn M_max &gt; M_rd.<br />
+                  <strong>Nguyên nhân:</strong> Lực dây lớn hơn sức chịu ngang của đất theo Broms (BP-1) hoặc γ·M_max &gt; M_rd của tiết diện cọc (BP-2).<br />
                   <strong>Giải pháp khắc phục:</strong>
                 </p>
                 <ul className="list-disc pl-5 text-xs text-rose-900 space-y-1">
-                  <li>Tăng kích thước cạnh cọc vuông D (ví dụ từ 0.40m lên 0.45m hoặc 0.50m). Tiết diện lớn hơn giúp tăng đáng kể diện tích cản đất và mômen chống uốn (W ~ D&sup3;).</li>
-                  <li>Tăng chiều sâu ngàm cọc bờ L (ví dụ từ 5.0m lên 6.5m ~ 8.0m).</li>
-                  <li>Tăng thêm số lượng dây neo bờ để phân tán lực kéo sang nhiều cọc hơn.</li>
+                  <li>BP-2: tăng thép chủ lồng cọc (số thanh, đường kính, mác CB500-V), hàm lượng thép ≤ 4 % tiết diện; nếu vẫn không đủ thì dùng cọc đôi + đài.</li>
+                  <li>BP-1: tăng chiều sâu cọc L hoặc dùng cọc đôi.</li>
+                  <li>Giữ tim chốt cáp sát mặt đất (≤ 100 mm) — tay đòn lớn hơn làm mômen tăng nhanh.</li>
                 </ul>
               </div>
 
@@ -1555,8 +1598,8 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 </p>
                 <ul className="list-disc pl-5 text-xs text-amber-900 space-y-1">
                   <li>Vào mục <strong>Dây Cáp</strong> và bấm chọn mã cáp có đường kính lớn hơn (ví dụ nâng từ <code>PES-24</code> lên <code>PES-28</code>, <code>PES-32</code> hoặc <code>PES-36</code>).</li>
-                  <li>Tăng tổng số lượng dây neo trong cụm bè.</li>
-                  <li>Kiểm tra lại góc nghiêng tấm pin &theta; hoặc giảm bớt diện tích đón gió nếu cho phép.</li>
+                  <li>Thêm dây ở cạnh bè chịu lực lớn, hoặc lùi cọc bờ xa bích hơn — dây quá ngắn hút lực trong mô hình cân bằng.</li>
+                  <li>Kiểm tra cách chỉnh dây theo mực nước (Mục 4): cắt cố định không chỉnh làm lực dây tăng nhiều.</li>
                 </ul>
               </div>
 
@@ -1565,10 +1608,10 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded bg-sky-600 text-white font-mono font-bold text-xs">
-                      C5
+                      SV-1 … SV-6
                     </span>
                     <span className="font-bold text-sky-950 text-sm">
-                      Cọc neo lòng hồ bị nhổ do lực kéo đứng (T_v &gt; T_v,allow)
+                      Đế neo vít xoắn KHÔNG ĐẠT (nhổ, trượt, lật, vít, nền)
                     </span>
                   </div>
                   <button
@@ -1576,17 +1619,17 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                     onClick={() => onSelectSection('input')}
                     className="text-xs font-bold text-sky-700 hover:text-sky-900 underline"
                   >
-                    Chỉnh Cọc Đáy &rarr;
+                    Chỉnh Đế Neo &rarr;
                   </button>
                 </div>
                 <p className="text-xs text-sky-900 leading-relaxed">
-                  <strong>Nguyên nhân:</strong> Dây cáp neo đáy quá dốc (khoảng cách từ mép bè tới cọc quá gần) khiến thành phần lực đứng T_v = T_max x sin(&theta;) vượt quá ma sát bám dính của bùn đáy hồ.<br />
+                  <strong>Nguyên nhân:</strong> Dây đáy quá dốc (đế quá gần bè) làm thành phần nhổ T_v lớn, hoặc lực ngang vượt bám dính bùn + gờ + vít.<br />
                   <strong>Giải pháp khắc phục:</strong>
                 </p>
                 <ul className="list-disc pl-5 text-xs text-sky-900 space-y-1">
-                  <li>Tăng chiều sâu ngàm cọc lòng hồ L_bed (ví dụ từ 6.0m lên 8.0m ~ 10.0m). Ma sát thành cọc tăng tuyến tính theo chiều sâu ngàm (Q ~ 4D x L).</li>
-                  <li>Kéo dài khoảng cách từ mép bè tới vị trí đóng cọc đáy lòng hồ để làm thoải góc dốc cáp &theta; (giúp sin(&theta;) nhỏ lại).</li>
-                  <li>Tăng tiết diện cọc đáy từ 0.30m lên 0.35m ~ 0.40m.</li>
+                  <li>Để chế độ tự định cỡ đế (Mục 9): cạnh B tăng từng 0,25 m tới 8 m, rồi tăng chiều dày, lấy đế ít bê tông nhất.</li>
+                  <li>Dời đế xa bè để dây thoải hơn (sin &theta; nhỏ lại).</li>
+                  <li>Khảo sát c_u bùn đáy (cắt cánh / xuyên tĩnh): giá trị 20 kPa đang dùng là giả định, bùn mặt hồ thường chỉ 2–10 kPa.</li>
                 </ul>
               </div>
             </div>

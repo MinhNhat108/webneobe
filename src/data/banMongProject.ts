@@ -156,6 +156,22 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         size: 467208,
         kind: 'dxf' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_8_BE.dxf'
+      },
+      {
+        id: 'bm_bo_tri_16900_dxf',
+        name: '10. Đề xuất bố trí bè ~16.900 tấm: bỏ BÈ 5, cắt bớt BÈ 7 — 29/10/2026, để xem xét, chưa áp dụng vào tính toán (HOBANMONG_BO_TRI_BE_16900_TAM_DE_XUAT.dxf)',
+        mime: 'application/dxf',
+        size: 347976,
+        kind: 'dxf' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_16900_TAM_DE_XUAT.dxf'
+      },
+      {
+        id: 'bm_bo_tri_16900_dwg',
+        name: '11. Đề xuất bố trí bè ~16.900 tấm: bỏ BÈ 5, cắt bớt BÈ 7 — 29/10/2026, để xem xét, chưa áp dụng vào tính toán (HOBANMONG_BO_TRI_BE_16900_TAM_DE_XUAT.dwg)',
+        mime: 'application/acad',
+        size: 99649,
+        kind: 'other' as const,
+        remoteUrl: 'docs_ban_mong/HOBANMONG_BO_TRI_BE_16900_TAM_DE_XUAT.dwg'
       }
     ],
     raftsSummary: BAN_MONG_RAFTS

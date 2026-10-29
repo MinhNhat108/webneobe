@@ -199,7 +199,7 @@ export function buildFinalDesign(
     // the raft's checks are those of the pile type of p0: when every line takes the single pile (BÈ 4 at 10°: the
     // raft's twin pile is sized for the floor F/(6 cos 30°), no line pulls that much) its BP-1 / BP-2 are the single pile's
     const gov = pileTypes.find((t) => !t.light) ?? pileTypes[0];
-    const panels = R.solarPanelCount ?? 0, a1 = R.solarPanelArea_m2 ?? 2.701, tilt = R.solarTilt_deg ?? 12;
+    const panels = R.solarPanelCount ?? 0, a1 = R.solarPanelArea_m2 ?? 2.701, tilt = R.solarTilt_deg ?? 10;
     const sp = r.shorePile;
     const bedLines = sum(schedule.bases, (x) => x.lines.filter((l) => l.raft === b.raft.name).length);
     return {

@@ -289,7 +289,7 @@ const STEPS: Array<[string, string[]]> = [
 const NOTES: Array<[string, string[]]> = [
   ['1. PHẠM VI VÀ SỐ LIỆU THIẾT KẾ', [
     `Cọc khoan nhồi tròn D${D} đổ tại chỗ, ${totalPiles} cọc tại ${totalPoints} điểm neo ven bờ, tổng chiều dài ${vn(totalLen)} m, bê tông ${vn(totalConc)} m³, thép khoảng ${vn(totalSteel / 1000)} tấn.`,
-    `Tải trọng: gió tính toán V = ${vn(state.env.windSpeed_ms, 0)} m/s, giàn pin nghiêng 12°. Lực căng dây và số thép từng bè theo bảng E. Hệ số tải trọng uốn cọc γ = ${vn(gamma)}.`,
+    `Tải trọng: gió tính toán V = ${vn(state.env.windSpeed_ms, 0)} m/s, giàn pin nghiêng ${vn(state.raft.solarTilt_deg ?? 10, 0)}°. Lực căng dây và số thép từng bè theo bảng E. Hệ số tải trọng uốn cọc γ = ${vn(gamma)}.`,
     designWindCaveat(state.env.windSpeed_ms) ? `CHÚ Ý: ${designWindCaveat(state.env.windSpeed_ms)}` : 'Gió tính toán không thấp hơn gió tiêu chuẩn TCVN 2737:2023 vùng II-B.',
     'Sức chịu tải ngang theo Broms với đất sét dẻo cứng φ = 28°, c = 12 kPa, γ = 18 kN/m³: GIẢ ĐỊNH, chưa có khoan khảo sát địa chất tại vị trí cọc.',
     'Uốn cọc theo TCVN 5574:2018 với lồng thép ở hướng bất lợi nhất (lồng không định hướng khi thả vào lỗ).',
@@ -327,7 +327,7 @@ const NOTES: Array<[string, string[]]> = [
     `Nếu tăng lớp bảo vệ lên 50 mm mà giữ D${D} thì cánh tay đòn thép giảm khoảng 20% và thép trong bảng E KHÔNG còn đủ: phải tăng đường kính lỗ khoan (D400) hoặc tính lại thép. CẦN CHỦ ĐẦU TƯ / THIẾT KẾ QUYẾT ĐỊNH TRƯỚC KHI THI CÔNG.`,
     `Khoảng hở giữa các thép chủ nhỏ nhất ${vn(minGap, 0)} mm (lồng ${Math.max(...barCounts)} thanh): dùng đá 1×2, bê tông độ sụt cao, đảm bảo bê tông chui qua lồng.`,
     `Chưa thiết kế: lực cắt thân cọc (đai xoắn là cấu tạo), ${rows.some((r) => r.perPoint > 1) ? 'đài cọc đôi, ' : ''}bảo vệ chống ăn mòn chi tiết, bê tông cục bộ mũ cọc.`,
-    `Bản vẽ theo mặt bằng ${rows.length} bè của Chủ đầu tư (HỒ HUỔI VANH.dxf, 08/10/2026). Neo đáy hồ (đế BTCT + vít xoắn) thể hiện ở bản vẽ mặt bằng hệ neo, không thuộc bản vẽ này.`,
+    `Bản vẽ theo mặt bằng ${new Set(shore.map((r) => r.raft)).size} bè của Chủ đầu tư (27/10/2026). Neo đáy hồ (đế BTCT + vít xoắn) thể hiện ở bản vẽ mặt bằng hệ neo, không thuộc bản vẽ này.`,
     'Đây là bản vẽ đề xuất phục vụ trao đổi; hồ sơ thi công phải do đơn vị thiết kế có chứng chỉ phát hành.'
   ]]
 ];
@@ -373,7 +373,7 @@ const md = [
   '',
   'Sinh bởi `scripts/buildShorePileDrawing.ts`. Bản vẽ: `coc_khoan_nhoi_ven_bo.dxf` (đơn vị mm, chữ tiếng Việt có dấu, font Arial). Nội dung ghi chú giống trên bản vẽ.',
   '',
-  `## Bảng thống kê (mặt bằng ${rows.length} bè, bản 08/10/2026)`,
+  `## Bảng thống kê (mặt bằng ${new Set(shore.map((r) => r.raft)).size} bè)`,
   '',
   '| Bè | Điểm neo | Cọc/điểm | Số cọc | L_tk (m) | Thép chủ | Mác | T dây (kN) | γ·T/cọc (kN) | HSSD uốn | BT/cọc (m³) | Thép/cọc (kg) | Lớp bảo vệ thực tới đai (mm) |',
   '|---|---|---|---|---|---|---|---|---|---|---|---|---|',

@@ -394,20 +394,20 @@ export const HUOI_VANH_PROJECT = {
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_NEO_4_BE_PA3_DE_VIT.xlsx'
     },
     {
-      id: 'doc_coc_ven_bo_dxf',
-      name: '15. Bản vẽ cọc khoan nhồi ven bờ D350 CVB-01 và biện pháp thi công — 175 điểm, 178 cọc, 28/10/2026 (HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf)',
+      id: 'doc_coc_thi_cong_dxf',
+      name: '15. Bản vẽ thi công cọc khoan nhồi ven bờ D350 CVB-01…05 (dự thảo): mặt bằng định vị C1…C175, tọa độ – cao độ, cấu tạo + thống kê thép, đầu cọc, đài cọc đôi, biện pháp — nghiêng 10°, 29/10/2026 (HOHUOIVANH_BV_THI_CONG_COC_KHOAN_NHOI_CVB01-05.dxf)',
       mime: 'application/dxf',
-      size: 75248,
+      size: 412654,
       kind: 'dxf' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf'
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BV_THI_CONG_COC_KHOAN_NHOI_CVB01-05.dxf'
     },
     {
-      id: 'doc_coc_ven_bo_dwg',
-      name: '16. Bản vẽ cọc khoan nhồi ven bờ D350 CVB-01, bản DWG (HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg)',
+      id: 'doc_coc_thi_cong_dwg',
+      name: '16. Bản vẽ thi công cọc khoan nhồi ven bờ CVB-01…05, bản DWG (HOHUOIVANH_BV_THI_CONG_COC_KHOAN_NHOI_CVB01-05.dwg)',
       mime: 'application/acad',
-      size: 50333,
+      size: 149852,
       kind: 'other' as const,
-      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg'
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BV_THI_CONG_COC_KHOAN_NHOI_CVB01-05.dwg'
     },
     {
       id: 'doc_de_neo_vit_xoan_neo01_04_dxf',

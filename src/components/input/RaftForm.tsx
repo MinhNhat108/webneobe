@@ -154,7 +154,7 @@ export const RaftForm: React.FC = () => {
               step={0.5}
               min={0}
               max={60}
-              helpText="Góc nghiêng so với phương ngang (12°)"
+              helpText="Góc nghiêng so với phương ngang (mặc định 10°)"
             />
 
             <NumberField

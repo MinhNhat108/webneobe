@@ -83,7 +83,7 @@ export function calculateLoads(
     //     with the wind load — use when real current/wave data exist.
     const panelCount = raft.solarPanelCount ?? 0;
     const panelArea1 = raft.solarPanelArea_m2 ?? 2.701;
-    const tiltDeg = raft.solarTilt_deg ?? 12.0;
+    const tiltDeg = raft.solarTilt_deg ?? 10.0; // both lakes 10° (owner 2026-10-28 / 29)
     const tiltRad = (tiltDeg * Math.PI) / 180.0;
     const cdPanel = raft.cdPanel ?? env.windCd ?? 1.3;
     const shieldFactor = raft.solarShieldFactor ?? 0.55;

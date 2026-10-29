@@ -930,7 +930,7 @@ export const GuideView: React.FC<GuideViewProps> = ({ onSelectSection }) => {
                       <line x1="135" y1="25" x2="170" y2="10" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
                       <line x1="180" y1="25" x2="215" y2="10" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
                     </g>
-                    <text x="50" y="-2" fill="#fbbf24" fontSize="11" fontWeight="bold">DÀN PIN MẶT TRỜI (Góc nghiêng 12°)</text>
+                    <text x="50" y="-2" fill="#fbbf24" fontSize="11" fontWeight="bold">DÀN PIN MẶT TRỜI (Góc nghiêng 10°)</text>
                   </g>
 
                   {/* Mooring Cable to Shore */}

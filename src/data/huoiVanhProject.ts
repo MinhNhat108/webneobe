@@ -376,6 +376,38 @@ export const HUOI_VANH_PROJECT = {
       size: 13768362,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_KHUNG_KET_CAU_BE_PIN_4_GIA_CUONG_TAI_NEO.dwg'
+    },
+    {
+      id: 'doc_mb_neo_dwg',
+      name: '13. Bản vẽ CAD bố trí neo 4 bè, bản DWG — ký hiệu C1… (cọc bờ), D1… (đế), 29/10/2026 (HOHUOIVANH_MAT_BANG_NEO_4_BE_PA3_DE_VIT.dwg)',
+      mime: 'application/acad',
+      size: 140686,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_MAT_BANG_NEO_4_BE_PA3_DE_VIT.dwg'
+    },
+    {
+      id: 'doc_bang_thong_ke_neo_xlsx',
+      name: '14. Bảng thống kê neo từng điểm — 175 cọc bờ, 36 đế, chiều dài cắt cáp; 4 bè, 18.914 tấm pin nghiêng 10°, 28/10/2026 (HOHUOIVANH_BANG_THONG_KE_NEO_4_BE_PA3_DE_VIT.xlsx)',
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 576310,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BANG_THONG_KE_NEO_4_BE_PA3_DE_VIT.xlsx'
+    },
+    {
+      id: 'doc_coc_ven_bo_dxf',
+      name: '15. Bản vẽ cọc khoan nhồi ven bờ D350 CVB-01 và biện pháp thi công — 175 điểm, 178 cọc, 28/10/2026 (HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf)',
+      mime: 'application/dxf',
+      size: 75248,
+      kind: 'dxf' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dxf'
+    },
+    {
+      id: 'doc_coc_ven_bo_dwg',
+      name: '16. Bản vẽ cọc khoan nhồi ven bờ D350 CVB-01, bản DWG (HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg)',
+      mime: 'application/acad',
+      size: 50333,
+      kind: 'other' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg'
     }
   ],
   raftsSummary: HUOI_VANH_RAFT_CATALOGUE

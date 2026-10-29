@@ -408,6 +408,14 @@ export const HUOI_VANH_PROJECT = {
       size: 50333,
       kind: 'other' as const,
       remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BAN_VE_COC_VEN_BO_D350.dwg'
+    },
+    {
+      id: 'doc_de_neo_vit_xoan_neo01_04_dxf',
+      name: '17. Bản vẽ cấu tạo đế neo đáy BTCT + vít xoắn NEO-01…04 (đế điển hình 2,5 × 2,5 × 0,4 m, sơ bộ 10/2026) (HOHUOIVANH_BV_DE_NEO_VIT_XOAN_NEO01-04.dxf)',
+      mime: 'application/dxf',
+      size: 1024631,
+      kind: 'dxf' as const,
+      remoteUrl: 'docs_huoi_vanh/HOHUOIVANH_BV_DE_NEO_VIT_XOAN_NEO01-04.dxf'
     }
   ],
   raftsSummary: HUOI_VANH_RAFT_CATALOGUE

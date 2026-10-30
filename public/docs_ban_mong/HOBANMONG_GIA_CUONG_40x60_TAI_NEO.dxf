@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461344.6537037035
+2461344.667303241
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461344.6537152776
+2461344.667303241
   9
 $TDUUPDATE
  40
@@ -549,7 +549,7 @@ $SPLINESEGS
   9
 $HANDSEED
   5
-821
+811
   9
 $SURFTAB1
  70
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{8CB9A4B9-FF56-47E7-8506-90F00938680E}
+{C1D024D0-6B32-4A1C-B01F-99559679C4DC}
   9
 $VERSIONGUID
   2
-{6D350C11-953D-4CF9-AEED-574DC154778A}
+{2A58F854-6BBD-497D-B307-C5E144672A7C}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -3257,7 +3257,7 @@ ACAD
   0
 APPID
   5
-81E
+80E
 330
 3
 100
@@ -3271,7 +3271,7 @@ HATCHBACKGROUNDCOLOR
   0
 APPID
   5
-81F
+80F
 330
 3
 100
@@ -7289,7 +7289,7 @@ AcDbText
  40
 4.0
   1
-BÈ 2 — T = 113,5 kN, 52 dây + 6 dây nối
+BÈ 2 — T = 121,9 kN, 52 dây + 6 dây nối
   7
 VN
  11
@@ -7881,7 +7881,7 @@ AcDbText
  40
 4.0
   1
-BÈ 4 — T = 113,5 kN, 30 dây + 6 dây nối
+BÈ 4 — T = 121,9 kN, 22 dây + 14 dây nối
   7
 VN
  11
@@ -8409,7 +8409,7 @@ AcDbText
  40
 4.0
   1
-BÈ 5 — T = 105,9 kN, 37 dây
+BÈ 5 — T = 121,9 kN, 29 dây + 8 dây nối
   7
 VN
  11
@@ -9657,7 +9657,7 @@ AcDbText
  40
 4.0
   1
-BÈ 6 — T = 152,1 kN, 50 dây
+BÈ 6 — T = 153,1 kN, 50 dây
   7
 VN
  11
@@ -12465,54 +12465,6 @@ DAY_NEO
 100
 AcDbLine
  10
--85.49
- 20
-75.45
- 30
-0.0
- 11
--112.25
- 21
-64.94
- 31
-0.0
-  0
-LINE
-  5
-1B0
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--80.0
- 20
-13.7
- 30
-0.0
- 11
--93.42
- 21
-5.82
- 31
-0.0
-  0
-LINE
-  5
-1B1
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
 -90.89
  20
 136.21
@@ -12527,7 +12479,7 @@ AcDbLine
   0
 LINE
   5
-1B2
+1B0
 330
 17
 100
@@ -12551,7 +12503,7 @@ AcDbLine
   0
 LINE
   5
-1B3
+1B1
 330
 17
 100
@@ -12575,7 +12527,7 @@ AcDbLine
   0
 LINE
   5
-1B4
+1B2
 330
 17
 100
@@ -12599,7 +12551,7 @@ AcDbLine
   0
 LINE
   5
-1B5
+1B3
 330
 17
 100
@@ -12623,31 +12575,7 @@ AcDbLine
   0
 LINE
   5
-1B6
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--82.75
- 20
-44.57
- 30
-0.0
- 11
--102.97
- 21
-35.6
- 31
-0.0
-  0
-LINE
-  5
-1B7
+1B4
 330
 17
 100
@@ -12671,7 +12599,7 @@ AcDbLine
   0
 LINE
   5
-1B8
+1B5
 330
 17
 100
@@ -12695,7 +12623,7 @@ AcDbLine
   0
 LINE
   5
-1B9
+1B6
 330
 17
 100
@@ -12719,7 +12647,7 @@ AcDbLine
   0
 LINE
   5
-1BA
+1B7
 330
 17
 100
@@ -12743,31 +12671,7 @@ AcDbLine
   0
 LINE
   5
-1BB
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--84.07
- 20
-59.52
- 30
-0.0
- 11
--107.58
- 21
-50.03
- 31
-0.0
-  0
-LINE
-  5
-1BC
+1B8
 330
 17
 100
@@ -12791,7 +12695,7 @@ AcDbLine
   0
 LINE
   5
-1BD
+1B9
 330
 17
 100
@@ -12815,7 +12719,7 @@ AcDbLine
   0
 LINE
   5
-1BE
+1BA
 330
 17
 100
@@ -12839,7 +12743,7 @@ AcDbLine
   0
 LINE
   5
-1BF
+1BB
 330
 17
 100
@@ -12863,7 +12767,7 @@ AcDbLine
   0
 LINE
   5
-1C0
+1BC
 330
 17
 100
@@ -12887,31 +12791,7 @@ AcDbLine
   0
 LINE
   5
-1C1
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--78.67
- 20
--1.24
- 30
-0.0
- 11
--91.62
- 21
--2.4
- 31
-0.0
-  0
-LINE
-  5
-1C2
+1BD
 330
 17
 100
@@ -12935,7 +12815,7 @@ AcDbLine
   0
 LINE
   5
-1C3
+1BE
 330
 17
 100
@@ -12959,7 +12839,7 @@ AcDbLine
   0
 LINE
   5
-1C4
+1BF
 330
 17
 100
@@ -12983,31 +12863,7 @@ AcDbLine
   0
 LINE
   5
-1C5
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--81.33
- 20
-28.64
- 30
-0.0
- 11
--100.03
- 21
-23.72
- 31
-0.0
-  0
-LINE
-  5
-1C6
+1C0
 330
 17
 100
@@ -13031,7 +12887,7 @@ AcDbLine
   0
 LINE
   5
-1C7
+1C1
 330
 17
 100
@@ -13055,31 +12911,7 @@ AcDbLine
   0
 LINE
   5
-1C8
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--77.96
- 20
--9.21
- 30
-0.0
- 11
--89.06
- 21
--11.49
- 31
-0.0
-  0
-LINE
-  5
-1C9
+1C2
 330
 17
 100
@@ -13103,31 +12935,7 @@ AcDbLine
   0
 LINE
   5
-1CA
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--80.62
- 20
-20.67
- 30
-0.0
- 11
--97.69
- 21
-16.26
- 31
-0.0
-  0
-LINE
-  5
-1CB
+1C3
 330
 17
 100
@@ -13151,7 +12959,7 @@ AcDbLine
   0
 LINE
   5
-1CC
+1C4
 330
 17
 100
@@ -13175,7 +12983,7 @@ AcDbLine
   0
 LINE
   5
-1CD
+1C5
 330
 17
 100
@@ -13199,31 +13007,7 @@ AcDbLine
   0
 LINE
   5
-1CE
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--123.19
- 20
-26.62
- 30
-0.0
- 11
--102.97
- 21
-35.6
- 31
-0.0
-  0
-LINE
-  5
-1CF
+1C6
 330
 17
 100
@@ -13247,7 +13031,7 @@ AcDbLine
   0
 LINE
   5
-1D0
+1C7
 330
 17
 100
@@ -13271,7 +13055,7 @@ AcDbLine
   0
 LINE
   5
-1D1
+1C8
 330
 17
 100
@@ -13295,7 +13079,7 @@ AcDbLine
   0
 LINE
   5
-1D2
+1C9
 330
 17
 100
@@ -13319,7 +13103,7 @@ AcDbLine
   0
 LINE
   5
-1D3
+1CA
 330
 17
 100
@@ -13335,15 +13119,15 @@ AcDbLine
  30
 0.0
  11
--212.72
+-272.4
  21
-1.51
+-22.55
  31
 0.0
   0
 LINE
   5
-1D4
+1CB
 330
 17
 100
@@ -13367,31 +13151,7 @@ AcDbLine
   0
 LINE
   5
-1D5
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--106.85
- 20
--2.05
- 30
-0.0
- 11
--93.42
- 21
-5.82
- 31
-0.0
-  0
-LINE
-  5
-1D6
+1CC
 330
 17
 100
@@ -13415,31 +13175,7 @@ AcDbLine
   0
 LINE
   5
-1D7
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--139.02
- 20
-54.43
- 30
-0.0
- 11
--112.25
- 21
-64.94
- 31
-0.0
-  0
-LINE
-  5
-1D8
+1CD
 330
 17
 100
@@ -13463,7 +13199,7 @@ AcDbLine
   0
 LINE
   5
-1D9
+1CE
 330
 17
 100
@@ -13487,7 +13223,7 @@ AcDbLine
   0
 LINE
   5
-1DA
+1CF
 330
 17
 100
@@ -13511,7 +13247,7 @@ AcDbLine
   0
 LINE
   5
-1DB
+1D0
 330
 17
 100
@@ -13535,7 +13271,7 @@ AcDbLine
   0
 LINE
   5
-1DC
+1D1
 330
 17
 100
@@ -13559,7 +13295,7 @@ AcDbLine
   0
 LINE
   5
-1DD
+1D2
 330
 17
 100
@@ -13583,7 +13319,7 @@ AcDbLine
   0
 LINE
   5
-1DE
+1D3
 330
 17
 100
@@ -13607,7 +13343,7 @@ AcDbLine
   0
 LINE
   5
-1DF
+1D4
 330
 17
 100
@@ -13631,31 +13367,7 @@ AcDbLine
   0
 LINE
   5
-1E0
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--114.77
- 20
-11.85
- 30
-0.0
- 11
--97.69
- 21
-16.26
- 31
-0.0
-  0
-LINE
-  5
-1E1
+1D5
 330
 17
 100
@@ -13679,7 +13391,7 @@ AcDbLine
   0
 LINE
   5
-1E2
+1D6
 330
 17
 100
@@ -13703,7 +13415,7 @@ AcDbLine
   0
 LINE
   5
-1E3
+1D7
 330
 17
 100
@@ -13727,31 +13439,7 @@ AcDbLine
   0
 LINE
   5
-1E4
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--131.1
- 20
-40.53
- 30
-0.0
- 11
--107.58
- 21
-50.03
- 31
-0.0
-  0
-LINE
-  5
-1E5
+1D8
 330
 17
 100
@@ -13775,7 +13463,7 @@ AcDbLine
   0
 LINE
   5
-1E6
+1D9
 330
 17
 100
@@ -13799,7 +13487,7 @@ AcDbLine
   0
 LINE
   5
-1E7
+1DA
 330
 17
 100
@@ -13823,7 +13511,7 @@ AcDbLine
   0
 LINE
   5
-1E8
+1DB
 330
 17
 100
@@ -13847,7 +13535,7 @@ AcDbLine
   0
 LINE
   5
-1E9
+1DC
 330
 17
 100
@@ -13871,7 +13559,7 @@ AcDbLine
   0
 LINE
   5
-1EA
+1DD
 330
 17
 100
@@ -13895,7 +13583,7 @@ AcDbLine
   0
 LINE
   5
-1EB
+1DE
 330
 17
 100
@@ -13919,31 +13607,7 @@ AcDbLine
   0
 LINE
   5
-1EC
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--118.73
- 20
-18.8
- 30
-0.0
- 11
--100.03
- 21
-23.72
- 31
-0.0
-  0
-LINE
-  5
-1ED
+1DF
 330
 17
 100
@@ -13967,55 +13631,7 @@ AcDbLine
   0
 LINE
   5
-1EE
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--103.14
- 20
--8.57
- 30
-0.0
- 11
--91.62
- 21
--2.4
- 31
-0.0
-  0
-LINE
-  5
-1EF
-330
-17
-100
-AcDbEntity
-  8
-DAY_NEO
-100
-AcDbLine
- 10
--100.17
- 20
--13.78
- 30
-0.0
- 11
--89.06
- 21
--11.49
- 31
-0.0
-  0
-LINE
-  5
-1F0
+1E0
 330
 17
 100
@@ -14039,7 +13655,7 @@ AcDbLine
   0
 LINE
   5
-1F1
+1E1
 330
 17
 100
@@ -14063,7 +13679,7 @@ AcDbLine
   0
 LINE
   5
-1F2
+1E2
 330
 17
 100
@@ -14087,7 +13703,7 @@ AcDbLine
   0
 LINE
   5
-1F3
+1E3
 330
 17
 100
@@ -14111,7 +13727,7 @@ AcDbLine
   0
 LINE
   5
-1F4
+1E4
 330
 17
 100
@@ -14135,7 +13751,7 @@ AcDbLine
   0
 LINE
   5
-1F5
+1E5
 330
 17
 100
@@ -14159,7 +13775,7 @@ AcDbLine
   0
 LINE
   5
-1F6
+1E6
 330
 17
 100
@@ -14183,7 +13799,7 @@ AcDbLine
   0
 LINE
   5
-1F7
+1E7
 330
 17
 100
@@ -14207,7 +13823,7 @@ AcDbLine
   0
 LINE
   5
-1F8
+1E8
 330
 17
 100
@@ -14231,7 +13847,7 @@ AcDbLine
   0
 LINE
   5
-1F9
+1E9
 330
 17
 100
@@ -14255,7 +13871,7 @@ AcDbLine
   0
 LINE
   5
-1FA
+1EA
 330
 17
 100
@@ -14279,7 +13895,7 @@ AcDbLine
   0
 LINE
   5
-1FB
+1EB
 330
 17
 100
@@ -14303,7 +13919,7 @@ AcDbLine
   0
 LINE
   5
-1FC
+1EC
 330
 17
 100
@@ -14327,7 +13943,7 @@ AcDbLine
   0
 LINE
   5
-1FD
+1ED
 330
 17
 100
@@ -14351,7 +13967,7 @@ AcDbLine
   0
 LINE
   5
-1FE
+1EE
 330
 17
 100
@@ -14375,7 +13991,7 @@ AcDbLine
   0
 LINE
   5
-1FF
+1EF
 330
 17
 100
@@ -14399,7 +14015,7 @@ AcDbLine
   0
 LINE
   5
-200
+1F0
 330
 17
 100
@@ -14423,7 +14039,7 @@ AcDbLine
   0
 LINE
   5
-201
+1F1
 330
 17
 100
@@ -14447,7 +14063,7 @@ AcDbLine
   0
 LINE
   5
-202
+1F2
 330
 17
 100
@@ -14471,7 +14087,7 @@ AcDbLine
   0
 LINE
   5
-203
+1F3
 330
 17
 100
@@ -14495,7 +14111,7 @@ AcDbLine
   0
 LINE
   5
-204
+1F4
 330
 17
 100
@@ -14519,7 +14135,7 @@ AcDbLine
   0
 LINE
   5
-205
+1F5
 330
 17
 100
@@ -14543,7 +14159,7 @@ AcDbLine
   0
 LINE
   5
-206
+1F6
 330
 17
 100
@@ -14567,7 +14183,7 @@ AcDbLine
   0
 LINE
   5
-207
+1F7
 330
 17
 100
@@ -14591,7 +14207,7 @@ AcDbLine
   0
 LINE
   5
-208
+1F8
 330
 17
 100
@@ -14615,7 +14231,7 @@ AcDbLine
   0
 LINE
   5
-209
+1F9
 330
 17
 100
@@ -14639,7 +14255,7 @@ AcDbLine
   0
 LINE
   5
-20A
+1FA
 330
 17
 100
@@ -14663,7 +14279,7 @@ AcDbLine
   0
 LINE
   5
-20B
+1FB
 330
 17
 100
@@ -14687,7 +14303,7 @@ AcDbLine
   0
 LINE
   5
-20C
+1FC
 330
 17
 100
@@ -14711,7 +14327,7 @@ AcDbLine
   0
 LINE
   5
-20D
+1FD
 330
 17
 100
@@ -14735,7 +14351,7 @@ AcDbLine
   0
 LINE
   5
-20E
+1FE
 330
 17
 100
@@ -14759,7 +14375,7 @@ AcDbLine
   0
 LINE
   5
-20F
+1FF
 330
 17
 100
@@ -14783,7 +14399,7 @@ AcDbLine
   0
 LINE
   5
-210
+200
 330
 17
 100
@@ -14807,7 +14423,7 @@ AcDbLine
   0
 LINE
   5
-211
+201
 330
 17
 100
@@ -14831,7 +14447,7 @@ AcDbLine
   0
 LINE
   5
-212
+202
 330
 17
 100
@@ -14855,7 +14471,7 @@ AcDbLine
   0
 LINE
   5
-213
+203
 330
 17
 100
@@ -14879,7 +14495,7 @@ AcDbLine
   0
 LINE
   5
-214
+204
 330
 17
 100
@@ -14903,7 +14519,7 @@ AcDbLine
   0
 LINE
   5
-215
+205
 330
 17
 100
@@ -14927,7 +14543,7 @@ AcDbLine
   0
 LINE
   5
-216
+206
 330
 17
 100
@@ -14951,7 +14567,7 @@ AcDbLine
   0
 LINE
   5
-217
+207
 330
 17
 100
@@ -14975,7 +14591,7 @@ AcDbLine
   0
 LINE
   5
-218
+208
 330
 17
 100
@@ -14999,7 +14615,7 @@ AcDbLine
   0
 LINE
   5
-219
+209
 330
 17
 100
@@ -15023,7 +14639,7 @@ AcDbLine
   0
 LINE
   5
-21A
+20A
 330
 17
 100
@@ -15047,7 +14663,7 @@ AcDbLine
   0
 LINE
   5
-21B
+20B
 330
 17
 100
@@ -15063,15 +14679,15 @@ AcDbLine
  30
 0.0
  11
--275.6
+-271.32
  21
-175.09
+242.01
  31
 0.0
   0
 LINE
   5
-21C
+20C
 330
 17
 100
@@ -15095,7 +14711,7 @@ AcDbLine
   0
 LINE
   5
-21D
+20D
 330
 17
 100
@@ -15119,7 +14735,7 @@ AcDbLine
   0
 LINE
   5
-21E
+20E
 330
 17
 100
@@ -15143,7 +14759,7 @@ AcDbLine
   0
 LINE
   5
-21F
+20F
 330
 17
 100
@@ -15167,7 +14783,7 @@ AcDbLine
   0
 LINE
   5
-220
+210
 330
 17
 100
@@ -15191,7 +14807,7 @@ AcDbLine
   0
 LINE
   5
-221
+211
 330
 17
 100
@@ -15215,7 +14831,7 @@ AcDbLine
   0
 LINE
   5
-222
+212
 330
 17
 100
@@ -15241,7 +14857,7 @@ AcDbLine
   0
 TEXT
   5
-223
+213
 330
 17
 100
@@ -15273,7 +14889,7 @@ AcDbText
   0
 LINE
   5
-224
+214
 330
 17
 100
@@ -15299,7 +14915,7 @@ AcDbLine
   0
 TEXT
   5
-225
+215
 330
 17
 100
@@ -15331,7 +14947,7 @@ AcDbText
   0
 LINE
   5
-226
+216
 330
 17
 100
@@ -15357,7 +14973,7 @@ AcDbLine
   0
 TEXT
   5
-227
+217
 330
 17
 100
@@ -15389,7 +15005,7 @@ AcDbText
   0
 LINE
   5
-228
+218
 330
 17
 100
@@ -15415,7 +15031,7 @@ AcDbLine
   0
 TEXT
   5
-229
+219
 330
 17
 100
@@ -15447,7 +15063,7 @@ AcDbText
   0
 LINE
   5
-22A
+21A
 330
 17
 100
@@ -15473,7 +15089,7 @@ AcDbLine
   0
 TEXT
   5
-22B
+21B
 330
 17
 100
@@ -15505,7 +15121,7 @@ AcDbText
   0
 LINE
   5
-22C
+21C
 330
 17
 100
@@ -15531,7 +15147,7 @@ AcDbLine
   0
 TEXT
   5
-22D
+21D
 330
 17
 100
@@ -15556,6 +15172,470 @@ VN
 -31.504999999999995
  21
 179.825
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+21E
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-85.49
+ 20
+75.45
+ 30
+0.0
+ 11
+-139.02
+ 21
+54.43
+ 31
+0.0
+  0
+TEXT
+  5
+21F
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-111.255
+ 20
+64.94
+ 30
+0.0
+ 40
+1.5
+  1
+T45-01
+  7
+VN
+ 11
+-111.255
+ 21
+64.94
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+220
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-80.0
+ 20
+13.7
+ 30
+0.0
+ 11
+-106.85
+ 21
+-2.05
+ 31
+0.0
+  0
+TEXT
+  5
+221
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-92.425
+ 20
+5.824999999999999
+ 30
+0.0
+ 40
+1.5
+  1
+T45-02
+  7
+VN
+ 11
+-92.425
+ 21
+5.824999999999999
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+222
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-82.75
+ 20
+44.57
+ 30
+0.0
+ 11
+-123.19
+ 21
+26.62
+ 31
+0.0
+  0
+TEXT
+  5
+223
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-101.97
+ 20
+35.595
+ 30
+0.0
+ 40
+1.5
+  1
+T45-03
+  7
+VN
+ 11
+-101.97
+ 21
+35.595
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+224
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-84.07
+ 20
+59.52
+ 30
+0.0
+ 11
+-131.1
+ 21
+40.53
+ 31
+0.0
+  0
+TEXT
+  5
+225
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-106.585
+ 20
+50.025000000000006
+ 30
+0.0
+ 40
+1.5
+  1
+T45-04
+  7
+VN
+ 11
+-106.585
+ 21
+50.025000000000006
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+226
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-78.67
+ 20
+-1.24
+ 30
+0.0
+ 11
+-103.14
+ 21
+-8.57
+ 31
+0.0
+  0
+TEXT
+  5
+227
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-89.905
+ 20
+-4.905
+ 30
+0.0
+ 40
+1.5
+  1
+T45-05
+  7
+VN
+ 11
+-89.905
+ 21
+-4.905
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+228
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-81.33
+ 20
+28.64
+ 30
+0.0
+ 11
+-118.73
+ 21
+18.8
+ 31
+0.0
+  0
+TEXT
+  5
+229
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-99.03
+ 20
+23.72
+ 30
+0.0
+ 40
+1.5
+  1
+T45-06
+  7
+VN
+ 11
+-99.03
+ 21
+23.72
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+22A
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-77.96
+ 20
+-9.21
+ 30
+0.0
+ 11
+-100.17
+ 21
+-13.78
+ 31
+0.0
+  0
+TEXT
+  5
+22B
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-88.065
+ 20
+-11.495000000000001
+ 30
+0.0
+ 40
+1.5
+  1
+T45-07
+  7
+VN
+ 11
+-88.065
+ 21
+-11.495000000000001
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+22C
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+370
+50
+100
+AcDbLine
+ 10
+-80.62
+ 20
+20.67
+ 30
+0.0
+ 11
+-114.77
+ 21
+11.85
+ 31
+0.0
+  0
+TEXT
+  5
+22D
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbText
+ 10
+-96.695
+ 20
+16.26
+ 30
+0.0
+ 40
+1.5
+  1
+T45-08
+  7
+VN
+ 11
+-96.695
+ 21
+16.26
  31
 0.0
 100
@@ -22959,9 +23039,35 @@ AcDbPolyline
  20
 199.46780307440554
   0
-CIRCLE
+LWPOLYLINE
   5
 34C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-83.98903110699483
+ 20
+205.28194040335202
+ 10
+-69.50014371265878
+ 20
+201.39965472681416
+  0
+CIRCLE
+  5
+34D
 330
 17
 100
@@ -22981,7 +23087,7 @@ AcDbCircle
   0
 CIRCLE
   5
-34D
+34E
 330
 17
 100
@@ -23001,7 +23107,7 @@ AcDbCircle
   0
 CIRCLE
   5
-34E
+34F
 330
 17
 100
@@ -23021,7 +23127,7 @@ AcDbCircle
   0
 TEXT
   5
-34F
+350
 330
 17
 100
@@ -23031,23 +23137,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--77.26222549998644
+-76.7445874098268
  20
-201.40894591267443
+203.3407975650831
  30
 0.0
  40
 1.2
   1
-B2-07: 5 thanh
+B2-07: 6 thanh
  50
--14.999999999999966
+-15.000000000000163
   7
 VN
  11
--77.26222549998644
+-76.7445874098268
  21
-201.40894591267443
+203.3407975650831
  31
 0.0
 100
@@ -23055,7 +23161,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-350
+351
 330
 17
 100
@@ -23081,7 +23187,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-351
+352
 330
 17
 100
@@ -23107,7 +23213,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-352
+353
 330
 17
 100
@@ -23133,7 +23239,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-353
+354
 330
 17
 100
@@ -23157,9 +23263,35 @@ AcDbPolyline
  20
 191.61703113958325
   0
+LWPOLYLINE
+  5
+355
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-62.41695797723755
+ 20
+197.43116846852988
+ 10
+-47.928070582901526
+ 20
+193.54888279199207
+  0
 CIRCLE
   5
-354
+356
 330
 17
 100
@@ -23179,7 +23311,7 @@ AcDbCircle
   0
 CIRCLE
   5
-355
+357
 330
 17
 100
@@ -23199,7 +23331,7 @@ AcDbCircle
   0
 TEXT
   5
-356
+358
 330
 17
 100
@@ -23209,23 +23341,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--55.690152370229214
+-55.172514280069535
  20
-193.55817397785216
+195.49002563026096
  30
 0.0
  40
 1.2
   1
-B2-08: 4 thanh
+B2-08: 5 thanh
  50
 -14.999999999999977
   7
 VN
  11
--55.690152370229214
+-55.172514280069535
  21
-193.55817397785216
+195.49002563026096
  31
 0.0
 100
@@ -23233,7 +23365,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-357
+359
 330
 17
 100
@@ -23259,7 +23391,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-358
+35A
 330
 17
 100
@@ -23285,7 +23417,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-359
+35B
 330
 17
 100
@@ -23311,7 +23443,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-35A
+35C
 330
 17
 100
@@ -23337,7 +23469,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-35B
+35D
 330
 17
 100
@@ -23363,7 +23495,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-35C
+35E
 330
 17
 100
@@ -23389,7 +23521,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-35D
+35F
 330
 17
 100
@@ -23415,7 +23547,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-35E
+360
 330
 17
 100
@@ -23435,7 +23567,7 @@ AcDbCircle
   0
 CIRCLE
   5
-35F
+361
 330
 17
 100
@@ -23455,7 +23587,7 @@ AcDbCircle
   0
 CIRCLE
   5
-360
+362
 330
 17
 100
@@ -23475,7 +23607,7 @@ AcDbCircle
   0
 CIRCLE
   5
-361
+363
 330
 17
 100
@@ -23495,7 +23627,7 @@ AcDbCircle
   0
 TEXT
   5
-362
+364
 330
 17
 100
@@ -23529,7 +23661,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-363
+365
 330
 17
 100
@@ -23555,7 +23687,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-364
+366
 330
 17
 100
@@ -23581,7 +23713,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-365
+367
 330
 17
 100
@@ -23607,7 +23739,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-366
+368
 330
 17
 100
@@ -23627,7 +23759,7 @@ AcDbCircle
   0
 CIRCLE
   5
-367
+369
 330
 17
 100
@@ -23647,7 +23779,7 @@ AcDbCircle
   0
 TEXT
   5
-368
+36A
 330
 17
 100
@@ -23681,7 +23813,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-369
+36B
 330
 17
 100
@@ -23707,7 +23839,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-36A
+36C
 330
 17
 100
@@ -23733,7 +23865,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-36B
+36D
 330
 17
 100
@@ -23759,7 +23891,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-36C
+36E
 330
 17
 100
@@ -23785,7 +23917,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-36D
+36F
 330
 17
 100
@@ -23805,7 +23937,7 @@ AcDbCircle
   0
 CIRCLE
   5
-36E
+370
 330
 17
 100
@@ -23825,7 +23957,7 @@ AcDbCircle
   0
 CIRCLE
   5
-36F
+371
 330
 17
 100
@@ -23845,7 +23977,7 @@ AcDbCircle
   0
 TEXT
   5
-370
+372
 330
 17
 100
@@ -23879,7 +24011,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-371
+373
 330
 17
 100
@@ -23905,7 +24037,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-372
+374
 330
 17
 100
@@ -23931,7 +24063,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-373
+375
 330
 17
 100
@@ -23957,7 +24089,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-374
+376
 330
 17
 100
@@ -23983,7 +24115,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-375
+377
 330
 17
 100
@@ -24003,7 +24135,7 @@ AcDbCircle
   0
 CIRCLE
   5
-376
+378
 330
 17
 100
@@ -24023,7 +24155,7 @@ AcDbCircle
   0
 CIRCLE
   5
-377
+379
 330
 17
 100
@@ -24043,7 +24175,7 @@ AcDbCircle
   0
 TEXT
   5
-378
+37A
 330
 17
 100
@@ -24077,7 +24209,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-379
+37B
 330
 17
 100
@@ -24103,7 +24235,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-37A
+37C
 330
 17
 100
@@ -24129,7 +24261,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-37B
+37D
 330
 17
 100
@@ -24155,7 +24287,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-37C
+37E
 330
 17
 100
@@ -24181,7 +24313,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-37D
+37F
 330
 17
 100
@@ -24201,7 +24333,7 @@ AcDbCircle
   0
 CIRCLE
   5
-37E
+380
 330
 17
 100
@@ -24221,7 +24353,7 @@ AcDbCircle
   0
 CIRCLE
   5
-37F
+381
 330
 17
 100
@@ -24241,7 +24373,7 @@ AcDbCircle
   0
 TEXT
   5
-380
+382
 330
 17
 100
@@ -24275,7 +24407,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-381
+383
 330
 17
 100
@@ -24301,7 +24433,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-382
+384
 330
 17
 100
@@ -24327,7 +24459,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-383
+385
 330
 17
 100
@@ -24353,7 +24485,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-384
+386
 330
 17
 100
@@ -24379,7 +24511,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-385
+387
 330
 17
 100
@@ -24399,7 +24531,7 @@ AcDbCircle
   0
 CIRCLE
   5
-386
+388
 330
 17
 100
@@ -24419,7 +24551,7 @@ AcDbCircle
   0
 CIRCLE
   5
-387
+389
 330
 17
 100
@@ -24439,7 +24571,7 @@ AcDbCircle
   0
 TEXT
   5
-388
+38A
 330
 17
 100
@@ -24473,7 +24605,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-389
+38B
 330
 17
 100
@@ -24499,7 +24631,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-38A
+38C
 330
 17
 100
@@ -24525,7 +24657,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-38B
+38D
 330
 17
 100
@@ -24551,7 +24683,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-38C
+38E
 330
 17
 100
@@ -24577,7 +24709,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-38D
+38F
 330
 17
 100
@@ -24603,7 +24735,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-38E
+390
 330
 17
 100
@@ -24627,9 +24759,35 @@ AcDbPolyline
  20
 215.18283698306666
   0
+LWPOLYLINE
+  5
+391
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+89.09102666770586
+ 20
+220.9969743120132
+ 10
+103.5799140620419
+ 20
+217.1146886354754
+  0
 CIRCLE
   5
-38F
+392
 330
 17
 100
@@ -24649,7 +24807,7 @@ AcDbCircle
   0
 CIRCLE
   5
-390
+393
 330
 17
 100
@@ -24669,7 +24827,7 @@ AcDbCircle
   0
 CIRCLE
   5
-391
+394
 330
 17
 100
@@ -24689,7 +24847,7 @@ AcDbCircle
   0
 CIRCLE
   5
-392
+395
 330
 17
 100
@@ -24709,7 +24867,7 @@ AcDbCircle
   0
 CIRCLE
   5
-393
+396
 330
 17
 100
@@ -24729,7 +24887,7 @@ AcDbCircle
   0
 TEXT
   5
-394
+397
 330
 17
 100
@@ -24739,23 +24897,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
-95.81783227471425
+96.33547036487388
  20
-217.12397982133558
+219.05583147374432
  30
 0.0
  40
 1.2
   1
-B2-15: 6 thanh
+B2-15: 7 thanh
  50
 -14.999999999999966
   7
 VN
  11
-95.81783227471425
+96.33547036487388
  21
-217.12397982133558
+219.05583147374432
  31
 0.0
 100
@@ -24763,33 +24921,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-395
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
-97.78231450672618
- 20
-218.66815075436128
- 10
-112.2712019010622
- 20
-214.78586507782347
-  0
-LWPOLYLINE
-  5
-396
+398
 330
 17
 100
@@ -24813,9 +24945,35 @@ AcDbPolyline
  20
 216.71771673023238
   0
+LWPOLYLINE
+  5
+399
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+98.81759068704551
+ 20
+222.5318540591789
+ 10
+113.30647808138153
+ 20
+218.64956838264106
+  0
 CIRCLE
   5
-397
+39A
 330
 17
 100
@@ -24835,7 +24993,7 @@ AcDbCircle
   0
 TEXT
   5
-398
+39B
 330
 17
 100
@@ -24845,9 +25003,9 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
-105.54439629405388
+106.06203438421352
  20
-218.65885956850127
+220.59071122090998
  30
 0.0
  40
@@ -24855,13 +25013,13 @@ AcDbText
   1
 B2-16: 2 thanh
  50
--14.999999999999982
+-15.000000000000089
   7
 VN
  11
-105.54439629405388
+106.06203438421352
  21
-218.65885956850127
+220.59071122090998
  31
 0.0
 100
@@ -24869,7 +25027,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-399
+39C
 330
 17
 100
@@ -24885,17 +25043,17 @@ AcDbPolyline
  43
 0.3
  10
-108.17755912202979
+107.14228294171045
  20
-220.02385807584406
+216.16015477102644
  10
-122.66644651636581
+121.63117033604648
  20
-216.14157239930623
+212.27786909448864
   0
 LWPOLYLINE
   5
-39A
+39D
 330
 17
 100
@@ -24921,7 +25079,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-39B
+39E
 330
 17
 100
@@ -24947,7 +25105,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-39C
+39F
 330
 17
 100
@@ -24967,7 +25125,7 @@ AcDbCircle
   0
 CIRCLE
   5
-39D
+3A0
 330
 17
 100
@@ -24987,7 +25145,7 @@ AcDbCircle
   0
 TEXT
   5
-39E
+3A1
 330
 17
 100
@@ -25021,7 +25179,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-39F
+3A2
 330
 17
 100
@@ -25047,7 +25205,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A0
+3A3
 330
 17
 100
@@ -25073,7 +25231,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A1
+3A4
 330
 17
 100
@@ -25099,7 +25257,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A2
+3A5
 330
 17
 100
@@ -25125,7 +25283,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3A3
+3A6
 330
 17
 100
@@ -25145,7 +25303,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3A4
+3A7
 330
 17
 100
@@ -25165,7 +25323,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3A5
+3A8
 330
 17
 100
@@ -25185,7 +25343,7 @@ AcDbCircle
   0
 TEXT
   5
-3A6
+3A9
 330
 17
 100
@@ -25219,7 +25377,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3A7
+3AA
 330
 17
 100
@@ -25245,7 +25403,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A8
+3AB
 330
 17
 100
@@ -25271,7 +25429,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3A9
+3AC
 330
 17
 100
@@ -25291,7 +25449,7 @@ AcDbCircle
   0
 TEXT
   5
-3AA
+3AD
 330
 17
 100
@@ -25325,7 +25483,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3AB
+3AE
 330
 17
 100
@@ -25351,7 +25509,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3AC
+3AF
 330
 17
 100
@@ -25377,7 +25535,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3AD
+3B0
 330
 17
 100
@@ -25403,7 +25561,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3AE
+3B1
 330
 17
 100
@@ -25429,7 +25587,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3AF
+3B2
 330
 17
 100
@@ -25449,7 +25607,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3B0
+3B3
 330
 17
 100
@@ -25469,7 +25627,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3B1
+3B4
 330
 17
 100
@@ -25489,7 +25647,7 @@ AcDbCircle
   0
 TEXT
   5
-3B2
+3B5
 330
 17
 100
@@ -25523,7 +25681,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3B3
+3B6
 330
 17
 100
@@ -25549,7 +25707,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3B4
+3B7
 330
 17
 100
@@ -25575,7 +25733,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3B5
+3B8
 330
 17
 100
@@ -25601,7 +25759,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3B6
+3B9
 330
 17
 100
@@ -25627,7 +25785,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3B7
+3BA
 330
 17
 100
@@ -25647,7 +25805,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3B8
+3BB
 330
 17
 100
@@ -25667,7 +25825,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3B9
+3BC
 330
 17
 100
@@ -25687,7 +25845,7 @@ AcDbCircle
   0
 TEXT
   5
-3BA
+3BD
 330
 17
 100
@@ -25721,7 +25879,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3BB
+3BE
 330
 17
 100
@@ -25747,7 +25905,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3BC
+3BF
 330
 17
 100
@@ -25773,7 +25931,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3BD
+3C0
 330
 17
 100
@@ -25799,7 +25957,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3BE
+3C1
 330
 17
 100
@@ -25825,7 +25983,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3BF
+3C2
 330
 17
 100
@@ -25845,7 +26003,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3C0
+3C3
 330
 17
 100
@@ -25865,7 +26023,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3C1
+3C4
 330
 17
 100
@@ -25885,7 +26043,7 @@ AcDbCircle
   0
 TEXT
   5
-3C2
+3C5
 330
 17
 100
@@ -25919,7 +26077,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3C3
+3C6
 330
 17
 100
@@ -25945,7 +26103,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3C4
+3C7
 330
 17
 100
@@ -25971,7 +26129,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3C5
+3C8
 330
 17
 100
@@ -25997,7 +26155,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3C6
+3C9
 330
 17
 100
@@ -26023,7 +26181,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3C7
+3CA
 330
 17
 100
@@ -26043,7 +26201,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3C8
+3CB
 330
 17
 100
@@ -26063,7 +26221,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3C9
+3CC
 330
 17
 100
@@ -26083,7 +26241,7 @@ AcDbCircle
   0
 TEXT
   5
-3CA
+3CD
 330
 17
 100
@@ -26117,7 +26275,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3CB
+3CE
 330
 17
 100
@@ -26143,7 +26301,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3CC
+3CF
 330
 17
 100
@@ -26169,7 +26327,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3CD
+3D0
 330
 17
 100
@@ -26195,7 +26353,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3CE
+3D1
 330
 17
 100
@@ -26221,7 +26379,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3CF
+3D2
 330
 17
 100
@@ -26247,7 +26405,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3D0
+3D3
 330
 17
 100
@@ -26267,7 +26425,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3D1
+3D4
 330
 17
 100
@@ -26287,7 +26445,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3D2
+3D5
 330
 17
 100
@@ -26307,7 +26465,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3D3
+3D6
 330
 17
 100
@@ -26327,7 +26485,7 @@ AcDbCircle
   0
 TEXT
   5
-3D4
+3D7
 330
 17
 100
@@ -26361,7 +26519,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3D5
+3D8
 330
 17
 100
@@ -26387,7 +26545,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3D6
+3D9
 330
 17
 100
@@ -26413,7 +26571,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3D7
+3DA
 330
 17
 100
@@ -26439,7 +26597,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3D8
+3DB
 330
 17
 100
@@ -26459,7 +26617,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3D9
+3DC
 330
 17
 100
@@ -26479,7 +26637,7 @@ AcDbCircle
   0
 TEXT
   5
-3DA
+3DD
 330
 17
 100
@@ -26513,7 +26671,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3DB
+3DE
 330
 17
 100
@@ -26539,7 +26697,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3DC
+3DF
 330
 17
 100
@@ -26565,7 +26723,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3DD
+3E0
 330
 17
 100
@@ -26591,7 +26749,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3DE
+3E1
 330
 17
 100
@@ -26617,7 +26775,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3DF
+3E2
 330
 17
 100
@@ -26637,7 +26795,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3E0
+3E3
 330
 17
 100
@@ -26657,7 +26815,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3E1
+3E4
 330
 17
 100
@@ -26677,7 +26835,7 @@ AcDbCircle
   0
 TEXT
   5
-3E2
+3E5
 330
 17
 100
@@ -26711,7 +26869,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3E3
+3E6
 330
 17
 100
@@ -26737,7 +26895,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3E4
+3E7
 330
 17
 100
@@ -26763,7 +26921,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3E5
+3E8
 330
 17
 100
@@ -26789,7 +26947,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3E6
+3E9
 330
 17
 100
@@ -26815,7 +26973,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3E7
+3EA
 330
 17
 100
@@ -26835,7 +26993,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3E8
+3EB
 330
 17
 100
@@ -26855,7 +27013,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3E9
+3EC
 330
 17
 100
@@ -26875,7 +27033,7 @@ AcDbCircle
   0
 TEXT
   5
-3EA
+3ED
 330
 17
 100
@@ -26909,7 +27067,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3EB
+3EE
 330
 17
 100
@@ -26935,7 +27093,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3EC
+3EF
 330
 17
 100
@@ -26961,7 +27119,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3ED
+3F0
 330
 17
 100
@@ -26987,7 +27145,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3EE
+3F1
 330
 17
 100
@@ -27013,7 +27171,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3EF
+3F2
 330
 17
 100
@@ -27033,7 +27191,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3F0
+3F3
 330
 17
 100
@@ -27053,7 +27211,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3F1
+3F4
 330
 17
 100
@@ -27073,7 +27231,7 @@ AcDbCircle
   0
 TEXT
   5
-3F2
+3F5
 330
 17
 100
@@ -27107,7 +27265,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3F3
+3F6
 330
 17
 100
@@ -27133,7 +27291,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3F4
+3F7
 330
 17
 100
@@ -27159,7 +27317,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3F5
+3F8
 330
 17
 100
@@ -27185,7 +27343,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3F6
+3F9
 330
 17
 100
@@ -27211,7 +27369,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3F7
+3FA
 330
 17
 100
@@ -27231,7 +27389,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3F8
+3FB
 330
 17
 100
@@ -27251,7 +27409,7 @@ AcDbCircle
   0
 CIRCLE
   5
-3F9
+3FC
 330
 17
 100
@@ -27271,7 +27429,7 @@ AcDbCircle
   0
 TEXT
   5
-3FA
+3FD
 330
 17
 100
@@ -27305,7 +27463,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3FB
+3FE
 330
 17
 100
@@ -27331,7 +27489,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3FC
+3FF
 330
 17
 100
@@ -27357,7 +27515,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3FD
+400
 330
 17
 100
@@ -27383,7 +27541,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3FE
+401
 330
 17
 100
@@ -27409,7 +27567,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-3FF
+402
 330
 17
 100
@@ -27429,7 +27587,7 @@ AcDbCircle
   0
 CIRCLE
   5
-400
+403
 330
 17
 100
@@ -27449,7 +27607,7 @@ AcDbCircle
   0
 CIRCLE
   5
-401
+404
 330
 17
 100
@@ -27469,7 +27627,7 @@ AcDbCircle
   0
 TEXT
   5
-402
+405
 330
 17
 100
@@ -27503,7 +27661,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-403
+406
 330
 17
 100
@@ -27529,7 +27687,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-404
+407
 330
 17
 100
@@ -27555,7 +27713,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-405
+408
 330
 17
 100
@@ -27581,7 +27739,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-406
+409
 330
 17
 100
@@ -27607,7 +27765,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-407
+40A
 330
 17
 100
@@ -27627,7 +27785,7 @@ AcDbCircle
   0
 CIRCLE
   5
-408
+40B
 330
 17
 100
@@ -27647,7 +27805,7 @@ AcDbCircle
   0
 CIRCLE
   5
-409
+40C
 330
 17
 100
@@ -27667,7 +27825,7 @@ AcDbCircle
   0
 TEXT
   5
-40A
+40D
 330
 17
 100
@@ -27701,7 +27859,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-40B
+40E
 330
 17
 100
@@ -27727,7 +27885,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-40C
+40F
 330
 17
 100
@@ -27753,7 +27911,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-40D
+410
 330
 17
 100
@@ -27773,7 +27931,7 @@ AcDbCircle
   0
 TEXT
   5
-40E
+411
 330
 17
 100
@@ -27807,7 +27965,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-40F
+412
 330
 17
 100
@@ -27833,7 +27991,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-410
+413
 330
 17
 100
@@ -27859,7 +28017,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-411
+414
 330
 17
 100
@@ -27879,7 +28037,7 @@ AcDbCircle
   0
 TEXT
   5
-412
+415
 330
 17
 100
@@ -27913,7 +28071,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-413
+416
 330
 17
 100
@@ -27939,7 +28097,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-414
+417
 330
 17
 100
@@ -27965,7 +28123,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-415
+418
 330
 17
 100
@@ -27985,7 +28143,7 @@ AcDbCircle
   0
 TEXT
   5
-416
+419
 330
 17
 100
@@ -28019,7 +28177,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-417
+41A
 330
 17
 100
@@ -28045,7 +28203,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-418
+41B
 330
 17
 100
@@ -28071,7 +28229,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-419
+41C
 330
 17
 100
@@ -28091,7 +28249,7 @@ AcDbCircle
   0
 TEXT
   5
-41A
+41D
 330
 17
 100
@@ -28125,7 +28283,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-41B
+41E
 330
 17
 100
@@ -28151,7 +28309,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-41C
+41F
 330
 17
 100
@@ -28177,7 +28335,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-41D
+420
 330
 17
 100
@@ -28197,7 +28355,7 @@ AcDbCircle
   0
 TEXT
   5
-41E
+421
 330
 17
 100
@@ -28231,7 +28389,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-41F
+422
 330
 17
 100
@@ -28257,7 +28415,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-420
+423
 330
 17
 100
@@ -28283,7 +28441,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-421
+424
 330
 17
 100
@@ -28303,7 +28461,7 @@ AcDbCircle
   0
 TEXT
   5
-422
+425
 330
 17
 100
@@ -28337,7 +28495,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-423
+426
 330
 17
 100
@@ -28363,7 +28521,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-424
+427
 330
 17
 100
@@ -28389,7 +28547,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-425
+428
 330
 17
 100
@@ -28409,7 +28567,7 @@ AcDbCircle
   0
 TEXT
   5
-426
+429
 330
 17
 100
@@ -28443,7 +28601,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-427
+42A
 330
 17
 100
@@ -28469,7 +28627,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-428
+42B
 330
 17
 100
@@ -28495,7 +28653,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-429
+42C
 330
 17
 100
@@ -28515,7 +28673,7 @@ AcDbCircle
   0
 TEXT
   5
-42A
+42D
 330
 17
 100
@@ -28549,7 +28707,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-42B
+42E
 330
 17
 100
@@ -28575,7 +28733,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-42C
+42F
 330
 17
 100
@@ -28601,7 +28759,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-42D
+430
 330
 17
 100
@@ -28627,7 +28785,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-42E
+431
 330
 17
 100
@@ -28647,7 +28805,7 @@ AcDbCircle
   0
 TEXT
   5
-42F
+432
 330
 17
 100
@@ -28681,7 +28839,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-430
+433
 330
 17
 100
@@ -28707,7 +28865,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-431
+434
 330
 17
 100
@@ -28733,7 +28891,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-432
+435
 330
 17
 100
@@ -28759,7 +28917,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-433
+436
 330
 17
 100
@@ -28779,7 +28937,7 @@ AcDbCircle
   0
 TEXT
   5
-434
+437
 330
 17
 100
@@ -28813,7 +28971,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-435
+438
 330
 17
 100
@@ -28839,7 +28997,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-436
+439
 330
 17
 100
@@ -28865,7 +29023,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-437
+43A
 330
 17
 100
@@ -28885,7 +29043,7 @@ AcDbCircle
   0
 TEXT
   5
-438
+43B
 330
 17
 100
@@ -28919,7 +29077,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-439
+43C
 330
 17
 100
@@ -28945,7 +29103,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-43A
+43D
 330
 17
 100
@@ -28971,7 +29129,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-43B
+43E
 330
 17
 100
@@ -28991,7 +29149,7 @@ AcDbCircle
   0
 TEXT
   5
-43C
+43F
 330
 17
 100
@@ -29025,7 +29183,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-43D
+440
 330
 17
 100
@@ -29051,7 +29209,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-43E
+441
 330
 17
 100
@@ -29077,7 +29235,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-43F
+442
 330
 17
 100
@@ -29097,7 +29255,7 @@ AcDbCircle
   0
 TEXT
   5
-440
+443
 330
 17
 100
@@ -29131,7 +29289,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-441
+444
 330
 17
 100
@@ -29157,7 +29315,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-442
+445
 330
 17
 100
@@ -29183,7 +29341,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-443
+446
 330
 17
 100
@@ -29203,7 +29361,7 @@ AcDbCircle
   0
 TEXT
   5
-444
+447
 330
 17
 100
@@ -29237,7 +29395,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-445
+448
 330
 17
 100
@@ -29263,7 +29421,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-446
+449
 330
 17
 100
@@ -29289,7 +29447,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-447
+44A
 330
 17
 100
@@ -29309,7 +29467,7 @@ AcDbCircle
   0
 TEXT
   5
-448
+44B
 330
 17
 100
@@ -29343,7 +29501,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-449
+44C
 330
 17
 100
@@ -29369,7 +29527,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-44A
+44D
 330
 17
 100
@@ -29395,7 +29553,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-44B
+44E
 330
 17
 100
@@ -29415,7 +29573,7 @@ AcDbCircle
   0
 TEXT
   5
-44C
+44F
 330
 17
 100
@@ -29449,7 +29607,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-44D
+450
 330
 17
 100
@@ -29475,7 +29633,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-44E
+451
 330
 17
 100
@@ -29501,7 +29659,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-44F
+452
 330
 17
 100
@@ -29521,7 +29679,7 @@ AcDbCircle
   0
 TEXT
   5
-450
+453
 330
 17
 100
@@ -29555,7 +29713,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-451
+454
 330
 17
 100
@@ -29581,7 +29739,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-452
+455
 330
 17
 100
@@ -29607,7 +29765,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-453
+456
 330
 17
 100
@@ -29627,7 +29785,7 @@ AcDbCircle
   0
 TEXT
   5
-454
+457
 330
 17
 100
@@ -29661,7 +29819,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-455
+458
 330
 17
 100
@@ -29687,7 +29845,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-456
+459
 330
 17
 100
@@ -29713,7 +29871,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-457
+45A
 330
 17
 100
@@ -29739,7 +29897,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-458
+45B
 330
 17
 100
@@ -29759,7 +29917,7 @@ AcDbCircle
   0
 TEXT
   5
-459
+45C
 330
 17
 100
@@ -29793,7 +29951,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-45A
+45D
 330
 17
 100
@@ -29819,7 +29977,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-45B
+45E
 330
 17
 100
@@ -29845,7 +30003,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-45C
+45F
 330
 17
 100
@@ -29871,7 +30029,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-45D
+460
 330
 17
 100
@@ -29891,7 +30049,7 @@ AcDbCircle
   0
 TEXT
   5
-45E
+461
 330
 17
 100
@@ -29925,7 +30083,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-45F
+462
 330
 17
 100
@@ -29951,7 +30109,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-460
+463
 330
 17
 100
@@ -29977,7 +30135,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-461
+464
 330
 17
 100
@@ -29997,7 +30155,7 @@ AcDbCircle
   0
 TEXT
   5
-462
+465
 330
 17
 100
@@ -30031,7 +30189,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-463
+466
 330
 17
 100
@@ -30057,7 +30215,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-464
+467
 330
 17
 100
@@ -30083,7 +30241,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-465
+468
 330
 17
 100
@@ -30103,7 +30261,7 @@ AcDbCircle
   0
 TEXT
   5
-466
+469
 330
 17
 100
@@ -30137,7 +30295,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-467
+46A
 330
 17
 100
@@ -30163,7 +30321,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-468
+46B
 330
 17
 100
@@ -30189,7 +30347,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-469
+46C
 330
 17
 100
@@ -30209,7 +30367,7 @@ AcDbCircle
   0
 TEXT
   5
-46A
+46D
 330
 17
 100
@@ -30243,7 +30401,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-46B
+46E
 330
 17
 100
@@ -30269,7 +30427,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-46C
+46F
 330
 17
 100
@@ -30295,7 +30453,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-46D
+470
 330
 17
 100
@@ -30315,7 +30473,7 @@ AcDbCircle
   0
 TEXT
   5
-46E
+471
 330
 17
 100
@@ -30349,7 +30507,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-46F
+472
 330
 17
 100
@@ -30375,7 +30533,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-470
+473
 330
 17
 100
@@ -30401,7 +30559,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-471
+474
 330
 17
 100
@@ -30421,7 +30579,7 @@ AcDbCircle
   0
 CIRCLE
   5
-472
+475
 330
 17
 100
@@ -30441,7 +30599,7 @@ AcDbCircle
   0
 TEXT
   5
-473
+476
 330
 17
 100
@@ -30475,7 +30633,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-474
+477
 330
 17
 100
@@ -30501,7 +30659,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-475
+478
 330
 17
 100
@@ -30527,7 +30685,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-476
+479
 330
 17
 100
@@ -30547,7 +30705,7 @@ AcDbCircle
   0
 CIRCLE
   5
-477
+47A
 330
 17
 100
@@ -30567,7 +30725,7 @@ AcDbCircle
   0
 TEXT
   5
-478
+47B
 330
 17
 100
@@ -30601,7 +30759,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-479
+47C
 330
 17
 100
@@ -30627,7 +30785,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-47A
+47D
 330
 17
 100
@@ -30653,7 +30811,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-47B
+47E
 330
 17
 100
@@ -30673,7 +30831,7 @@ AcDbCircle
   0
 CIRCLE
   5
-47C
+47F
 330
 17
 100
@@ -30693,7 +30851,7 @@ AcDbCircle
   0
 TEXT
   5
-47D
+480
 330
 17
 100
@@ -30727,7 +30885,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-47E
+481
 330
 17
 100
@@ -30753,7 +30911,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-47F
+482
 330
 17
 100
@@ -30779,7 +30937,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-480
+483
 330
 17
 100
@@ -30799,7 +30957,7 @@ AcDbCircle
   0
 CIRCLE
   5
-481
+484
 330
 17
 100
@@ -30819,7 +30977,7 @@ AcDbCircle
   0
 TEXT
   5
-482
+485
 330
 17
 100
@@ -30853,7 +31011,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-483
+486
 330
 17
 100
@@ -30879,7 +31037,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-484
+487
 330
 17
 100
@@ -30905,7 +31063,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-485
+488
 330
 17
 100
@@ -30931,7 +31089,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-486
+489
 330
 17
 100
@@ -30957,7 +31115,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-487
+48A
 330
 17
 100
@@ -30977,7 +31135,7 @@ AcDbCircle
   0
 CIRCLE
   5
-488
+48B
 330
 17
 100
@@ -30997,7 +31155,7 @@ AcDbCircle
   0
 CIRCLE
   5
-489
+48C
 330
 17
 100
@@ -31017,7 +31175,7 @@ AcDbCircle
   0
 CIRCLE
   5
-48A
+48D
 330
 17
 100
@@ -31037,7 +31195,7 @@ AcDbCircle
   0
 TEXT
   5
-48B
+48E
 330
 17
 100
@@ -31071,7 +31229,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-48C
+48F
 330
 17
 100
@@ -31097,7 +31255,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-48D
+490
 330
 17
 100
@@ -31123,7 +31281,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-48E
+491
 330
 17
 100
@@ -31143,7 +31301,7 @@ AcDbCircle
   0
 CIRCLE
   5
-48F
+492
 330
 17
 100
@@ -31163,7 +31321,7 @@ AcDbCircle
   0
 TEXT
   5
-490
+493
 330
 17
 100
@@ -31197,7 +31355,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-491
+494
 330
 17
 100
@@ -31223,7 +31381,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-492
+495
 330
 17
 100
@@ -31243,7 +31401,7 @@ AcDbCircle
   0
 TEXT
   5
-493
+496
 330
 17
 100
@@ -31277,7 +31435,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-494
+497
 330
 17
 100
@@ -31303,7 +31461,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-495
+498
 330
 17
 100
@@ -31323,7 +31481,7 @@ AcDbCircle
   0
 TEXT
   5
-496
+499
 330
 17
 100
@@ -31357,7 +31515,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-497
+49A
 330
 17
 100
@@ -31383,7 +31541,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-498
+49B
 330
 17
 100
@@ -31403,7 +31561,7 @@ AcDbCircle
   0
 TEXT
   5
-499
+49C
 330
 17
 100
@@ -31437,7 +31595,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-49A
+49D
 330
 17
 100
@@ -31463,7 +31621,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-49B
+49E
 330
 17
 100
@@ -31483,7 +31641,7 @@ AcDbCircle
   0
 TEXT
   5
-49C
+49F
 330
 17
 100
@@ -31517,7 +31675,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-49D
+4A0
 330
 17
 100
@@ -31543,7 +31701,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-49E
+4A1
 330
 17
 100
@@ -31563,7 +31721,7 @@ AcDbCircle
   0
 TEXT
   5
-49F
+4A2
 330
 17
 100
@@ -31597,7 +31755,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4A0
+4A3
 330
 17
 100
@@ -31623,7 +31781,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4A1
+4A4
 330
 17
 100
@@ -31643,7 +31801,7 @@ AcDbCircle
   0
 TEXT
   5
-4A2
+4A5
 330
 17
 100
@@ -31677,7 +31835,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4A3
+4A6
 330
 17
 100
@@ -31703,7 +31861,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4A4
+4A7
 330
 17
 100
@@ -31723,7 +31881,7 @@ AcDbCircle
   0
 TEXT
   5
-4A5
+4A8
 330
 17
 100
@@ -31757,7 +31915,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4A6
+4A9
 330
 17
 100
@@ -31783,7 +31941,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4A7
+4AA
 330
 17
 100
@@ -31803,7 +31961,7 @@ AcDbCircle
   0
 TEXT
   5
-4A8
+4AB
 330
 17
 100
@@ -31837,7 +31995,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4A9
+4AC
 330
 17
 100
@@ -31863,7 +32021,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4AA
+4AD
 330
 17
 100
@@ -31883,7 +32041,7 @@ AcDbCircle
   0
 TEXT
   5
-4AB
+4AE
 330
 17
 100
@@ -31917,7 +32075,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4AC
+4AF
 330
 17
 100
@@ -31943,7 +32101,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4AD
+4B0
 330
 17
 100
@@ -31963,7 +32121,7 @@ AcDbCircle
   0
 TEXT
   5
-4AE
+4B1
 330
 17
 100
@@ -31997,7 +32155,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4AF
+4B2
 330
 17
 100
@@ -32023,7 +32181,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4B0
+4B3
 330
 17
 100
@@ -32043,7 +32201,7 @@ AcDbCircle
   0
 TEXT
   5
-4B1
+4B4
 330
 17
 100
@@ -32077,7 +32235,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4B2
+4B5
 330
 17
 100
@@ -32103,7 +32261,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4B3
+4B6
 330
 17
 100
@@ -32123,7 +32281,7 @@ AcDbCircle
   0
 TEXT
   5
-4B4
+4B7
 330
 17
 100
@@ -32157,7 +32315,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4B5
+4B8
 330
 17
 100
@@ -32183,7 +32341,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4B6
+4B9
 330
 17
 100
@@ -32203,7 +32361,7 @@ AcDbCircle
   0
 TEXT
   5
-4B7
+4BA
 330
 17
 100
@@ -32237,7 +32395,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4B8
+4BB
 330
 17
 100
@@ -32263,7 +32421,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4B9
+4BC
 330
 17
 100
@@ -32283,7 +32441,7 @@ AcDbCircle
   0
 TEXT
   5
-4BA
+4BD
 330
 17
 100
@@ -32317,7 +32475,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4BB
+4BE
 330
 17
 100
@@ -32343,7 +32501,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4BC
+4BF
 330
 17
 100
@@ -32363,7 +32521,7 @@ AcDbCircle
   0
 TEXT
   5
-4BD
+4C0
 330
 17
 100
@@ -32397,7 +32555,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4BE
+4C1
 330
 17
 100
@@ -32423,7 +32581,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4BF
+4C2
 330
 17
 100
@@ -32443,7 +32601,7 @@ AcDbCircle
   0
 TEXT
   5
-4C0
+4C3
 330
 17
 100
@@ -32477,7 +32635,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4C1
+4C4
 330
 17
 100
@@ -32503,7 +32661,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4C2
+4C5
 330
 17
 100
@@ -32523,7 +32681,7 @@ AcDbCircle
   0
 TEXT
   5
-4C3
+4C6
 330
 17
 100
@@ -32557,7 +32715,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4C4
+4C7
 330
 17
 100
@@ -32583,7 +32741,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4C5
+4C8
 330
 17
 100
@@ -32603,7 +32761,7 @@ AcDbCircle
   0
 TEXT
   5
-4C6
+4C9
 330
 17
 100
@@ -32637,7 +32795,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4C7
+4CA
 330
 17
 100
@@ -32663,7 +32821,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4C8
+4CB
 330
 17
 100
@@ -32683,7 +32841,7 @@ AcDbCircle
   0
 TEXT
   5
-4C9
+4CC
 330
 17
 100
@@ -32717,7 +32875,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4CA
+4CD
 330
 17
 100
@@ -32743,7 +32901,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4CB
+4CE
 330
 17
 100
@@ -32763,7 +32921,7 @@ AcDbCircle
   0
 TEXT
   5
-4CC
+4CF
 330
 17
 100
@@ -32797,7 +32955,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4CD
+4D0
 330
 17
 100
@@ -32823,7 +32981,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4CE
+4D1
 330
 17
 100
@@ -32843,7 +33001,7 @@ AcDbCircle
   0
 TEXT
   5
-4CF
+4D2
 330
 17
 100
@@ -32877,7 +33035,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D0
+4D3
 330
 17
 100
@@ -32903,7 +33061,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4D1
+4D4
 330
 17
 100
@@ -32923,7 +33081,7 @@ AcDbCircle
   0
 TEXT
   5
-4D2
+4D5
 330
 17
 100
@@ -32957,7 +33115,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D3
+4D6
 330
 17
 100
@@ -32983,7 +33141,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4D4
+4D7
 330
 17
 100
@@ -33003,7 +33161,7 @@ AcDbCircle
   0
 TEXT
   5
-4D5
+4D8
 330
 17
 100
@@ -33037,7 +33195,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D6
+4D9
 330
 17
 100
@@ -33063,7 +33221,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4D7
+4DA
 330
 17
 100
@@ -33083,7 +33241,7 @@ AcDbCircle
   0
 TEXT
   5
-4D8
+4DB
 330
 17
 100
@@ -33117,7 +33275,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D9
+4DC
 330
 17
 100
@@ -33143,7 +33301,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4DA
+4DD
 330
 17
 100
@@ -33169,7 +33327,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4DB
+4DE
 330
 17
 100
@@ -33195,7 +33353,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4DC
+4DF
 330
 17
 100
@@ -33215,7 +33373,7 @@ AcDbCircle
   0
 CIRCLE
   5
-4DD
+4E0
 330
 17
 100
@@ -33235,7 +33393,7 @@ AcDbCircle
   0
 TEXT
   5
-4DE
+4E1
 330
 17
 100
@@ -33269,7 +33427,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4DF
+4E2
 330
 17
 100
@@ -33295,7 +33453,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4E0
+4E3
 330
 17
 100
@@ -33321,7 +33479,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4E1
+4E4
 330
 17
 100
@@ -33347,7 +33505,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4E2
+4E5
 330
 17
 100
@@ -33367,7 +33525,7 @@ AcDbCircle
   0
 CIRCLE
   5
-4E3
+4E6
 330
 17
 100
@@ -33387,7 +33545,7 @@ AcDbCircle
   0
 TEXT
   5
-4E4
+4E7
 330
 17
 100
@@ -33421,7 +33579,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4E5
+4E8
 330
 17
 100
@@ -33447,7 +33605,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4E6
+4E9
 330
 17
 100
@@ -33471,9 +33629,35 @@ AcDbPolyline
  20
 160.75430106264884
   0
+LWPOLYLINE
+  5
+4EA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-92.64639186784582
+ 20
+157.42880447883397
+ 10
+-77.70577588668428
+ 20
+158.7622189318306
+  0
 CIRCLE
   5
-4E7
+4EB
 330
 17
 100
@@ -33493,7 +33677,7 @@ AcDbCircle
   0
 TEXT
   5
-4E8
+4EC
 330
 17
 100
@@ -33503,23 +33687,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--85.35387247099763
+-85.17608387726506
  20
-160.08759383615052
+158.09551170533229
  30
 0.0
  40
 1.2
   1
-B4-03: 2 thanh
+B4-03: 3 thanh
  50
 5.100000000000048
   7
 VN
  11
--85.35387247099763
+-85.17608387726506
  21
-160.08759383615052
+158.09551170533229
  31
 0.0
 100
@@ -33527,7 +33711,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4E9
+4ED
 330
 17
 100
@@ -33553,7 +33737,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4EA
+4EE
 330
 17
 100
@@ -33579,7 +33763,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4EB
+4EF
 330
 17
 100
@@ -33595,17 +33779,43 @@ AcDbPolyline
  43
 0.3
  10
--81.47929363973586
+-77.50656767360213
  20
-158.42544144441624
+158.77999779120387
  10
 -66.53867765857431
  20
 159.75885589741287
   0
+LWPOLYLINE
+  5
+4F0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-81.30150504600329
+ 20
+156.4333593135981
+ 10
+-66.36088906484173
+ 20
+157.76677376659472
+  0
 CIRCLE
   5
-4EC
+4F1
 330
 17
 100
@@ -33625,7 +33835,7 @@ AcDbCircle
   0
 TEXT
   5
-4ED
+4F2
 330
 17
 100
@@ -33635,23 +33845,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--74.00898564915508
+-73.8311970554225
  20
-159.09214867091455
+157.1000665400964
  30
 0.0
  40
 1.2
   1
-B4-04: 3 thanh
+B4-04: 4 thanh
  50
-5.100000000000048
+5.100000000000043
   7
 VN
  11
--74.00898564915508
+-73.8311970554225
  21
-159.09214867091455
+157.1000665400964
  31
 0.0
 100
@@ -33659,7 +33869,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4EE
+4F3
 330
 17
 100
@@ -33685,7 +33895,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4EF
+4F4
 330
 17
 100
@@ -33709,9 +33919,35 @@ AcDbPolyline
  20
 163.17352452692
   0
+LWPOLYLINE
+  5
+4F5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-65.53952447859409
+ 20
+159.84802794310514
+ 10
+-50.59890849743256
+ 20
+161.18144239610177
+  0
 CIRCLE
   5
-4F0
+4F6
 330
 17
 100
@@ -33731,7 +33967,7 @@ AcDbCircle
   0
 TEXT
   5
-4F1
+4F7
 330
 17
 100
@@ -33741,23 +33977,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--58.24700508174591
+-58.069216488013325
  20
-162.5068173004217
+160.51473516960345
  30
 0.0
  40
 1.2
   1
-B4-05: 2 thanh
+B4-05: 3 thanh
  50
-5.10000000000005
+5.100000000000053
   7
 VN
  11
--58.24700508174591
+-58.069216488013325
  21
-162.5068173004217
+160.51473516960345
  31
 0.0
 100
@@ -33765,7 +34001,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4F2
+4F8
 330
 17
 100
@@ -33791,7 +34027,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4F3
+4F9
 330
 17
 100
@@ -33817,7 +34053,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4F4
+4FA
 330
 17
 100
@@ -33843,7 +34079,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4F5
+4FB
 330
 17
 100
@@ -33867,9 +34103,35 @@ AcDbPolyline
  20
 160.633797688582
   0
+LWPOLYLINE
+  5
+4FC
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-48.99934332060772
+ 20
+157.308301104767
+ 10
+-34.05872733944617
+ 20
+158.6417155577636
+  0
 CIRCLE
   5
-4F6
+4FD
 330
 17
 100
@@ -33889,7 +34151,7 @@ AcDbCircle
   0
 CIRCLE
   5
-4F7
+4FE
 330
 17
 100
@@ -33909,7 +34171,7 @@ AcDbCircle
   0
 TEXT
   5
-4F8
+4FF
 330
 17
 100
@@ -33919,23 +34181,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--41.70682392375954
+-41.52903533002694
  20
-159.9670904620837
+157.97500833126531
  30
 0.0
  40
 1.2
   1
-B4-06: 4 thanh
+B4-06: 5 thanh
  50
-5.100000000000045
+5.0999999999999375
   7
 VN
  11
--41.70682392375954
+-41.52903533002694
  21
-159.9670904620837
+157.97500833126531
  31
 0.0
 100
@@ -33943,7 +34205,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4F9
+500
 330
 17
 100
@@ -33969,7 +34231,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4FA
+501
 330
 17
 100
@@ -33995,7 +34257,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4FB
+502
 330
 17
 100
@@ -34021,7 +34283,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-4FC
+503
 330
 17
 100
@@ -34041,7 +34303,7 @@ AcDbCircle
   0
 TEXT
   5
-4FD
+504
 330
 17
 100
@@ -34075,7 +34337,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-4FE
+505
 330
 17
 100
@@ -34101,7 +34363,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-4FF
+506
 330
 17
 100
@@ -34127,7 +34389,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-500
+507
 330
 17
 100
@@ -34153,7 +34415,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-501
+508
 330
 17
 100
@@ -34173,7 +34435,7 @@ AcDbCircle
   0
 CIRCLE
   5
-502
+509
 330
 17
 100
@@ -34193,7 +34455,7 @@ AcDbCircle
   0
 TEXT
   5
-503
+50A
 330
 17
 100
@@ -34227,7 +34489,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-504
+50B
 330
 17
 100
@@ -34253,7 +34515,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-505
+50C
 330
 17
 100
@@ -34279,7 +34541,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-506
+50D
 330
 17
 100
@@ -34305,7 +34567,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-507
+50E
 330
 17
 100
@@ -34325,7 +34587,7 @@ AcDbCircle
   0
 CIRCLE
   5
-508
+50F
 330
 17
 100
@@ -34345,7 +34607,7 @@ AcDbCircle
   0
 TEXT
   5
-509
+510
 330
 17
 100
@@ -34379,7 +34641,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-50A
+511
 330
 17
 100
@@ -34405,7 +34667,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-50B
+512
 330
 17
 100
@@ -34431,7 +34693,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-50C
+513
 330
 17
 100
@@ -34457,7 +34719,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-50D
+514
 330
 17
 100
@@ -34477,7 +34739,7 @@ AcDbCircle
   0
 CIRCLE
   5
-50E
+515
 330
 17
 100
@@ -34497,7 +34759,7 @@ AcDbCircle
   0
 TEXT
   5
-50F
+516
 330
 17
 100
@@ -34531,7 +34793,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-510
+517
 330
 17
 100
@@ -34557,7 +34819,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-511
+518
 330
 17
 100
@@ -34583,7 +34845,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-512
+519
 330
 17
 100
@@ -34603,7 +34865,7 @@ AcDbCircle
   0
 TEXT
   5
-513
+51A
 330
 17
 100
@@ -34637,7 +34899,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-514
+51B
 330
 17
 100
@@ -34663,7 +34925,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-515
+51C
 330
 17
 100
@@ -34689,7 +34951,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-516
+51D
 330
 17
 100
@@ -34709,7 +34971,7 @@ AcDbCircle
   0
 TEXT
   5
-517
+51E
 330
 17
 100
@@ -34743,7 +35005,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-518
+51F
 330
 17
 100
@@ -34769,7 +35031,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-519
+520
 330
 17
 100
@@ -34795,7 +35057,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-51A
+521
 330
 17
 100
@@ -34815,7 +35077,7 @@ AcDbCircle
   0
 TEXT
   5
-51B
+522
 330
 17
 100
@@ -34849,7 +35111,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-51C
+523
 330
 17
 100
@@ -34875,7 +35137,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-51D
+524
 330
 17
 100
@@ -34901,7 +35163,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-51E
+525
 330
 17
 100
@@ -34921,7 +35183,7 @@ AcDbCircle
   0
 TEXT
   5
-51F
+526
 330
 17
 100
@@ -34955,7 +35217,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-520
+527
 330
 17
 100
@@ -34981,7 +35243,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-521
+528
 330
 17
 100
@@ -35007,7 +35269,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-522
+529
 330
 17
 100
@@ -35027,7 +35289,7 @@ AcDbCircle
   0
 TEXT
   5
-523
+52A
 330
 17
 100
@@ -35061,7 +35323,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-524
+52B
 330
 17
 100
@@ -35087,7 +35349,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-525
+52C
 330
 17
 100
@@ -35113,7 +35375,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-526
+52D
 330
 17
 100
@@ -35133,7 +35395,7 @@ AcDbCircle
   0
 TEXT
   5
-527
+52E
 330
 17
 100
@@ -35167,7 +35429,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-528
+52F
 330
 17
 100
@@ -35193,7 +35455,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-529
+530
 330
 17
 100
@@ -35219,7 +35481,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-52A
+531
 330
 17
 100
@@ -35239,7 +35501,7 @@ AcDbCircle
   0
 TEXT
   5
-52B
+532
 330
 17
 100
@@ -35273,7 +35535,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-52C
+533
 330
 17
 100
@@ -35299,7 +35561,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-52D
+534
 330
 17
 100
@@ -35325,7 +35587,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-52E
+535
 330
 17
 100
@@ -35345,7 +35607,7 @@ AcDbCircle
   0
 TEXT
   5
-52F
+536
 330
 17
 100
@@ -35379,7 +35641,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-530
+537
 330
 17
 100
@@ -35405,7 +35667,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-531
+538
 330
 17
 100
@@ -35431,7 +35693,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-532
+539
 330
 17
 100
@@ -35451,7 +35713,7 @@ AcDbCircle
   0
 TEXT
   5
-533
+53A
 330
 17
 100
@@ -35485,7 +35747,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-534
+53B
 330
 17
 100
@@ -35511,7 +35773,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-535
+53C
 330
 17
 100
@@ -35537,7 +35799,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-536
+53D
 330
 17
 100
@@ -35557,7 +35819,7 @@ AcDbCircle
   0
 TEXT
   5
-537
+53E
 330
 17
 100
@@ -35591,7 +35853,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-538
+53F
 330
 17
 100
@@ -35617,7 +35879,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-539
+540
 330
 17
 100
@@ -35643,7 +35905,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-53A
+541
 330
 17
 100
@@ -35663,7 +35925,7 @@ AcDbCircle
   0
 TEXT
   5
-53B
+542
 330
 17
 100
@@ -35697,7 +35959,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-53C
+543
 330
 17
 100
@@ -35723,7 +35985,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-53D
+544
 330
 17
 100
@@ -35749,7 +36011,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-53E
+545
 330
 17
 100
@@ -35769,7 +36031,7 @@ AcDbCircle
   0
 TEXT
   5
-53F
+546
 330
 17
 100
@@ -35803,7 +36065,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-540
+547
 330
 17
 100
@@ -35829,7 +36091,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-541
+548
 330
 17
 100
@@ -35855,7 +36117,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-542
+549
 330
 17
 100
@@ -35875,7 +36137,7 @@ AcDbCircle
   0
 TEXT
   5
-543
+54A
 330
 17
 100
@@ -35909,7 +36171,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-544
+54B
 330
 17
 100
@@ -35935,7 +36197,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-545
+54C
 330
 17
 100
@@ -35961,7 +36223,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-546
+54D
 330
 17
 100
@@ -35981,7 +36243,7 @@ AcDbCircle
   0
 TEXT
   5
-547
+54E
 330
 17
 100
@@ -36015,7 +36277,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-548
+54F
 330
 17
 100
@@ -36041,7 +36303,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-549
+550
 330
 17
 100
@@ -36067,7 +36329,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-54A
+551
 330
 17
 100
@@ -36087,7 +36349,7 @@ AcDbCircle
   0
 TEXT
   5
-54B
+552
 330
 17
 100
@@ -36121,7 +36383,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-54C
+553
 330
 17
 100
@@ -36147,7 +36409,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-54D
+554
 330
 17
 100
@@ -36173,7 +36435,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-54E
+555
 330
 17
 100
@@ -36193,7 +36455,7 @@ AcDbCircle
   0
 TEXT
   5
-54F
+556
 330
 17
 100
@@ -36227,7 +36489,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-550
+557
 330
 17
 100
@@ -36253,7 +36515,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-551
+558
 330
 17
 100
@@ -36279,7 +36541,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-552
+559
 330
 17
 100
@@ -36299,7 +36561,7 @@ AcDbCircle
   0
 TEXT
   5
-553
+55A
 330
 17
 100
@@ -36333,7 +36595,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-554
+55B
 330
 17
 100
@@ -36359,7 +36621,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-555
+55C
 330
 17
 100
@@ -36385,7 +36647,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-556
+55D
 330
 17
 100
@@ -36405,7 +36667,7 @@ AcDbCircle
   0
 TEXT
   5
-557
+55E
 330
 17
 100
@@ -36439,7 +36701,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-558
+55F
 330
 17
 100
@@ -36465,7 +36727,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-559
+560
 330
 17
 100
@@ -36491,7 +36753,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-55A
+561
 330
 17
 100
@@ -36511,7 +36773,7 @@ AcDbCircle
   0
 TEXT
   5
-55B
+562
 330
 17
 100
@@ -36545,7 +36807,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-55C
+563
 330
 17
 100
@@ -36571,7 +36833,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-55D
+564
 330
 17
 100
@@ -36597,7 +36859,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-55E
+565
 330
 17
 100
@@ -36617,7 +36879,7 @@ AcDbCircle
   0
 TEXT
   5
-55F
+566
 330
 17
 100
@@ -36651,7 +36913,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-560
+567
 330
 17
 100
@@ -36677,7 +36939,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-561
+568
 330
 17
 100
@@ -36703,7 +36965,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-562
+569
 330
 17
 100
@@ -36723,7 +36985,7 @@ AcDbCircle
   0
 TEXT
   5
-563
+56A
 330
 17
 100
@@ -36757,7 +37019,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-564
+56B
 330
 17
 100
@@ -36783,7 +37045,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-565
+56C
 330
 17
 100
@@ -36809,7 +37071,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-566
+56D
 330
 17
 100
@@ -36829,7 +37091,7 @@ AcDbCircle
   0
 TEXT
   5
-567
+56E
 330
 17
 100
@@ -36863,7 +37125,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-568
+56F
 330
 17
 100
@@ -36889,87 +37151,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-569
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--92.7459959743869
- 20
-157.4199150491473
- 10
--81.67850185281802
- 20
-158.40766258504297
-  0
-CIRCLE
-  5
-56A
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--93.43494596348512
- 20
-164.85312700294605
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-56B
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--87.21224891360245
- 20
-157.91378881709514
- 30
-0.0
- 40
-1.2
-  1
-B4-33: 2 thanh
- 50
-5.100000000000202
-  7
-VN
- 11
--87.21224891360245
- 21
-157.91378881709514
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-56C
+570
 330
 17
 100
@@ -36989,13 +37171,67 @@ AcDbPolyline
  20
 155.4278329183292
  10
--77.62759139949277
+-81.50071325908543
  20
-156.7612473713258
+156.41558045422482
+  0
+CIRCLE
+  5
+571
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-93.43494596348512
+ 20
+164.85312700294605
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+572
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-87.03446031986988
+ 20
+155.921706686277
+ 30
+0.0
+ 40
+1.2
+  1
+B4-33: 2 thanh
+ 50
+5.100000000000049
+  7
+VN
+ 11
+-87.03446031986988
+ 21
+155.921706686277
+ 31
+0.0
+100
+AcDbText
   0
 LWPOLYLINE
   5
-56D
+573
 330
 17
 100
@@ -37019,63 +37255,9 @@ AcDbPolyline
  20
 154.7691652405074
   0
-CIRCLE
-  5
-56E
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--93.1250540365149
- 20
-161.36687299705397
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-56F
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--84.92011079634095
- 20
-154.10245801400907
- 30
-0.0
- 40
-1.2
-  1
-B4-34: 2 thanh
- 50
-5.099999999999935
-  7
-VN
- 11
--84.92011079634095
- 21
-154.10245801400907
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-570
+574
 330
 17
 100
@@ -37099,9 +37281,63 @@ AcDbPolyline
  20
 152.77708310968927
   0
+CIRCLE
+  5
+575
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-93.1250540365149
+ 20
+161.36687299705397
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+576
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-84.74232220260836
+ 20
+152.11037588319095
+ 30
+0.0
+ 40
+1.2
+  1
+B4-34: 2 thanh
+ 50
+5.100000000000048
+  7
+VN
+ 11
+-84.74232220260836
+ 21
+152.11037588319095
+ 31
+0.0
+100
+AcDbText
+  0
 LWPOLYLINE
   5
-571
+577
 330
 17
 100
@@ -37125,63 +37361,9 @@ AcDbPolyline
  20
 150.78500097887104
   0
-CIRCLE
-  5
-572
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--92.3749459634851
- 20
-152.89312700294604
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-573
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--84.56453360887579
- 20
-150.11829375237272
- 30
-0.0
- 40
-1.2
-  1
-B4-35: 2 thanh
- 50
-5.100000000000048
-  7
-VN
- 11
--84.56453360887579
- 21
-150.11829375237272
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-574
+578
 330
 17
 100
@@ -37205,9 +37387,63 @@ AcDbPolyline
  20
 148.79291884805278
   0
+CIRCLE
+  5
+579
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-92.3749459634851
+ 20
+152.89312700294604
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+57A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-84.38674501514319
+ 20
+148.12621162155446
+ 30
+0.0
+ 40
+1.2
+  1
+B4-35: 2 thanh
+ 50
+5.100000000000048
+  7
+VN
+ 11
+-84.38674501514319
+ 21
+148.12621162155446
+ 31
+0.0
+100
+AcDbText
+  0
 LWPOLYLINE
   5
-575
+57B
 330
 17
 100
@@ -37231,9 +37467,35 @@ AcDbPolyline
  20
 146.8008367172346
   0
+LWPOLYLINE
+  5
+57C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-91.5014758182588
+ 20
+143.47534013341973
+ 10
+-76.56085983709725
+ 20
+144.80875458641634
+  0
 CIRCLE
   5
-576
+57D
 330
 17
 100
@@ -37253,7 +37515,7 @@ AcDbCircle
   0
 TEXT
   5
-577
+57E
 330
 17
 100
@@ -37263,9 +37525,9 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--84.20895642141062
+-84.03116782767802
  20
-146.1341294907363
+144.14204735991802
  30
 0.0
  40
@@ -37273,13 +37535,13 @@ AcDbText
   1
 B4-36: 2 thanh
  50
-5.099999999999945
+5.099999999999939
   7
 VN
  11
--84.20895642141062
+-84.03116782767802
  21
-146.1341294907363
+144.14204735991802
  31
 0.0
 100
@@ -37287,7 +37549,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-578
+57F
 330
 17
 100
@@ -37313,7 +37575,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-579
+580
 330
 17
 100
@@ -37339,7 +37601,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-57A
+581
 330
 17
 100
@@ -37359,7 +37621,7 @@ AcDbCircle
   0
 TEXT
   5
-57B
+582
 330
 17
 100
@@ -37393,7 +37655,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-57C
+583
 330
 17
 100
@@ -37419,7 +37681,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-57D
+584
 330
 17
 100
@@ -37445,7 +37707,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-57E
+585
 330
 17
 100
@@ -37465,7 +37727,7 @@ AcDbCircle
   0
 TEXT
   5
-57F
+586
 330
 17
 100
@@ -37499,7 +37761,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-580
+587
 330
 17
 100
@@ -37525,7 +37787,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-581
+588
 330
 17
 100
@@ -37551,7 +37813,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-582
+589
 330
 17
 100
@@ -37571,7 +37833,7 @@ AcDbCircle
   0
 TEXT
   5
-583
+58A
 330
 17
 100
@@ -37605,7 +37867,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-584
+58B
 330
 17
 100
@@ -37631,7 +37893,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-585
+58C
 330
 17
 100
@@ -37657,7 +37919,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-586
+58D
 330
 17
 100
@@ -37677,7 +37939,7 @@ AcDbCircle
   0
 TEXT
   5
-587
+58E
 330
 17
 100
@@ -37711,7 +37973,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-588
+58F
 330
 17
 100
@@ -37737,7 +37999,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-589
+590
 330
 17
 100
@@ -37763,7 +38025,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-58A
+591
 330
 17
 100
@@ -37783,7 +38045,7 @@ AcDbCircle
   0
 TEXT
   5
-58B
+592
 330
 17
 100
@@ -37817,7 +38079,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-58C
+593
 330
 17
 100
@@ -37843,7 +38105,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-58D
+594
 330
 17
 100
@@ -37869,7 +38131,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-58E
+595
 330
 17
 100
@@ -37889,7 +38151,7 @@ AcDbCircle
   0
 TEXT
   5
-58F
+596
 330
 17
 100
@@ -37923,7 +38185,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-590
+597
 330
 17
 100
@@ -37949,7 +38211,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-591
+598
 330
 17
 100
@@ -37975,7 +38237,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-592
+599
 330
 17
 100
@@ -37995,7 +38257,7 @@ AcDbCircle
   0
 TEXT
   5
-593
+59A
 330
 17
 100
@@ -38029,7 +38291,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-594
+59B
 330
 17
 100
@@ -38055,7 +38317,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-595
+59C
 330
 17
 100
@@ -38081,7 +38343,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-596
+59D
 330
 17
 100
@@ -38101,7 +38363,7 @@ AcDbCircle
   0
 TEXT
   5
-597
+59E
 330
 17
 100
@@ -38135,33 +38397,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-598
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--85.63445222508341
- 20
-77.73662981641807
- 10
--70.69383624392187
- 20
-79.0700442694147
-  0
-LWPOLYLINE
-  5
-599
+59F
 330
 17
 100
@@ -38185,63 +38421,9 @@ AcDbPolyline
  20
 77.07796213859645
   0
-CIRCLE
-  5
-59A
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--85.6449459634851
- 20
-77.19312700294606
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-59B
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--77.98635564077006
- 20
-76.41125491209814
- 30
-0.0
- 40
-1.2
-  1
-B4-45: 2 thanh
- 50
-5.099999999999939
-  7
-VN
- 11
--77.98635564077006
- 21
-76.41125491209814
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-59C
+5A0
 330
 17
 100
@@ -38267,7 +38449,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-59D
+5A1
 330
 17
 100
@@ -38283,17 +38465,17 @@ AcDbPolyline
  43
 0.3
  10
--85.10108644388565
+-85.63445222508341
  20
-71.76038342396336
+77.73662981641807
  10
--70.16047046272409
+-70.69383624392187
  20
-73.09379787695998
+79.0700442694147
   0
 CIRCLE
   5
-59E
+5A2
 330
 17
 100
@@ -38303,9 +38485,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--85.33505403651488
+-85.48999999999998
  20
-73.70687299705396
+75.45
  30
 0.0
  40
@@ -38313,7 +38495,7 @@ AcDbCircle
   0
 TEXT
   5
-59F
+5A3
 330
 17
 100
@@ -38323,23 +38505,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--77.63077845330487
+-78.16414423450263
  20
-72.42709065046168
+78.40333704291638
  30
 0.0
  40
 1.2
   1
-B4-46: 2 thanh
+B4-45: 3 thanh
  50
-5.099999999999989
+5.099999999999993
   7
 VN
  11
--77.63077845330487
+-78.16414423450263
  21
-72.42709065046168
+78.40333704291638
  31
 0.0
 100
@@ -38347,33 +38529,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5A0
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--84.21214347522272
- 20
-61.799972769872234
- 10
--69.27152749406116
- 20
-63.133387222868855
-  0
-LWPOLYLINE
-  5
-5A1
+5A4
 330
 17
 100
@@ -38397,63 +38553,9 @@ AcDbPolyline
  20
 61.14130509205061
   0
-CIRCLE
-  5
-5A2
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--84.22494596348511
- 20
-61.26312700294605
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5A3
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--76.56404689090934
- 20
-60.4745978655523
- 30
-0.0
- 40
-1.2
-  1
-B4-47: 2 thanh
- 50
-5.099999999999967
-  7
-VN
- 11
--76.56404689090934
- 21
-60.4745978655523
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-5A4
+5A5
 330
 17
 100
@@ -38479,7 +38581,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5A5
+5A6
 330
 17
 100
@@ -38495,17 +38597,17 @@ AcDbPolyline
  43
 0.3
  10
--83.67877769402494
+-84.21214347522272
  20
-55.82372637741752
+61.799972769872234
  10
--68.7381617128634
+-69.27152749406116
  20
-57.15714083041414
+63.133387222868855
   0
 CIRCLE
   5
-5A6
+5A7
 330
 17
 100
@@ -38515,9 +38617,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--83.91505403651489
+-84.07
  20
-57.77687299705396
+59.519999999999996
  30
 0.0
  40
@@ -38525,7 +38627,7 @@ AcDbCircle
   0
 TEXT
   5
-5A7
+5A8
 330
 17
 100
@@ -38535,23 +38637,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--76.20846970344417
+-76.74183548464194
  20
-56.49043360391583
+62.466679996370544
  30
 0.0
  40
 1.2
   1
-B4-48: 2 thanh
+B4-46: 3 thanh
  50
-5.099999999999993
+5.099999999999989
   7
 VN
  11
--76.20846970344417
+-76.74183548464194
  21
-56.49043360391583
+62.466679996370544
  31
 0.0
 100
@@ -38559,7 +38661,33 @@ AcDbText
   0
 LWPOLYLINE
   5
-5A8
+5A9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-82.61204613162943
+ 20
+43.87123359250813
+ 10
+-67.67143015046787
+ 20
+45.204648045504754
+  0
+LWPOLYLINE
+  5
+5AA
 330
 17
 100
@@ -38585,87 +38713,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5A9
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--82.9676233190946
- 20
-47.8553978541446
- 10
--68.02700733793304
- 20
-49.18881230714122
-  0
-CIRCLE
-  5
-5AA
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--82.9049459634851
- 20
-46.313127002946054
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
 5AB
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--75.49731532851382
- 20
-48.52210508064291
- 30
-0.0
- 40
-1.2
-  1
-B4-49: 2 thanh
- 50
-5.099999999999989
-  7
-VN
- 11
--75.49731532851382
- 21
-48.52210508064291
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-5AC
 330
 17
 100
@@ -38689,9 +38737,63 @@ AcDbPolyline
  20
 43.212565914686515
   0
-LWPOLYLINE
+CIRCLE
+  5
+5AC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-82.75
+ 20
+44.57
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
   5
 5AD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-74.96394954731605
+ 20
+42.545858688188204
+ 30
+0.0
+ 40
+1.2
+  1
+B4-47: 3 thanh
+ 50
+5.099999999999993
+  7
+VN
+ 11
+-74.96394954731605
+ 21
+42.545858688188204
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+5AE
 330
 17
 100
@@ -38707,71 +38809,17 @@ AcDbPolyline
  43
 0.3
  10
--82.61204613162943
+-81.18971643472908
  20
-43.87123359250813
+27.934341838985343
  10
--67.67143015046787
+-66.24910045356752
  20
-45.204648045504754
-  0
-CIRCLE
-  5
-5AE
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--82.5950540365149
- 20
-42.826872997053954
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5AF
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--75.14173814104865
- 20
-44.537940819006444
- 30
-0.0
- 40
-1.2
-  1
-B4-50: 2 thanh
- 50
-5.099999999999989
-  7
-VN
- 11
--75.14173814104865
- 21
-44.537940819006444
- 31
-0.0
-100
-AcDbText
+29.267756291981964
   0
 LWPOLYLINE
   5
-5B0
+5AF
 330
 17
 100
@@ -38797,87 +38845,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5B1
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--81.54529362416594
- 20
-31.918506122714113
- 10
--66.60467764300438
- 20
-33.251920575710734
-  0
-CIRCLE
-  5
-5B2
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--81.4849459634851
- 20
-30.38312700294605
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5B3
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--74.07498563358516
- 20
-32.585213349212424
- 30
-0.0
- 40
-1.2
-  1
-B4-51: 2 thanh
- 50
-5.099999999999989
-  7
-VN
- 11
--74.07498563358516
- 21
-32.585213349212424
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-5B4
+5B0
 330
 17
 100
@@ -38901,9 +38869,63 @@ AcDbPolyline
  20
 27.275674150117563
   0
+CIRCLE
+  5
+5B1
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-81.33000000000001
+ 20
+28.64
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+5B2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-73.54161984942988
+ 20
+26.608966923619253
+ 30
+0.0
+ 40
+1.2
+  1
+B4-48: 3 thanh
+ 50
+5.099999999999993
+  7
+VN
+ 11
+-73.54161984942988
+ 21
+26.608966923619253
+ 31
+0.0
+100
+AcDbText
+  0
 LWPOLYLINE
   5
-5B5
+5B3
 330
 17
 100
@@ -38919,71 +38941,17 @@ AcDbPolyline
  43
 0.3
  10
--81.18971643472908
+-80.47856205398902
  20
-27.934341838985343
+19.966013250616026
  10
--66.24910045356752
+-65.53794607282748
  20
-29.267756291981964
-  0
-CIRCLE
-  5
-5B6
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--81.17505403651488
- 20
-26.896872997053958
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5B7
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--73.7194084441483
- 20
-28.601049065483654
- 30
-0.0
- 40
-1.2
-  1
-B4-52: 2 thanh
- 50
-5.099999999999989
-  7
-VN
- 11
--73.7194084441483
- 21
-28.601049065483654
- 31
-0.0
-100
-AcDbText
+21.299427703612647
   0
 LWPOLYLINE
   5
-5B8
+5B4
 330
 17
 100
@@ -39009,87 +38977,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5B9
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--80.8341392452922
- 20
-23.950177555256538
- 10
--65.89352326413066
- 20
-25.283592008253155
-  0
-CIRCLE
-  5
-5BA
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--80.77494596348512
- 20
-22.41312700294605
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5BB
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--73.36383125471144
- 20
-24.616884781754848
- 30
-0.0
- 40
-1.2
-  1
-B4-53: 2 thanh
- 50
-5.09999999999998
-  7
-VN
- 11
--73.36383125471144
- 21
-24.616884781754848
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-5BC
+5B5
 330
 17
 100
@@ -39113,35 +39001,9 @@ AcDbPolyline
  20
 19.307345550702085
   0
-LWPOLYLINE
-  5
-5BD
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--80.47856205398902
- 20
-19.966013250616026
- 10
--65.53794607282748
- 20
-21.299427703612647
-  0
 CIRCLE
   5
-5BE
+5B6
 330
 17
 100
@@ -39151,9 +39013,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--80.46505403651489
+-80.62
  20
-18.92687299705396
+20.67
  30
 0.0
  40
@@ -39161,7 +39023,7 @@ AcDbCircle
   0
 TEXT
   5
-5BF
+5B7
 330
 17
 100
@@ -39171,23 +39033,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--73.00825406340826
+-72.83046546770397
  20
-20.632720477114336
+18.640638324203774
  30
 0.0
  40
 1.2
   1
-B4-54: 2 thanh
+B4-49: 3 thanh
  50
-5.099999999999993
+5.099999999999989
   7
 VN
  11
--73.00825406340826
+-72.83046546770397
  21
-20.632720477114336
+18.640638324203774
  31
 0.0
 100
@@ -39195,33 +39057,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5C0
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--80.12298486258048
- 20
-15.981848944794915
- 10
--65.18236888141892
- 20
-17.315263397791536
-  0
-LWPOLYLINE
-  5
-5C1
+5B8
 330
 17
 100
@@ -39245,63 +39081,9 @@ AcDbPolyline
  20
 15.32318124488099
   0
-CIRCLE
-  5
-5C2
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--80.1549459634851
- 20
-15.443127002946046
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5C3
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--72.47488827629542
- 20
-14.656474018382681
- 30
-0.0
- 40
-1.2
-  1
-B4-55: 2 thanh
- 50
-5.099999999999987
-  7
-VN
- 11
--72.47488827629542
- 21
-14.656474018382681
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-5C4
+5B9
 330
 17
 100
@@ -39327,7 +39109,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5C5
+5BA
 330
 17
 100
@@ -39343,17 +39125,17 @@ AcDbPolyline
  43
 0.3
  10
--79.58961907743934
+-80.12298486258048
  20
-10.00560250815557
+15.981848944794915
  10
--64.6490030962778
+-65.18236888141892
  20
-11.33901696115219
+17.315263397791536
   0
 CIRCLE
   5
-5C6
+5BB
 330
 17
 100
@@ -39363,9 +39145,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--79.84505403651488
+-79.99999999999999
  20
-11.95687299705395
+13.700000000000001
  30
 0.0
  40
@@ -39373,7 +39155,7 @@ AcDbCircle
   0
 TEXT
   5
-5C7
+5BC
 330
 17
 100
@@ -39383,23 +39165,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--72.11931108685857
+-72.6526768719997
  20
-10.67230973465388
+16.648556171293226
  30
 0.0
  40
 1.2
   1
-B4-56: 2 thanh
+B4-50: 3 thanh
  50
-5.099999999999987
+5.099999999999989
   7
 VN
  11
--72.11931108685857
+-72.6526768719997
  21
-10.67230973465388
+16.648556171293226
  31
 0.0
 100
@@ -39407,113 +39189,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5C8
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--78.70067610877639
- 20
-0.045191854064400815
- 10
--63.76006012761486
- 20
-1.3786063070610208
-  0
-LWPOLYLINE
-  5
-5C9
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--78.87846470250898
- 20
-2.0372739848826376
- 10
--63.93784872134745
- 20
-3.370688437879257
-  0
-CIRCLE
-  5
-5CA
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--78.82494596348512
- 20
-0.5031270029460485
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5CB
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--71.40815671192821
- 20
-2.703981211380947
- 30
-0.0
- 40
-1.2
-  1
-B4-57: 2 thanh
- 50
-5.099999999999993
-  7
-VN
- 11
--71.40815671192821
- 21
-2.703981211380947
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-5CC
+5BD
 330
 17
 100
@@ -39539,7 +39215,113 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5CD
+5BE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-78.70067610877639
+ 20
+0.045191854064400815
+ 10
+-63.76006012761486
+ 20
+1.3786063070610208
+  0
+LWPOLYLINE
+  5
+5BF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-78.87846470250898
+ 20
+2.0372739848826376
+ 10
+-63.93784872134745
+ 20
+3.370688437879257
+  0
+CIRCLE
+  5
+5C0
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-78.67000000000002
+ 20
+-1.2400000000000002
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+5C1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-71.40815671192821
+ 20
+2.703981211380947
+ 30
+0.0
+ 40
+1.2
+  1
+B4-51: 3 thanh
+ 50
+5.099999999999993
+  7
+VN
+ 11
+-71.40815671192821
+ 21
+2.703981211380947
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+5C2
 330
 17
 100
@@ -39563,63 +39345,9 @@ AcDbPolyline
  20
 -8.581774325278056
   0
-CIRCLE
-  5
-5CE
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--78.5150540365149
- 20
--2.9831270029460475
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5CF
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--70.34142782890268
- 20
--9.248481551776365
- 30
-0.0
- 40
-1.2
-  1
-B4-58: 2 thanh
- 50
-5.09999999999999
-  7
-VN
- 11
--70.34142782890268
- 21
--9.248481551776365
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-5D0
+5C3
 330
 17
 100
@@ -39645,7 +39373,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5D1
+5C4
 330
 17
 100
@@ -39671,7 +39399,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-5D2
+5C5
 330
 17
 100
@@ -39681,9 +39409,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--78.11494596348508
+-77.96
  20
--7.466872997053952
+-9.21
  30
 0.0
  40
@@ -39691,7 +39419,7 @@ AcDbCircle
   0
 TEXT
   5
-5D3
+5C6
 330
 17
 100
@@ -39709,7 +39437,7 @@ AcDbText
  40
 1.2
   1
-B4-59: 2 thanh
+B4-52: 3 thanh
  50
 5.099999999999991
   7
@@ -39725,113 +39453,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5D4
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--79.41183048370675
- 20
-8.01352037733734
- 10
--64.47121450254521
- 20
-9.34693483033396
-  0
-LWPOLYLINE
-  5
-5D5
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--81.72308221888436
- 20
-33.9105882645785
- 10
--66.78246623772282
- 20
-35.24400271757512
-  0
-CIRCLE
-  5
-5D6
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--77.80505403651487
- 20
--10.953127002946045
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-5D7
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--74.2527742283036
- 20
-34.57729549107681
- 30
-0.0
- 40
-1.2
-  1
-B4-60: 2 thanh
- 50
-5.099999999999993
-  7
-VN
- 11
--74.2527742283036
- 21
-34.57729549107681
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-5D8
+5C7
 330
 17
 100
@@ -39857,7 +39479,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5D9
+5C8
 330
 17
 100
@@ -39881,9 +39503,35 @@ AcDbPolyline
  20
 -13.140696576241591
   0
+LWPOLYLINE
+  5
+5C9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-221.57318341853303
+ 20
+-22.309839631588673
+ 10
+-208.54371070196015
+ 20
+-14.877959605102555
+  0
 CIRCLE
   5
-5DA
+5CA
 330
 17
 100
@@ -39903,7 +39551,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5DB
+5CB
 330
 17
 100
@@ -39923,7 +39571,7 @@ AcDbCircle
   0
 TEXT
   5
-5DC
+5CC
 330
 17
 100
@@ -39933,23 +39581,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--216.0493643971026
+-215.05844706024658
  20
--16.85663658948465
+-18.593899618345613
  30
 0.0
  40
 1.2
   1
-B5-01: 2 thanh
+B5-01: 3 thanh
  50
-29.700000000000035
+29.699999999999992
   7
 VN
  11
--216.0493643971026
+-215.05844706024658
  21
--16.85663658948465
+-18.593899618345613
  31
 0.0
 100
@@ -39957,33 +39605,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5DD
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--213.3980560651365
- 20
--17.646829315414585
- 10
--200.36858334856362
- 20
--10.21494928892847
-  0
-LWPOLYLINE
-  5
-5DE
+5CD
 330
 17
 100
@@ -40009,7 +39631,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5DF
+5CE
 330
 17
 100
@@ -40033,9 +39655,35 @@ AcDbPolyline
  20
 -13.689475346650413
   0
+LWPOLYLINE
+  5
+5CF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-210.42530405456841
+ 20
+-22.858618401997518
+ 10
+-197.39583133799553
+ 20
+-15.426738375511402
+  0
 CIRCLE
   5
-5E0
+5D0
 330
 17
 100
@@ -40055,7 +39703,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5E1
+5D1
 330
 17
 100
@@ -40075,7 +39723,7 @@ AcDbCircle
   0
 TEXT
   5
-5E2
+5D2
 330
 17
 100
@@ -40085,9 +39733,9 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--204.901485033138
+-203.910567696282
  20
--17.40541535989347
+-19.14267838875446
  30
 0.0
  40
@@ -40095,13 +39743,13 @@ AcDbText
   1
 B5-02: 3 thanh
  50
-29.699999999999978
+29.699999999999985
   7
 VN
  11
--204.901485033138
+-203.910567696282
  21
--17.40541535989347
+-19.14267838875446
  31
 0.0
 100
@@ -40109,7 +39757,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5E3
+5D3
 330
 17
 100
@@ -40135,7 +39783,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5E4
+5D4
 330
 17
 100
@@ -40159,9 +39807,35 @@ AcDbPolyline
  20
 -0.5470294686265541
   0
+LWPOLYLINE
+  5
+5D5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-199.49413459165703
+ 20
+-9.716172523973635
+ 10
+-186.46466187508418
+ 20
+-2.284292497487519
+  0
 CIRCLE
   5
-5E5
+5D6
 330
 17
 100
@@ -40181,7 +39855,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5E6
+5D7
 330
 17
 100
@@ -40201,7 +39875,7 @@ AcDbCircle
   0
 TEXT
   5
-5E7
+5D8
 330
 17
 100
@@ -40211,23 +39885,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--193.97031557022663
+-192.9793982333706
  20
--4.262969481869613
+-6.0002325107305765
  30
 0.0
  40
 1.2
   1
-B5-03: 2 thanh
+B5-03: 3 thanh
  50
-29.700000000000042
+29.700000000000035
   7
 VN
  11
--193.97031557022663
+-192.9793982333706
  21
--4.262969481869613
+-6.0002325107305765
  31
 0.0
 100
@@ -40235,7 +39909,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5E8
+5D9
 330
 17
 100
@@ -40261,7 +39935,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5E9
+5DA
 330
 17
 100
@@ -40287,7 +39961,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5EA
+5DB
 330
 17
 100
@@ -40313,7 +39987,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-5EB
+5DC
 330
 17
 100
@@ -40333,7 +40007,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5EC
+5DD
 330
 17
 100
@@ -40353,7 +40027,7 @@ AcDbCircle
   0
 TEXT
   5
-5ED
+5DE
 330
 17
 100
@@ -40387,7 +40061,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5EE
+5DF
 330
 17
 100
@@ -40413,7 +40087,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5EF
+5E0
 330
 17
 100
@@ -40439,7 +40113,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5F0
+5E1
 330
 17
 100
@@ -40465,7 +40139,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-5F1
+5E2
 330
 17
 100
@@ -40485,7 +40159,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5F2
+5E3
 330
 17
 100
@@ -40505,7 +40179,7 @@ AcDbCircle
   0
 TEXT
   5
-5F3
+5E4
 330
 17
 100
@@ -40539,7 +40213,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5F4
+5E5
 330
 17
 100
@@ -40565,7 +40239,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5F5
+5E6
 330
 17
 100
@@ -40589,9 +40263,35 @@ AcDbPolyline
  20
 -80.60442301712517
   0
+LWPOLYLINE
+  5
+5E7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-148.07166597028706
+ 20
+-86.2990400147503
+ 10
+-135.04219325371417
+ 20
+-78.86715998826419
+  0
 CIRCLE
   5
-5F6
+5E8
 330
 17
 100
@@ -40611,7 +40311,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5F7
+5E9
 330
 17
 100
@@ -40631,7 +40331,7 @@ AcDbCircle
   0
 TEXT
   5
-5F8
+5EA
 330
 17
 100
@@ -40641,23 +40341,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--140.5660122751446
+-141.5569296120006
  20
--84.32036303036823
+-82.58310000150725
  30
 0.0
  40
 1.2
   1
-B5-06: 2 thanh
+B5-06: 3 thanh
  50
-29.700000000000024
+29.69999999999997
   7
 VN
  11
--140.5660122751446
+-141.5569296120006
  21
--84.32036303036823
+-82.58310000150725
  31
 0.0
 100
@@ -40665,7 +40365,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5F9
+5EB
 330
 17
 100
@@ -40691,7 +40391,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5FA
+5EC
 330
 17
 100
@@ -40717,7 +40417,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-5FB
+5ED
 330
 17
 100
@@ -40743,7 +40443,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-5FC
+5EE
 330
 17
 100
@@ -40763,7 +40463,7 @@ AcDbCircle
   0
 CIRCLE
   5
-5FD
+5EF
 330
 17
 100
@@ -40783,7 +40483,7 @@ AcDbCircle
   0
 TEXT
   5
-5FE
+5F0
 330
 17
 100
@@ -40817,7 +40517,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-5FF
+5F1
 330
 17
 100
@@ -40843,7 +40543,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-600
+5F2
 330
 17
 100
@@ -40869,7 +40569,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-601
+5F3
 330
 17
 100
@@ -40895,7 +40595,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-602
+5F4
 330
 17
 100
@@ -40921,7 +40621,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-603
+5F5
 330
 17
 100
@@ -40947,7 +40647,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-604
+5F6
 330
 17
 100
@@ -40967,7 +40667,7 @@ AcDbCircle
   0
 CIRCLE
   5
-605
+5F7
 330
 17
 100
@@ -40987,7 +40687,7 @@ AcDbCircle
   0
 CIRCLE
   5
-606
+5F8
 330
 17
 100
@@ -41007,7 +40707,7 @@ AcDbCircle
   0
 CIRCLE
   5
-607
+5F9
 330
 17
 100
@@ -41027,7 +40727,7 @@ AcDbCircle
   0
 TEXT
   5
-608
+5FA
 330
 17
 100
@@ -41061,7 +40761,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-609
+5FB
 330
 17
 100
@@ -41087,7 +40787,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-60A
+5FC
 330
 17
 100
@@ -41113,7 +40813,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-60B
+5FD
 330
 17
 100
@@ -41139,7 +40839,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-60C
+5FE
 330
 17
 100
@@ -41159,7 +40859,7 @@ AcDbCircle
   0
 CIRCLE
   5
-60D
+5FF
 330
 17
 100
@@ -41179,7 +40879,7 @@ AcDbCircle
   0
 TEXT
   5
-60E
+600
 330
 17
 100
@@ -41213,7 +40913,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-60F
+601
 330
 17
 100
@@ -41239,7 +40939,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-610
+602
 330
 17
 100
@@ -41265,7 +40965,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-611
+603
 330
 17
 100
@@ -41291,7 +40991,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-612
+604
 330
 17
 100
@@ -41311,7 +41011,7 @@ AcDbCircle
   0
 CIRCLE
   5
-613
+605
 330
 17
 100
@@ -41331,7 +41031,7 @@ AcDbCircle
   0
 TEXT
   5
-614
+606
 330
 17
 100
@@ -41365,7 +41065,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-615
+607
 330
 17
 100
@@ -41391,7 +41091,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-616
+608
 330
 17
 100
@@ -41415,9 +41115,35 @@ AcDbPolyline
  20
 42.48177786158046
   0
+LWPOLYLINE
+  5
+609
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-212.8630638832964
+ 20
+33.312634806231834
+ 10
+-199.83359116672352
+ 20
+40.74451483271795
+  0
 CIRCLE
   5
-617
+60A
 330
 17
 100
@@ -41437,7 +41163,7 @@ AcDbCircle
   0
 CIRCLE
   5
-618
+60B
 330
 17
 100
@@ -41457,7 +41183,7 @@ AcDbCircle
   0
 TEXT
   5
-619
+60C
 330
 17
 100
@@ -41467,23 +41193,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--207.33924486186686
+-206.34832752500995
  20
-38.7658378483374
+37.02857481947489
  30
 0.0
  40
 1.2
   1
-B5-11: 2 thanh
+B5-11: 3 thanh
  50
-29.700000000000106
+29.69999999999997
   7
 VN
  11
--207.33924486186686
+-206.34832752500995
  21
-38.7658378483374
+37.02857481947489
  31
 0.0
 100
@@ -41491,7 +41217,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-61A
+60D
 330
 17
 100
@@ -41517,7 +41243,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-61B
+60E
 330
 17
 100
@@ -41543,7 +41269,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-61C
+60F
 330
 17
 100
@@ -41559,17 +41285,43 @@ AcDbPolyline
  43
 0.3
  10
--203.20010264500448
+-199.6598648638359
  20
-38.82429058737696
+40.84360656640443
  10
 -190.1706299284316
  20
 46.25617061386308
   0
+LWPOLYLINE
+  5
+610
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-202.20918530814754
+ 20
+37.0870275585144
+ 10
+-189.17971259157466
+ 20
+44.51890758500052
+  0
 CIRCLE
   5
-61D
+611
 330
 17
 100
@@ -41589,7 +41341,7 @@ AcDbCircle
   0
 CIRCLE
   5
-61E
+612
 330
 17
 100
@@ -41609,7 +41361,7 @@ AcDbCircle
   0
 TEXT
   5
-61F
+613
 330
 17
 100
@@ -41619,23 +41371,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--196.68536628671802
+-195.6944489498611
  20
-42.54023060062002
+40.80296757175746
  30
 0.0
  40
 1.2
   1
-B5-12: 3 thanh
+B5-12: 4 thanh
  50
 29.699999999999996
   7
 VN
  11
--196.68536628671802
+-195.6944489498611
  21
-42.54023060062002
+40.80296757175746
  31
 0.0
 100
@@ -41643,7 +41395,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-620
+614
 330
 17
 100
@@ -41669,7 +41421,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-621
+615
 330
 17
 100
@@ -41695,7 +41447,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-622
+616
 330
 17
 100
@@ -41721,7 +41473,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-623
+617
 330
 17
 100
@@ -41741,7 +41493,7 @@ AcDbCircle
   0
 CIRCLE
   5
-624
+618
 330
 17
 100
@@ -41761,7 +41513,7 @@ AcDbCircle
   0
 TEXT
   5
-625
+619
 330
 17
 100
@@ -41795,7 +41547,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-626
+61A
 330
 17
 100
@@ -41821,7 +41573,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-627
+61B
 330
 17
 100
@@ -41847,7 +41599,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-628
+61C
 330
 17
 100
@@ -41873,7 +41625,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-629
+61D
 330
 17
 100
@@ -41893,7 +41645,7 @@ AcDbCircle
   0
 CIRCLE
   5
-62A
+61E
 330
 17
 100
@@ -41913,7 +41665,7 @@ AcDbCircle
   0
 TEXT
   5
-62B
+61F
 330
 17
 100
@@ -41947,7 +41699,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-62C
+620
 330
 17
 100
@@ -41973,7 +41725,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-62D
+621
 330
 17
 100
@@ -41999,7 +41751,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-62E
+622
 330
 17
 100
@@ -42025,7 +41777,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-62F
+623
 330
 17
 100
@@ -42045,7 +41797,7 @@ AcDbCircle
   0
 CIRCLE
   5
-630
+624
 330
 17
 100
@@ -42065,7 +41817,7 @@ AcDbCircle
   0
 TEXT
   5
-631
+625
 330
 17
 100
@@ -42099,7 +41851,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-632
+626
 330
 17
 100
@@ -42123,9 +41875,35 @@ AcDbPolyline
  20
 34.172011305272726
   0
+LWPOLYLINE
+  5
+627
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-207.24831724804548
+ 20
+25.002868249924123
+ 10
+-194.2188445314726
+ 20
+32.43474827641024
+  0
 CIRCLE
   5
-633
+628
 330
 17
 100
@@ -42145,7 +41923,7 @@ AcDbCircle
   0
 TEXT
   5
-634
+629
 330
 17
 100
@@ -42155,23 +41933,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--201.72449822661594
+-200.73358088975903
  20
-30.456071292029666
+28.718808263167183
  30
 0.0
  40
 1.2
   1
-B5-16: 1 thanh
+B5-16: 2 thanh
  50
-29.70000000000005
+29.699999999999985
   7
 VN
  11
--201.72449822661594
+-200.73358088975903
  21
-30.456071292029666
+28.718808263167183
  31
 0.0
 100
@@ -42179,7 +41957,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-635
+62A
 330
 17
 100
@@ -42203,9 +41981,35 @@ AcDbPolyline
  20
 30.697485247547657
   0
+LWPOLYLINE
+  5
+62B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-205.26648257433163
+ 20
+21.528342192199073
+ 10
+-192.2370098577588
+ 20
+28.96022221868519
+  0
 CIRCLE
   5
-636
+62C
 330
 17
 100
@@ -42225,7 +42029,7 @@ AcDbCircle
   0
 TEXT
   5
-637
+62D
 330
 17
 100
@@ -42235,23 +42039,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--199.74266355290212
+-198.7517462160452
  20
-26.981545234304598
+25.244282205442133
  30
 0.0
  40
 1.2
   1
-B5-17: 1 thanh
+B5-17: 2 thanh
  50
-29.699999999999985
+29.70000000000009
   7
 VN
  11
--199.74266355290212
+-198.7517462160452
  21
-26.981545234304598
+25.244282205442133
  31
 0.0
 100
@@ -42259,7 +42063,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-638
+62E
 330
 17
 100
@@ -42283,9 +42087,35 @@ AcDbPolyline
  20
 20.273907074372588
   0
+LWPOLYLINE
+  5
+62F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-199.3209785531902
+ 20
+11.104764019023975
+ 10
+-186.29150583661738
+ 20
+18.53664404551009
+  0
 CIRCLE
   5
-639
+630
 330
 17
 100
@@ -42305,7 +42135,7 @@ AcDbCircle
   0
 TEXT
   5
-63A
+631
 330
 17
 100
@@ -42315,23 +42145,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--193.79715953176068
+-192.8062421949038
  20
-16.55796706112953
+14.820704032267033
  30
 0.0
  40
 1.2
   1
-B5-18: 1 thanh
+B5-18: 2 thanh
  50
-29.700000000000035
+29.70000000000009
   7
 VN
  11
--193.79715953176068
+-192.8062421949038
  21
-16.55796706112953
+14.820704032267033
  31
 0.0
 100
@@ -42339,7 +42169,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-63B
+632
 330
 17
 100
@@ -42363,9 +42193,35 @@ AcDbPolyline
  20
 16.799381016647608
   0
+LWPOLYLINE
+  5
+633
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-197.3391438794764
+ 20
+7.630237961298911
+ 10
+-184.30967116290353
+ 20
+15.062117987785028
+  0
 CIRCLE
   5
-63C
+634
 330
 17
 100
@@ -42385,7 +42241,7 @@ AcDbCircle
   0
 TEXT
   5
-63D
+635
 330
 17
 100
@@ -42395,23 +42251,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--191.8153248580469
+-190.82440752118998
  20
-13.08344100340455
+11.34617797454197
  30
 0.0
  40
 1.2
   1
-B5-19: 1 thanh
+B5-19: 2 thanh
  50
-29.700000000000035
+29.699999999999985
   7
 VN
  11
--191.8153248580469
+-190.82440752118998
  21
-13.08344100340455
+11.34617797454197
  31
 0.0
 100
@@ -42419,7 +42275,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-63E
+636
 330
 17
 100
@@ -42443,9 +42299,35 @@ AcDbPolyline
  20
 -21.87655758738971
   0
+LWPOLYLINE
+  5
+637
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-216.7054598856967
+ 20
+-31.045700642736765
+ 10
+-203.67598716912386
+ 20
+-23.61382061625065
+  0
 CIRCLE
   5
-63F
+638
 330
 17
 100
@@ -42465,7 +42347,7 @@ AcDbCircle
   0
 TEXT
   5
-640
+639
 330
 17
 100
@@ -42475,23 +42357,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--211.18164086426629
+-210.19072352741028
  20
--25.59249760063277
+-27.329760629493705
  30
 0.0
  40
 1.2
   1
-B5-20: 1 thanh
+B5-20: 2 thanh
  50
-29.70000000000005
+29.700000000000035
   7
 VN
  11
--211.18164086426629
+-210.19072352741028
  21
--25.59249760063277
+-27.329760629493705
  31
 0.0
 100
@@ -42499,7 +42381,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-641
+63A
 330
 17
 100
@@ -42523,9 +42405,35 @@ AcDbPolyline
  20
 -25.35108364511163
   0
+LWPOLYLINE
+  5
+63B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-214.72362521198465
+ 20
+-34.520226700458736
+ 10
+-201.69415249541177
+ 20
+-27.088346673972616
+  0
 CIRCLE
   5
-642
+63C
 330
 17
 100
@@ -42545,7 +42453,7 @@ AcDbCircle
   0
 TEXT
   5
-643
+63D
 330
 17
 100
@@ -42555,23 +42463,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--209.19980619055426
+-208.20888885369823
  20
--29.067023658354685
+-30.804286687215676
  30
 0.0
  40
 1.2
   1
-B5-21: 1 thanh
+B5-21: 2 thanh
  50
-29.700000000000024
+29.699999999999996
   7
 VN
  11
--209.19980619055426
+-208.20888885369823
  21
--29.067023658354685
+-30.804286687215676
  31
 0.0
 100
@@ -42579,7 +42487,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-644
+63E
 330
 17
 100
@@ -42603,9 +42511,35 @@ AcDbPolyline
  20
 -28.82560970283358
   0
+LWPOLYLINE
+  5
+63F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-212.74179053827262
+ 20
+-37.99475275818066
+ 10
+-199.71231782169974
+ 20
+-30.562872731694547
+  0
 CIRCLE
   5
-645
+640
 330
 17
 100
@@ -42625,7 +42559,7 @@ AcDbCircle
   0
 TEXT
   5
-646
+641
 330
 17
 100
@@ -42635,23 +42569,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--207.2179715168422
+-206.22705417998617
  20
--32.541549716076645
+-34.2788127449376
  30
 0.0
  40
 1.2
   1
-B5-22: 1 thanh
+B5-22: 2 thanh
  50
-29.70000000000005
+29.69999999999997
   7
 VN
  11
--207.2179715168422
+-206.22705417998617
  21
--32.541549716076645
+-34.2788127449376
  31
 0.0
 100
@@ -42659,7 +42593,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-647
+642
 330
 17
 100
@@ -42683,9 +42617,35 @@ AcDbPolyline
  20
 -32.30013576055553
   0
+LWPOLYLINE
+  5
+643
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-210.75995586456057
+ 20
+-41.469278815902605
+ 10
+-197.73048314798768
+ 20
+-34.037398789416486
+  0
 CIRCLE
   5
-648
+644
 330
 17
 100
@@ -42705,7 +42665,7 @@ AcDbCircle
   0
 TEXT
   5
-649
+645
 330
 17
 100
@@ -42715,23 +42675,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--205.2361368431301
+-204.2452195062741
  20
--36.01607577379858
+-37.75333880265954
  30
 0.0
  40
 1.2
   1
-B5-23: 1 thanh
+B5-23: 2 thanh
  50
-29.69999999999997
+29.699999999999996
   7
 VN
  11
--205.2361368431301
+-204.2452195062741
  21
--36.01607577379858
+-37.75333880265954
  31
 0.0
 100
@@ -42739,7 +42699,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-64A
+646
 330
 17
 100
@@ -42763,9 +42723,35 @@ AcDbPolyline
  20
 -35.77466181827745
   0
+LWPOLYLINE
+  5
+647
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-208.77812119084854
+ 20
+-44.943804873624536
+ 10
+-195.74864847427565
+ 20
+-37.51192484713842
+  0
 CIRCLE
   5
-64B
+648
 330
 17
 100
@@ -42785,7 +42771,7 @@ AcDbCircle
   0
 TEXT
   5
-64C
+649
 330
 17
 100
@@ -42795,23 +42781,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--203.2543021694181
+-202.2633848325621
  20
--39.49060183152051
+-41.22786486038147
  30
 0.0
  40
 1.2
   1
-B5-24: 1 thanh
+B5-24: 2 thanh
  50
-29.70000000000005
+29.699999999999996
   7
 VN
  11
--203.2543021694181
+-202.2633848325621
  21
--39.49060183152051
+-41.22786486038147
  31
 0.0
 100
@@ -42819,7 +42805,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-64D
+64A
 330
 17
 100
@@ -42843,9 +42829,35 @@ AcDbPolyline
  20
 -39.2491878759994
   0
+LWPOLYLINE
+  5
+64B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-206.79628651713648
+ 20
+-48.41833093134648
+ 10
+-193.7668138005636
+ 20
+-40.98645090486037
+  0
 CIRCLE
   5
-64E
+64C
 330
 17
 100
@@ -42865,7 +42877,7 @@ AcDbCircle
   0
 TEXT
   5
-64F
+64D
 330
 17
 100
@@ -42875,23 +42887,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--201.27246749570605
+-200.28155015885005
  20
--42.96512788924245
+-44.702390918103426
  30
 0.0
  40
 1.2
   1
-B5-25: 1 thanh
+B5-25: 2 thanh
  50
 29.69999999999997
   7
 VN
  11
--201.27246749570605
+-200.28155015885005
  21
--42.96512788924245
+-44.702390918103426
  31
 0.0
 100
@@ -42899,7 +42911,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-650
+64E
 330
 17
 100
@@ -42923,9 +42935,35 @@ AcDbPolyline
  20
 -49.67276604916523
   0
+LWPOLYLINE
+  5
+64F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-200.8507824960003
+ 20
+-58.84190910451232
+ 10
+-187.82130977942745
+ 20
+-51.410029078026206
+  0
 CIRCLE
   5
-651
+650
 330
 17
 100
@@ -42945,7 +42983,7 @@ AcDbCircle
   0
 TEXT
   5
-652
+651
 330
 17
 100
@@ -42955,23 +42993,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--195.3269634745699
+-194.33604613771388
  20
--53.38870606240829
+-55.12596909126926
  30
 0.0
  40
 1.2
   1
-B5-26: 1 thanh
+B5-26: 2 thanh
  50
-29.70000000000005
+29.700000000000024
   7
 VN
  11
--195.3269634745699
+-194.33604613771388
  21
--53.38870606240829
+-55.12596909126926
  31
 0.0
 100
@@ -42979,7 +43017,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-653
+652
 330
 17
 100
@@ -43002,6 +43040,32 @@ AcDbPolyline
 -186.83039244257142
  20
 -53.14729210688718
+  0
+LWPOLYLINE
+  5
+653
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-198.86894782228828
+ 20
+-62.31643516223427
+ 10
+-185.8394751057154
+ 20
+-54.884555135748144
   0
 CIRCLE
   5
@@ -43035,23 +43099,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--193.34512880085785
+-192.35421146400182
  20
--56.863232120130235
+-58.60049514899121
  30
 0.0
  40
 1.2
   1
-B5-27: 1 thanh
+B5-27: 2 thanh
  50
-29.700000000000024
+29.700000000000017
   7
 VN
  11
--193.34512880085785
+-192.35421146400182
  21
--56.863232120130235
+-58.60049514899121
  31
 0.0
 100
@@ -43083,9 +43147,35 @@ AcDbPolyline
  20
 -63.570870280052986
   0
-CIRCLE
+LWPOLYLINE
   5
 657
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-192.9234438011521
+ 20
+-72.74001333540008
+ 10
+-179.89397108457925
+ 20
+-65.30813330891397
+  0
+CIRCLE
+  5
+658
 330
 17
 100
@@ -43105,7 +43195,7 @@ AcDbCircle
   0
 TEXT
   5
-658
+659
 330
 17
 100
@@ -43115,23 +43205,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--187.3996247797217
+-186.40870744286568
  20
--67.28681029329604
+-69.02407332215702
  30
 0.0
  40
 1.2
   1
-B5-28: 1 thanh
+B5-28: 2 thanh
  50
-29.69999999999997
+29.700000000000024
   7
 VN
  11
--187.3996247797217
+-186.40870744286568
  21
--67.28681029329604
+-69.02407332215702
  31
 0.0
 100
@@ -43139,7 +43229,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-659
+65A
 330
 17
 100
@@ -43163,9 +43253,35 @@ AcDbPolyline
  20
 -67.04539633777493
   0
+LWPOLYLINE
+  5
+65B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-190.94160912744007
+ 20
+-76.21453939312202
+ 10
+-177.91213641086722
+ 20
+-68.78265936663591
+  0
 CIRCLE
   5
-65A
+65C
 330
 17
 100
@@ -43185,7 +43301,7 @@ AcDbCircle
   0
 TEXT
   5
-65B
+65D
 330
 17
 100
@@ -43195,23 +43311,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--185.41779010600965
+-184.42687276915365
  20
--70.76133635101799
+-72.49859937987897
  30
 0.0
  40
 1.2
   1
-B5-29: 1 thanh
+B5-29: 2 thanh
  50
-29.69999999999997
+29.700000000000024
   7
 VN
  11
--185.41779010600965
+-184.42687276915365
  21
--70.76133635101799
+-72.49859937987897
  31
 0.0
 100
@@ -43219,7 +43335,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-65C
+65E
 330
 17
 100
@@ -43243,9 +43359,35 @@ AcDbPolyline
  20
 -77.4689745109408
   0
+LWPOLYLINE
+  5
+65F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-184.99610510630393
+ 20
+-86.63811756628787
+ 10
+-171.96663238973105
+ 20
+-79.20623753980176
+  0
 CIRCLE
   5
-65D
+660
 330
 17
 100
@@ -43265,86 +43407,6 @@ AcDbCircle
   0
 TEXT
   5
-65E
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--179.47228608487347
- 20
--81.18491452418385
- 30
-0.0
- 40
-1.2
-  1
-B5-30: 1 thanh
- 50
-29.69999999999997
-  7
-VN
- 11
--179.47228608487347
- 21
--81.18491452418385
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-65F
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--184.0051877694479
- 20
--88.37538059514885
- 10
--170.97571505287502
- 20
--80.94350056866274
-  0
-CIRCLE
-  5
-660
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--184.2239667671932
- 20
--88.28068617396036
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
 661
 330
 17
@@ -43355,23 +43417,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--177.49045141116147
+-178.48136874801747
  20
--84.6594405819058
+-82.92217755304482
  30
 0.0
  40
 1.2
   1
-B5-31: 1 thanh
+B5-30: 2 thanh
  50
 29.69999999999997
   7
 VN
  11
--177.49045141116147
+-178.48136874801747
  21
--84.6594405819058
+-82.92217755304482
  31
 0.0
 100
@@ -43395,17 +43457,43 @@ AcDbPolyline
  43
 0.3
  10
--178.05968374831176
+-184.0051877694479
  20
--98.79895876831465
+-88.37538059514885
  10
--165.03021103173887
+-170.97571505287502
  20
--91.36707874182854
+-80.94350056866274
+  0
+LWPOLYLINE
+  5
+663
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-183.01427043259184
+ 20
+-90.1126436240098
+ 10
+-169.98479771601902
+ 20
+-82.6807635975237
   0
 CIRCLE
   5
-663
+664
 330
 17
 100
@@ -43415,9 +43503,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--178.03603323280674
+-184.2239667671932
  20
--99.13931382603965
+-88.28068617396036
  30
 0.0
  40
@@ -43425,7 +43513,7 @@ AcDbCircle
   0
 TEXT
   5
-664
+665
 330
 17
 100
@@ -43435,23 +43523,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--171.5449473900253
+-176.49953407430542
  20
--95.08301875507159
+-86.39670361076675
  30
 0.0
  40
 1.2
   1
-B5-32: 1 thanh
+B5-31: 2 thanh
  50
-29.69999999999997
+29.70000000000008
   7
 VN
  11
--171.5449473900253
+-176.49953407430542
  21
--95.08301875507159
+-86.39670361076675
  31
 0.0
 100
@@ -43459,7 +43547,33 @@ AcDbText
   0
 LWPOLYLINE
   5
-665
+666
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-178.05968374831176
+ 20
+-98.79895876831465
+ 10
+-165.03021103173887
+ 20
+-91.36707874182854
+  0
+LWPOLYLINE
+  5
+667
 330
 17
 100
@@ -43485,7 +43599,113 @@ AcDbPolyline
   0
 CIRCLE
   5
-666
+668
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-178.03603323280674
+ 20
+-99.13931382603965
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+669
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-170.5540300531693
+ 20
+-96.82028178393256
+ 30
+0.0
+ 40
+1.2
+  1
+B5-32: 2 thanh
+ 50
+29.700000000000024
+  7
+VN
+ 11
+-170.5540300531693
+ 21
+-96.82028178393256
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+66A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-179.05060108516776
+ 20
+-97.06169573945368
+ 10
+-166.0211283685949
+ 20
+-89.62981571296757
+  0
+LWPOLYLINE
+  5
+66B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-173.1050970640316
+ 20
+-107.48527391261953
+ 10
+-160.07562434745876
+ 20
+-100.0533938861334
+  0
+CIRCLE
+  5
+66C
 330
 17
 100
@@ -43505,7 +43725,7 @@ AcDbCircle
   0
 TEXT
   5
-667
+66D
 330
 17
 100
@@ -43515,23 +43735,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--170.5540300531693
+-166.59036070574518
  20
--96.82028178393256
+-103.76933389937648
  30
 0.0
  40
 1.2
   1
-B5-33: 1 thanh
+B5-33: 2 thanh
  50
-29.700000000000024
+29.700000000000074
   7
 VN
  11
--170.5540300531693
+-166.59036070574518
  21
--96.82028178393256
+-103.76933389937648
  31
 0.0
 100
@@ -43539,7 +43759,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-668
+66E
 330
 17
 100
@@ -43565,7 +43785,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-669
+66F
 330
 17
 100
@@ -43591,7 +43811,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-66A
+670
 330
 17
 100
@@ -43611,7 +43831,7 @@ AcDbCircle
   0
 TEXT
   5
-66B
+671
 330
 17
 100
@@ -43645,7 +43865,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-66C
+672
 330
 17
 100
@@ -43671,7 +43891,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-66D
+673
 330
 17
 100
@@ -43697,7 +43917,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-66E
+674
 330
 17
 100
@@ -43717,7 +43937,7 @@ AcDbCircle
   0
 TEXT
   5
-66F
+675
 330
 17
 100
@@ -43751,33 +43971,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-670
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--151.94490031338233
- 20
-49.63979022392649
- 10
--138.91542759680948
- 20
-57.07167025041261
-  0
-LWPOLYLINE
-  5
-671
+676
 330
 17
 100
@@ -43801,63 +43995,9 @@ AcDbPolyline
  20
 55.334407221550116
   0
-CIRCLE
-  5
-672
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--139.88603926162986
- 20
-55.950682740520044
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-673
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--144.43924661823905
- 20
-51.61846720830707
- 30
-0.0
- 40
-1.2
-  1
-B5-36: 2 thanh
- 50
-29.699999999999946
-  7
-VN
- 11
--144.43924661823905
- 21
-51.61846720830707
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-674
+677
 330
 17
 100
@@ -43883,86 +44023,6 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-675
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--148.97214830281163
- 20
-44.42800113733895
- 10
--135.94267558623875
- 20
-51.859881163825065
-  0
-CIRCLE
-  5
-676
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--138.15396073837016
- 20
-52.90931725947992
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-677
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--142.45741194452518
- 20
-48.14394115058201
- 30
-0.0
- 40
-1.2
-  1
-B5-37: 2 thanh
- 50
-29.69999999999997
-  7
-VN
- 11
--142.45741194452518
- 21
-48.14394115058201
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
 678
 330
 17
@@ -43979,17 +44039,71 @@ AcDbPolyline
  43
 0.3
  10
--144.01756161852708
+-151.94490031338233
  20
-35.741685993026366
+49.63979022392649
  10
--130.98808890195423
+-138.91542759680948
  20
-43.17356601951248
+57.07167025041261
+  0
+CIRCLE
+  5
+679
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-139.02
+ 20
+54.429999999999986
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+67A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-145.4301639550959
+ 20
+53.35573023716955
+ 30
+0.0
+ 40
+1.2
+  1
+B5-36: 3 thanh
+ 50
+29.70000000000005
+  7
+VN
+ 11
+-145.4301639550959
+ 21
+53.35573023716955
+ 31
+0.0
+100
+AcDbText
   0
 LWPOLYLINE
   5
-679
+67B
 330
 17
 100
@@ -44012,60 +44126,6 @@ AcDbPolyline
 -129.99717156509732
  20
 41.43630299064997
-  0
-CIRCLE
-  5
-67A
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--131.96603926162985
- 20
-42.05068274052006
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-67B
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--136.51190792338377
- 20
-37.720362977406914
- 30
-0.0
- 40
-1.2
-  1
-B5-38: 2 thanh
- 50
-29.69999999999997
-  7
-VN
- 11
--136.51190792338377
- 21
-37.720362977406914
- 31
-0.0
-100
-AcDbText
   0
 LWPOLYLINE
   5
@@ -44111,13 +44171,13 @@ AcDbPolyline
  43
 0.3
  10
--141.04480960795638
+-144.01756161852708
  20
-30.529896906438832
+35.741685993026366
  10
--128.01533689138353
+-130.98808890195423
  20
-37.96177693292494
+43.17356601951248
   0
 CIRCLE
   5
@@ -44131,9 +44191,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--130.23396073837014
+-131.1
  20
-39.009317259479936
+40.53
  30
 0.0
  40
@@ -44151,23 +44211,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--134.53007324966995
+-137.50282526024066
  20
-34.245836919681885
+39.45762600626942
  30
 0.0
  40
 1.2
   1
-B5-39: 2 thanh
+B5-37: 3 thanh
  50
-29.700000000000017
+29.700000000000024
   7
 VN
  11
--134.53007324966995
+-137.50282526024066
  21
-34.245836919681885
+39.45762600626942
  31
 0.0
 100
@@ -44191,32 +44251,6 @@ AcDbPolyline
  43
 0.3
  10
--136.09022292367183
- 20
-21.84358176212623
- 10
--123.06075020709898
- 20
-29.27546178861234
-  0
-LWPOLYLINE
-  5
-681
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
 -135.09930558681495
  20
 20.10631873326376
@@ -44225,63 +44259,9 @@ AcDbPolyline
  20
 27.53819875974987
   0
-CIRCLE
-  5
-682
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--124.05603926162985
- 20
-28.140682740520063
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-683
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--128.58456922852852
- 20
-23.822258746506815
- 30
-0.0
- 40
-1.2
-  1
-B5-40: 2 thanh
- 50
-29.700000000000024
-  7
-VN
- 11
--128.58456922852852
- 21
-23.822258746506815
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-684
+681
 330
 17
 100
@@ -44307,193 +44287,87 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
+682
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-136.09022292367183
+ 20
+21.84358176212623
+ 10
+-123.06075020709898
+ 20
+29.27546178861234
+  0
+CIRCLE
+  5
+683
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+-123.19
+ 20
+26.619999999999994
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+684
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+-129.5754865653854
+ 20
+25.559521775369284
+ 30
+0.0
+ 40
+1.2
+  1
+B5-38: 3 thanh
+ 50
+29.700000000000017
+  7
+VN
+ 11
+-129.5754865653854
+ 21
+25.559521775369284
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
 685
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--133.11747091310113
- 20
-16.631792675538694
- 10
--120.08799819652826
- 20
-24.063672702024807
-  0
-CIRCLE
-  5
-686
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--122.32396073837013
- 20
-25.099317259479932
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-687
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--126.6027345548147
- 20
-20.34773268878175
- 30
-0.0
- 40
-1.2
-  1
-B5-41: 2 thanh
- 50
-29.699999999999996
-  7
-VN
- 11
--126.6027345548147
- 21
-20.34773268878175
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-688
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--131.13563623938734
- 20
-13.157266617813667
- 10
--118.10616352281444
- 20
-20.589146644299777
-  0
-LWPOLYLINE
-  5
-689
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--132.12655357624425
- 20
-14.8945296466762
- 10
--119.09708085967137
- 20
-22.32640967316231
-  0
-CIRCLE
-  5
-68A
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--119.59603926162987
- 20
-20.320682740520056
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-68B
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--125.6118172179578
- 20
-18.610469659919254
- 30
-0.0
- 40
-1.2
-  1
-B5-42: 2 thanh
- 50
-29.699999999999964
-  7
-VN
- 11
--125.6118172179578
- 21
-18.610469659919254
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-68C
 330
 17
 100
@@ -44519,7 +44393,33 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-68D
+686
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-131.13563623938734
+ 20
+13.157266617813667
+ 10
+-118.10616352281444
+ 20
+20.589146644299777
+  0
+LWPOLYLINE
+  5
+687
 330
 17
 100
@@ -44545,7 +44445,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-68E
+688
 330
 17
 100
@@ -44555,9 +44455,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--117.86396073837015
+-118.73
  20
-17.27931725947993
+18.8
  30
 0.0
  40
@@ -44565,7 +44465,7 @@ AcDbCircle
   0
 TEXT
   5
-68F
+689
 330
 17
 100
@@ -44583,7 +44483,7 @@ AcDbText
  40
 1.2
   1
-B5-43: 2 thanh
+B5-39: 3 thanh
  50
 29.699999999999985
   7
@@ -44599,113 +44499,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-690
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--127.1719668919597
- 20
-6.208214502363599
- 10
--114.14249417538683
- 20
-13.640094528849708
-  0
-LWPOLYLINE
-  5
-691
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--128.16288422881658
- 20
-7.945477531226107
- 10
--115.13341151224373
- 20
-15.377357557712218
-  0
-CIRCLE
-  5
-692
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--115.63603926162986
- 20
-13.370682740520055
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-693
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--121.64814787053015
- 20
-11.661417544469163
- 30
-0.0
- 40
-1.2
-  1
-B5-44: 2 thanh
- 50
-29.700000000000024
-  7
-VN
- 11
--121.64814787053015
- 21
-11.661417544469163
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-694
+68A
 330
 17
 100
@@ -44731,7 +44525,33 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-695
+68B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-127.1719668919597
+ 20
+6.208214502363599
+ 10
+-114.14249417538683
+ 20
+13.640094528849708
+  0
+LWPOLYLINE
+  5
+68C
 330
 17
 100
@@ -44757,7 +44577,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-696
+68D
 330
 17
 100
@@ -44767,9 +44587,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--113.90396073837015
+-114.77
  20
-10.329317259479923
+11.849999999999985
  30
 0.0
  40
@@ -44777,7 +44597,7 @@ AcDbCircle
   0
 TEXT
   5
-697
+68E
 330
 17
 100
@@ -44795,7 +44615,7 @@ AcDbText
  40
 1.2
   1
-B5-45: 2 thanh
+B5-40: 3 thanh
  50
 29.699999999999964
   7
@@ -44811,113 +44631,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-698
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--119.24462819710446
- 20
--7.689889728536525
- 10
--106.21515548053158
- 20
--0.25800970205041507
-  0
-LWPOLYLINE
-  5
-699
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--120.23554553396139
- 20
--5.952626699673987
- 10
--107.2060728173885
- 20
-1.4792533268121235
-  0
-CIRCLE
-  5
-69A
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--107.71603926162985
- 20
--0.5293172594799435
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-69B
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--113.72080917567494
- 20
--2.2366866864309314
- 30
-0.0
- 40
-1.2
-  1
-B5-46: 2 thanh
- 50
-29.699999999999964
-  7
-VN
- 11
--113.72080917567494
- 21
--2.2366866864309314
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-69C
+68F
 330
 17
 100
@@ -44943,7 +44657,33 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-69D
+690
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-119.24462819710446
+ 20
+-7.689889728536525
+ 10
+-106.21515548053158
+ 20
+-0.25800970205041507
+  0
+LWPOLYLINE
+  5
+691
 330
 17
 100
@@ -44969,7 +44709,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-69E
+692
 330
 17
 100
@@ -44979,9 +44719,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--105.98396073837013
+-106.85
  20
--3.570682740520067
+-2.0500000000000114
  30
 0.0
  40
@@ -44989,7 +44729,7 @@ AcDbCircle
   0
 TEXT
   5
-69F
+693
 330
 17
 100
@@ -45007,7 +44747,7 @@ AcDbText
  40
 1.2
   1
-B5-47: 2 thanh
+B5-41: 3 thanh
  50
 29.699999999999964
   7
@@ -45023,33 +44763,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6A0
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--116.27187618653375
- 20
--12.901678815124061
- 10
--103.24240346996088
- 20
--5.46979878863795
-  0
-LWPOLYLINE
-  5
-6A1
+694
 330
 17
 100
@@ -45073,63 +44787,9 @@ AcDbPolyline
  20
 -7.207061817500471
   0
-CIRCLE
-  5
-6A2
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--104.00603926162987
- 20
--7.049317259479959
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-6A3
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--108.76622249139041
- 20
--10.923001830743527
- 30
-0.0
- 40
-1.2
-  1
-B5-48: 2 thanh
- 50
-29.700000000000017
-  7
-VN
- 11
--108.76622249139041
- 21
--10.923001830743527
- 31
-0.0
-100
-AcDbText
-  0
 LWPOLYLINE
   5
-6A4
+695
 330
 17
 100
@@ -45155,7 +44815,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6A5
+696
 330
 17
 100
@@ -45171,17 +44831,17 @@ AcDbPolyline
  43
 0.3
  10
--113.29912417596303
+-116.27187618653375
  20
--18.11346790171161
+-12.901678815124061
  10
--100.26965145939016
+-103.24240346996088
  20
--10.6815878752255
+-5.46979878863795
   0
 CIRCLE
   5
-6A6
+697
 330
 17
 100
@@ -45191,9 +44851,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--102.27396073837014
+-103.14
  20
--10.090682740520077
+-8.570000000000014
  30
 0.0
  40
@@ -45201,7 +44861,7 @@ AcDbCircle
   0
 TEXT
   5
-6A7
+698
 330
 17
 100
@@ -45211,23 +44871,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--106.78438781767659
+-109.75713982824732
  20
--14.397527888468554
+-9.185738801881005
  30
 0.0
  40
 1.2
   1
-B5-49: 2 thanh
+B5-42: 3 thanh
  50
-29.699999999999985
+29.699999999999992
   7
 VN
  11
--106.78438781767659
+-109.75713982824732
  21
--14.397527888468554
+-9.185738801881005
  31
 0.0
 100
@@ -45235,7 +44895,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6A8
+699
 330
 17
 100
@@ -45261,7 +44921,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6A9
+69A
 330
 17
 100
@@ -45285,9 +44945,35 @@ AcDbPolyline
  20
 -14.15611393294741
   0
+LWPOLYLINE
+  5
+69B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-113.29912417596303
+ 20
+-18.11346790171161
+ 10
+-100.26965145939016
+ 20
+-10.6815878752255
+  0
 CIRCLE
   5
-6AA
+69C
 330
 17
 100
@@ -45297,9 +44983,9 @@ BICH_NEO
 100
 AcDbCircle
  10
--101.03603926162985
+-100.17
  20
--12.259317259479943
+-13.780000000000005
  30
 0.0
  40
@@ -45307,7 +44993,7 @@ AcDbCircle
   0
 TEXT
   5
-6AB
+69D
 330
 17
 100
@@ -45317,23 +45003,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--104.80255314396456
+-106.78438781767659
  20
--17.872053946190466
+-14.397527888468554
  30
 0.0
  40
 1.2
   1
-B5-50: 2 thanh
+B5-43: 3 thanh
  50
-29.69999999999997
+29.699999999999985
   7
 VN
  11
--104.80255314396456
+-106.78438781767659
  21
--17.872053946190466
+-14.397527888468554
  31
 0.0
 100
@@ -45341,7 +45027,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6AC
+69E
 330
 17
 100
@@ -45367,7 +45053,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6AD
+69F
 330
 17
 100
@@ -45393,7 +45079,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6AE
+6A0
 330
 17
 100
@@ -45413,7 +45099,7 @@ AcDbCircle
   0
 TEXT
   5
-6AF
+6A1
 330
 17
 100
@@ -45431,7 +45117,7 @@ AcDbText
  40
 1.2
   1
-B5-51: 2 thanh
+B5-44: 2 thanh
  50
 29.69999999999997
   7
@@ -45447,7 +45133,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6B0
+6A2
 330
 17
 100
@@ -45473,7 +45159,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6B1
+6A3
 330
 17
 100
@@ -45499,113 +45185,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6B2
-330
-17
-100
-AcDbEntity
-  8
-BICH_NEO
-100
-AcDbCircle
- 10
--99.30396073837014
- 20
--15.300682740520072
- 30
-0.0
- 40
-0.6
-  0
-TEXT
-  5
-6B3
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbText
- 10
--100.83888379654049
- 20
--24.821106061634307
- 30
-0.0
- 40
-1.2
-  1
-B5-52: 2 thanh
- 50
-29.699999999999946
-  7
-VN
- 11
--100.83888379654049
- 21
--24.821106061634307
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-6B4
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--106.36270281797088
- 20
--30.27430910373834
- 10
--93.33323010139803
- 20
--22.842429077252227
-  0
-LWPOLYLINE
-  5
-6B5
-330
-17
-100
-AcDbEntity
-  8
-GIA_CUONG_40x60
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 43
-0.3
- 10
--105.37178548111487
- 20
--32.011572132599305
- 10
--92.342312764542
- 20
--24.579692106113193
-  0
-CIRCLE
-  5
-6B6
+6A4
 330
 17
 100
@@ -45625,7 +45205,7 @@ AcDbCircle
   0
 TEXT
   5
-6B7
+6A5
 330
 17
 100
@@ -45635,23 +45215,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--98.85704912282844
+-100.83888379654049
  20
--28.29563211935625
+-24.821106061634307
  30
 0.0
  40
 1.2
   1
-B5-53: 2 thanh
+B5-45: 2 thanh
  50
-29.699999999999996
+29.699999999999946
   7
 VN
  11
--98.85704912282844
+-100.83888379654049
  21
--28.29563211935625
+-24.821106061634307
  31
 0.0
 100
@@ -45659,7 +45239,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6B8
+6A6
 330
 17
 100
@@ -45685,7 +45265,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6B9
+6A7
 330
 17
 100
@@ -45711,7 +45291,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6BA
+6A8
 330
 17
 100
@@ -45731,7 +45311,7 @@ AcDbCircle
   0
 TEXT
   5
-6BB
+6A9
 330
 17
 100
@@ -45749,7 +45329,7 @@ AcDbText
  40
 1.2
   1
-B5-54: 2 thanh
+B5-46: 2 thanh
  50
 29.700000000000024
   7
@@ -45765,7 +45345,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6BC
+6AA
 330
 17
 100
@@ -45791,7 +45371,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6BD
+6AB
 330
 17
 100
@@ -45817,7 +45397,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6BE
+6AC
 330
 17
 100
@@ -45837,7 +45417,7 @@ AcDbCircle
   0
 TEXT
   5
-6BF
+6AD
 330
 17
 100
@@ -45855,7 +45435,7 @@ AcDbText
  40
 1.2
   1
-B5-55: 2 thanh
+B5-47: 2 thanh
  50
 29.70000000000001
   7
@@ -45871,7 +45451,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6C0
+6AE
 330
 17
 100
@@ -45897,7 +45477,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6C1
+6AF
 330
 17
 100
@@ -45923,7 +45503,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6C2
+6B0
 330
 17
 100
@@ -45943,7 +45523,7 @@ AcDbCircle
   0
 TEXT
   5
-6C3
+6B1
 330
 17
 100
@@ -45961,7 +45541,7 @@ AcDbText
  40
 1.2
   1
-B5-56: 2 thanh
+B5-48: 2 thanh
  50
 29.699999999999946
   7
@@ -45977,7 +45557,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6C4
+6B2
 330
 17
 100
@@ -46003,7 +45583,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6C5
+6B3
 330
 17
 100
@@ -46029,7 +45609,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6C6
+6B4
 330
 17
 100
@@ -46049,7 +45629,7 @@ AcDbCircle
   0
 TEXT
   5
-6C7
+6B5
 330
 17
 100
@@ -46067,7 +45647,7 @@ AcDbText
  40
 1.2
   1
-B5-57: 2 thanh
+B5-49: 2 thanh
  50
 29.699999999999996
   7
@@ -46083,7 +45663,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6C8
+6B6
 330
 17
 100
@@ -46109,7 +45689,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6C9
+6B7
 330
 17
 100
@@ -46135,7 +45715,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6CA
+6B8
 330
 17
 100
@@ -46161,7 +45741,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6CB
+6B9
 330
 17
 100
@@ -46187,7 +45767,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6CC
+6BA
 330
 17
 100
@@ -46213,7 +45793,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6CD
+6BB
 330
 17
 100
@@ -46233,7 +45813,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6CE
+6BC
 330
 17
 100
@@ -46253,7 +45833,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6CF
+6BD
 330
 17
 100
@@ -46273,7 +45853,7 @@ AcDbCircle
   0
 TEXT
   5
-6D0
+6BE
 330
 17
 100
@@ -46307,7 +45887,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6D1
+6BF
 330
 17
 100
@@ -46333,7 +45913,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6D2
+6C0
 330
 17
 100
@@ -46359,7 +45939,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6D3
+6C1
 330
 17
 100
@@ -46385,7 +45965,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6D4
+6C2
 330
 17
 100
@@ -46411,7 +45991,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6D5
+6C3
 330
 17
 100
@@ -46437,7 +46017,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6D6
+6C4
 330
 17
 100
@@ -46457,7 +46037,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6D7
+6C5
 330
 17
 100
@@ -46477,7 +46057,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6D8
+6C6
 330
 17
 100
@@ -46497,7 +46077,7 @@ AcDbCircle
   0
 TEXT
   5
-6D9
+6C7
 330
 17
 100
@@ -46531,7 +46111,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6DA
+6C8
 330
 17
 100
@@ -46557,7 +46137,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6DB
+6C9
 330
 17
 100
@@ -46583,7 +46163,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6DC
+6CA
 330
 17
 100
@@ -46609,7 +46189,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6DD
+6CB
 330
 17
 100
@@ -46635,7 +46215,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6DE
+6CC
 330
 17
 100
@@ -46655,7 +46235,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6DF
+6CD
 330
 17
 100
@@ -46675,7 +46255,7 @@ AcDbCircle
   0
 TEXT
   5
-6E0
+6CE
 330
 17
 100
@@ -46709,7 +46289,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6E1
+6CF
 330
 17
 100
@@ -46735,7 +46315,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6E2
+6D0
 330
 17
 100
@@ -46761,7 +46341,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6E3
+6D1
 330
 17
 100
@@ -46787,7 +46367,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6E4
+6D2
 330
 17
 100
@@ -46813,7 +46393,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6E5
+6D3
 330
 17
 100
@@ -46839,7 +46419,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6E6
+6D4
 330
 17
 100
@@ -46859,7 +46439,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6E7
+6D5
 330
 17
 100
@@ -46879,7 +46459,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6E8
+6D6
 330
 17
 100
@@ -46899,7 +46479,7 @@ AcDbCircle
   0
 TEXT
   5
-6E9
+6D7
 330
 17
 100
@@ -46933,7 +46513,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6EA
+6D8
 330
 17
 100
@@ -46959,7 +46539,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6EB
+6D9
 330
 17
 100
@@ -46985,7 +46565,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6EC
+6DA
 330
 17
 100
@@ -47005,7 +46585,7 @@ AcDbCircle
   0
 TEXT
   5
-6ED
+6DB
 330
 17
 100
@@ -47039,7 +46619,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6EE
+6DC
 330
 17
 100
@@ -47065,7 +46645,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6EF
+6DD
 330
 17
 100
@@ -47091,7 +46671,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6F0
+6DE
 330
 17
 100
@@ -47117,7 +46697,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6F1
+6DF
 330
 17
 100
@@ -47137,7 +46717,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6F2
+6E0
 330
 17
 100
@@ -47157,7 +46737,7 @@ AcDbCircle
   0
 TEXT
   5
-6F3
+6E1
 330
 17
 100
@@ -47191,7 +46771,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6F4
+6E2
 330
 17
 100
@@ -47217,7 +46797,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6F5
+6E3
 330
 17
 100
@@ -47243,7 +46823,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6F6
+6E4
 330
 17
 100
@@ -47269,7 +46849,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6F7
+6E5
 330
 17
 100
@@ -47295,7 +46875,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6F8
+6E6
 330
 17
 100
@@ -47321,7 +46901,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-6F9
+6E7
 330
 17
 100
@@ -47341,7 +46921,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6FA
+6E8
 330
 17
 100
@@ -47361,7 +46941,7 @@ AcDbCircle
   0
 CIRCLE
   5
-6FB
+6E9
 330
 17
 100
@@ -47381,7 +46961,7 @@ AcDbCircle
   0
 TEXT
   5
-6FC
+6EA
 330
 17
 100
@@ -47415,7 +46995,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-6FD
+6EB
 330
 17
 100
@@ -47441,7 +47021,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6FE
+6EC
 330
 17
 100
@@ -47467,7 +47047,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-6FF
+6ED
 330
 17
 100
@@ -47493,7 +47073,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-700
+6EE
 330
 17
 100
@@ -47519,7 +47099,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-701
+6EF
 330
 17
 100
@@ -47545,7 +47125,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-702
+6F0
 330
 17
 100
@@ -47565,7 +47145,7 @@ AcDbCircle
   0
 CIRCLE
   5
-703
+6F1
 330
 17
 100
@@ -47585,7 +47165,7 @@ AcDbCircle
   0
 CIRCLE
   5
-704
+6F2
 330
 17
 100
@@ -47605,7 +47185,7 @@ AcDbCircle
   0
 TEXT
   5
-705
+6F3
 330
 17
 100
@@ -47639,7 +47219,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-706
+6F4
 330
 17
 100
@@ -47665,7 +47245,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-707
+6F5
 330
 17
 100
@@ -47691,7 +47271,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-708
+6F6
 330
 17
 100
@@ -47717,7 +47297,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-709
+6F7
 330
 17
 100
@@ -47743,7 +47323,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-70A
+6F8
 330
 17
 100
@@ -47769,7 +47349,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-70B
+6F9
 330
 17
 100
@@ -47789,7 +47369,7 @@ AcDbCircle
   0
 CIRCLE
   5
-70C
+6FA
 330
 17
 100
@@ -47809,7 +47389,7 @@ AcDbCircle
   0
 CIRCLE
   5
-70D
+6FB
 330
 17
 100
@@ -47829,7 +47409,7 @@ AcDbCircle
   0
 TEXT
   5
-70E
+6FC
 330
 17
 100
@@ -47863,7 +47443,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-70F
+6FD
 330
 17
 100
@@ -47889,7 +47469,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-710
+6FE
 330
 17
 100
@@ -47915,7 +47495,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-711
+6FF
 330
 17
 100
@@ -47935,7 +47515,7 @@ AcDbCircle
   0
 TEXT
   5
-712
+700
 330
 17
 100
@@ -47969,7 +47549,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-713
+701
 330
 17
 100
@@ -47995,7 +47575,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-714
+702
 330
 17
 100
@@ -48021,7 +47601,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-715
+703
 330
 17
 100
@@ -48047,7 +47627,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-716
+704
 330
 17
 100
@@ -48073,7 +47653,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-717
+705
 330
 17
 100
@@ -48099,7 +47679,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-718
+706
 330
 17
 100
@@ -48119,7 +47699,7 @@ AcDbCircle
   0
 CIRCLE
   5
-719
+707
 330
 17
 100
@@ -48139,7 +47719,7 @@ AcDbCircle
   0
 CIRCLE
   5
-71A
+708
 330
 17
 100
@@ -48159,7 +47739,7 @@ AcDbCircle
   0
 TEXT
   5
-71B
+709
 330
 17
 100
@@ -48193,7 +47773,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-71C
+70A
 330
 17
 100
@@ -48219,7 +47799,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-71D
+70B
 330
 17
 100
@@ -48245,7 +47825,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-71E
+70C
 330
 17
 100
@@ -48271,7 +47851,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-71F
+70D
 330
 17
 100
@@ -48297,7 +47877,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-720
+70E
 330
 17
 100
@@ -48323,7 +47903,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-721
+70F
 330
 17
 100
@@ -48343,7 +47923,7 @@ AcDbCircle
   0
 CIRCLE
   5
-722
+710
 330
 17
 100
@@ -48363,7 +47943,7 @@ AcDbCircle
   0
 CIRCLE
   5
-723
+711
 330
 17
 100
@@ -48383,7 +47963,7 @@ AcDbCircle
   0
 TEXT
   5
-724
+712
 330
 17
 100
@@ -48417,7 +47997,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-725
+713
 330
 17
 100
@@ -48443,7 +48023,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-726
+714
 330
 17
 100
@@ -48469,7 +48049,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-727
+715
 330
 17
 100
@@ -48495,7 +48075,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-728
+716
 330
 17
 100
@@ -48521,7 +48101,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-729
+717
 330
 17
 100
@@ -48547,7 +48127,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-72A
+718
 330
 17
 100
@@ -48567,7 +48147,7 @@ AcDbCircle
   0
 CIRCLE
   5
-72B
+719
 330
 17
 100
@@ -48587,7 +48167,7 @@ AcDbCircle
   0
 CIRCLE
   5
-72C
+71A
 330
 17
 100
@@ -48607,7 +48187,7 @@ AcDbCircle
   0
 TEXT
   5
-72D
+71B
 330
 17
 100
@@ -48641,7 +48221,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-72E
+71C
 330
 17
 100
@@ -48667,7 +48247,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-72F
+71D
 330
 17
 100
@@ -48693,7 +48273,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-730
+71E
 330
 17
 100
@@ -48719,7 +48299,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-731
+71F
 330
 17
 100
@@ -48745,7 +48325,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-732
+720
 330
 17
 100
@@ -48771,7 +48351,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-733
+721
 330
 17
 100
@@ -48791,7 +48371,7 @@ AcDbCircle
   0
 CIRCLE
   5
-734
+722
 330
 17
 100
@@ -48811,7 +48391,7 @@ AcDbCircle
   0
 CIRCLE
   5
-735
+723
 330
 17
 100
@@ -48831,7 +48411,7 @@ AcDbCircle
   0
 TEXT
   5
-736
+724
 330
 17
 100
@@ -48865,7 +48445,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-737
+725
 330
 17
 100
@@ -48891,7 +48471,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-738
+726
 330
 17
 100
@@ -48917,7 +48497,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-739
+727
 330
 17
 100
@@ -48943,7 +48523,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-73A
+728
 330
 17
 100
@@ -48969,7 +48549,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-73B
+729
 330
 17
 100
@@ -48995,7 +48575,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-73C
+72A
 330
 17
 100
@@ -49015,7 +48595,7 @@ AcDbCircle
   0
 CIRCLE
   5
-73D
+72B
 330
 17
 100
@@ -49035,7 +48615,7 @@ AcDbCircle
   0
 CIRCLE
   5
-73E
+72C
 330
 17
 100
@@ -49055,7 +48635,7 @@ AcDbCircle
   0
 TEXT
   5
-73F
+72D
 330
 17
 100
@@ -49089,7 +48669,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-740
+72E
 330
 17
 100
@@ -49115,7 +48695,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-741
+72F
 330
 17
 100
@@ -49141,7 +48721,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-742
+730
 330
 17
 100
@@ -49167,7 +48747,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-743
+731
 330
 17
 100
@@ -49193,7 +48773,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-744
+732
 330
 17
 100
@@ -49217,9 +48797,35 @@ AcDbPolyline
  20
 157.148054194593
   0
+LWPOLYLINE
+  5
+733
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-311.6679629174687
+ 20
+164.11339665129523
+ 10
+-299.38068225313384
+ 20
+155.50975010602951
+  0
 CIRCLE
   5
-745
+734
 330
 17
 100
@@ -49239,7 +48845,7 @@ AcDbCircle
   0
 CIRCLE
   5
-746
+735
 330
 17
 100
@@ -49259,7 +48865,7 @@ AcDbCircle
   0
 CIRCLE
   5
-747
+736
 330
 17
 100
@@ -49279,7 +48885,7 @@ AcDbCircle
   0
 TEXT
   5
-748
+737
 330
 17
 100
@@ -49289,23 +48895,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--304.29490589957146
+-305.52432258530126
  20
-161.39227572521486
+159.8115733786624
  30
 0.0
  40
 1.2
   1
-B6-16: 5 thanh
+B6-16: 6 thanh
  50
--35.00000000000002
+-35.000000000000156
   7
 VN
  11
--304.29490589957146
+-305.52432258530126
  21
-161.39227572521486
+159.8115733786624
  31
 0.0
 100
@@ -49313,7 +48919,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-749
+738
 330
 17
 100
@@ -49339,7 +48945,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-74A
+739
 330
 17
 100
@@ -49365,7 +48971,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-74B
+73A
 330
 17
 100
@@ -49391,7 +48997,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-74C
+73B
 330
 17
 100
@@ -49417,7 +49023,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-74D
+73C
 330
 17
 100
@@ -49443,7 +49049,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-74E
+73D
 330
 17
 100
@@ -49463,7 +49069,7 @@ AcDbCircle
   0
 CIRCLE
   5
-74F
+73E
 330
 17
 100
@@ -49483,7 +49089,7 @@ AcDbCircle
   0
 CIRCLE
   5
-750
+73F
 330
 17
 100
@@ -49503,7 +49109,7 @@ AcDbCircle
   0
 TEXT
   5
-751
+740
 330
 17
 100
@@ -49537,7 +49143,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-752
+741
 330
 17
 100
@@ -49563,7 +49169,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-753
+742
 330
 17
 100
@@ -49589,7 +49195,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-754
+743
 330
 17
 100
@@ -49609,7 +49215,7 @@ AcDbCircle
   0
 TEXT
   5
-755
+744
 330
 17
 100
@@ -49643,7 +49249,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-756
+745
 330
 17
 100
@@ -49669,7 +49275,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-757
+746
 330
 17
 100
@@ -49695,7 +49301,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-758
+747
 330
 17
 100
@@ -49721,7 +49327,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-759
+748
 330
 17
 100
@@ -49747,7 +49353,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-75A
+749
 330
 17
 100
@@ -49767,7 +49373,7 @@ AcDbCircle
   0
 CIRCLE
   5
-75B
+74A
 330
 17
 100
@@ -49787,7 +49393,7 @@ AcDbCircle
   0
 TEXT
   5
-75C
+74B
 330
 17
 100
@@ -49821,7 +49427,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-75D
+74C
 330
 17
 100
@@ -49847,7 +49453,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-75E
+74D
 330
 17
 100
@@ -49873,7 +49479,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-75F
+74E
 330
 17
 100
@@ -49899,7 +49505,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-760
+74F
 330
 17
 100
@@ -49925,7 +49531,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-761
+750
 330
 17
 100
@@ -49951,7 +49557,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-762
+751
 330
 17
 100
@@ -49971,7 +49577,7 @@ AcDbCircle
   0
 CIRCLE
   5
-763
+752
 330
 17
 100
@@ -49991,7 +49597,7 @@ AcDbCircle
   0
 CIRCLE
   5
-764
+753
 330
 17
 100
@@ -50011,7 +49617,7 @@ AcDbCircle
   0
 TEXT
   5
-765
+754
 330
 17
 100
@@ -50045,7 +49651,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-766
+755
 330
 17
 100
@@ -50071,7 +49677,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-767
+756
 330
 17
 100
@@ -50097,7 +49703,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-768
+757
 330
 17
 100
@@ -50123,7 +49729,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-769
+758
 330
 17
 100
@@ -50149,7 +49755,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-76A
+759
 330
 17
 100
@@ -50175,7 +49781,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-76B
+75A
 330
 17
 100
@@ -50195,7 +49801,7 @@ AcDbCircle
   0
 CIRCLE
   5
-76C
+75B
 330
 17
 100
@@ -50215,7 +49821,7 @@ AcDbCircle
   0
 CIRCLE
   5
-76D
+75C
 330
 17
 100
@@ -50235,7 +49841,7 @@ AcDbCircle
   0
 TEXT
   5
-76E
+75D
 330
 17
 100
@@ -50269,7 +49875,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-76F
+75E
 330
 17
 100
@@ -50295,7 +49901,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-770
+75F
 330
 17
 100
@@ -50321,7 +49927,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-771
+760
 330
 17
 100
@@ -50347,7 +49953,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-772
+761
 330
 17
 100
@@ -50373,7 +49979,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-773
+762
 330
 17
 100
@@ -50393,7 +49999,7 @@ AcDbCircle
   0
 CIRCLE
   5
-774
+763
 330
 17
 100
@@ -50413,7 +50019,7 @@ AcDbCircle
   0
 TEXT
   5
-775
+764
 330
 17
 100
@@ -50447,7 +50053,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-776
+765
 330
 17
 100
@@ -50473,7 +50079,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-777
+766
 330
 17
 100
@@ -50499,7 +50105,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-778
+767
 330
 17
 100
@@ -50525,7 +50131,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-779
+768
 330
 17
 100
@@ -50551,7 +50157,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-77A
+769
 330
 17
 100
@@ -50571,7 +50177,7 @@ AcDbCircle
   0
 CIRCLE
   5
-77B
+76A
 330
 17
 100
@@ -50591,7 +50197,7 @@ AcDbCircle
   0
 TEXT
   5
-77C
+76B
 330
 17
 100
@@ -50625,7 +50231,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-77D
+76C
 330
 17
 100
@@ -50651,7 +50257,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-77E
+76D
 330
 17
 100
@@ -50677,7 +50283,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-77F
+76E
 330
 17
 100
@@ -50703,7 +50309,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-780
+76F
 330
 17
 100
@@ -50729,7 +50335,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-781
+770
 330
 17
 100
@@ -50755,7 +50361,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-782
+771
 330
 17
 100
@@ -50775,7 +50381,7 @@ AcDbCircle
   0
 CIRCLE
   5
-783
+772
 330
 17
 100
@@ -50795,7 +50401,7 @@ AcDbCircle
   0
 CIRCLE
   5
-784
+773
 330
 17
 100
@@ -50815,7 +50421,7 @@ AcDbCircle
   0
 TEXT
   5
-785
+774
 330
 17
 100
@@ -50849,7 +50455,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-786
+775
 330
 17
 100
@@ -50875,7 +50481,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-787
+776
 330
 17
 100
@@ -50901,7 +50507,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-788
+777
 330
 17
 100
@@ -50927,7 +50533,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-789
+778
 330
 17
 100
@@ -50953,7 +50559,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-78A
+779
 330
 17
 100
@@ -50979,7 +50585,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-78B
+77A
 330
 17
 100
@@ -50999,7 +50605,7 @@ AcDbCircle
   0
 CIRCLE
   5
-78C
+77B
 330
 17
 100
@@ -51019,7 +50625,7 @@ AcDbCircle
   0
 CIRCLE
   5
-78D
+77C
 330
 17
 100
@@ -51039,7 +50645,7 @@ AcDbCircle
   0
 TEXT
   5
-78E
+77D
 330
 17
 100
@@ -51073,7 +50679,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-78F
+77E
 330
 17
 100
@@ -51099,7 +50705,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-790
+77F
 330
 17
 100
@@ -51125,7 +50731,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-791
+780
 330
 17
 100
@@ -51151,7 +50757,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-792
+781
 330
 17
 100
@@ -51177,7 +50783,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-793
+782
 330
 17
 100
@@ -51203,7 +50809,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-794
+783
 330
 17
 100
@@ -51223,7 +50829,7 @@ AcDbCircle
   0
 CIRCLE
   5
-795
+784
 330
 17
 100
@@ -51243,7 +50849,7 @@ AcDbCircle
   0
 CIRCLE
   5
-796
+785
 330
 17
 100
@@ -51263,7 +50869,7 @@ AcDbCircle
   0
 TEXT
   5
-797
+786
 330
 17
 100
@@ -51297,7 +50903,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-798
+787
 330
 17
 100
@@ -51323,7 +50929,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-799
+788
 330
 17
 100
@@ -51349,7 +50955,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-79A
+789
 330
 17
 100
@@ -51375,7 +50981,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-79B
+78A
 330
 17
 100
@@ -51401,7 +51007,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-79C
+78B
 330
 17
 100
@@ -51427,7 +51033,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-79D
+78C
 330
 17
 100
@@ -51447,7 +51053,7 @@ AcDbCircle
   0
 CIRCLE
   5
-79E
+78D
 330
 17
 100
@@ -51467,7 +51073,7 @@ AcDbCircle
   0
 CIRCLE
   5
-79F
+78E
 330
 17
 100
@@ -51487,7 +51093,7 @@ AcDbCircle
   0
 TEXT
   5
-7A0
+78F
 330
 17
 100
@@ -51521,7 +51127,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7A1
+790
 330
 17
 100
@@ -51547,7 +51153,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7A2
+791
 330
 17
 100
@@ -51573,7 +51179,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7A3
+792
 330
 17
 100
@@ -51599,7 +51205,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7A4
+793
 330
 17
 100
@@ -51625,7 +51231,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7A5
+794
 330
 17
 100
@@ -51651,7 +51257,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7A6
+795
 330
 17
 100
@@ -51671,7 +51277,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7A7
+796
 330
 17
 100
@@ -51691,7 +51297,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7A8
+797
 330
 17
 100
@@ -51711,7 +51317,7 @@ AcDbCircle
   0
 TEXT
   5
-7A9
+798
 330
 17
 100
@@ -51745,7 +51351,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7AA
+799
 330
 17
 100
@@ -51771,7 +51377,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7AB
+79A
 330
 17
 100
@@ -51797,7 +51403,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7AC
+79B
 330
 17
 100
@@ -51823,7 +51429,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7AD
+79C
 330
 17
 100
@@ -51849,7 +51455,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7AE
+79D
 330
 17
 100
@@ -51873,9 +51479,35 @@ AcDbPolyline
  20
 128.74781581929088
   0
+LWPOLYLINE
+  5
+79E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+-377.89006376864984
+ 20
+137.23651045009353
+ 10
+-365.76731073039787
+ 20
+128.74806738885488
+  0
 CIRCLE
   5
-7AF
+79F
 330
 17
 100
@@ -51895,7 +51527,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7B0
+7A0
 330
 17
 100
@@ -51915,7 +51547,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7B1
+7A1
 330
 17
 100
@@ -51935,7 +51567,7 @@ AcDbCircle
   0
 TEXT
   5
-7B2
+7A2
 330
 17
 100
@@ -51945,23 +51577,23 @@ GIA_CUONG_40x60
 100
 AcDbText
  10
--371.828863400429
+-371.82868724952385
  20
-132.99203734991022
+132.99228891947422
  30
 0.0
  40
 1.2
   1
-B6-29: 5 thanh
+B6-29: 6 thanh
  50
--35.0000000000001
+-34.999999999999886
   7
 VN
  11
--371.828863400429
+-371.82868724952385
  21
-132.99203734991022
+132.99228891947422
  31
 0.0
 100
@@ -51969,7 +51601,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7B3
+7A3
 330
 17
 100
@@ -51995,7 +51627,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7B4
+7A4
 330
 17
 100
@@ -52021,7 +51653,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7B5
+7A5
 330
 17
 100
@@ -52047,7 +51679,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7B6
+7A6
 330
 17
 100
@@ -52073,7 +51705,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7B7
+7A7
 330
 17
 100
@@ -52099,7 +51731,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7B8
+7A8
 330
 17
 100
@@ -52119,7 +51751,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7B9
+7A9
 330
 17
 100
@@ -52139,7 +51771,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7BA
+7AA
 330
 17
 100
@@ -52159,7 +51791,7 @@ AcDbCircle
   0
 TEXT
   5
-7BB
+7AB
 330
 17
 100
@@ -52193,7 +51825,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7BC
+7AC
 330
 17
 100
@@ -52219,7 +51851,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7BD
+7AD
 330
 17
 100
@@ -52245,7 +51877,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7BE
+7AE
 330
 17
 100
@@ -52265,7 +51897,7 @@ AcDbCircle
   0
 TEXT
   5
-7BF
+7AF
 330
 17
 100
@@ -52299,7 +51931,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7C0
+7B0
 330
 17
 100
@@ -52325,7 +51957,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7C1
+7B1
 330
 17
 100
@@ -52351,7 +51983,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7C2
+7B2
 330
 17
 100
@@ -52377,7 +52009,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7C3
+7B3
 330
 17
 100
@@ -52403,7 +52035,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7C4
+7B4
 330
 17
 100
@@ -52429,7 +52061,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7C5
+7B5
 330
 17
 100
@@ -52449,7 +52081,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7C6
+7B6
 330
 17
 100
@@ -52469,7 +52101,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7C7
+7B7
 330
 17
 100
@@ -52489,7 +52121,7 @@ AcDbCircle
   0
 TEXT
   5
-7C8
+7B8
 330
 17
 100
@@ -52523,7 +52155,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7C9
+7B9
 330
 17
 100
@@ -52549,7 +52181,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7CA
+7BA
 330
 17
 100
@@ -52575,7 +52207,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7CB
+7BB
 330
 17
 100
@@ -52601,7 +52233,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7CC
+7BC
 330
 17
 100
@@ -52627,7 +52259,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7CD
+7BD
 330
 17
 100
@@ -52653,7 +52285,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7CE
+7BE
 330
 17
 100
@@ -52679,7 +52311,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7CF
+7BF
 330
 17
 100
@@ -52699,7 +52331,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7D0
+7C0
 330
 17
 100
@@ -52719,7 +52351,7 @@ AcDbCircle
   0
 CIRCLE
   5
-7D1
+7C1
 330
 17
 100
@@ -52739,7 +52371,7 @@ AcDbCircle
   0
 TEXT
   5
-7D2
+7C2
 330
 17
 100
@@ -52773,7 +52405,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7D3
+7C3
 330
 17
 100
@@ -52799,7 +52431,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7D4
+7C4
 330
 17
 100
@@ -52825,7 +52457,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7D5
+7C5
 330
 17
 100
@@ -52845,7 +52477,7 @@ AcDbCircle
   0
 TEXT
   5
-7D6
+7C6
 330
 17
 100
@@ -52879,7 +52511,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7D7
+7C7
 330
 17
 100
@@ -52905,7 +52537,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7D8
+7C8
 330
 17
 100
@@ -52931,7 +52563,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7D9
+7C9
 330
 17
 100
@@ -52951,7 +52583,7 @@ AcDbCircle
   0
 TEXT
   5
-7DA
+7CA
 330
 17
 100
@@ -52985,7 +52617,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7DB
+7CB
 330
 17
 100
@@ -53011,7 +52643,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7DC
+7CC
 330
 17
 100
@@ -53037,7 +52669,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7DD
+7CD
 330
 17
 100
@@ -53057,7 +52689,7 @@ AcDbCircle
   0
 TEXT
   5
-7DE
+7CE
 330
 17
 100
@@ -53091,7 +52723,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7DF
+7CF
 330
 17
 100
@@ -53117,7 +52749,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7E0
+7D0
 330
 17
 100
@@ -53143,7 +52775,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7E1
+7D1
 330
 17
 100
@@ -53163,7 +52795,7 @@ AcDbCircle
   0
 TEXT
   5
-7E2
+7D2
 330
 17
 100
@@ -53197,7 +52829,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7E3
+7D3
 330
 17
 100
@@ -53223,7 +52855,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7E4
+7D4
 330
 17
 100
@@ -53249,7 +52881,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7E5
+7D5
 330
 17
 100
@@ -53269,7 +52901,7 @@ AcDbCircle
   0
 TEXT
   5
-7E6
+7D6
 330
 17
 100
@@ -53303,7 +52935,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7E7
+7D7
 330
 17
 100
@@ -53329,7 +52961,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7E8
+7D8
 330
 17
 100
@@ -53355,7 +52987,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7E9
+7D9
 330
 17
 100
@@ -53381,7 +53013,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7EA
+7DA
 330
 17
 100
@@ -53401,7 +53033,7 @@ AcDbCircle
   0
 TEXT
   5
-7EB
+7DB
 330
 17
 100
@@ -53435,7 +53067,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7EC
+7DC
 330
 17
 100
@@ -53461,7 +53093,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7ED
+7DD
 330
 17
 100
@@ -53487,7 +53119,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7EE
+7DE
 330
 17
 100
@@ -53507,7 +53139,7 @@ AcDbCircle
   0
 TEXT
   5
-7EF
+7DF
 330
 17
 100
@@ -53541,7 +53173,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7F0
+7E0
 330
 17
 100
@@ -53567,7 +53199,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7F1
+7E1
 330
 17
 100
@@ -53593,7 +53225,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7F2
+7E2
 330
 17
 100
@@ -53613,7 +53245,7 @@ AcDbCircle
   0
 TEXT
   5
-7F3
+7E3
 330
 17
 100
@@ -53647,7 +53279,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7F4
+7E4
 330
 17
 100
@@ -53673,7 +53305,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7F5
+7E5
 330
 17
 100
@@ -53699,7 +53331,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7F6
+7E6
 330
 17
 100
@@ -53719,7 +53351,7 @@ AcDbCircle
   0
 TEXT
   5
-7F7
+7E7
 330
 17
 100
@@ -53753,7 +53385,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7F8
+7E8
 330
 17
 100
@@ -53779,7 +53411,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7F9
+7E9
 330
 17
 100
@@ -53805,7 +53437,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7FA
+7EA
 330
 17
 100
@@ -53825,7 +53457,7 @@ AcDbCircle
   0
 TEXT
   5
-7FB
+7EB
 330
 17
 100
@@ -53859,7 +53491,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-7FC
+7EC
 330
 17
 100
@@ -53885,7 +53517,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-7FD
+7ED
 330
 17
 100
@@ -53911,7 +53543,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-7FE
+7EE
 330
 17
 100
@@ -53931,7 +53563,7 @@ AcDbCircle
   0
 TEXT
   5
-7FF
+7EF
 330
 17
 100
@@ -53965,7 +53597,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-800
+7F0
 330
 17
 100
@@ -53991,7 +53623,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-801
+7F1
 330
 17
 100
@@ -54017,7 +53649,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-802
+7F2
 330
 17
 100
@@ -54037,7 +53669,7 @@ AcDbCircle
   0
 TEXT
   5
-803
+7F3
 330
 17
 100
@@ -54071,7 +53703,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-804
+7F4
 330
 17
 100
@@ -54097,7 +53729,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-805
+7F5
 330
 17
 100
@@ -54123,7 +53755,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-806
+7F6
 330
 17
 100
@@ -54143,7 +53775,7 @@ AcDbCircle
   0
 TEXT
   5
-807
+7F7
 330
 17
 100
@@ -54177,7 +53809,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-808
+7F8
 330
 17
 100
@@ -54203,7 +53835,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-809
+7F9
 330
 17
 100
@@ -54229,7 +53861,7 @@ AcDbPolyline
   0
 CIRCLE
   5
-80A
+7FA
 330
 17
 100
@@ -54249,7 +53881,7 @@ AcDbCircle
   0
 TEXT
   5
-80B
+7FB
 330
 17
 100
@@ -54283,7 +53915,7 @@ AcDbText
   0
 TEXT
   5
-80C
+7FC
 330
 17
 100
@@ -54315,7 +53947,7 @@ AcDbText
   0
 TEXT
   5
-80D
+7FD
 330
 17
 100
@@ -54333,7 +53965,7 @@ AcDbText
  40
 3.0
   1
-Thanh lấy từ bản vẽ khung có gia cường "CT-KC-BE-0n ... - GIA CƯỜNG TẠI VỊ TRÍ NEO.dwg" (chi tiết từng thanh, từng móc); mặt bằng neo: web (231 dây, cáp chữ Y). Đơn vị: m.
+Thanh lấy từ bản vẽ khung có gia cường "CT-KC-BE-0n ... - GIA CƯỜNG TẠI VỊ TRÍ NEO.dwg" (chi tiết từng thanh, từng móc); mặt bằng neo: web (215 dây, cáp chữ Y). Đơn vị: m.
   7
 VN
  11
@@ -54347,7 +53979,7 @@ AcDbText
   0
 TEXT
   5
-80E
+7FE
 330
 17
 100
@@ -54379,7 +54011,7 @@ AcDbText
   0
 TEXT
   5
-80F
+7FF
 330
 17
 100
@@ -54397,7 +54029,7 @@ AcDbText
  40
 3.0
   1
-BÈ 2: 55 cụm, 173 thanh, 2.490 m hộp 40x60 gia cường, 2.011 móc "几"; T = 113,5 kN
+BÈ 2: 55 cụm, 176 thanh, 2.535 m hộp 40x60 gia cường, 2.047 móc "几"; T = 121,9 kN
   7
 VN
  11
@@ -54411,7 +54043,7 @@ AcDbText
   0
 TEXT
   5
-810
+800
 330
 17
 100
@@ -54443,7 +54075,7 @@ AcDbText
   0
 TEXT
   5
-811
+801
 330
 17
 100
@@ -54461,7 +54093,7 @@ AcDbText
  40
 3.0
   1
-BÈ 4: 60 cụm, 129 thanh, 1.914 m hộp 40x60 gia cường, 1.563 móc "几"; T = 113,5 kN
+BÈ 4: 52 cụm, 125 thanh, 1.850 m hộp 40x60 gia cường, 1.511 móc "几"; T = 121,9 kN
   7
 VN
  11
@@ -54475,7 +54107,7 @@ AcDbText
   0
 TEXT
   5
-812
+802
 330
 17
 100
@@ -54493,7 +54125,7 @@ AcDbText
  40
 3.0
   1
-BÈ 5: 57 cụm, 109 thanh, 1.616 m hộp 40x60 gia cường, 1.326 móc "几"; T = 105,9 kN
+BÈ 5: 49 cụm, 124 thanh, 1.837 m hộp 40x60 gia cường, 1.527 móc "几"; T = 121,9 kN
   7
 VN
  11
@@ -54507,7 +54139,7 @@ AcDbText
   0
 TEXT
   5
-813
+803
 330
 17
 100
@@ -54525,7 +54157,7 @@ AcDbText
  40
 3.0
   1
-BÈ 6: 47 cụm, 177 thanh, 2.614 m hộp 40x60 gia cường, 2.128 móc "几"; T = 152,1 kN
+BÈ 6: 47 cụm, 179 thanh, 2.644 m hộp 40x60 gia cường, 2.151 móc "几"; T = 153,1 kN
   7
 VN
  11
@@ -54539,7 +54171,7 @@ AcDbText
   0
 TEXT
   5
-814
+804
 330
 17
 100
@@ -54557,7 +54189,7 @@ AcDbText
  40
 3.5
   1
-TỔNG: 314 cụm, 714 thanh, 10.507 m
+TỔNG: 298 cụm, 730 thanh, 10.739 m
   7
 VN
  11
@@ -54571,7 +54203,7 @@ AcDbText
   0
 TEXT
   5
-815
+805
 330
 17
 100
@@ -54603,7 +54235,7 @@ AcDbText
   0
 TEXT
   5
-816
+806
 330
 17
 100
@@ -54635,7 +54267,7 @@ AcDbText
   0
 TEXT
   5
-817
+807
 330
 17
 100
@@ -54667,7 +54299,7 @@ AcDbText
   0
 TEXT
   5
-818
+808
 330
 17
 100
@@ -54699,7 +54331,7 @@ AcDbText
   0
 TEXT
   5
-819
+809
 330
 17
 100
@@ -54731,7 +54363,7 @@ AcDbText
   0
 TEXT
   5
-81A
+80A
 330
 17
 100
@@ -54763,7 +54395,7 @@ AcDbText
   0
 TEXT
   5
-81B
+80B
 330
 17
 100
@@ -54795,7 +54427,7 @@ AcDbText
   0
 TEXT
   5
-81C
+80C
 330
 17
 100
@@ -54827,7 +54459,7 @@ AcDbText
   0
 TEXT
   5
-81D
+80D
 330
 17
 100
@@ -55947,7 +55579,7 @@ CREATED_BY_EZDXF
   3
 WRITTEN_BY_EZDXF
 350
-820
+810
   0
 DICTIONARYVAR
   5
@@ -55959,7 +55591,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-10-30T08:41:20.942997+00:00
+1.4.5 @ 2026-10-30T09:00:55.419436+00:00
   0
 VISUALSTYLE
   5
@@ -56663,7 +56295,7 @@ X-Ray
   0
 DICTIONARYVAR
   5
-820
+810
 330
 2D
 100
@@ -56671,7 +56303,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-10-30T08:41:21.062692+00:00
+1.4.5 @ 2026-10-30T09:00:55.473649+00:00
   0
 ENDSEC
   0

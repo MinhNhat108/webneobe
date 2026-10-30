@@ -105,6 +105,7 @@ const groupOf = (name: string): string[] => {
   return [...g];
 };
 const tiesOf = (name: string) => TIES.filter((t) => t.rafts.includes(name));
+const pairKey = (t: { rafts: string[] }) => [...t.rafts].sort().join('|');
 /** Wind + current + wave on each raft alone (no layout needed), for the share of a tied group. */
 const fEnvOf: Record<string, number> = {};
 function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
@@ -116,9 +117,18 @@ function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
     const gIn = polygons.filter((q) => grp.includes(q.name));
     const beds = gIn.map((q) => q.designBed_m ?? LAKE.mndb - (WATER_DEPTH[q.name] ?? DEFAULT_DEPTH_M));
     const ties = TIES.filter((t) => t.rafts.every((r) => grp.includes(r)));
-    // tie design load (ASSUMED, not modelled): one raft may hand its whole load to the partner; the ties of the gap
-    // share it, half of them pulling at a time
-    const tieDesign = Math.max(...grp.map((n) => fEnvOf[n])) / Math.max(1, ties.length / 2);
+    // tie design load (ASSUMED, not modelled): the rafts on one side of a gap may hand their whole load across it; the
+    // ties of THAT gap share it, half of them pulling at a time. Largest over the gaps of the group.
+    const sideOf = (start: string, cut: string) => {
+      const g = new Set([start]);
+      for (let grew = true; grew;) { grew = false; for (const t of ties) if (pairKey(t) !== cut && t.rafts.some((r) => g.has(r)) && t.rafts.some((r) => !g.has(r))) { t.rafts.forEach((r) => g.add(r)); grew = true; } }
+      return [...g];
+    };
+    const tieDesign = Math.max(...[...new Set(ties.map(pairKey))].map((key) => {
+      const [a, b] = key.split('|'); const n = ties.filter((t) => pairKey(t) === key).length;
+      const load = Math.max(...[a, b].map((r) => sideOf(r, key).reduce((s, q) => s + fEnvOf[q], 0)));
+      return load / Math.max(1, n / 2);
+    }));
     return {
       floatLevel_m: Math.round((Math.max(...beds) + DRAFT_M) * 100) / 100,
       minGap_m: Math.round(Math.min(...polygons.filter((q) => !grp.includes(q.name)).flatMap((q) => gIn.map((g) => ringGap(g.points, q.points)))) * 100) / 100,

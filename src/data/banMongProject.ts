@@ -89,7 +89,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thuyet_minh_docx',
         name: '1. Thuyết minh tính toán hệ neo — mặt bằng 6 bè, 16.912 tấm pin nghiêng 10°, 30/10/2026 (HOBANMONG_THUYET_MINH_TINH_TOAN.docx)',
         mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 24915,
+        size: 24248,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx'
       },
@@ -97,15 +97,15 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_bang_tinh_xlsx',
         name: '2. Bảng tính Excel hệ neo — mặt bằng 6 bè, 16.912 tấm pin nghiêng 10°, 30/10/2026, lực dây cân bằng theo mực nước (HOBANMONG_BANG_TINH_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 545571,
+        size: 519479,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_TINH_NEO.xlsx'
       },
       {
         id: 'bm_mb_neo_dxf',
-        name: '3. Bản vẽ CAD bố trí neo 6 bè — 16.912 tấm pin nghiêng 10°, ưu tiên neo bờ, nối BÈ 2 – BÈ 4, 30/10/2026 (HOBANMONG_MAT_BANG_NEO_6_BE.dxf)',
+        name: '3. Bản vẽ CAD bố trí neo 6 bè — 16.912 tấm pin nghiêng 10°, ưu tiên neo bờ, nối BÈ 2 – BÈ 4 – BÈ 5, 30/10/2026 (HOBANMONG_MAT_BANG_NEO_6_BE.dxf)',
         mime: 'application/dxf',
-        size: 411305,
+        size: 385680,
         kind: 'dxf' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_6_BE.dxf'
       },
@@ -113,7 +113,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_neo_xlsx',
         name: '4. Thống kê vật tư neo và cáp neo, đặt hàng — mặt bằng 6 bè, 16.912 tấm pin nghiêng 10°, 30/10/2026 (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 802646,
+        size: 769339,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       },
@@ -129,7 +129,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_be_pin_xlsx',
         name: '6. Thống kê vật tư bè pin và cấu kiện bè pin — 6 bè, tấm pin / phao / inverter theo bảng Revit tờ CT-BP, khung đo trên bản vẽ CAD kết cấu, có hộp 40x60 gia cường tại vị trí neo, 30/10/2026 (HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 614455,
+        size: 612700,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_BE_PIN.xlsx'
       },
@@ -137,7 +137,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_gia_cuong_dxf',
         name: '7. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01 — 6 bè, theo bản vẽ khung kết cấu 30/10/2026 (HOBANMONG_GIA_CUONG_40x60_TAI_NEO.dxf)',
         mime: 'application/dxf',
-        size: 437010,
+        size: 433976,
         kind: 'dxf' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_GIA_CUONG_40x60_TAI_NEO.dxf'
       },
@@ -161,7 +161,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_khung_2_dwg',
         name: '10. Khung kết cấu BÈ 2 có hộp 40x60 gia cường tại vị trí neo — tờ CT-KC-BE-02 của Chủ đầu tư 30/10/2026, lớp GC-* thêm 30/10/2026 (HOBANMONG_KHUNG_KET_CAU_BE_PIN_2_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 20568307,
+        size: 20576294,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_KHUNG_KET_CAU_BE_PIN_2_GIA_CUONG_TAI_NEO.dwg'
       },
@@ -169,7 +169,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_khung_3_dwg',
         name: '11. Khung kết cấu BÈ 3 có hộp 40x60 gia cường tại vị trí neo — tờ CT-KC-BE-03 của Chủ đầu tư 30/10/2026, lớp GC-* thêm 30/10/2026 (HOBANMONG_KHUNG_KET_CAU_BE_PIN_3_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 2216032,
+        size: 2216000,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_KHUNG_KET_CAU_BE_PIN_3_GIA_CUONG_TAI_NEO.dwg'
       },
@@ -177,7 +177,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_khung_4_dwg',
         name: '12. Khung kết cấu BÈ 4 có hộp 40x60 gia cường tại vị trí neo — tờ CT-KC-BE-04 của Chủ đầu tư 30/10/2026, lớp GC-* thêm 30/10/2026 (HOBANMONG_KHUNG_KET_CAU_BE_PIN_4_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 7754001,
+        size: 7756632,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_KHUNG_KET_CAU_BE_PIN_4_GIA_CUONG_TAI_NEO.dwg'
       },
@@ -185,7 +185,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_khung_5_dwg',
         name: '13. Khung kết cấu BÈ 5 có hộp 40x60 gia cường tại vị trí neo — tờ CT-KC-BE-05 của Chủ đầu tư 30/10/2026, lớp GC-* thêm 30/10/2026 (HOBANMONG_KHUNG_KET_CAU_BE_PIN_5_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 10448652,
+        size: 10438226,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_KHUNG_KET_CAU_BE_PIN_5_GIA_CUONG_TAI_NEO.dwg'
       },
@@ -193,7 +193,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_khung_6_dwg',
         name: '14. Khung kết cấu BÈ 6 có hộp 40x60 gia cường tại vị trí neo — tờ CT-KC-BE-06 của Chủ đầu tư 30/10/2026, lớp GC-* thêm 30/10/2026 (HOBANMONG_KHUNG_KET_CAU_BE_PIN_6_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 19903834,
+        size: 19890113,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_KHUNG_KET_CAU_BE_PIN_6_GIA_CUONG_TAI_NEO.dwg'
       },
@@ -201,15 +201,15 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_mb_neo_dwg',
         name: '15. Bản vẽ CAD bố trí neo 6 bè, bản DWG — ký hiệu C1… (cọc bờ), D1… (đế), 30/10/2026 (HOBANMONG_MAT_BANG_NEO_6_BE.dwg)',
         mime: 'application/acad',
-        size: 145585,
+        size: 136970,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_6_BE.dwg'
       },
       {
         id: 'bm_bang_thong_ke_neo_xlsx',
-        name: '16. Bảng thống kê neo từng điểm — 184 cọc bờ, 29 đế, 6 dây nối BÈ 2 – BÈ 4, chiều dài cắt cáp; 6 bè, 16.912 tấm pin nghiêng 10°, 30/10/2026 (HOBANMONG_BANG_THONG_KE_NEO_6_BE.xlsx)',
+        name: '16. Bảng thống kê neo từng điểm — 186 cọc bờ, 19 đế, 14 dây nối BÈ 2 – 4 – 5, chiều dài cắt cáp; 6 bè, 16.912 tấm pin nghiêng 10°, 30/10/2026 (HOBANMONG_BANG_THONG_KE_NEO_6_BE.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 594619,
+        size: 566571,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_THONG_KE_NEO_6_BE.xlsx'
       },
@@ -217,7 +217,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_gia_cuong_dwg',
         name: '17. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01, bản DWG — 6 bè, 30/10/2026 (HOBANMONG_GIA_CUONG_40x60_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 104753,
+        size: 103470,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_GIA_CUONG_40x60_TAI_NEO.dwg'
       },

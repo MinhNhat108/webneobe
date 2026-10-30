@@ -105,9 +105,14 @@ export const LAKES = {
     // Rafts tied to each other across a narrow gap (owner 2026-10-24): every shared base of the pair is replaced by a
     // tie rope cleat to cleat (src/data/banMong/ties.json) and the pair is calculated as ONE group on its outer lines.
     // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). 6-raft plan (owner 2026-10-30: bed lines of the BÈ 2 – BÈ 4
-    // gap crossing each other): BÈ 2 – BÈ 4 tied, 6 ropes 18–31 m; T 81/83 → 113,5 kN (PES-36), 6 bases and 12 bed
-    // lines (compensation devices) fewer.
-    raftTies: [['BÈ 2', 'BÈ 4']],
+    // gap crossing each other): BÈ 2 – BÈ 4 tied, 6 ropes 18–31 m; then (same evening, 8 shared bases crowding the
+    // BÈ 4 – BÈ 5 gap) BÈ 4 – BÈ 5 tied too, 8 ropes 23–58 m: group BÈ 2 + 4 + 5 T 121,9 kN (PES-36, u 0,95), ties
+    // 154,8 kN (PES-40), 16 bases and 28 bed lines (compensation devices) fewer than untied. Tying BÈ 2 – BÈ 3 (2 ropes
+    // only) is NOT possible: each rope would take the whole BÈ 2 side, 597–860 kN, more than any PES cable.
+    raftTies: [['BÈ 2', 'BÈ 4'], ['BÈ 4', 'BÈ 5']],
+    // longer reach for named lines: B5-D09, B6-D44 single bases with the bank 80–84 m away (owner 2026-10-30: "D24, D28
+    // sao ko neo bờ đi")
+    shoreSpanFor: { 'B5-D09': 90, 'B6-D44': 90 },
     // Panels of each raft. Plan of 2026-10-30 (6 rafts, "CHUGIAP-HOBANMONG ver 2 - Floor Plan - BỐ TRÍ BÈ PIN HỒ
     // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): table "THỐNG KÊ TẤM PIN MẶT TRỜI" of
     // the sheets CT-BP-01…06 of "BO TRI BE PIN HO BAN MONG.pdf" (Revit, owner 2026-10-30): 16 912 panels. Before the

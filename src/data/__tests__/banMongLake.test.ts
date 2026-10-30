@@ -98,7 +98,8 @@ describe('Hồ Bản Mòng tab', () => {
     for (const l of MOORING_LINES_V2.filter((q) => q.type === 'SHORE')) {
       // 2 cm: the pile is rounded to 0.01 m on a steep slope of the 5 m survey grid
       expect(groundAt(l.xAnchor, l.yAnchor)!, l.code).toBeGreaterThanOrEqual(MNDB_M - 0.5 - 0.02);
-      expect(l.span, l.code).toBeLessThanOrEqual(80); // Bản Mòng reach (lakeConfig maxShoreSpan, 2026-10-24); Huổi Vanh 60
+      // Bản Mòng reach (lakeConfig maxShoreSpan, 2026-10-24; Huổi Vanh 60); B5-D09, B6-D44 to 90 m (shoreSpanFor, 30/10)
+      expect(l.span, l.code).toBeLessThanOrEqual(['B5-D09', 'B6-D44'].includes(l.code) ? 90 : 80);
     }
     // a base stands on the IFC ground at its own point, under water at MNDB (scripts/lakeConfig.mjs, bedOnTerrain)
     for (const b of bedAnchorsOf()) {
@@ -108,14 +109,15 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('BÈ 2 – BÈ 4 tied across their gap (owner 30/10: crossed bed lines); no short single base left to take the raft load', () => {
-    // the shared bases of the BÈ 2 – BÈ 4 gap (D10, D11, D14, D16, D17, D19: lines crossing each other) became 6 ropes
-    // cleat to cleat; the pair is ONE group on its outer lines
-    expect(RAFT_TIES.length).toBe(6);
-    expect(LAYOUT_COUNTS.ties).toBe(6);
-    for (const t of RAFT_TIES) expect([...t.rafts].sort()).toEqual(['BÈ 2', 'BÈ 4']);
+  it('BÈ 2 – BÈ 4 – BÈ 5 tied across their gaps (owner 30/10: crowded bed lines); no short single base left to take the raft load', () => {
+    // the shared bases of the BÈ 2 – BÈ 4 gap (6, lines crossing each other) and of the BÈ 4 – BÈ 5 gap (8) became
+    // ropes cleat to cleat; the three rafts are ONE group on their outer lines
+    expect(RAFT_TIES.length).toBe(14);
+    expect(LAYOUT_COUNTS.ties).toBe(14);
+    expect(RAFT_TIES.filter((t) => [...t.rafts].sort().join() === 'BÈ 2,BÈ 4').length).toBe(6);
+    expect(RAFT_TIES.filter((t) => [...t.rafts].sort().join() === 'BÈ 4,BÈ 5').length).toBe(8);
     for (const r of HUOI_VANH_RAFTS) {
-      if (r.name === 'BÈ 2' || r.name === 'BÈ 4') expect(r.mooringLayout!.group!.ties.length, r.name).toBe(6);
+      if (['BÈ 2', 'BÈ 4', 'BÈ 5'].includes(r.name)) expect(r.mooringLayout!.group!.rafts.length, r.name).toBe(3);
       else expect(r.mooringLayout!.group, r.name).toBeUndefined();
     }
     // planner step 2g: B2-D50 (single base, 7 m cable in the BÈ 1 – BÈ 2 corner) took 199 kN of BÈ 2 and was dropped
@@ -125,7 +127,7 @@ describe('Hồ Bản Mòng tab', () => {
       const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor);
       return calculateProject(st).t_max_intact_kN;
     };
-    expect(T('BÈ 2')).toBeLessThan(120); // the group BÈ 2 + BÈ 4: 113,5 kN; 204 kN (PES-48) with B2-D50
+    expect(T('BÈ 2')).toBeLessThan(125); // the group BÈ 2 + 4 + 5: 121,9 kN; 204 kN (PES-48) with B2-D50
   });
 
   it('every raft passes at the 20 m/s default (screw-base option)', () => {

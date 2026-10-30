@@ -65,6 +65,15 @@ def members(i):
 data = ROOT / 'src' / 'data'
 polys = {r['name']: r for r in json.load(open(data / ('banMong/raftPolygons.json' if BAN_MONG else 'huoiVanhRaftPolygons_v2.json'), encoding='utf-8'))}
 lines = json.load(open(data / ('banMong/coordinates.json' if BAN_MONG else 'huoiVanhCoordinates_v2.json'), encoding='utf-8'))
+# Ties between two rafts (lakeConfig raftTies, banMong/ties.json): ONE cleat at each end, carrying the whole tie design load
+# of the catalogue (mooringLayout.group.tieDesign_kN), not the 0,7 T of a cleat of a Y-branched mooring line.
+TIE_ENDS = []
+if BAN_MONG and (data / 'banMong/ties.json').exists():
+    cat = {r['name']: r for r in json.load(open(data / 'banMong/raftCatalogue.json', encoding='utf-8'))}
+    for t in json.load(open(data / 'banMong/ties.json', encoding='utf-8')):
+        for me, other in ((t['a'], t['b']), (t['b'], t['a'])):
+            TIE_ENDS.append(dict(raft=me['raft'], code=t['code'], x=me['x'], y=me['y'], ox=other['x'], oy=other['y'],
+                                 kN=cat[me['raft']]['mooringLayout']['group']['tieDesign_kN']))
 mw = openpyxl.load_workbook(MOORING_XLSX, data_only=True)['KiemTra_Nhanh']
 T = {r[0]: r[1] for r in mw.iter_rows(min_row=4, values_only=True) if r[0] in RAFTS}
 assert set(T) == set(RAFTS), T
@@ -170,27 +179,31 @@ for i, name in enumerate(RAFTS, start=1):
         return best[1]
 
     along, across = {}, []
-    for ln in [l for l in lines if l['raft'] == name]:
+    ends = [dict(code=ln['code'], xRaft=ln['xRaft'], yRaft=ln['yRaft'], xAnchor=ln['xAnchor'], yAnchor=ln['yAnchor'],
+                 cleats=(('a', -CLEAT_GAP / 2, K_Y * T[name]), ('b', CLEAT_GAP / 2, K_Y * T[name]))) for ln in lines if ln['raft'] == name]
+    ends += [dict(code=e['code'], xRaft=e['x'], yRaft=e['y'], xAnchor=e['ox'], yAnchor=e['oy'], cleats=(('', 0.0, e['kN']),))
+             for e in TIE_ENDS if e['raft'] == name]
+    for ln in ends:
         u, v = uv(*to_frame(ln['xRaft'], ln['yRaft']))
         k = nearest_edge(u, v)
         (x1, y1), (x2, y2) = pts[k], pts[(k + 1) % len(pts)]
         ex, ey = x2 - x1, y2 - y1; L = math.hypot(ex, ey); ex, ey = ex / L, ey / L
         nx, ny = (-ey, ex) if ccw else (ey, -ex)  # inward normal
         au, av = uv(*to_frame(ln['xAnchor'], ln['yAnchor']))
-        for tag, off in (('a', -CLEAT_GAP / 2), ('b', CLEAT_GAP / 2)):
-            p = (u + ex * off, v + ey * off, ln['code'] + tag, (au, av))
+        for tag, off, load in ln['cleats']:
+            p = (u + ex * off, v + ey * off, ln['code'] + tag, (au, av), load)
             if abs(ex) > abs(ey): along.setdefault(k, []).append(p)
             else: across.append((k, p, (nx, ny)))
     clusters = []
 
     def make(cid, kind, cl, bars_fn):
-        need = len(cl) * K_Y * T[name] * GAMMA
+        need = sum(c[4] for c in cl) * GAMMA
         bars = bars_fn()
-        if not bars: raise RuntimeError(f'{name} {cid}: không đặt được thanh')
+        if not bars: raise RuntimeError(f'{name} {cid}: không đặt được thanh ({[c[2] for c in cl]}, {[(round(c[0]), round(c[1])) for c in cl]})')
         n = max(1, math.ceil(need / (len(bars[0]['C52']) * P_KEP) - 0.0005))
         bars = bars_fn(n)
         clusters.append(dict(id=cid, kind=kind, cleats=[c[2] for c in cl], cleatUV=[(c[0], c[1]) for c in cl], anchorUV=[c[3] for c in cl],
-                             T_kN=T[name], design_kN=need, bars=bars, n=len(bars)))
+                             cleatLoad_kN=[c[4] for c in cl], T_kN=T[name], design_kN=need, bars=bars, n=len(bars)))
 
     seq = 0
     for k in sorted(along):
@@ -244,7 +257,12 @@ for i, name in enumerate(RAFTS, start=1):
                 if not cs: continue
                 start = cs[0] if s > 0 else cs[-1]
                 ua, ub = sorted((start - s * 100, start + s * (L_GC - 100)))
-                if not free(r[0], ua, ub): continue
+                if not free(r[0], ua, ub):
+                    # a bar of another cluster further in on this row: stop short of it (at least 6 m from the edge)
+                    hit = [(a, bb) for w, a, bb in used if abs(r[0] - w) <= 10 and ub >= a and ua <= bb]
+                    if s > 0: ub = min(a for a, _ in hit) - 200
+                    else: ua = max(bb for _, bb in hit) + 200
+                    if ub - ua < 6000 or not free(r[0], ua, ub): continue
                 out.append(dict(v=r[0], u0=ua, u1=ub, C52=crossings(r[0], ua, ub)))
                 if len(out) == n: break
             return out
@@ -279,9 +297,10 @@ for i, name in enumerate(RAFTS, start=1):
     fx = [r[1] for r in M] + [r[3] for r in M]; fy = [r[2] for r in M] + [r[4] for r in M]
     X0, Y0 = max(fx) + 15000, max(fy)
     nb = sum(c['n'] for c in clusters); Lt = sum((b['u1'] - b['u0']) / 1000 for c in clusters for b in c['bars']); nc = sum(len(b['C52']) for c in clusters for b in c['bars'])
-    head = [f'HỘP 40x60 GIA CƯỜNG TẠI VỊ TRÍ NEO — {name} (cáp 2 nhánh chữ Y, T = {T[name]:.1f} kN)'.replace('.', ','),
+    head = [f'HỘP 40x60 GIA CƯỜNG TẠI VỊ TRÍ NEO — {name} (cáp 2 nhánh chữ Y, T = {T[name]:.1f} kN'.replace('.', ',')
+            + (f'; dây nối T..: 1 bích, {next(e["kN"] for e in TIE_ENDS if e["raft"] == name):.1f} kN)'.replace('.', ',') if any(e['raft'] == name for e in TIE_ENDS) else ')'),
             f'{len(clusters)} cụm, {nb} thanh, {Lt:,.1f} m hộp 40x60, {nc} móc "几" (đỏ: thanh gia cường; vòng nhỏ: móc kẹp vào dầm C52; tím: bích neo; xanh: phương dây neo)'.replace(',', '#').replace('.', ',').replace('#', '.'),
-            'Số thanh = MAX(1; ROUNDUP(số bích × 0,7 T × 1,2 / (số dầm C52 thanh cắt qua × 7 kN))). Sức chịu 1 móc "几" 7 kN là GIẢ ĐỊNH — chờ số liệu Mibet.',
+            'Số thanh = MAX(1; ROUNDUP(số bích × 0,7 T × 1,2 / (số dầm C52 thanh cắt qua × 7 kN))); bích dây nối hai bè lấy cả lực dây nối thay cho 0,7 T. Sức chịu 1 móc "几" 7 kN là GIẢ ĐỊNH — chờ số liệu Mibet.',
             'Thanh nằm trên hàng phao, theo phương hộp 40x60 kết cấu, kẹp móc "几" (2 đai ốc thoi M10×30 + 1 bulông M10×120) vào MỌI dầm C52 nó cắt qua.',
             'Chi tiết liên kết bích – hộp và vị trí chính xác do nhà cung cấp bè xác nhận. Lớp GC-*: chèn tại 0,0 vào bản vẽ khung gốc.',
             '', 'MÃ CỤM | BÍCH | SỐ THANH × DÀI | DẦM C52 CẮT QUA / THANH']
@@ -303,6 +322,7 @@ for i, name in enumerate(RAFTS, start=1):
             b['nC52'] = len(b['C52'])
         c['cleatsWorld'] = [list(to_world(*xy(u, v))) for u, v in c['cleatUV']]
         for k in ('cleatUV', 'anchorUV'): c.pop(k)
+        c['ties'] = [code for code in c['cleats'] if code.startswith('T')]
         for b in c['bars']: b.pop('C52')
     lens = lambda kind: sorted(round(max(r[3] - r[1], r[4] - r[2]) / 1000, 3) for r in M if r[0] == kind)
     result['rafts'][name] = dict(fit=dict(rot_deg=ang, shift_m=[tx, ty], meanDist_m=meanDist), boxAlongX=box_h, T_kN=T[name],

@@ -104,8 +104,10 @@ export const LAKES = {
     shoreFirst: true,
     // Rafts tied to each other across a narrow gap (owner 2026-10-24): every shared base of the pair is replaced by a
     // tie rope cleat to cleat (src/data/banMong/ties.json) and the pair is calculated as ONE group on its outer lines.
-    // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). The 6-raft plan of 2026-10-30 has no gap under 15 m.
-    raftTies: [],
+    // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). 6-raft plan (owner 2026-10-30: bed lines of the BÈ 2 – BÈ 4
+    // gap crossing each other): BÈ 2 – BÈ 4 tied, 6 ropes 18–31 m; T 81/83 → 113,5 kN (PES-36), 6 bases and 12 bed
+    // lines (compensation devices) fewer.
+    raftTies: [['BÈ 2', 'BÈ 4']],
     // Panels of each raft. Plan of 2026-10-30 (6 rafts, "CHUGIAP-HOBANMONG ver 2 - Floor Plan - BỐ TRÍ BÈ PIN HỒ
     // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): table "THỐNG KÊ TẤM PIN MẶT TRỜI" of
     // the sheets CT-BP-01…06 of "BO TRI BE PIN HO BAN MONG.pdf" (Revit, owner 2026-10-30): 16 912 panels. Before the

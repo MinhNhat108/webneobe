@@ -133,8 +133,10 @@ B_C52 = round(sum(RJ[n]['c52Pitch_m'] for n in RAFTS) / NR, 3)
 clusters = [(n, c['id'], c['kind'], c['cleats'], c) for n in RAFTS for c in RJ[n]['clusters']]
 C52_CAD = {n: RJ[n]['c52_m'] for n in RAFTS}
 BOX_CAD = {n: RJ[n]['box_m'] for n in RAFTS}
-lineCount = {n: catalogue[n]['cableCount'] for n in RAFTS}
-assert sum(lineCount.values()) == len(lines), (sum(lineCount.values()), len(lines))
+ties = json.load(open(data / 'ties.json', encoding='utf-8')) if (data / 'ties.json').exists() else []
+lineCount = {n: sum(1 for l in lines if l['raft'] == n) for n in RAFTS}  # mooring lines (2 cleats each, Y branches)
+tieCount = {n: sum(1 for t in ties if n in t['rafts']) for n in RAFTS}  # ties to another raft (1 cleat at each end)
+for n in RAFTS: assert catalogue[n]['cableCount'] == lineCount[n] + tieCount[n], (n, catalogue[n]['cableCount'], lineCount[n], tieCount[n])
 for n in RAFTS: assert catalogue[n]['solarPanelCount'] == SHEETS[n]['pv'], (n, catalogue[n]['solarPanelCount'], SHEETS[n]['pv'])
 
 
@@ -222,6 +224,7 @@ DL = [
     ('HN_BV', 'Hộp 40x60 — số thanh (bảng tờ CT-KC-BE)', lambda n: KC_TABLE[n][1][0], 'Như trên'),
     ('HL_BV', 'Hộp 40x60 — chiều dài (m, bảng tờ CT-KC-BE)', lambda n: KC_TABLE[n][1][1], 'Như trên'),
     ('LINE', 'Số dây neo của bè (tuyến cáp)', lambda n: lineCount[n], 'Mặt bằng neo trên web (ưu tiên bờ, 80 m)'),
+    ('TIE', 'Số dây nối sang bè bên cạnh', lambda n: tieCount[n], 'ties.json của web (BÈ 2 – BÈ 4 nối thay cho các đế dùng chung ở khe)'),
 ]
 D = {}
 for i, (code, label, fn, src) in enumerate(DL):
@@ -247,7 +250,7 @@ gc['A2'] = ('Mỗi thanh nằm trên một hàng phao, theo phương hộp 40x60
             'Số thanh cần = MAX(1; ROUNDUP(số bích × K_Y × T × γ / (dầm C52 cắt qua × P_KEP))); cột "Số thanh vẽ" là số thanh trên bản vẽ (theo giá trị mặc định ở GiaDinh) — sửa P_KEP mà cột Kiểm tra báo THIẾU thì phải vẽ thêm thanh.')
 for a in ('A1', 'A2'): gc[a].font = FB if a == 'A1' else F
 gc.merge_cells('A2:S2'); gc['A2'].alignment = WRAP; gc.row_dimensions[2].height = 62
-HDR = ['Bè', 'Mã cụm (trên bản vẽ)', 'Cách bố trí', 'Bích trong cụm (mã dây + a/b)', 'Số bích', 'T dây (kN, gió 20 m/s)', 'Lực thiết kế cụm = số bích × K_Y × T × γ (kN)', 'Dầm C52 cắt qua — thanh ít nhất (ĐO CAD)',
+HDR = ['Bè', 'Mã cụm (trên bản vẽ)', 'Cách bố trí', 'Bích trong cụm (mã dây + a/b)', 'Số bích', 'T dây (kN, gió 20 m/s)', 'Lực thiết kế cụm = (số bích dây neo × K_Y × T + lực dây nối) × γ (kN)', 'Dầm C52 cắt qua — thanh ít nhất (ĐO CAD)',
        'Sức chịu 1 thanh (kN)', 'Số thanh cần', 'Số thanh vẽ', 'Kiểm tra', 'Tổng dài (m, ĐO CAD)', 'Số cây cấp hàng', 'Số mối nối', 'Móc "几" (cái, ĐO CAD)', 'Đai ốc thoi M10×30 (bộ)', 'Bulông M10×120 (bộ)', 'Khối lượng (kg)']
 for j, h in enumerate(HDR):
     c = gc.cell(3, j + 1, h); c.font = FB; c.fill = HEAD; c.alignment = CENTER
@@ -256,7 +259,10 @@ for i, (name, cid, kind, codes, c) in enumerate(clusters):
     r = 4 + i
     bars = c['bars']
     pieces = '+'.join(f'ROUNDUP({b["L_m"]:.3f}/{G["L_H"]}-0.0005,0)' for b in bars)
-    vals = [name, cid, kind, ', '.join(codes), len(codes), T[name], f'=E{r}*F{r}*{G["K_Y"]}*{G["GAMMA"]}', min(b['nC52'] for b in bars),
+    nY = sum(1 for k in codes if not k.startswith('T'))
+    tieKN = sum(L for k, L in zip(codes, c['cleatLoad_kN']) if k.startswith('T'))
+    design = f'={nY}*F{r}*{G["K_Y"]}*{G["GAMMA"]}' + (f'+{tieKN:.1f}*{G["GAMMA"]}' if tieKN else '')
+    vals = [name, cid, kind, ', '.join(codes), len(codes), T[name], design, min(b['nC52'] for b in bars),
             f'=H{r}*{G["P_KEP"]}', f'=MAX(1,ROUNDUP(G{r}/I{r}-0.0005,0))', len(bars), f'=IF(K{r}>=J{r},"ĐỦ","THIẾU")', round(sum(b['L_m'] for b in bars), 3),
             f'={pieces}', f'=N{r}-K{r}', sum(b['nC52'] for b in bars), f'=2*P{r}', f'=P{r}', f'=M{r}*{G["M_H"]}']
     for j, v in enumerate(vals): gc.cell(r, j + 1, v)
@@ -371,7 +377,7 @@ ITEMS = [
     ('Bộ kẹp tiếp địa tấm pin', 'bộ', lambda j: f'={dlref("PV", j)}*{G["K_GC"]}', 'hh', 'ƯL', 'Cần nối đẳng thế khung tấm pin; hỏi Mibet kẹp của MRac G5 có răng tiếp địa không và định mức bộ/tấm trước khi đặt'),
     ('Bộ đai ốc thoi M8×25 + long đen lớn (gá vào C52)', 'bộ', lambda j: f'={dlref("PV", j)}*{G["K_RN8"]}', 'hh', 'ƯL', ''),
     ('F. ĐIỂM NEO TRÊN BÈ',),
-    ('Ma ní chữ U (U-Shaped Shackle) làm bích neo trên bè', 'cái', lambda j: f'=2*{dlref("LINE", j)}', 'hh', 'NEO', f'Cáp 2 nhánh chữ Y: 2 bích mỗi dây, bắt vào hộp 40x60 gia cường; mắt nhánh cáp móc thẳng vào ma ní này. Số dây theo mặt bằng neo của web ({len(lines)} dây)'),
+    ('Ma ní chữ U (U-Shaped Shackle) làm bích neo trên bè', 'cái', lambda j: f'=2*{dlref("LINE", j)}+{dlref("TIE", j)}', 'hh', 'NEO', f'Cáp 2 nhánh chữ Y: 2 bích mỗi dây, bắt vào hộp 40x60 gia cường; mắt nhánh cáp móc thẳng vào ma ní này. Số dây theo mặt bằng neo của web ({len(lines)} dây); dây nối hai bè: 1 bích mỗi đầu ({len(ties)} dây nối)'),
 ]
 row = 4; stt = 0; item_rows = {}
 NCOL = 8 + NR
@@ -492,9 +498,12 @@ for name in RAFTS:
             msp.add_line((p[0] + cdir[0] * t0, p[1] + cdir[1] * t0), (p[0] + cdir[0] * t1, p[1] + cdir[1] * t1), dxfattribs={'layer': 'KHUNG_C52'})
         s += 5 * B_C52
     c = polys[name]['centroid']
-    txt(f'{name} — T = {vn(T[name], 1)} kN, {lineCount[name]} dây', (c['x'] - 30, c['y']), 4.0, 'BE_PIN')
+    txt(f'{name} — T = {vn(T[name], 1)} kN, {lineCount[name]} dây' + (f' + {tieCount[name]} dây nối' if tieCount[name] else ''), (c['x'] - 30, c['y']), 4.0, 'BE_PIN')
 for ln in lines:
     msp.add_line((ln['xRaft'], ln['yRaft']), (ln['xAnchor'], ln['yAnchor']), dxfattribs={'layer': 'DAY_NEO'})
+for t in ties:
+    msp.add_line((t['a']['x'], t['a']['y']), (t['b']['x'], t['b']['y']), dxfattribs={'layer': 'DAY_NEO', 'lineweight': 50})
+    txt(t['code'], ((t['a']['x'] + t['b']['x']) / 2 + 1, (t['a']['y'] + t['b']['y']) / 2), 1.5, 'DAY_NEO')
 for name, cid, kind, codes, c in clusters:
     for b in c['bars']:
         msp.add_lwpolyline(b['world'], dxfattribs={'layer': 'GIA_CUONG_40x60', 'const_width': 0.3})
@@ -524,7 +533,8 @@ for t in ['GHI CHÚ:',
           '3. Hộp kẹp vào MỌI dầm C52 nó cắt qua bằng móc "几" (2 đai ốc thoi M10×30 + 1 bulông M10×120).',
           '4. Số thanh = MAX(1; số bích × 0,7 T × 1,2 / (số dầm C52 thanh cắt qua × 7 kN)); sức chịu móc 7 kN là GIẢ ĐỊNH, chờ số liệu Mibet.',
           '5. Nét xám mảnh: phương dầm C52 (vẽ 1/5 số dầm). Nét xanh: dây neo. Chi tiết liên kết bích – hộp do nhà cung cấp bè lập và xác nhận.',
-          '6. Vị trí bích lấy theo mặt bằng neo; khung trên bản vẽ rộng hơn đường bao bè 1,3–2 m ở một cạnh nên bích có thể lệch ~1 m dọc mép.']:
+          '6. Dây nối BÈ 2 – BÈ 4 (T24-..): 1 bích mỗi đầu, bích chịu cả lực dây nối (GIẢ ĐỊNH của catalogue), thay cho 0,7 T.',
+          '7. Vị trí bích lấy theo mặt bằng neo; khung trên bản vẽ rộng hơn đường bao bè 1,3–2 m ở một cạnh nên bích có thể lệch ~1 m dọc mép.']:
     txt(t, (X0, y), 2.6); y -= 5
 dxf.saveas(OUT_DXF)
 

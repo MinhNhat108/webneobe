@@ -108,11 +108,16 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('no raft tie on the 6-raft plan (no gap under 15 m); no short single base left to take the raft load', () => {
-    // the 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 across 12.9 m; the gaps of the 6-raft plan are 15–37 m
-    expect(RAFT_TIES).toEqual([]);
-    expect(LAYOUT_COUNTS.ties).toBe(0);
-    for (const r of HUOI_VANH_RAFTS) expect(r.mooringLayout!.group, r.name).toBeUndefined();
+  it('BÈ 2 – BÈ 4 tied across their gap (owner 30/10: crossed bed lines); no short single base left to take the raft load', () => {
+    // the shared bases of the BÈ 2 – BÈ 4 gap (D10, D11, D14, D16, D17, D19: lines crossing each other) became 6 ropes
+    // cleat to cleat; the pair is ONE group on its outer lines
+    expect(RAFT_TIES.length).toBe(6);
+    expect(LAYOUT_COUNTS.ties).toBe(6);
+    for (const t of RAFT_TIES) expect([...t.rafts].sort()).toEqual(['BÈ 2', 'BÈ 4']);
+    for (const r of HUOI_VANH_RAFTS) {
+      if (r.name === 'BÈ 2' || r.name === 'BÈ 4') expect(r.mooringLayout!.group!.ties.length, r.name).toBe(6);
+      else expect(r.mooringLayout!.group, r.name).toBeUndefined();
+    }
     // planner step 2g: B2-D50 (single base, 7 m cable in the BÈ 1 – BÈ 2 corner) took 199 kN of BÈ 2 and was dropped
     for (const l of MOORING_LINES_V2.filter((q) => q.type === 'BED' && !q.sharedWith)) expect(l.span, l.code).toBeGreaterThanOrEqual(10);
     const T = (name: string) => {
@@ -120,7 +125,7 @@ describe('Hồ Bản Mòng tab', () => {
       const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor);
       return calculateProject(st).t_max_intact_kN;
     };
-    expect(T('BÈ 2')).toBeLessThan(110); // 204 kN (PES-48) with B2-D50
+    expect(T('BÈ 2')).toBeLessThan(120); // the group BÈ 2 + BÈ 4: 113,5 kN; 204 kN (PES-48) with B2-D50
   });
 
   it('every raft passes at the 20 m/s default (screw-base option)', () => {

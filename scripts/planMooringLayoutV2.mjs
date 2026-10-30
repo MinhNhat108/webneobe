@@ -482,6 +482,9 @@ for (const poly of polygons) {
 // Measured about the outline's vertex centroid, from each ANCHOR bearing —
 // the same metric the restraint test pins.
 const MAX_ARC = 60; // degrees
+// a wider arc allowed for named rafts (lakeConfig maxArcFor; Bản Mòng BÈ 3 2026-10-30: its north-west corner faces only
+// water and BÈ 2, so a 60° arc needs a lake-bed base there; the engine passes with the open arc)
+const maxArcOf = (name) => Math.max(MAX_ARC, LAKE.maxArcFor?.[name] ?? 0);
 function widestArc(name) {
   const ring = ringOf[name];
   const cx = ring.reduce((s, q) => s + q.x, 0) / ring.length;
@@ -500,7 +503,7 @@ function closeOpenArcs() {
  for (const poly of polygons) {
   for (let guard = 0; guard < 10; guard++) {
     const arc = widestArc(poly.name);
-    if (arc.gap <= MAX_ARC) break;
+    if (arc.gap <= maxArcOf(poly.name)) break;
     const w = walker(poly.points);
     const own = coords.filter((c) => c.raft === poly.name);
     const ts = own.map((c) => w.param(cleatOf(c)));
@@ -620,7 +623,7 @@ function rehookKeepingArcs(raft, ls, apply) {
   const saved = ls.map((l) => ({ ...l }));
   apply();
   const after = widestArc(raft).gap;
-  if (after <= MAX_ARC || after <= before + 1e-9) return true;
+  if (after <= maxArcOf(raft) || after <= before + 1e-9) return true;
   ls.forEach((l, i) => { for (const k of Object.keys(l)) delete l[k]; Object.assign(l, saved[i]); });
   return false;
 }
@@ -656,7 +659,7 @@ function convertToShore(eligible) {
   // the swing must not open an arc wider than MAX_ARC with no line (Bản Mòng BÈ 5, a narrow raft)
   const keep = { x: c.xAnchor, y: c.yAnchor };
   c.xAnchor = best.q.x; c.yAnchor = best.q.y;
-  const opens = widestArc(c.raft).gap > MAX_ARC && widestArc(c.raft).gap > arcBefore(c, keep);
+  const opens = widestArc(c.raft).gap > maxArcOf(c.raft) && widestArc(c.raft).gap > arcBefore(c, keep);
   c.xAnchor = keep.x; c.yAnchor = keep.y;
   if (opens) continue;
   changed = true;
@@ -1123,7 +1126,7 @@ if (process.argv.includes('--explain')) {
 // ---- Step 2e': an arc opened by the moves above (Bản Mòng BÈ 5: a cable swung to the bank left 62°) --------
 // Closed again like Step 2b, with a lake-bed line (swinging it to the bank would re-open the arc).
 // A no-op when every arc is <= MAX_ARC (Huổi Vanh).
-if (polygons.some((p) => widestArc(p.name).gap > MAX_ARC)) closeOpenArcs();
+if (polygons.some((p) => widestArc(p.name).gap > maxArcOf(p.name))) closeOpenArcs();
 
 // ---- Step 2f: a shared base stands midway between its two cleats -----------
 // Two cables of equal length pull the base alike from both sides, and neither is steeper than it has to be
@@ -1144,7 +1147,7 @@ for (const a of coords) {
   // nor open an arc wider than MAX_ARC with no line (Bản Mòng 6-raft plan 2026-10-30: BÈ 3 went to 60.x°)
   const old = { ...anchorOf(a) }, arcs = [a.raft, b.raft].map((n) => widestArc(n).gap);
   setAnchor(a, mid); setAnchor(b, mid);
-  if ([a.raft, b.raft].some((n, i) => { const g = widestArc(n).gap; return g > MAX_ARC && g > arcs[i] + 1e-9; })) {
+  if ([a.raft, b.raft].some((n, i) => { const g = widestArc(n).gap; return g > maxArcOf(n) && g > arcs[i] + 1e-9; })) {
     setAnchor(a, old); setAnchor(b, old);
     continue;
   }
@@ -1164,7 +1167,7 @@ for (const c of [...coords]) {
   const i = coords.indexOf(c);
   coords.splice(i, 1);
   const stepOk = !GAP_LIMITED.has(c.raft) || Math.max(...cleatGaps(c.raft).gaps.map((g) => g.len)) <= MAX_CLEAT_STEP + STEP_TOL;
-  if (widestArc(c.raft).gap > MAX_ARC || !stepOk) { coords.splice(i, 0, c); continue; }
+  if (widestArc(c.raft).gap > maxArcOf(c.raft) || !stepOk) { coords.splice(i, 0, c); continue; }
   report.moved.push(`${c.code}: single base, ${c.span} m cable — dropped (C9 ${(poly.perimeter_m / n).toFixed(2)} m without it)`);
 }
 
@@ -1221,7 +1224,7 @@ for (let i = 0; i < coords.length; i++) {
 if (new Set(coords.map((c) => c.code)).size !== coords.length) errors.push('duplicate line code');
 for (const poly of polygons) {
   const arc = widestArc(poly.name);
-  if (arc.gap > MAX_ARC) errors.push(`arc ${poly.name}: ${arc.gap.toFixed(0)}°`);
+  if (arc.gap > maxArcOf(poly.name)) errors.push(`arc ${poly.name}: ${arc.gap.toFixed(0)}°`);
 }
 for (const name of GAP_LIMITED) {
   const worst = Math.max(...cleatGaps(name).gaps.map((g) => g.len));

@@ -1256,10 +1256,10 @@
         },
         {
           "code": "B3-D16",
-          "type": "BED",
-          "azimuth_deg": 274,
-          "span_m": 17.5,
-          "pin_m": 654.99
+          "type": "SHORE",
+          "azimuth_deg": 238,
+          "span_m": 46.16,
+          "pin_m": 663.18
         },
         {
           "code": "B3-D17",
@@ -1270,10 +1270,10 @@
         },
         {
           "code": "B3-D18",
-          "type": "BED",
-          "azimuth_deg": 184,
-          "span_m": 17.5,
-          "pin_m": 652.12
+          "type": "SHORE",
+          "azimuth_deg": 204,
+          "span_m": 42,
+          "pin_m": 662.42
         },
         {
           "code": "B3-D19",
@@ -1285,8 +1285,8 @@
       ]
     },
     "cableCount": 19,
-    "shoreAnchors": 15,
-    "bedAnchors": 4,
+    "shoreAnchors": 17,
+    "bedAnchors": 2,
     "selectedCable": "PES-32",
     "waterDepth_m": 14.1,
     "bedAnchorDist_m": 8.3,
@@ -1304,7 +1304,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 6.7,
-      "maxTension_kN": 89
+      "maxTension_kN": 93
     }
   },
   {

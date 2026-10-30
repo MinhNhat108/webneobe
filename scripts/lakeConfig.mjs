@@ -113,6 +113,11 @@ export const LAKES = {
     // longer reach for named lines: B5-D09, B6-D44 single bases with the bank 80–84 m away (owner 2026-10-30: "D24, D28
     // sao ko neo bờ đi")
     shoreSpanFor: { 'B5-D09': 90, 'B6-D44': 90 },
+    // a wider open arc for named rafts (planner: 60°): BÈ 3 north-west corner faces only water and BÈ 2, so 60° needs a
+    // lake-bed base there (D14, owner 30/10 "cái D14 kia b ko có cách nào khác à"); B3-D16 goes instead to a pile on the
+    // spit at (44; 147), placed by hand (the planner scans only the first bank point of a bearing). Engine: 78,7 kN
+    // PES-32 (76,5 with the base), drift 0,79 m.
+    maxArcFor: { 'BÈ 3': 70 },
     // Panels of each raft. Plan of 2026-10-30 (6 rafts, "CHUGIAP-HOBANMONG ver 2 - Floor Plan - BỐ TRÍ BÈ PIN HỒ
     // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): table "THỐNG KÊ TẤM PIN MẶT TRỜI" of
     // the sheets CT-BP-01…06 of "BO TRI BE PIN HO BAN MONG.pdf" (Revit, owner 2026-10-30): 16 912 panels. Before the

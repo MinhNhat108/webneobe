@@ -7,7 +7,7 @@
     "length_m": 198,
     "width_m": 102.5,
     "angle_deg": 75,
-    "solarPanelCount": 2915,
+    "solarPanelCount": 2912,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 646.87,
@@ -348,7 +348,7 @@
     "length_m": 302.8,
     "width_m": 96,
     "angle_deg": 165,
-    "solarPanelCount": 4191,
+    "solarPanelCount": 4200,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 646.73,
@@ -794,7 +794,7 @@
     "length_m": 100,
     "width_m": 37.2,
     "angle_deg": 86,
-    "solarPanelCount": 713,
+    "solarPanelCount": 700,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 648.87,
@@ -955,7 +955,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 6.7,
-      "maxTension_kN": 91
+      "maxTension_kN": 89
     }
   },
   {
@@ -966,7 +966,7 @@
     "length_m": 174,
     "width_m": 72.3,
     "angle_deg": 95.1,
-    "solarPanelCount": 2095,
+    "solarPanelCount": 2100,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 646.94,
@@ -1258,7 +1258,7 @@
     "length_m": 148,
     "width_m": 110,
     "angle_deg": 119.7,
-    "solarPanelCount": 2809,
+    "solarPanelCount": 2800,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 648.43,
@@ -1543,7 +1543,7 @@
     "bedRebarDia_mm": 25,
     "shorePilesPerPoint": 2,
     "shorePileLight": {
-      "tension_kN": 77.2,
+      "tension_kN": 77,
       "shorePileL_m": 6.5,
       "shoreRebarCount": 6,
       "shoreRebarDia_mm": 28,
@@ -1554,7 +1554,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 4.9,
-      "maxTension_kN": 221
+      "maxTension_kN": 220
     }
   },
   {
@@ -1565,7 +1565,7 @@
     "length_m": 290.3,
     "width_m": 78,
     "angle_deg": 145,
-    "solarPanelCount": 4177,
+    "solarPanelCount": 4200,
     "focusFactor": 0,
     "mooringLayout": {
       "floatLevel_m": 649.1,
@@ -1926,7 +1926,7 @@
     "cableCount": 50,
     "shoreAnchors": 45,
     "bedAnchors": 5,
-    "selectedCable": "PES-40",
+    "selectedCable": "PES-48",
     "waterDepth_m": 13.9,
     "bedAnchorDist_m": 17.4,
     "shoreAnchorDist_m": 24,
@@ -1942,7 +1942,7 @@
     "shorePilesPerPoint": 2,
     "pileRebarRs_MPa": 435,
     "shorePileLight": {
-      "tension_kN": 74.8,
+      "tension_kN": 75.4,
       "shorePileL_m": 6.5,
       "shoreRebarCount": 6,
       "shoreRebarDia_mm": 28,
@@ -1952,8 +1952,8 @@
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.3,
-      "maxTension_kN": 359
+      "drift_m": 5.1,
+      "maxTension_kN": 379
     }
   }
 ]

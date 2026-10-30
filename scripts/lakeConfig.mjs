@@ -107,10 +107,11 @@ export const LAKES = {
     // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). The 6-raft plan of 2026-10-30 has no gap under 15 m.
     raftTies: [],
     // Panels of each raft. Plan of 2026-10-30 (6 rafts, "CHUGIAP-HOBANMONG ver 2 - Floor Plan - BỐ TRÍ BÈ PIN HỒ
-    // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): the drawing has no panel table, so the
-    // ~16 900 panels the owner asked for (2026-10-29) are shared by area (0.192 panels/m², 22/10 plan: 0.196).
+    // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): table "THỐNG KÊ TẤM PIN MẶT TRỜI" of
+    // the sheets CT-BP-01…06 of "BO TRI BE PIN HO BAN MONG.pdf" (Revit, owner 2026-10-30): 16 912 panels. Before the
+    // sheets came: ~16 900 shared by area (2915 / 4191 / 713 / 2095 / 2809 / 4177).
     // Before: 8 rafts, 18 240 panels from the sheets CT-BP of "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf".
-    panelsByRaft: { 'BÈ 1': 2915, 'BÈ 2': 4191, 'BÈ 3': 713, 'BÈ 4': 2095, 'BÈ 5': 2809, 'BÈ 6': 4177 }
+    panelsByRaft: { 'BÈ 1': 2912, 'BÈ 2': 4200, 'BÈ 3': 700, 'BÈ 4': 2100, 'BÈ 5': 2800, 'BÈ 6': 4200 }
   }
 };
 

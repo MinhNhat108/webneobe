@@ -136,11 +136,10 @@ export const AttachmentPanel: React.FC = () => {
                   Hồ sơ gốc của hồ Bản Mòng (chỉ tài liệu của hồ này):
                 </p>
                 <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
-                  <li><strong>Bố trí bè pin 6 bè, chốt 30/10/2026</strong> (.dwg của Chủ đầu tư) và đường bao 6 bè dùng tính neo (.dxf)</li>
-                  <li><strong>Thông số mực nước hồ</strong> (.png)</li>
-                  <li><strong>Mô hình địa hình IFC</strong> (.ifc, tải về)</li>
-                  <li><strong>Thống kê vật tư neo, cáp neo</strong> (.xlsx)</li>
-                  <li><strong>Thuyết minh, bảng tính, bảng thống kê và bản vẽ neo 6 bè</strong> (30/10/2026, .docx / .xlsx / .dxf / .dwg)</li>
+                  <li><strong>Thuyết minh tính toán, bảng tính Excel, bản vẽ neo 6 bè</strong> (30/10/2026, 16.912 tấm pin, .docx / .xlsx / .dxf / .dwg)</li>
+                  <li><strong>Thống kê vật tư neo, cáp neo</strong> và <strong>vật tư bè pin</strong> (.xlsx), bảng thống kê neo từng điểm</li>
+                  <li><strong>Khung kết cấu 6 bè có hộp 40x60 gia cường tại vị trí neo</strong> (.dwg) và sơ đồ tổng GC-01</li>
+                  <li><strong>Bố trí bè pin 6 bè của Chủ đầu tư</strong> (.dwg, .pdf CT-BP), đường bao bè, mực nước, địa hình IFC</li>
                 </ul>
                 <p className="text-slate-500 text-[11px]">
                   Hồ sơ tính toán neo của Bản Mòng là hồ sơ ĐỂ XEM XÉT: phương án neo, thiết bị bù mực nước + khóa bão, đế đơn và khảo sát địa chất chưa được chốt (xem mục 8 thuyết minh).

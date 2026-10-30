@@ -71,12 +71,12 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('6 rafts of the plan settled 30/10/2026, 88 043 m², ~16 900 panels shared by area', () => {
+  it('6 rafts of the plan settled 30/10/2026, 88 043 m², 16 912 panels of the sheets CT-BP', () => {
     expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5', 'BÈ 6']);
     expect(RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0)).toBe(88043);
-    // the drawing has no panel table: the 16 900 panels the owner asked for (29/10) are shared by area (lakeConfig)
-    expect(HUOI_VANH_RAFTS.map((r) => r.solarPanelCount)).toEqual([2915, 4191, 713, 2095, 2809, 4177]);
-    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(16900);
+    // table "THỐNG KÊ TẤM PIN MẶT TRỜI" of the sheets CT-BP-01…06 (BO TRI BE PIN HO BAN MONG.pdf, 30/10/2026)
+    expect(HUOI_VANH_RAFTS.map((r) => r.solarPanelCount)).toEqual([2912, 4200, 700, 2100, 2800, 4200]);
+    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(16912);
     expect(RAFT_POLYGONS_V2.map((p) => p.area_m2)).toEqual([15185, 21836, 3714, 10912, 14633, 21763]);
     // design depth = MNDB - median IFC ground under the raft
     for (const r of HUOI_VANH_RAFTS) {

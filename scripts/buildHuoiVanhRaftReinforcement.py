@@ -2,6 +2,10 @@
 Hộp 40x60 gia cường tại các vị trí neo, vẽ TRÊN bản vẽ khung kết cấu bè pin của Chủ đầu tư (Huổi Vanh, 4 bè):
 
   python scripts/buildHuoiVanhRaftReinforcement.py <thư mục kc1.dxf…kc4.dxf> <bảng vật tư neo .xlsx> <thư mục kết quả>
+  python scripts/buildHuoiVanhRaftReinforcement.py <thư mục kc1.dxf…kc6.dxf> <bảng vật tư neo .xlsx> <thư mục kết quả> --lake=ban-mong
+
+- Bản Mòng (6 bè): kc<i>.dxf = "CHUGIAP-HOBANMONG ver 2-Sheet - CT-KC-BE-0<i> - BỐ TRÍ KHUNG KẾT CẤU BÈ PIN 0<i>.dxf"
+  (tờ Revit: khung là MỘT block ở model space tại 0,0, các dầm / hộp / phao là block lồng bên trong).
 
 - kc<i>.dxf: "CHUGIAP-HOHUOIVANH ver 3 - Floor Plan - KHUNG KẾT CẤU BÈ PIN <i>.dwg" đổi sang DXF (accoreconsole DXFOUT).
   Mỗi dầm C52, hộp 40x60, dải phao là một block Revit; script lấy khung bao của từng block (mm).
@@ -26,9 +30,10 @@ import openpyxl
 from ezdxf import bbox
 
 ROOT = Path(__file__).resolve().parent.parent
-KC_DIR, MOORING_XLSX, OUT_DIR = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
+BAN_MONG = '--lake=ban-mong' in sys.argv
+KC_DIR, MOORING_XLSX, OUT_DIR = [Path(a) for a in sys.argv[1:] if not a.startswith('--')][:3]
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-RAFTS = [f'BÈ {i}' for i in range(1, 5)]
+RAFTS = [f'BÈ {i}' for i in range(1, 7 if BAN_MONG else 5)]
 
 CLEAT_GAP, L_GC, P_KEP, K_Y, GAMMA = 3500.0, 15000.0, 7.0, 0.7, 1.2  # mm, mm, kN, -, -
 CLUSTER_SPAN = L_GC - 1000.0
@@ -58,8 +63,8 @@ def members(i):
 
 # ------------------------------------------------------------------ web layout and line tension
 data = ROOT / 'src' / 'data'
-polys = {r['name']: r for r in json.load(open(data / 'huoiVanhRaftPolygons_v2.json', encoding='utf-8'))}
-lines = json.load(open(data / 'huoiVanhCoordinates_v2.json', encoding='utf-8'))
+polys = {r['name']: r for r in json.load(open(data / ('banMong/raftPolygons.json' if BAN_MONG else 'huoiVanhRaftPolygons_v2.json'), encoding='utf-8'))}
+lines = json.load(open(data / ('banMong/coordinates.json' if BAN_MONG else 'huoiVanhCoordinates_v2.json'), encoding='utf-8'))
 mw = openpyxl.load_workbook(MOORING_XLSX, data_only=True)['KiemTra_Nhanh']
 T = {r[0]: r[1] for r in mw.iter_rows(min_row=4, values_only=True) if r[0] in RAFTS}
 assert set(T) == set(RAFTS), T
@@ -93,12 +98,22 @@ def fit(name, M):
         t = np.array([x0 + 5 + fw / 2, y0 + 5 + fh / 2]) - (q.max(0) + q.min(0)) / 2
         c = cost(a10 / 10, *t)
         if best is None or c < best[0]: best = (c, a10 / 10, t[0], t[1])
+    fixed = False
+    if BAN_MONG:
+        # Bản Mòng: the frame of the Revit sheet is axis-aligned, so the rotation turns the outline's main edges onto the
+        # axes (BÈ 3: a 100 × 37,1 m rectangle at 86° in a 101 × 39 m frame; a free fit stops at 93° because the frame is
+        # wider than the outline).
+        E = [(np.linalg.norm(q - p), math.degrees(math.atan2(*(q - p)[::-1])) % 90) for p, q in zip(pts, np.roll(pts, -1, 0))]
+        d = max(set(round(e[1], 1) for e in E), key=lambda a: sum(L for L, b in E if abs(b - a) < 0.2))
+        snap = min((k * 90 - d for k in range(-1, 6)), key=lambda a: abs(a - best[1]))
+        if abs(snap - best[1]) < 2.5:
+            best = (cost(snap, best[2], best[3]), snap % 360, best[2], best[3]); fixed = True
     for sa, stt in ((0.2, 1.0), (0.05, 0.25), (0.01, 0.05)):
         improved = True
         while improved:
             improved = False
             c, a, tx, ty = best
-            for da in (-sa, 0, sa):
+            for da in ((0,) if fixed else (-sa, 0, sa)):
                 for dx in (-stt, 0, stt):
                     for dy in (-stt, 0, stt):
                         v = cost(a + da, tx + dx, ty + dy)

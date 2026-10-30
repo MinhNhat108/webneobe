@@ -393,7 +393,7 @@ export const useProjectStore = create<ProjectStore>()(
     }),
     {
       name: ACTIVE_LAKE.storageKey,
-      version: 21,
+      version: 22,
       migrate: (persistedState: any, version: number) => {
         if (persistedState) {
           if (persistedState.currentProject) {
@@ -552,6 +552,17 @@ export const useProjectStore = create<ProjectStore>()(
           if (version < 21 && ACTIVE_LAKE_ID === 'ban-mong' && persistedState.currentProject?.id === BUILT_IN_ID
             && persistedState.currentProject.raft?.solarTilt_deg === 12) {
             persistedState.currentProject = { ...persistedState.currentProject, raft: { ...persistedState.currentProject.raft, solarTilt_deg: 10 } };
+          }
+
+          // v22 (2026-10-30): Bản Mòng panel counts from the sheets CT-BP (16.912); a saved count equal to the share by
+          // area of 16.900 is the old default of that raft, not a user's choice
+          const OLD_BM_PANELS: Record<string, number> = { 'BÈ 1': 2915, 'BÈ 2': 4191, 'BÈ 3': 713, 'BÈ 4': 2095, 'BÈ 5': 2809, 'BÈ 6': 4177 };
+          const cp22 = persistedState.currentProject;
+          if (version < 22 && ACTIVE_LAKE_ID === 'ban-mong' && cp22?.id === BUILT_IN_ID) {
+            const item = HUOI_VANH_RAFTS.find((r) => r.id === persistedState.activeRaftId);
+            if (item && cp22.raft?.solarPanelCount === OLD_BM_PANELS[item.name]) {
+              persistedState.currentProject = { ...cp22, raft: { ...cp22.raft, solarPanelCount: item.solarPanelCount } };
+            }
           }
 
           // Whatever the history, never leave the app pointing at a raft that

@@ -165,7 +165,7 @@ export function lakeCaveats(): string[] {
   const single = LAYOUT_COUNTS.bedBases - LAYOUT_COUNTS.sharedBases;
   if (single > 0) {
     out.push(
-      `${single}/${LAYOUT_COUNTS.bedBases} đế vít xoắn là đế ĐƠN ở vùng nước trống (không đối diện bè nào và xa bờ hơn tầm dây bờ cho phép 80 m): ` +
+      `${single}/${LAYOUT_COUNTS.bedBases} đế vít xoắn là đế ĐƠN (một dây), ở vùng nước trống xa bờ hơn tầm dây bờ cho phép 80 m hoặc ở khe không đặt được dây đối diện: ` +
       'quy tắc của Huổi Vanh "đế chỉ đặt giữa hai bè" không áp dụng được cho mặt bằng này — cần Chủ đầu tư xác nhận.'
     );
   }

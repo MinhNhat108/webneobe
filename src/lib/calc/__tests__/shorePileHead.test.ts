@@ -78,6 +78,16 @@ describe('Shore pile head and cable connection', () => {
     expect(buildShorePileHead(sq, buildPileSchedule(sq, calculateProject(sq)), undefined)).toBeUndefined();
   });
 
+  it('a padeye on a thin base slab takes more anchor bars when the anchorage does not fit (4 -> 6 -> 8)', () => {
+    // Bản Mòng BM-DV036 (2026-10-30): B6-D06 132 kN at 44° on a 0.4 m slab, bars limited to 350 mm
+    const eye = (limit?: number) => designShorePileHead({ tension_kN: 132, loadFactor: 1.2, pileDia_m: 0.35, attachHeight_m: 0.15, cableMbl_kN: 475, inclination_deg: 44, anchorLengthLimit_mm: limit });
+    expect(eye().anchorBarCount).toBe(4);
+    const thin = eye(350);
+    expect(thin.anchorBarCount).toBe(6);
+    expect(thin.checks.find((c) => c.id === 'H-7')!.ok).toBe(true);
+    expect(thin.checks.find((c) => c.id === 'H-6')!.ok).toBe(true);
+  });
+
   it('is drawn on the detail layer of the CAD sheet with its checks and the height requirement', () => {
     const { state, results, batch } = setup();
     const out = buildMooringPileDxf(state, results, batch);

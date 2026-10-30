@@ -180,7 +180,7 @@ it('Nắp chụp khóa đầu vít vào đế', 'Ống lồng Ø114×6 + bản b
 {
   const e0 = eyes[0];
   const steepest = Math.max(...bases0.flatMap((b) => b.lines.map((l) => slopeOf(l.code))));
-  it('Tai neo mặt đế (bản mã + tai + thép neo, 1 bộ mỗi dây)', `Bản mã SS400 ${e0.plateSide_mm}×${e0.plateSide_mm}×${e0.plateThk_mm}, tai t = ${e0.padeyeThk_mm} lỗ ${holes(eyes)}, ${e0.anchorBarCount}Φ${e0.anchorBarDia_mm} L = ${Math.min(...eyes.map((e) => e.anchorBarLength_mm))}–${Math.max(...eyes.map((e) => e.anchorBarLength_mm))} móc vào lưới đáy đế; hàn góc ${[...new Set(eyes.map((e) => e.weldLeg_mm))].sort((x, y) => x - y).map((w) => `${w} mm (${eyes.filter((e) => e.weldLeg_mm === w).length} bộ)`).join(', ')} hai phía; đặt sẵn khi đúc đế`, 'bộ', eyes.length, 0.02,
+  it('Tai neo mặt đế (bản mã + tai + thép neo, 1 bộ mỗi dây)', `Bản mã SS400 ${e0.plateSide_mm}×${e0.plateSide_mm}×${e0.plateThk_mm}, tai t = ${e0.padeyeThk_mm} lỗ ${holes(eyes)}, ${[...new Set(eyes.map((e) => e.anchorBarCount))].sort((x, y) => x - y).map((n) => `${n}Φ${e0.anchorBarDia_mm}${eyes.some((e) => e.anchorBarCount !== n) ? ` (${eyes.filter((e) => e.anchorBarCount === n).length} bộ)` : ''}`).join(', ')} L = ${Math.min(...eyes.map((e) => e.anchorBarLength_mm))}–${Math.max(...eyes.map((e) => e.anchorBarLength_mm))} móc vào lưới đáy đế; hàn góc ${[...new Set(eyes.map((e) => e.weldLeg_mm))].sort((x, y) => x - y).map((w) => `${w} mm (${eyes.filter((e) => e.weldLeg_mm === w).length} bộ)`).join(', ')} hai phía; đặt sẵn khi đúc đế`, 'bộ', eyes.length, 0.02,
     `${sharedBases} đế dùng chung có 2 bộ, ${T.bases - sharedBases} đế đơn có 1 bộ; tính cho lực lớn nhất của chính dây, cáp dốc tới ${tx(steepest, 0)}° (có thành phần nhổ); mức sử dụng lớn nhất ${tx(maxUtil(eyes), 2)}`);
 }
 sec('IV', 'PHỤ KIỆN CHẠC CHỮ Y TẠI BÈ');
@@ -304,7 +304,7 @@ const steelRows: (string | number)[][] = [
   [`Thép bản đế Φ${bp.rebarDia_mm}`, 'CB400-V (lưới đế)', T.baseRebar_kg, 0.03, 'Đế BTCT (engine)'],
   ['Thép ống vít Ø89×5', 'Ống thép mạ kẽm nhúng nóng', T.screwLength_m * SCREW_KG_M, 0.05, `${tx(SCREW_KG_M, 2)} kg/m`],
   ['Thép tấm bản mã + tai neo (đầu cọc, đài, đế)', 'SS400 mạ kẽm nhúng nóng', sum(allHeads, (h) => plateKg(h) + eyeKg(h)), 0.05, `${allHeads.length} bộ`],
-  [`Thép neo bản mã Φ${allHeads[0].anchorBarDia_mm}`, 'CB400-V', sum(allHeads, barsKg), 0.03, `${allHeads.length} bộ × ${allHeads[0].anchorBarCount} thanh`],
+  [`Thép neo bản mã Φ${allHeads[0].anchorBarDia_mm}`, 'CB400-V', sum(allHeads, barsKg), 0.03, `${allHeads.length} bộ, ${allHeads.reduce((n, h) => n + h.anchorBarCount, 0)} thanh`],
   ...(caps.length ? [['Thép đài cọc đôi', 'CB400-V Φ16, Φ12; CB240-T Φ10', sum(caps, (c) => c.steel_kg), 0.05, 'twinPileCap.ts']] : [])
 ];
 const steel = [

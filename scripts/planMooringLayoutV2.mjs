@@ -1136,9 +1136,33 @@ for (const a of coords) {
       && polygons.every((q) => q.name === l.raft || !segOverRing(cleatOf(l), mid, q.points)));
   if (!ok) continue;
   const before = `${a.span} / ${b.span}`;
+  // nor open an arc wider than MAX_ARC with no line (Bản Mòng 6-raft plan 2026-10-30: BÈ 3 went to 60.x°)
+  const old = { ...anchorOf(a) }, arcs = [a.raft, b.raft].map((n) => widestArc(n).gap);
   setAnchor(a, mid); setAnchor(b, mid);
+  if ([a.raft, b.raft].some((n, i) => { const g = widestArc(n).gap; return g > MAX_ARC && g > arcs[i] + 1e-9; })) {
+    setAnchor(a, old); setAnchor(b, old);
+    continue;
+  }
   report.moved.push(`${a.code} + ${b.code}: shared base centred between its two cleats, spans ${before} -> ${a.span} / ${b.span} m`);
 }
+// ---- Step 2g: a short single-base line that is no longer needed ------------
+// Step 2 adds lines for C9 before the shore conversion and the partner lines of R3; a single base squeezed into a
+// corner with a short cable (Bản Mòng 6-raft plan 2026-10-30: B2-D50, 7 m in the BÈ 1 – BÈ 2 corner) is stiff and
+// takes the whole raft load in the equilibrium (BÈ 2 199 kN against 99 kN for the next line). Dropped when C9, the
+// open arc and the edge step of the raft still hold without it.
+const SHORT_BED_SPAN = 10; // m
+for (const c of [...coords]) {
+  if (c.type !== 'BED' || c.sharedWith || c.span >= SHORT_BED_SPAN) continue;
+  const poly = polygons.find((p) => p.name === c.raft);
+  const n = coords.filter((o) => o.raft === c.raft).length - 1;
+  if (poly.perimeter_m / n > MAX_SPACING) continue;
+  const i = coords.indexOf(c);
+  coords.splice(i, 1);
+  const stepOk = !GAP_LIMITED.has(c.raft) || Math.max(...cleatGaps(c.raft).gaps.map((g) => g.len)) <= MAX_CLEAT_STEP + STEP_TOL;
+  if (widestArc(c.raft).gap > MAX_ARC || !stepOk) { coords.splice(i, 0, c); continue; }
+  report.moved.push(`${c.code}: single base, ${c.span} m cable — dropped (C9 ${(poly.perimeter_m / n).toFixed(2)} m without it)`);
+}
+
 // One id per lake-bed base: shared lines carry the same id.
 {
   let n = 0;

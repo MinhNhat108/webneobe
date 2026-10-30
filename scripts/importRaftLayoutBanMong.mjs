@@ -30,7 +30,8 @@ const TERRAIN = JSON.parse(fs.readFileSync(path.join(ROOT, LAKE.files.terrain), 
 const dxfPath = process.argv[2];
 const dry = process.argv.includes('--dry');
 if (!dxfPath) { console.error('usage: node scripts/importRaftLayoutBanMong.mjs "<plan.dxf>" [--dry]'); process.exit(1); }
-const ORDER = ['1', '2', '3', '4', '5', '6', '7', '8'];
+// the raft numbers of the current plan: the keys of panelsByRaft in lakeConfig (6 rafts since 2026-10-30)
+const ORDER = Object.keys(LAKE.panelsByRaft).map((n) => n.replace(/^BÈ /, ''));
 
 // ------------------------------------------------------------------ DXF
 const L = fs.readFileSync(dxfPath, 'utf8').split(/\r?\n/);

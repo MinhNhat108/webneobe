@@ -294,13 +294,13 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   }
   if (!bedDone) notes.push(`${poly.name}: NO lake-bed pile 350x350 passes (PA1, up to 3 piles per point, L 12 m, 4D32)`);
 
-  // Huổi Vanh (2026-10-28, "nhiều cọc đôi thế"): the raft's pile above is sized for its governing tension (with the
+  // Both lakes (Huổi Vanh 2026-10-28, "nhiều cọc đôi thế"; Bản Mòng from the 6-raft plan of 2026-10-30): the raft's pile above is sized for its governing tension (with the
   // floor F/(6 cos 30°)), but most shore lines pull far less. A raft with several piles per point gets a lighter
   // SINGLE pile (under 4 % steel) for every shore point whose own line never pulls more than the light pile's design
   // tension: the largest tension of that line over every level and direction + pretension, capped by the raft's —
   // the rule the lake-bed bases already follow (screwBaseSchedule.ts). The design tension is the largest own-line
   // tension a single pile can take; the lines above it keep the raft's pile.
-  if (!BAN_MONG && (row.shorePilesPerPoint ?? 1) > 1) {
+  if ((row.shorePilesPerPoint ?? 1) > 1) {
     const b = base(), st = buildRaftProjectState(b, row, b.anchor), res = calculateProject(st);
     const lineMax = res.mooringAnalysis?.lineMax_kN ?? {};
     const own = (code: string) => Math.min(res.t_max_intact_kN, (lineMax[code] ?? Infinity) + (st.line.pretension_kN ?? 0));

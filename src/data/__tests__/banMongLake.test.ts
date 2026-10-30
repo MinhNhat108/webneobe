@@ -71,13 +71,13 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('8 rafts of the plan 22/10/2026, 93 178 m², the panels of each raft from the drawing (18 240)', () => {
-    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5', 'BÈ 6', 'BÈ 7', 'BÈ 8']);
-    expect(RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0)).toBe(93178);
-    // tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of CT-BP-01…08
-    expect(HUOI_VANH_RAFTS.map((r) => r.solarPanelCount)).toEqual([2352, 2380, 3136, 2252, 784, 1568, 2884, 2884]);
-    // vs the PA2 plan of 19/10 only BÈ 4 (notch filled in) and BÈ 6 (shortened) changed
-    expect(RAFT_POLYGONS_V2.map((p) => p.area_m2)).toEqual([12085, 12028, 16289, 11697, 4146, 8103, 14962, 13868]);
+  it('6 rafts of the plan settled 30/10/2026, 88 043 m², ~16 900 panels shared by area', () => {
+    expect(HUOI_VANH_RAFTS.map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5', 'BÈ 6']);
+    expect(RAFT_POLYGONS_V2.reduce((s, p) => s + p.area_m2, 0)).toBe(88043);
+    // the drawing has no panel table: the 16 900 panels the owner asked for (29/10) are shared by area (lakeConfig)
+    expect(HUOI_VANH_RAFTS.map((r) => r.solarPanelCount)).toEqual([2915, 4191, 713, 2095, 2809, 4177]);
+    expect(HUOI_VANH_RAFTS.reduce((s, r) => s + (r.solarPanelCount ?? 0), 0)).toBe(16900);
+    expect(RAFT_POLYGONS_V2.map((p) => p.area_m2)).toEqual([15185, 21836, 3714, 10912, 14633, 21763]);
     // design depth = MNDB - median IFC ground under the raft
     for (const r of HUOI_VANH_RAFTS) {
       const p = RAFT_POLYGONS_V2.find((q) => q.name === r.name)!;
@@ -108,21 +108,19 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('BÈ 3 and BÈ 4 are tied across their narrow gap: no base in it, one group on the outer lines', () => {
-    expect(RAFT_TIES.length).toBe(LAYOUT_COUNTS.ties);
-    expect(RAFT_TIES.length).toBeGreaterThan(0);
-    for (const t of RAFT_TIES) {
-      expect([...t.rafts].sort(), t.code).toEqual(['BÈ 3', 'BÈ 4']);
-      // the tie lines are gone from the line file, so no base is left in the gap
-      expect(MOORING_LINES_V2.some((l) => l.code === t.a.code || l.code === t.b.code), t.code).toBe(false);
-    }
-    const r3 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3')!, r4 = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 4')!;
-    expect(r3.mooringLayout!.group!.rafts.sort()).toEqual(['BÈ 3', 'BÈ 4']);
-    // the same group: the same outer lines and the same total load, so the same line tension
-    expect(r3.mooringLayout!.lines.length).toBe(r4.mooringLayout!.lines.length);
-    const T = (r: typeof r3) => { const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor); return calculateProject(st).t_max_intact_kN; };
-    expect(T(r3)).toBeCloseTo(T(r4), 0);
-    expect(T(r3)).toBeLessThan(110); // was 163 kN with the shared bases in the gap
+  it('no raft tie on the 6-raft plan (no gap under 15 m); no short single base left to take the raft load', () => {
+    // the 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 across 12.9 m; the gaps of the 6-raft plan are 15–37 m
+    expect(RAFT_TIES).toEqual([]);
+    expect(LAYOUT_COUNTS.ties).toBe(0);
+    for (const r of HUOI_VANH_RAFTS) expect(r.mooringLayout!.group, r.name).toBeUndefined();
+    // planner step 2g: B2-D50 (single base, 7 m cable in the BÈ 1 – BÈ 2 corner) took 199 kN of BÈ 2 and was dropped
+    for (const l of MOORING_LINES_V2.filter((q) => q.type === 'BED' && !q.sharedWith)) expect(l.span, l.code).toBeGreaterThanOrEqual(10);
+    const T = (name: string) => {
+      const r = HUOI_VANH_RAFTS.find((q) => q.name === name)!;
+      const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor);
+      return calculateProject(st).t_max_intact_kN;
+    };
+    expect(T('BÈ 2')).toBeLessThan(110); // 204 kN (PES-48) with B2-D50
   });
 
   it('every raft passes at the 20 m/s default (screw-base option)', () => {
@@ -177,14 +175,14 @@ describe('Hồ Bản Mòng tab', () => {
     const cut = buildCableCuttingSchedule(state);
     expect(cut.rows).toHaveLength(LAYOUT_COUNTS.lines);
     const d = buildFinalDesign(state, results, batch);
-    expect(d.rafts).toHaveLength(8);
+    expect(d.rafts).toHaveLength(6);
     const dxf = buildMooringScrewBaseDxf(state, results, batch);
-    expect([dxf.baseCount, dxf.raftCount]).toEqual([LAYOUT_COUNTS.bedBases, 8]);
+    expect([dxf.baseCount, dxf.raftCount]).toEqual([LAYOUT_COUNTS.bedBases, 6]);
     expect(dxf.schedule.bases[0].baseId).toBe('BM-DV001');
   });
 
   it('the 3D scene places every anchor on the IFC terrain', () => {
-    expect(RAFT_MODELS).toHaveLength(8);
+    expect(RAFT_MODELS).toHaveLength(6);
     const piles = buildPileModels();
     expect(piles).toHaveLength(LAYOUT_COUNTS.anchorPoints);
     expect(buildCableModels(piles)).toHaveLength(LAYOUT_COUNTS.lines);
@@ -194,8 +192,8 @@ describe('Hồ Bản Mòng tab', () => {
     const c = lakeCaveats();
     expect(c[0]).toContain('19,55 m');
     expect(c.some((t) => t.includes('lộ khô'))).toBe(bedAnchorsOf().some((b) => b.z > MNC_M));
-    // BÈ 5, 7 and 8 sit on ground at or above MNC (median 649,0–649,2 m)
-    expect(raftsAgroundAtMnc().map((r) => r.name)).toEqual(expect.arrayContaining(['BÈ 5', 'BÈ 7', 'BÈ 8']));
+    // every raft of the 6-raft plan has ground above MNC somewhere under it (highest 653,1–657,2 m; BÈ 5 the most)
+    expect(raftsAgroundAtMnc().map((r) => r.name)).toEqual(['BÈ 1', 'BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5', 'BÈ 6']);
     expect(c.some((t) => t.includes('đế ĐƠN'))).toBe(LAYOUT_COUNTS.bedBases > LAYOUT_COUNTS.sharedBases);
     expect(ACTIVE_LAKE.codeWind.confirmed).toBe(false);
     expect(c.some((t) => t.includes('Sơn La'))).toBe(true);

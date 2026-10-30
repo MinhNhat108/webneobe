@@ -114,7 +114,7 @@ export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
   const padeyeThk_mm = 25;
   const padeyeWidth_mm = 200;
   const padeyeHeight_mm = holeAbovePlate_mm + 50;
-  const anchorBarDia_mm = 22, anchorBarCount = 4, anchorBarSpacing_mm = 180;
+  const anchorBarDia_mm = 22, anchorBarSpacing_mm = 180;
   const anchorBarLength_mm = Math.min(600, input.anchorLengthLimit_mm ?? 600);
   const collarSide_mm = Math.max(400, pileDia_mm + 50), collarDepth_mm = 300;
 
@@ -134,18 +134,23 @@ export function designShorePileHead(input: ShorePileHeadInput): ShorePileHead {
   const weldLeg_mm = [10, 12, 14].find((leg) => weldStressOf(leg) <= WELD_F_MPA) ?? 14;
   const weldStress = weldStressOf(weldLeg_mm);
 
-  // Anchor bars: the couple Ph · (pin above the concrete) on two bars in tension plus the uplift Pv on all four,
-  // the shear Ph on all four.
+  // Anchor bars in two rows across the pull: the couple Ph · (pin above the concrete) on the bars of one row in
+  // tension plus the uplift Pv on all of them, the shear Ph on all of them. 4 bars, raised to 6 / 8 where the
+  // anchorage does not fit (a padeye on a 0.4 m base slab: Bản Mòng BM-DV036, 132 kN at 44°, 2026-10-30).
   const armToConcrete_mm = holeAbovePlate_mm + plateThk_mm;
   const barArea = (Math.PI * anchorBarDia_mm * anchorBarDia_mm) / 4;
-  const barTension = (Ph * 1000 * armToConcrete_mm) / anchorBarSpacing_mm / 2 / 1000 + Pv / anchorBarCount; // kN per bar
-  const barShear = Ph / anchorBarCount;
   const barTensionCap = (barArea * BAR_RS_MPA) / 1000;
   const barShearCap = (barArea * BAR_RSW_MPA) / 1000;
-  const interaction = (barTension / barTensionCap) ** 2 + (barShear / barShearCap) ** 2;
   // Anchorage (TCVN 5574:2018): l0 = Rs·d / (4·R_bond), R_bond = 2.5·Rbt; scaled by the stress actually in the bar, not less than 15 d and 200 mm.
   const l0 = (BAR_RS_MPA * anchorBarDia_mm) / (4 * 2.5 * RBT_MPA);
-  const lAn = Math.max(l0 * (barTension / barTensionCap), 15 * anchorBarDia_mm, 200);
+  const barsOf = (n: number) => {
+    const tension = (Ph * 1000 * armToConcrete_mm) / anchorBarSpacing_mm / (n / 2) / 1000 + Pv / n; // kN per bar
+    const shear = Ph / n;
+    const interaction = (tension / barTensionCap) ** 2 + (shear / barShearCap) ** 2;
+    return { n, tension, interaction, lAn: Math.max(l0 * (tension / barTensionCap), 15 * anchorBarDia_mm, 200) };
+  };
+  const bars = [4, 6, 8].map(barsOf).find((b) => b.interaction <= 1 && b.lAn <= anchorBarLength_mm) ?? barsOf(8);
+  const anchorBarCount = bars.n, interaction = bars.interaction, lAn = bars.lAn;
 
   const pinAboveGround_mm = pileTopAboveGround_mm + plateThk_mm + holeAbovePlate_mm;
   const checks: HeadCheck[] = [

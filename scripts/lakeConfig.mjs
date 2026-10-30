@@ -99,11 +99,13 @@ export const LAKES = {
     maxShoreSpan: 80,
     // Rafts tied to each other across a narrow gap (owner 2026-10-24): every shared base of the pair is replaced by a
     // tie rope cleat to cleat (src/data/banMong/ties.json) and the pair is calculated as ONE group on its outer lines.
-    // BÈ 3 – BÈ 4 (gap 12.9 m): BÈ 3 163 -> ~96 kN, 8 bases fewer; tying the other pairs raises the line forces.
-    raftTies: [['BÈ 3', 'BÈ 4']],
-    // Panels of each raft, tables "THỐNG KÊ TẤM PIN MẶT TRỜI" of the sheets CT-BP-01…08 of
-    // "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf": 18 240 panels, SETTLED by the owner 2026-10-22 (the Pre-FS had 16 892).
-    panelsByRaft: { 'BÈ 1': 2352, 'BÈ 2': 2380, 'BÈ 3': 3136, 'BÈ 4': 2252, 'BÈ 5': 784, 'BÈ 6': 1568, 'BÈ 7': 2884, 'BÈ 8': 2884 }
+    // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). The 6-raft plan of 2026-10-30 has no gap under 15 m.
+    raftTies: [],
+    // Panels of each raft. Plan of 2026-10-30 (6 rafts, "CHUGIAP-HOBANMONG ver 2 - Floor Plan - BỐ TRÍ BÈ PIN HỒ
+    // BẢN MÒNG.dxf", owner: "t chốt phương án bố trí bè pin theo bản cad này"): the drawing has no panel table, so the
+    // ~16 900 panels the owner asked for (2026-10-29) are shared by area (0.192 panels/m², 22/10 plan: 0.196).
+    // Before: 8 rafts, 18 240 panels from the sheets CT-BP of "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf".
+    panelsByRaft: { 'BÈ 1': 2915, 'BÈ 2': 4191, 'BÈ 3': 713, 'BÈ 4': 2095, 'BÈ 5': 2809, 'BÈ 6': 4177 }
   }
 };
 

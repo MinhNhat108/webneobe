@@ -155,11 +155,12 @@ export function lakeCaveats(): string[] {
   }
   if (RAFT_TIES.length) {
     const g = HUOI_VANH_RAFTS.find((r) => r.mooringLayout?.group)?.mooringLayout?.group;
-    const pair = [...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(' – ');
+    const pair = [...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(', ');
     out.push(
-      `${RAFT_TIES.length} dây nối ${pair} thay cho ${RAFT_TIES.length} đế dùng chung ở khe hẹp (dài ${vn(Math.min(...RAFT_TIES.map((t) => t.length_m)), 1)}–${vn(Math.max(...RAFT_TIES.map((t) => t.length_m)), 1)} m): hai bè tính như MỘT cụm trên các dây phía ngoài. ` +
-      `Mỗi dây nối kiểm tra với ${vn(g?.tieDesign_kN ?? 0, 0)} kN (GIẢ ĐỊNH: một bè truyền toàn bộ lực của nó sang bè kia, một nửa số dây nối cùng làm việc) — chưa mô hình riêng. ` +
-      'Dây nối dài cố định (hai bè cùng nổi, không cần bù mực nước); cần đệm chống va giữa hai bè và nhà sản xuất bè xác nhận khung chịu được lực tập trung tại điểm nối.'
+      `${RAFT_TIES.length} dây nối giữa ${pair} thay cho các đế dùng chung ở khe (dài ${vn(Math.min(...RAFT_TIES.map((t) => t.length_m)), 1)}–${vn(Math.max(...RAFT_TIES.map((t) => t.length_m)), 1)} m): các bè nối tính như MỘT cụm trên các dây phía ngoài. ` +
+      `Mỗi dây nối kiểm tra với ${vn(g?.tieDesign_kN ?? 0, 0)} kN: lực qua mỗi khe lấy từ cân bằng của cả cụm (phần lực gió của các bè một phía khe không do dây neo riêng của chúng giữ, mọi mực nước và hướng, kể cả đứt 1 dây), ` +
+      'không nhỏ hơn toàn bộ lực gió của phía nhẹ hơn; GIẢ ĐỊNH các bè nối dịch chuyển như một khối và chỉ một nửa số dây nối của khe cùng làm việc. ' +
+      'Dây nối dài cố định (các bè cùng nổi, không cần bù mực nước); cần đệm chống va giữa các bè và nhà sản xuất bè xác nhận khung chịu được lực tập trung tại điểm nối.'
     );
   }
   // shore first (2026-10-30): a cable swung up to 75° to reach the bank instead of a base in a gap

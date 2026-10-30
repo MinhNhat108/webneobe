@@ -221,7 +221,7 @@ if (RAFT_TIES.length) {
   const tieCable = Object.keys(MBL).sort((p, q) => MBL[p] - MBL[q]).find((c) => MBL[c] / tieDesign >= 3) ?? 'PES-40';
   const tieLen = sum(RAFT_TIES, (t) => t.length_m + 2 * EYE_ROPE_M);
   it(`Cáp dây nối hai bè ${tieCable}`, `Polyester ${tieCable}, MBL ${MBL[tieCable]} kN; ${RAFT_TIES.length} dây ${tx(Math.min(...RAFT_TIES.map((t) => t.length_m)))}–${tx(Math.max(...RAFT_TIES.map((t) => t.length_m)))} m bích – bích`, 'md', tieLen, WASTE,
-    `Nối ${[...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(' – ')} thay cho ${RAFT_TIES.length} đế dùng chung; mỗi dây kiểm tra ${tx(tieDesign, 0)} kN (GIẢ ĐỊNH), HSAT ${tx(MBL[tieCable] / tieDesign, 2)}; dài cố định, không cần bù mực nước`);
+    `Nối ${[...new Set(RAFT_TIES.flatMap((t) => t.rafts))].join(', ')} thay cho các đế dùng chung ở khe; mỗi dây kiểm tra ${tx(tieDesign, 0)} kN (khe nặng nhất, theo cân bằng của cả cụm; GIẢ ĐỊNH nửa số dây nối của khe cùng làm việc), HSAT ${tx(MBL[tieCable] / tieDesign, 2)}; dài cố định, không cần bù mực nước`);
   it('Ma-nê dây nối hai bè', `Thép rèn mạ kẽm, WLL ≥ ${wll(tieDesign)} t`, 'cái', 2 * RAFT_TIES.length, 0.03, '2 cái mỗi dây nối, tại hai bích bè');
   it('Đệm chống va giữa hai bè (fender)', 'Đệm cao su / phao đệm treo mép bè, theo nhà sản xuất bè', 'bộ', RAFT_TIES.length, 0.1, 'Khi gió đẩy hai bè lại gần nhau dây nối chùng: đệm giữ hai bè không va nhau — CHƯA chọn loại');
 }

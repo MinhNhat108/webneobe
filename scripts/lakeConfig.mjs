@@ -107,9 +107,11 @@ export const LAKES = {
     // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). 6-raft plan (owner 2026-10-30: bed lines of the BÈ 2 – BÈ 4
     // gap crossing each other): BÈ 2 – BÈ 4 tied, 6 ropes 18–31 m; then (same evening, 8 shared bases crowding the
     // BÈ 4 – BÈ 5 gap) BÈ 4 – BÈ 5 tied too, 8 ropes 23–58 m: group BÈ 2 + 4 + 5 T 121,9 kN (PES-36, u 0,95), ties
-    // 154,8 kN (PES-40), 16 bases and 28 bed lines (compensation devices) fewer than untied. Tying BÈ 2 – BÈ 3 (2 ropes
-    // only) is NOT possible: each rope would take the whole BÈ 2 side, 597–860 kN, more than any PES cable.
-    raftTies: [['BÈ 2', 'BÈ 4'], ['BÈ 4', 'BÈ 5']],
+    // 154,8 kN (PES-40), 16 bases and 28 bed lines (compensation devices) fewer than untied. Then BÈ 2 – BÈ 3 too (owner
+    // 30/10 "D11, D13 neo đáy t nghỉ bỏ đi và nối 2 bè lại"): the 2 shared bases + 2 ropes placed by hand in ties.json
+    // (4 ropes 17–19 m; 2 ropes would need 261 kN each). Group BÈ 2 + 3 + 4 + 5: T 95,2 kN PES-32. Tie check (catalogue):
+    // the gap force from the group equilibrium (not less than the wind on the lighter side) over half the ropes of the gap.
+    raftTies: [['BÈ 2', 'BÈ 4'], ['BÈ 4', 'BÈ 5'], ['BÈ 2', 'BÈ 3']],
     // longer reach for named lines: B5-D09, B6-D44 single bases with the bank 80–84 m away (owner 2026-10-30: "D24, D28
     // sao ko neo bờ đi")
     shoreSpanFor: { 'B5-D09': 90, 'B6-D44': 90 },

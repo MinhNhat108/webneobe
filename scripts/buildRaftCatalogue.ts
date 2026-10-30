@@ -46,7 +46,7 @@ import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
 import { lakeFromArgv } from './lakeConfig.mjs';
 import { SCREW_BASE_DEFAULTS } from '../src/lib/calc/screwAnchorBed';
-import { analyseMooring, STANDBY_SPAN_M, STANDBY_SLACK_M, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
+import { analyseMooring, groupSideForce, STANDBY_SPAN_M, STANDBY_SLACK_M, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const LAKE = lakeFromArgv();
@@ -106,6 +106,7 @@ const groupOf = (name: string): string[] => {
 };
 const tiesOf = (name: string) => TIES.filter((t) => t.rafts.includes(name));
 const pairKey = (t: { rafts: string[] }) => [...t.rafts].sort().join('|');
+const tieDesignCache: Record<string, number> = {};
 /** Wind + current + wave on each raft alone (no layout needed), for the share of a tied group. */
 const fEnvOf: Record<string, number> = {};
 function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
@@ -117,16 +118,33 @@ function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
     const gIn = polygons.filter((q) => grp.includes(q.name));
     const beds = gIn.map((q) => q.designBed_m ?? LAKE.mndb - (WATER_DEPTH[q.name] ?? DEFAULT_DEPTH_M));
     const ties = TIES.filter((t) => t.rafts.every((r) => grp.includes(r)));
-    // tie design load (ASSUMED, not modelled): the rafts on one side of a gap may hand their whole load across it; the
-    // ties of THAT gap share it, half of them pulling at a time. Largest over the gaps of the group.
+    // tie design load: the group moves as one body (catalogue model). For each gap, the rafts on one side feel their own
+    // lines and their own wind; the rest crosses the gap in its ropes (groupSideForce: every level, every direction,
+    // intact and with the most loaded line lost). Not less than the wind on the lighter side (its own lines all slack:
+    // the ropes hold it). Half of the ropes of the gap pull at a time (ASSUMED). Largest over the gaps of the group.
     const sideOf = (start: string, cut: string) => {
       const g = new Set([start]);
       for (let grew = true; grew;) { grew = false; for (const t of ties) if (pairKey(t) !== cut && t.rafts.some((r) => g.has(r)) && t.rafts.some((r) => !g.has(r))) { t.rafts.forEach((r) => g.add(r)); grew = true; } }
       return [...g];
     };
-    const tieDesign = Math.max(...[...new Set(ties.map(pairKey))].map((key) => {
-      const [a, b] = key.split('|'); const n = ties.filter((t) => pairKey(t) === key).length;
-      const load = Math.max(...[a, b].map((r) => sideOf(r, key).reduce((s, q) => s + fEnvOf[q], 0)));
+    const floatLevel = Math.round((Math.max(...beds) + DRAFT_M) * 100) / 100;
+    const eqLines = outer.filter((l) => l.span >= STANDBY_SPAN_M).map((l) => ({
+      code: l.code, type: l.type, azimuth_deg: l.azimuth, span_m: l.span,
+      pin_m: Math.round((l.zAnchor + (l.type === 'SHORE' ? SHORE_ARM_M : BASE_PIN_M)) * 100) / 100
+    }));
+    const raftOfLine = Object.fromEntries(outer.map((l) => [l.code, l.raft]));
+    const gapKey = grp.slice().sort().join('|');
+    const tieDesign = tieDesignCache[gapKey] ??= Math.max(...[...new Set(ties.map(pairKey))].map((key) => {
+      const [a] = key.split('|'); const n = ties.filter((t) => pairKey(t) === key).length;
+      const side = sideOf(a, key), other = grp.filter((r) => !side.includes(r));
+      const fSide = side.reduce((s, q) => s + fEnvOf[q], 0), fOther = other.reduce((s, q) => s + fEnvOf[q], 0);
+      const eq = groupSideForce({
+        lines: eqLines, force_kN: fAll, mnc_m: PROJECT.env.mnc_m!, mndb_m: PROJECT.env.mndbt_m!, mnlkt_m: PROJECT.env.mncn_m!,
+        floatLevel_m: floatLevel, cleatHeight_m: PROJECT.raft.freeboardHeight_m ?? 0.35, mbl_kN: 385,
+        compensation: 'seasonal', adjustStep_m: 0
+      }, (code) => side.includes(raftOfLine[code]), fSide / fAll);
+      const load = Math.max(eq.force_kN, Math.min(fSide, fOther));
+      console.log(`tie gap ${key}: ${n} ropes, equilibrium ${eq.force_kN.toFixed(1)} kN (${eq.level_m} m, ${eq.direction_deg}°), lighter side ${Math.min(fSide, fOther).toFixed(1)} kN -> ${(load / Math.max(1, n / 2)).toFixed(1)} kN/rope`);
       return load / Math.max(1, n / 2);
     }));
     return {
@@ -336,7 +354,7 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   if (BAN_MONG) {
     const b = base(), st = buildRaftProjectState(b, row, b.anchor), res = calculateProject(st), lay = row.mooringLayout!;
     const eq = analyseMooring({
-      lines: lay.lines, force_kN: res.f_env_total_kN, mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
+      lines: lay.lines, force_kN: res.f_env_total_kN * (1 + (lay.group?.forceRatio ?? 0)), mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
       floatLevel_m: lay.floatLevel_m, cleatHeight_m: st.raft.freeboardHeight_m ?? 0.35, mbl_kN: st.line.mbl_kN,
       compensation: 'device', deviceTension_kN: st.line.pretension_kN, deviceStroke_m: LOCK_FAIL_STROKE_M
     });
@@ -347,7 +365,7 @@ const rows: RaftSummaryItem[] = polygons.map((poly, i) => {
   if (!BAN_MONG && !WHAT_IF) {
     const b = base(), st = buildRaftProjectState(b, row, b.anchor), res = calculateProject(st), lay = row.mooringLayout!;
     const eq = analyseMooring({
-      lines: lay.lines, force_kN: res.f_env_total_kN, mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
+      lines: lay.lines, force_kN: res.f_env_total_kN * (1 + (lay.group?.forceRatio ?? 0)), mnc_m: st.env.mnc_m!, mndb_m: st.env.mndbt_m!, mnlkt_m: st.env.mncn_m!,
       floatLevel_m: lay.floatLevel_m, cleatHeight_m: st.raft.freeboardHeight_m ?? 0.35, mbl_kN: st.line.mbl_kN,
       compensation: 'fixed', eaPerMbl: st.line.eaPerMbl
     });

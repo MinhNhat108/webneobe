@@ -246,6 +246,42 @@ export function analysisLevels(inp: EqInput): number[] {
   return [...out].sort((a, b) => a - b);
 }
 
+/**
+ * Tied group (rafts joined by ropes, moved together as one body): the force the ropes of a gap pass across it.
+ * At every level and direction (intact, and with the most loaded line of the level lost) the group is solved as one
+ * body; the rafts on one side of the gap feel their own lines (`inSide`) and their own share of the load
+ * (`loadShare` of force_kN); what is left over is carried by the ropes. Largest magnitude, kN.
+ */
+export function groupSideForce(inp: EqInput, inSide: (code: string) => boolean, loadShare: number): { force_kN: number; level_m: number; direction_deg: number } {
+  const dirStep = inp.directionStep_deg ?? 15;
+  let best = { force_kN: 0, level_m: 0, direction_deg: 0 };
+  const check = (w: number, dir: number, skip?: string) => {
+    const lines = prepare(inp, w, skip);
+    const fx = inp.force_kN * Math.sin(rad(dir)), fy = inp.force_kN * Math.cos(rad(dir));
+    const r = solve(lines, fx, fy);
+    if (!Number.isFinite(r.ux)) return;
+    let sx = loadShare * fx, sy = loadShare * fy;
+    r.T.forEach((t, i) => {
+      const l = lines[i];
+      if (t <= 0 || !inSide(l.code)) return;
+      const a = l.ax - r.ux, b = l.ay - r.uy, d = Math.sqrt(a * a + b * b + l.h * l.h);
+      sx += (t * a) / d; sy += (t * b) / d;
+    });
+    const f = Math.hypot(sx, sy);
+    if (f > best.force_kN) best = { force_kN: f, level_m: w, direction_deg: dir };
+  };
+  for (const w of analysisLevels(inp)) {
+    let worst = { t: 0, code: '' };
+    for (let dir = 0; dir < 360; dir += dirStep) {
+      check(w, dir);
+      const c = solveCase(inp, w, dir);
+      if (c.maxTension_kN > worst.t) worst = { t: c.maxTension_kN, code: c.maxLine };
+    }
+    for (let dir = 0; dir < 360; dir += dirStep) check(w, dir, worst.code);
+  }
+  return best;
+}
+
 export function analyseMooring(inp: EqInput): EqResult {
   const dirStep = inp.directionStep_deg ?? 15;
   const levels: EqLevelSummary[] = [];

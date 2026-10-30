@@ -109,15 +109,16 @@ describe('Hồ Bản Mòng tab', () => {
     }
   });
 
-  it('BÈ 2 – BÈ 4 – BÈ 5 tied across their gaps (owner 30/10: crowded bed lines); no short single base left to take the raft load', () => {
-    // the shared bases of the BÈ 2 – BÈ 4 gap (6, lines crossing each other) and of the BÈ 4 – BÈ 5 gap (8) became
-    // ropes cleat to cleat; the three rafts are ONE group on their outer lines
-    expect(RAFT_TIES.length).toBe(14);
-    expect(LAYOUT_COUNTS.ties).toBe(14);
+  it('BÈ 2, 3, 4, 5 tied across their gaps (owner 30/10: crowded bed lines); no short single base left to take the raft load', () => {
+    // the shared bases of the BÈ 2 – BÈ 4 gap (6, lines crossing each other), of the BÈ 4 – BÈ 5 gap (8) and of the
+    // BÈ 2 – BÈ 3 gap (2, plus 2 ropes placed by hand) became ropes cleat to cleat; the four rafts are ONE group
+    expect(RAFT_TIES.length).toBe(18);
+    expect(LAYOUT_COUNTS.ties).toBe(18);
+    expect(RAFT_TIES.filter((t) => [...t.rafts].sort().join() === 'BÈ 2,BÈ 3').length).toBe(4);
     expect(RAFT_TIES.filter((t) => [...t.rafts].sort().join() === 'BÈ 2,BÈ 4').length).toBe(6);
     expect(RAFT_TIES.filter((t) => [...t.rafts].sort().join() === 'BÈ 4,BÈ 5').length).toBe(8);
     for (const r of HUOI_VANH_RAFTS) {
-      if (['BÈ 2', 'BÈ 4', 'BÈ 5'].includes(r.name)) expect(r.mooringLayout!.group!.rafts.length, r.name).toBe(3);
+      if (['BÈ 2', 'BÈ 3', 'BÈ 4', 'BÈ 5'].includes(r.name)) expect(r.mooringLayout!.group!.rafts.length, r.name).toBe(4);
       else expect(r.mooringLayout!.group, r.name).toBeUndefined();
     }
     // planner step 2g: B2-D50 (single base, 7 m cable in the BÈ 1 – BÈ 2 corner) took 199 kN of BÈ 2 and was dropped
@@ -127,7 +128,11 @@ describe('Hồ Bản Mòng tab', () => {
       const st = buildRaftProjectState(JSON.parse(JSON.stringify(HUOI_VANH_DEFAULT_PROJECT)), r, HUOI_VANH_DEFAULT_PROJECT.anchor);
       return calculateProject(st).t_max_intact_kN;
     };
-    expect(T('BÈ 2')).toBeLessThan(125); // the group BÈ 2 + 4 + 5: 121,9 kN; 204 kN (PES-48) with B2-D50
+    expect(T('BÈ 2')).toBeLessThan(100); // the group BÈ 2 + 3 + 4 + 5: 95,2 kN; 204 kN (PES-48) with B2-D50
+    // tie check: largest gap force of the group equilibrium over half the ropes of that gap (BÈ 2 – BÈ 4: 154,8 kN)
+    const g = HUOI_VANH_RAFTS.find((r) => r.name === 'BÈ 3')!.mooringLayout!.group!;
+    expect(g.tieDesign_kN).toBeGreaterThan(150);
+    expect(g.tieDesign_kN).toBeLessThan(475 / 3);
   });
 
   it('every raft passes at the 20 m/s default (screw-base option)', () => {

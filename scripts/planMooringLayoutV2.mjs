@@ -119,6 +119,9 @@ const coords = JSON.parse(fs.readFileSync(COORDS, 'utf8'));
 // the same state on every run; the ties are formed again at the end (idempotent).
 const TIES_FILE = LAKE.abs.ties;
 const TIED = (LAKE.raftTies ?? []).map((p) => new Set(p));
+/** A lake-bed line of a tied pair on a base it shares with the partner raft: it becomes a tie at the end. */
+const isTieLine = (c) => c.type === 'BED' && !!c.sharedWith
+  && TIED.some((p) => p.has(c.raft) && p.has(coords.find((o) => o.code === c.sharedWith)?.raft));
 const oldTies = TIES_FILE && fs.existsSync(TIES_FILE) ? JSON.parse(fs.readFileSync(TIES_FILE, 'utf8')) : [];
 for (const t of oldTies) {
   for (const [me, other] of [[t.a, t.b], [t.b, t.a]]) {
@@ -557,6 +560,8 @@ function facingRaft(c) {
  * raft of a bed-gap pair, or its cleat lies in a bed zone.
  */
 function keepBed(c) {
+  // a tie (lakeConfig raftTies) stays a rope between the two rafts, never a shore line
+  if (isTieLine(c)) return true;
   const w = walker(ringOf[c.raft]), e = w.at(w.param(cleatOf(c))), cleat = cleatOf(c);
   // a zone may hold only the edges facing one way (owner 2026-10-28: the south EDGE of BÈ 2, not its east / west ends)
   const normalAz = ((Math.atan2(e.n.x, e.n.y) * 180) / Math.PI + 360) % 360;
@@ -1217,6 +1222,8 @@ for (let i = 0; i < coords.length; i++) {
     const a = coords[i], b = coords[j];
     if (segCross(cleatOf(a), anchorOf(a), cleatOf(b), anchorOf(b))) errors.push(`G3 ${a.code} x ${b.code}`);
     if (a.anchorId && a.anchorId === b.anchorId) continue; // two lines on ONE shared base
+    // the base of a tie is not built (the pair becomes a rope cleat to cleat): no gap between two of them
+    if (isTieLine(a) && isTieLine(b)) continue;
     const gap = a.type === 'BED' && b.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP;
     if (dist(anchorOf(a), anchorOf(b)) < gap - 1e-6) errors.push(`G4 ${a.code}/${b.code}`);
   }
@@ -1246,7 +1253,7 @@ for (const pair of TIED) {
       a: { code: c.code, raft: A, x: c.xRaft, y: c.yRaft }, b: { code: o.code, raft: B, x: o.xRaft, y: o.yRaft },
       base: { x: c.xAnchor, y: c.yAnchor, z: c.zAnchor } });
   }
-  ties.filter((t) => t.rafts[0] === A).sort((p, q) => p.a.code.localeCompare(q.a.code, 'en', { numeric: true }))
+  ties.filter((t) => t.rafts[0] === A && t.rafts[1] === B).sort((p, q) => p.a.code.localeCompare(q.a.code, 'en', { numeric: true }))
     .forEach((t, i) => { t.code = `${prefix}-${String(i + 1).padStart(2, '0')}`; });
 }
 const tiedCodes = new Set(ties.flatMap((t) => [t.a.code, t.b.code]));

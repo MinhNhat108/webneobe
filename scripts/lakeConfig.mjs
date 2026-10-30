@@ -94,9 +94,14 @@ export const LAKES = {
     // open water are normal, so a base facing a raft that has no room for a partner line stays single.
     singleBaseFacingOk: true,
     // Rule R1 reach: the bank is 60–110 m from several rafts (BÈ 3 west end, BÈ 6, BÈ 8 south). Owner 2026-10-24:
-    // anchor to the bank wherever possible, settled on 80 m shore cables (Huổi Vanh 60 m). 100 m gives 48 bases
-    // but loads BÈ 8 to 179 kN (short stiff bed lines left among long shore lines: PES-48, 3 piles per point).
+    // anchor to the bank wherever possible, settled on 80 m shore cables for the 8-raft plan (Huổi Vanh 60 m). 100 m gave 48 bases
+    // but loaded BÈ 8 to 179 kN (short stiff bed lines left among long shore lines: PES-48, 3 piles per point).
     maxShoreSpan: 80,
+    // 6-raft plan, owner 2026-10-30 "tiền neo bờ nhất có thể": a line facing another raft also goes to the bank where
+    // its cable reaches it (shoreFirst). Fresh plan: 80 m without shoreFirst 172 shore lines / 40 bases (max 132 kN);
+    // 80 m with it 184 / 35 (150 kN) — CHOSEN by the owner; 100 m with it 194 / 30 (148 kN) but +875 m of main cable,
+    // +11 piles, +5 compensation devices and locks, 15 cables of 80–100 m, for 5 bases fewer; 120 m only one more.
+    shoreFirst: true,
     // Rafts tied to each other across a narrow gap (owner 2026-10-24): every shared base of the pair is replaced by a
     // tie rope cleat to cleat (src/data/banMong/ties.json) and the pair is calculated as ONE group on its outer lines.
     // The 8-raft plan of 22/10 tied BÈ 3 – BÈ 4 (gap 12.9 m). The 6-raft plan of 2026-10-30 has no gap under 15 m.

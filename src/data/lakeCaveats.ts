@@ -162,6 +162,14 @@ export function lakeCaveats(): string[] {
       'Dây nối dài cố định (hai bè cùng nổi, không cần bù mực nước); cần đệm chống va giữa hai bè và nhà sản xuất bè xác nhận khung chịu được lực tập trung tại điểm nối.'
     );
   }
+  // shore first (2026-10-30): a cable swung up to 75° to reach the bank instead of a base in a gap
+  const ob = obliqueShoreLines();
+  if (ob.length) {
+    out.push(
+      `${ob.length}/${LAYOUT_COUNTS.lines - LAYOUT_COUNTS.bedLines} dây bờ lệch quá 60° so với pháp tuyến mép bè (tới ${vn(Math.max(...ob.map((x) => x.deg)), 0)}°: ${ob.map((x) => x.code).join(', ')}) — ` +
+      'do ưu tiên neo bờ thay đế ở các khe giữa bè: cáp chạy xiên dọc mép, tai neo trên bè chịu lực xiên; nhà sản xuất bè cần xác nhận.'
+    );
+  }
   const single = LAYOUT_COUNTS.bedBases - LAYOUT_COUNTS.sharedBases;
   if (single > 0) {
     out.push(

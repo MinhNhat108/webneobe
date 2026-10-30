@@ -144,9 +144,11 @@ describe('Hồ Bản Mòng tab', () => {
       // every case reached equilibrium; the damaged system (any level's most loaded line lost) is in the cable check
       expect(a.unconverged, b.raft.name).toBe(0);
       expect(b.results.t_max_damaged_kN, b.raft.name).toBeGreaterThanOrEqual(a.damaged.maxTension_kN);
-      // the single-angle tension of Huổi Vanh would be unsafe here
-      expect(b.results.t_max_intact_kN, b.raft.name).toBeGreaterThan(b.results.t_geometric_kN);
+      // never below the single-angle tension (it governs BÈ 2 of the shore-first 6-raft plan, 81,1 kN)
+      expect(b.results.t_max_intact_kN, b.raft.name).toBeGreaterThanOrEqual(b.results.t_geometric_kN);
     }
+    // the single-angle tension of Huổi Vanh would be unsafe here: the equilibrium is higher for most rafts
+    expect(batch.filter((b) => b.results.t_max_intact_kN > b.results.t_geometric_kN + 0.05).length).toBeGreaterThanOrEqual(batch.length - 1);
   });
 
   it('fixed-cut cables do not work in this lake: some raft fails', () => {

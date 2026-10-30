@@ -121,7 +121,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thong_ke_neo_xlsx',
         name: '5. Thống kê vật tư neo và cáp neo — 6 bè, 30/10/2026 (HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 827665,
+        size: 771176,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THONG_KE_VAT_TU_NEO.xlsx'
       },
@@ -129,7 +129,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_thuyet_minh_docx',
         name: '6. Thuyết minh tính toán hệ neo 6 bè — 30/10/2026 (HOBANMONG_THUYET_MINH_TINH_TOAN.docx)',
         mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 25111,
+        size: 24987,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx'
       },
@@ -137,7 +137,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_bang_tinh_xlsx',
         name: '7. Bảng tính Excel hệ neo 6 bè, cân bằng theo mực nước — 30/10/2026 (HOBANMONG_BANG_TINH_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 560184,
+        size: 563479,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_TINH_NEO.xlsx'
       },
@@ -145,7 +145,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_bang_thong_ke_neo_xlsx',
         name: '8. Bảng thống kê neo từng điểm: cọc bờ, đế vít xoắn, chiều dài cắt cáp — 6 bè, 30/10/2026 (HOBANMONG_BANG_THONG_KE_NEO_6_BE.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 604446,
+        size: 615047,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_BANG_THONG_KE_NEO_6_BE.xlsx'
       },
@@ -153,7 +153,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_mb_neo_dxf',
         name: '9. Bản vẽ CAD mặt bằng neo 6 bè — 30/10/2026 (HOBANMONG_MAT_BANG_NEO_6_BE.dxf)',
         mime: 'application/dxf',
-        size: 427419,
+        size: 429399,
         kind: 'dxf' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_6_BE.dxf'
       },
@@ -161,7 +161,7 @@ export function banMongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI_VA
         id: 'bm_mb_neo_dwg',
         name: '10. Bản vẽ CAD mặt bằng neo 6 bè — 30/10/2026, bản DWG (HOBANMONG_MAT_BANG_NEO_6_BE.dwg)',
         mime: 'application/acad',
-        size: 154936,
+        size: 155481,
         kind: 'other' as const,
         remoteUrl: 'docs_ban_mong/HOBANMONG_MAT_BANG_NEO_6_BE.dwg'
       }

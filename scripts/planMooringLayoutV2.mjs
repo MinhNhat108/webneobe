@@ -671,6 +671,11 @@ function convertToShore(eligible) {
  }
 }
 convertToShore((c) => !facingRaft(c) && !keepBed(c));
+// Shore first (lakeConfig shoreFirst / --shore-first; Bản Mòng owner 2026-10-30: "tiền neo bờ nhất có thể"): a line
+// facing another raft across a gap also goes to the bank when its cable, swung up to 75°, reaches it without
+// crossing a raft or another line; only what cannot stays on a lake-bed base.
+const SHORE_FIRST = process.argv.includes('--shore-first') || (!process.argv.includes('--no-shore-first') && !!LAKE.shoreFirst);
+if (SHORE_FIRST) convertToShore((c) => !keepBed(c));
 
 if (process.argv.includes('--explain')) {
   for (const c of coords) {

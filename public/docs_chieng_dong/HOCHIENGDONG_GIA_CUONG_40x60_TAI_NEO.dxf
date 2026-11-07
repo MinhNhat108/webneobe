@@ -1,0 +1,25184 @@
+  0
+SECTION
+  2
+HEADER
+  9
+$ACADVER
+  1
+AC1024
+  9
+$ACADMAINTVER
+ 70
+6
+  9
+$DWGCODEPAGE
+  3
+ANSI_1252
+  9
+$LASTSAVEDBY
+  1
+ezdxf
+  9
+$INSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMIN
+ 10
+1e+20
+ 20
+1e+20
+ 30
+1e+20
+  9
+$EXTMAX
+ 10
+-1e+20
+ 20
+-1e+20
+ 30
+-1e+20
+  9
+$LIMMIN
+ 10
+0.0
+ 20
+0.0
+  9
+$LIMMAX
+ 10
+420.0
+ 20
+297.0
+  9
+$ORTHOMODE
+ 70
+0
+  9
+$REGENMODE
+ 70
+1
+  9
+$FILLMODE
+ 70
+1
+  9
+$QTEXTMODE
+ 70
+0
+  9
+$MIRRTEXT
+ 70
+1
+  9
+$LTSCALE
+ 40
+1.0
+  9
+$ATTMODE
+ 70
+1
+  9
+$TEXTSIZE
+ 40
+2.5
+  9
+$TRACEWID
+ 40
+1.0
+  9
+$TEXTSTYLE
+  7
+OpenSans
+  9
+$CLAYER
+  8
+0
+  9
+$CELTYPE
+  6
+ByLayer
+  9
+$CECOLOR
+ 62
+256
+  9
+$CELTSCALE
+ 40
+1.0
+  9
+$DISPSILH
+ 70
+0
+  9
+$DIMSCALE
+ 40
+1.0
+  9
+$DIMASZ
+ 40
+0.175
+  9
+$DIMEXO
+ 40
+0.125
+  9
+$DIMDLI
+ 40
+3.75
+  9
+$DIMRND
+ 40
+0.0
+  9
+$DIMDLE
+ 40
+0.0
+  9
+$DIMEXE
+ 40
+0.375
+  9
+$DIMTP
+ 40
+0.0
+  9
+$DIMTM
+ 40
+0.0
+  9
+$DIMTXT
+ 40
+0.25
+  9
+$DIMCEN
+ 40
+2.5
+  9
+$DIMTSZ
+ 40
+0.0
+  9
+$DIMTOL
+ 70
+0
+  9
+$DIMLIM
+ 70
+0
+  9
+$DIMTIH
+ 70
+0
+  9
+$DIMTOH
+ 70
+0
+  9
+$DIMSE1
+ 70
+0
+  9
+$DIMSE2
+ 70
+0
+  9
+$DIMTAD
+ 70
+1
+  9
+$DIMZIN
+ 70
+12
+  9
+$DIMBLK
+  1
+ARCHTICK
+  9
+$DIMASO
+ 70
+1
+  9
+$DIMSHO
+ 70
+1
+  9
+$DIMPOST
+  1
+
+  9
+$DIMAPOST
+  1
+
+  9
+$DIMALT
+ 70
+0
+  9
+$DIMALTD
+ 70
+3
+  9
+$DIMALTF
+ 40
+0.03937007874
+  9
+$DIMLFAC
+ 40
+100.0
+  9
+$DIMTOFL
+ 70
+1
+  9
+$DIMTVP
+ 40
+0.0
+  9
+$DIMTIX
+ 70
+0
+  9
+$DIMSOXD
+ 70
+0
+  9
+$DIMSAH
+ 70
+0
+  9
+$DIMBLK1
+  1
+
+  9
+$DIMBLK2
+  1
+
+  9
+$DIMSTYLE
+  2
+EZDXF
+  9
+$DIMCLRD
+ 70
+0
+  9
+$DIMCLRE
+ 70
+0
+  9
+$DIMCLRT
+ 70
+0
+  9
+$DIMTFAC
+ 40
+0.5
+  9
+$DIMGAP
+ 40
+0.1
+  9
+$DIMJUST
+ 70
+0
+  9
+$DIMSD1
+ 70
+0
+  9
+$DIMSD2
+ 70
+0
+  9
+$DIMTOLJ
+ 70
+0
+  9
+$DIMTZIN
+ 70
+8
+  9
+$DIMALTZ
+ 70
+0
+  9
+$DIMALTTZ
+ 70
+0
+  9
+$DIMUPT
+ 70
+1
+  9
+$DIMDEC
+ 70
+2
+  9
+$DIMTDEC
+ 70
+2
+  9
+$DIMALTU
+ 70
+2
+  9
+$DIMALTTD
+ 70
+3
+  9
+$DIMTXSTY
+  7
+OpenSansCondensed-Light
+  9
+$DIMAUNIT
+ 70
+0
+  9
+$DIMADEC
+ 70
+2
+  9
+$DIMALTRND
+ 40
+0.0
+  9
+$DIMAZIN
+ 70
+3
+  9
+$DIMDSEP
+ 70
+46
+  9
+$DIMATFIT
+ 70
+3
+  9
+$DIMFRAC
+ 70
+0
+  9
+$DIMLDRBLK
+  1
+
+  9
+$DIMLUNIT
+ 70
+2
+  9
+$DIMLWD
+ 70
+-2
+  9
+$DIMLWE
+ 70
+-2
+  9
+$DIMTMOVE
+ 70
+2
+  9
+$DIMFXL
+ 40
+1.0
+  9
+$DIMFXLON
+ 70
+0
+  9
+$DIMJOGANG
+ 40
+0.785398163397
+  9
+$DIMTFILL
+ 70
+0
+  9
+$DIMTFILLCLR
+ 70
+0
+  9
+$DIMARCSYM
+ 70
+0
+  9
+$DIMLTYPE
+  6
+
+  9
+$DIMLTEX1
+  6
+
+  9
+$DIMLTEX2
+  6
+
+  9
+$DIMTXTDIRECTION
+ 70
+0
+  9
+$LUNITS
+ 70
+2
+  9
+$LUPREC
+ 70
+4
+  9
+$SKETCHINC
+ 40
+1.0
+  9
+$FILLETRAD
+ 40
+10.0
+  9
+$AUNITS
+ 70
+0
+  9
+$AUPREC
+ 70
+2
+  9
+$MENU
+  1
+.
+  9
+$ELEVATION
+ 40
+0.0
+  9
+$PELEVATION
+ 40
+0.0
+  9
+$THICKNESS
+ 40
+0.0
+  9
+$LIMCHECK
+ 70
+0
+  9
+$CHAMFERA
+ 40
+0.0
+  9
+$CHAMFERB
+ 40
+0.0
+  9
+$CHAMFERC
+ 40
+0.0
+  9
+$CHAMFERD
+ 40
+0.0
+  9
+$SKPOLY
+ 70
+0
+  9
+$TDCREATE
+ 40
+2461352.926886574
+  9
+$TDUCREATE
+ 40
+2458532.153996898
+  9
+$TDUPDATE
+ 40
+2461352.926886574
+  9
+$TDUUPDATE
+ 40
+2458532.1544311
+  9
+$TDINDWG
+ 40
+0.0
+  9
+$TDUSRTIMER
+ 40
+0.0
+  9
+$USRTIMER
+ 70
+1
+  9
+$ANGBASE
+ 50
+0.0
+  9
+$ANGDIR
+ 70
+0
+  9
+$PDMODE
+ 70
+0
+  9
+$PDSIZE
+ 40
+0.0
+  9
+$PLINEWID
+ 40
+0.0
+  9
+$SPLFRAME
+ 70
+0
+  9
+$SPLINETYPE
+ 70
+6
+  9
+$SPLINESEGS
+ 70
+8
+  9
+$HANDSEED
+  5
+353
+  9
+$SURFTAB1
+ 70
+6
+  9
+$SURFTAB2
+ 70
+6
+  9
+$SURFTYPE
+ 70
+6
+  9
+$SURFU
+ 70
+6
+  9
+$SURFV
+ 70
+6
+  9
+$UCSBASE
+  2
+
+  9
+$UCSNAME
+  2
+
+  9
+$UCSORG
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSXDIR
+ 10
+1.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSYDIR
+ 10
+0.0
+ 20
+1.0
+ 30
+0.0
+  9
+$UCSORTHOREF
+  2
+
+  9
+$UCSORTHOVIEW
+ 70
+0
+  9
+$UCSORGTOP
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGBOTTOM
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGLEFT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGRIGHT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGFRONT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGBACK
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSBASE
+  2
+
+  9
+$PUCSNAME
+  2
+
+  9
+$PUCSORG
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSXDIR
+ 10
+1.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSYDIR
+ 10
+0.0
+ 20
+1.0
+ 30
+0.0
+  9
+$PUCSORTHOREF
+  2
+
+  9
+$PUCSORTHOVIEW
+ 70
+0
+  9
+$PUCSORGTOP
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGBOTTOM
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGLEFT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGRIGHT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGFRONT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGBACK
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$USERI1
+ 70
+0
+  9
+$USERI2
+ 70
+0
+  9
+$USERI3
+ 70
+0
+  9
+$USERI4
+ 70
+0
+  9
+$USERI5
+ 70
+0
+  9
+$USERR1
+ 40
+0.0
+  9
+$USERR2
+ 40
+0.0
+  9
+$USERR3
+ 40
+0.0
+  9
+$USERR4
+ 40
+0.0
+  9
+$USERR5
+ 40
+0.0
+  9
+$WORLDVIEW
+ 70
+1
+  9
+$SHADEDGE
+ 70
+3
+  9
+$SHADEDIF
+ 70
+70
+  9
+$TILEMODE
+ 70
+1
+  9
+$MAXACTVP
+ 70
+64
+  9
+$PINSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PLIMCHECK
+ 70
+0
+  9
+$PEXTMIN
+ 10
+1e+20
+ 20
+1e+20
+ 30
+1e+20
+  9
+$PEXTMAX
+ 10
+-1e+20
+ 20
+-1e+20
+ 30
+-1e+20
+  9
+$PLIMMIN
+ 10
+0.0
+ 20
+0.0
+  9
+$PLIMMAX
+ 10
+420.0
+ 20
+297.0
+  9
+$UNITMODE
+ 70
+0
+  9
+$VISRETAIN
+ 70
+1
+  9
+$PLINEGEN
+ 70
+0
+  9
+$PSLTSCALE
+ 70
+1
+  9
+$TREEDEPTH
+ 70
+3020
+  9
+$CMLSTYLE
+  2
+Standard
+  9
+$CMLJUST
+ 70
+0
+  9
+$CMLSCALE
+ 40
+20.0
+  9
+$PROXYGRAPHICS
+ 70
+1
+  9
+$MEASUREMENT
+ 70
+1
+  9
+$CELWEIGHT
+370
+-1
+  9
+$ENDCAPS
+280
+0
+  9
+$JOINSTYLE
+280
+0
+  9
+$LWDISPLAY
+290
+0
+  9
+$INSUNITS
+ 70
+6
+  9
+$HYPERLINKBASE
+  1
+
+  9
+$STYLESHEET
+  1
+
+  9
+$XEDIT
+290
+1
+  9
+$CEPSNTYPE
+380
+0
+  9
+$PSTYLEMODE
+290
+1
+  9
+$FINGERPRINTGUID
+  2
+{C4E3D65B-E574-4F3F-921A-0A2716B19768}
+  9
+$VERSIONGUID
+  2
+{7C0EDF0A-3481-4C2A-BA77-5FD13E13D3BB}
+  9
+$EXTNAMES
+290
+1
+  9
+$PSVPSCALE
+ 40
+0.0
+  9
+$OLESTARTUP
+290
+0
+  9
+$SORTENTS
+280
+127
+  9
+$INDEXCTL
+280
+0
+  9
+$HIDETEXT
+280
+1
+  9
+$XCLIPFRAME
+280
+1
+  9
+$HALOGAP
+280
+0
+  9
+$OBSCOLOR
+ 70
+257
+  9
+$OBSLTYPE
+280
+0
+  9
+$INTERSECTIONDISPLAY
+280
+0
+  9
+$INTERSECTIONCOLOR
+ 70
+257
+  9
+$DIMASSOC
+280
+2
+  9
+$PROJECTNAME
+  1
+
+  9
+$CAMERADISPLAY
+290
+0
+  9
+$LENSLENGTH
+ 40
+50.0
+  9
+$CAMERAHEIGHT
+ 40
+0.0
+  9
+$STEPSPERSEC
+ 40
+24.0
+  9
+$STEPSIZE
+ 40
+100.0
+  9
+$3DDWFPREC
+ 40
+2.0
+  9
+$PSOLWIDTH
+ 40
+0.005
+  9
+$PSOLHEIGHT
+ 40
+0.08
+  9
+$LOFTANG1
+ 40
+1.570796326795
+  9
+$LOFTANG2
+ 40
+1.570796326795
+  9
+$LOFTMAG1
+ 40
+0.0
+  9
+$LOFTMAG2
+ 40
+0.0
+  9
+$LOFTPARAM
+ 70
+7
+  9
+$LOFTNORMALS
+280
+1
+  9
+$LATITUDE
+ 40
+37.795
+  9
+$LONGITUDE
+ 40
+-122.394
+  9
+$NORTHDIRECTION
+ 40
+0.0
+  9
+$TIMEZONE
+ 70
+-8000
+  9
+$LIGHTGLYPHDISPLAY
+280
+1
+  9
+$TILEMODELIGHTSYNCH
+280
+1
+  9
+$CMATERIAL
+347
+20
+  9
+$SOLIDHIST
+280
+0
+  9
+$SHOWHIST
+280
+1
+  9
+$DWFFRAME
+280
+2
+  9
+$DGNFRAME
+280
+2
+  9
+$REALWORLDSCALE
+290
+1
+  9
+$INTERFERECOLOR
+ 62
+256
+  9
+$CSHADOW
+280
+0
+  9
+$SHADOWPLANELOCATION
+ 40
+0.0
+  0
+ENDSEC
+  0
+SECTION
+  2
+CLASSES
+  0
+CLASS
+  1
+ACDBDICTIONARYWDFLT
+  2
+AcDbDictionaryWithDefault
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+SUN
+  2
+AcDbSun
+  3
+SCENEOE
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+VISUALSTYLE
+  2
+AcDbVisualStyle
+  3
+ObjectDBX Classes
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MATERIAL
+  2
+AcDbMaterial
+  3
+ObjectDBX Classes
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+SCALE
+  2
+AcDbScale
+  3
+ObjectDBX Classes
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+TABLESTYLE
+  2
+AcDbTableStyle
+  3
+ObjectDBX Classes
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MLEADERSTYLE
+  2
+AcDbMLeaderStyle
+  3
+ACDB_MLEADERSTYLE_CLASS
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+DICTIONARYVAR
+  2
+AcDbDictionaryVar
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+CELLSTYLEMAP
+  2
+AcDbCellStyleMap
+  3
+ObjectDBX Classes
+ 90
+1152
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MENTALRAYRENDERSETTINGS
+  2
+AcDbMentalRayRenderSettings
+  3
+SCENEOE
+ 90
+1024
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBDETAILVIEWSTYLE
+  2
+AcDbDetailViewStyle
+  3
+ObjectDBX Classes
+ 90
+1025
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBSECTIONVIEWSTYLE
+  2
+AcDbSectionViewStyle
+  3
+ObjectDBX Classes
+ 90
+1025
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+RASTERVARIABLES
+  2
+AcDbRasterVariables
+  3
+ISM
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+LAYOUT
+  2
+AcDbLayout
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBPLACEHOLDER
+  2
+AcDbPlaceHolder
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+TABLE
+  2
+VPORT
+  5
+8
+330
+0
+100
+AcDbSymbolTable
+ 70
+1
+  0
+VPORT
+  5
+23
+330
+8
+100
+AcDbSymbolTableRecord
+100
+AcDbViewportTableRecord
+  2
+*Active
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 11
+1.0
+ 21
+1.0
+ 12
+0.0
+ 22
+0.0
+ 13
+0.0
+ 23
+0.0
+ 14
+0.5
+ 24
+0.5
+ 15
+0.5
+ 25
+0.5
+ 16
+0.0
+ 26
+0.0
+ 36
+1.0
+ 17
+0.0
+ 27
+0.0
+ 37
+0.0
+ 40
+1000.0
+ 41
+1.34
+ 42
+50.0
+ 43
+0.0
+ 44
+0.0
+ 50
+0.0
+ 51
+0.0
+ 71
+0
+ 72
+1000
+ 73
+1
+ 74
+3
+ 75
+0
+ 76
+0
+ 77
+0
+ 78
+0
+281
+0
+ 65
+0
+146
+0.0
+  0
+ENDTAB
+  0
+TABLE
+  2
+LTYPE
+  5
+2
+330
+0
+100
+AcDbSymbolTable
+ 70
+21
+  0
+LTYPE
+  5
+24
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+ByBlock
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+25
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+ByLayer
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+26
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+Continuous
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+2F
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+CENTER
+ 70
+0
+  3
+Center ____ _ ____ _ ____ _ ____ _ ____ _ ____
+ 72
+65
+ 73
+4
+ 40
+5.08
+ 49
+3.175
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+0.635
+ 74
+0
+ 49
+-0.635
+ 74
+0
+  0
+LTYPE
+  5
+30
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+CENTERX2
+ 70
+0
+  3
+Center (2x) ________  __  ________  __  ________
+ 72
+65
+ 73
+4
+ 40
+8.89
+ 49
+6.35
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+1.27
+ 74
+0
+ 49
+-0.635
+ 74
+0
+  0
+LTYPE
+  5
+31
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+CENTER2
+ 70
+0
+  3
+Center (.5x) ____ _ ____ _ ____ _ ____ _ ____
+ 72
+65
+ 73
+4
+ 40
+2.54
+ 49
+1.587
+ 74
+0
+ 49
+-0.318
+ 74
+0
+ 49
+0.318
+ 74
+0
+ 49
+-0.318
+ 74
+0
+  0
+LTYPE
+  5
+32
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHED
+ 70
+0
+  3
+Dashed __ __ __ __ __ __ __ __ __ __ __ __ __ _
+ 72
+65
+ 73
+2
+ 40
+1.524
+ 49
+1.27
+ 74
+0
+ 49
+-0.254
+ 74
+0
+  0
+LTYPE
+  5
+33
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHEDX2
+ 70
+0
+  3
+Dashed (2x) ____  ____  ____  ____  ____  ____
+ 72
+65
+ 73
+2
+ 40
+3.048
+ 49
+2.54
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+34
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHED2
+ 70
+0
+  3
+Dashed (.5x) _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ 72
+65
+ 73
+2
+ 40
+0.762
+ 49
+0.635
+ 74
+0
+ 49
+-0.127
+ 74
+0
+  0
+LTYPE
+  5
+35
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+PHANTOM
+ 70
+0
+  3
+Phantom ______  __  __  ______  __  __  ______
+ 72
+65
+ 73
+6
+ 40
+6.35
+ 49
+3.175
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+0.635
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+0.635
+ 74
+0
+ 49
+-0.635
+ 74
+0
+  0
+LTYPE
+  5
+36
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+PHANTOMX2
+ 70
+0
+  3
+Phantom (2x)____________    ____    ____    ____________
+ 72
+65
+ 73
+6
+ 40
+10.795
+ 49
+6.35
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+1.27
+ 74
+0
+ 49
+-0.635
+ 74
+0
+ 49
+1.27
+ 74
+0
+ 49
+-0.635
+ 74
+0
+  0
+LTYPE
+  5
+37
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+PHANTOM2
+ 70
+0
+  3
+Phantom (.5x) ___ _ _ ___ _ _ ___ _ _ ___ _ _ ___
+ 72
+65
+ 73
+6
+ 40
+3.175
+ 49
+1.587
+ 74
+0
+ 49
+-0.318
+ 74
+0
+ 49
+0.318
+ 74
+0
+ 49
+-0.318
+ 74
+0
+ 49
+0.318
+ 74
+0
+ 49
+-0.318
+ 74
+0
+  0
+LTYPE
+  5
+38
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHDOT
+ 70
+0
+  3
+Dash dot __ . __ . __ . __ . __ . __ . __ . __
+ 72
+65
+ 73
+4
+ 40
+3.556
+ 49
+2.54
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+39
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHDOTX2
+ 70
+0
+  3
+Dash dot (2x) ____  .  ____  .  ____  .  ____
+ 72
+65
+ 73
+4
+ 40
+6.096
+ 49
+5.08
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+3A
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHDOT2
+ 70
+0
+  3
+Dash dot (.5x) _ . _ . _ . _ . _ . _ . _ . _
+ 72
+65
+ 73
+4
+ 40
+1.778
+ 49
+1.27
+ 74
+0
+ 49
+-0.254
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.254
+ 74
+0
+  0
+LTYPE
+  5
+3B
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DOT
+ 70
+0
+  3
+Dot .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+ 72
+65
+ 73
+2
+ 40
+0.508
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+3C
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DOTX2
+ 70
+0
+  3
+Dot (2x) .    .    .    .    .    .    .    . 
+ 72
+65
+ 73
+2
+ 40
+1.016
+ 49
+0.0
+ 74
+0
+ 49
+-1.016
+ 74
+0
+  0
+LTYPE
+  5
+3D
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DOT2
+ 70
+0
+  3
+Dot (.5) . . . . . . . . . . . . . . . . . . . 
+ 72
+65
+ 73
+2
+ 40
+0.254
+ 49
+0.0
+ 74
+0
+ 49
+-0.254
+ 74
+0
+  0
+LTYPE
+  5
+3E
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DIVIDE
+ 70
+0
+  3
+Divide __ . . __ . . __ . . __ . . __ . . __
+ 72
+65
+ 73
+6
+ 40
+4.064
+ 49
+2.54
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+3F
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DIVIDEX2
+ 70
+0
+  3
+Divide (2x) ____  . .  ____  . .  ____  . .  ____
+ 72
+65
+ 73
+6
+ 40
+6.604
+ 49
+5.08
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.508
+ 74
+0
+  0
+LTYPE
+  5
+40
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DIVIDE2
+ 70
+0
+  3
+Divide(.5x) _ . _ . _ . _ . _ . _ . _ . _
+ 72
+65
+ 73
+6
+ 40
+2.032
+ 49
+1.27
+ 74
+0
+ 49
+-0.254
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.254
+ 74
+0
+ 49
+0.0
+ 74
+0
+ 49
+-0.254
+ 74
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+LAYER
+  5
+1
+330
+0
+100
+AcDbSymbolTable
+ 70
+8
+  0
+LAYER
+  5
+27
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+0
+ 70
+0
+ 62
+7
+  6
+Continuous
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+28
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+Defpoints
+ 70
+0
+ 62
+7
+  6
+Continuous
+290
+0
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+8B
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+BE_PIN
+ 70
+0
+ 62
+7
+  6
+Continuous
+370
+50
+390
+13
+347
+21
+  0
+LAYER
+  5
+8C
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+KHUNG_C52
+ 70
+0
+ 62
+8
+  6
+Continuous
+370
+0
+390
+13
+347
+21
+  0
+LAYER
+  5
+8D
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+DAY_NEO
+ 70
+0
+ 62
+5
+  6
+Continuous
+370
+0
+390
+13
+347
+21
+  0
+LAYER
+  5
+8E
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+BICH_NEO
+ 70
+0
+ 62
+1
+  6
+Continuous
+370
+25
+390
+13
+347
+21
+  0
+LAYER
+  5
+8F
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+GIA_CUONG_40x60
+ 70
+0
+ 62
+1
+  6
+Continuous
+370
+70
+390
+13
+347
+21
+  0
+LAYER
+  5
+90
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+GHI_CHU
+ 70
+0
+ 62
+7
+  6
+Continuous
+370
+0
+390
+13
+347
+21
+  0
+ENDTAB
+  0
+TABLE
+  2
+STYLE
+  5
+5
+330
+0
+100
+AcDbSymbolTable
+ 70
+27
+  0
+STYLE
+  5
+29
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+Standard
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+txt
+  4
+
+  0
+STYLE
+  5
+41
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-Light
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-Light.ttf
+  4
+
+  0
+STYLE
+  5
+42
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-Light-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-LightItalic.ttf
+  4
+
+  0
+STYLE
+  5
+43
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-Regular.ttf
+  4
+
+  0
+STYLE
+  5
+44
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-Italic.ttf
+  4
+
+  0
+STYLE
+  5
+45
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-SemiBold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-SemiBold.ttf
+  4
+
+  0
+STYLE
+  5
+46
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-SemiBoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-SemiBoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+47
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-Bold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-Bold.ttf
+  4
+
+  0
+STYLE
+  5
+48
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-BoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-BoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+49
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-ExtraBold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-ExtraBold.ttf
+  4
+
+  0
+STYLE
+  5
+4A
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSans-ExtraBoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSans-ExtraBoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+4B
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSansCondensed-Bold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSansCondensed-Bold.ttf
+  4
+
+  0
+STYLE
+  5
+4C
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSansCondensed-Light
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSansCondensed-Light.ttf
+  4
+
+  0
+STYLE
+  5
+4D
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+OpenSansCondensed-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+OpenSansCondensed-LightItalic.ttf
+  4
+
+  0
+STYLE
+  5
+4E
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSans
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSans-Regular.ttf
+  4
+
+  0
+STYLE
+  5
+4F
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSans-Bold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSans-Bold.ttf
+  4
+
+  0
+STYLE
+  5
+50
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSans-BoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSans-BoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+51
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSans-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSans-Italic.ttf
+  4
+
+  0
+STYLE
+  5
+52
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSerif
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSerif-Regular.ttf
+  4
+
+  0
+STYLE
+  5
+53
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSerif-Bold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSerif-Bold.ttf
+  4
+
+  0
+STYLE
+  5
+54
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSerif-BoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSerif-BoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+55
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationSerif-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationSerif-Italic.ttf
+  4
+
+  0
+STYLE
+  5
+56
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationMono
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationMono-Regular.ttf
+  4
+
+  0
+STYLE
+  5
+57
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationMono-Bold
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationMono-Bold.ttf
+  4
+
+  0
+STYLE
+  5
+58
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationMono-BoldItalic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationMono-BoldItalic.ttf
+  4
+
+  0
+STYLE
+  5
+59
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+LiberationMono-Italic
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+LiberationMono-Italic.ttf
+  4
+
+  0
+STYLE
+  5
+8A
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+VN
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+arial.ttf
+  4
+
+  0
+ENDTAB
+  0
+TABLE
+  2
+VIEW
+  5
+7
+330
+0
+100
+AcDbSymbolTable
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+UCS
+  5
+6
+330
+0
+100
+AcDbSymbolTable
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+APPID
+  5
+3
+330
+0
+100
+AcDbSymbolTable
+ 70
+3
+  0
+APPID
+  5
+2A
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+ACAD
+ 70
+0
+  0
+APPID
+  5
+350
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+HATCHBACKGROUNDCOLOR
+ 70
+0
+  0
+APPID
+  5
+351
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+EZDXF
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+DIMSTYLE
+  5
+4
+330
+0
+100
+AcDbSymbolTable
+ 70
+12
+100
+AcDbDimStyleTable
+  0
+DIMSTYLE
+105
+2B
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+Standard
+ 70
+0
+ 40
+1.0
+ 41
+2.5
+ 42
+0.625
+ 43
+3.75
+ 44
+1.25
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+2.5
+141
+2.5
+142
+0.0
+143
+0.03937007874
+144
+1.0
+145
+0.0
+146
+1.0
+147
+0.625
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+8
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+44
+279
+0
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+0
+289
+3
+290
+0
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+73
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZDXF
+ 70
+0
+ 40
+1.0
+ 41
+0.175
+ 42
+0.125
+ 43
+3.75
+ 44
+0.375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.25
+141
+2.5
+142
+0.0
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.1
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+342
+74
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+7C
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_100_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.25
+ 42
+0.125
+ 43
+3.75
+ 44
+0.375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.25
+141
+2.5
+142
+0.125
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.1
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+7D
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_50_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.125
+ 42
+0.0625
+ 43
+3.75
+ 44
+0.1875
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.125
+141
+2.5
+142
+0.0625
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.05
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+7E
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_25_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.0625
+ 42
+0.03125
+ 43
+3.75
+ 44
+0.09375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.0625
+141
+2.5
+142
+0.03125
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.025
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+7F
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_20_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.05
+ 42
+0.025
+ 43
+3.75
+ 44
+0.07500000000000001
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.05
+141
+2.5
+142
+0.025
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.020000000000000004
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+80
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_10_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.025
+ 42
+0.0125
+ 43
+3.75
+ 44
+0.037500000000000006
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.025
+141
+2.5
+142
+0.0125
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.010000000000000002
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+81
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_5_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.0125
+ 42
+0.00625
+ 43
+3.75
+ 44
+0.018750000000000003
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.0125
+141
+2.5
+142
+0.00625
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.005000000000000001
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+82
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_M_1_H25_CM
+ 70
+0
+ 40
+1.0
+ 41
+0.0025
+ 42
+0.00125
+ 43
+3.75
+ 44
+0.00375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.0025
+141
+2.5
+142
+0.00125
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.001
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+83
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_RADIUS
+ 70
+0
+ 40
+1.0
+ 41
+0.25
+ 42
+0.125
+ 43
+3.75
+ 44
+0.375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.25
+141
+0.0
+142
+0.0
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.1
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+0
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+1
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+342
+84
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+88
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_RADIUS_INSIDE
+ 70
+0
+ 40
+1.0
+ 41
+0.25
+ 42
+0.125
+ 43
+3.75
+ 44
+0.375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.25
+141
+0.0
+142
+0.0
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.1
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+0
+ 78
+12
+ 79
+3
+170
+0
+171
+3
+172
+0
+173
+0
+174
+1
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+0
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+0
+290
+0
+340
+4C
+342
+84
+371
+-2
+372
+-2
+  0
+DIMSTYLE
+105
+89
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+EZ_CURVED
+ 70
+0
+ 40
+1.0
+ 41
+0.25
+ 42
+0.125
+ 43
+3.75
+ 44
+0.375
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+0.25
+141
+2.5
+142
+0.0
+143
+0.03937007874
+144
+100.0
+145
+0.0
+146
+0.5
+147
+0.1
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+12
+ 79
+2
+ 90
+2
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+46
+279
+2
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+1
+289
+3
+290
+0
+340
+4C
+371
+-2
+372
+-2
+  0
+ENDTAB
+  0
+TABLE
+  2
+BLOCK_RECORD
+  5
+9
+330
+0
+100
+AcDbSymbolTable
+ 70
+5
+  0
+BLOCK_RECORD
+  5
+17
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+*Model_Space
+340
+1A
+ 70
+0
+280
+1
+281
+0
+  0
+BLOCK_RECORD
+  5
+1B
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+*Paper_Space
+340
+1E
+ 70
+0
+280
+1
+281
+0
+  0
+BLOCK_RECORD
+  5
+74
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+_ARCHTICK
+340
+0
+ 70
+0
+280
+1
+281
+0
+  0
+BLOCK_RECORD
+  5
+78
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+_CLOSEDFILLED
+340
+0
+ 70
+0
+280
+1
+281
+0
+  0
+BLOCK_RECORD
+  5
+84
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+_CLOSEDBLANK
+340
+0
+ 70
+0
+280
+1
+281
+0
+  0
+ENDTAB
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+BLOCK
+  5
+18
+330
+17
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+*Model_Space
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+*Model_Space
+  1
+
+  0
+ENDBLK
+  5
+19
+330
+17
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+BLOCK
+  5
+1C
+330
+1B
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+*Paper_Space
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+*Paper_Space
+  1
+
+  0
+ENDBLK
+  5
+1D
+330
+1B
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+BLOCK
+  5
+75
+330
+74
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+_ARCHTICK
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+_ARCHTICK
+  1
+
+  0
+LWPOLYLINE
+  5
+77
+330
+74
+100
+AcDbEntity
+  8
+0
+  6
+BYBLOCK
+ 62
+0
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.15
+ 10
+-0.5
+ 20
+-0.5
+ 10
+0.5
+ 20
+0.5
+  0
+ENDBLK
+  5
+76
+330
+74
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+BLOCK
+  5
+79
+330
+78
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+_CLOSEDFILLED
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+_CLOSEDFILLED
+  1
+
+  0
+SOLID
+  5
+7B
+330
+78
+100
+AcDbEntity
+  8
+0
+  6
+BYBLOCK
+ 62
+0
+100
+AcDbTrace
+ 10
+-1.0
+ 20
+0.16439898372402537
+ 30
+0.0
+ 11
+0.0
+ 21
+0.0
+ 31
+0.0
+ 12
+-1.0
+ 22
+-0.16439898372402537
+ 32
+0.0
+ 13
+-1.0
+ 23
+-0.16439898372402537
+ 33
+0.0
+  0
+ENDBLK
+  5
+7A
+330
+78
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+BLOCK
+  5
+85
+330
+84
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+_CLOSEDBLANK
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+_CLOSEDBLANK
+  1
+
+  0
+LWPOLYLINE
+  5
+87
+330
+84
+100
+AcDbEntity
+  8
+0
+  6
+BYBLOCK
+ 62
+0
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+-1.0
+ 20
+0.16439898372402537
+ 10
+0.0
+ 20
+0.0
+ 10
+-1.0
+ 20
+-0.16439898372402537
+  0
+ENDBLK
+  5
+86
+330
+84
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+LWPOLYLINE
+  5
+91
+330
+17
+100
+AcDbEntity
+  8
+BE_PIN
+100
+AcDbPolyline
+ 90
+12
+ 70
+1
+ 10
+497003.257
+ 20
+2343893.078
+ 10
+497037.127
+ 20
+2343943.419
+ 10
+496913.727
+ 20
+2344020.809
+ 10
+496935.857
+ 20
+2344056.225
+ 10
+496872.01
+ 20
+2344095.366
+ 10
+496897.447
+ 20
+2344136.072
+ 10
+496836.146
+ 20
+2344174.377
+ 10
+496751.359
+ 20
+2344038.69
+ 10
+496812.659
+ 20
+2344000.384
+ 10
+496788.283
+ 20
+2343961.374
+ 10
+497034.853
+ 20
+2343807.3
+ 10
+497064.529
+ 20
+2343854.791
+  0
+LINE
+  5
+92
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497064.0811958492
+ 20
+2343855.0708191264
+ 30
+0.0
+ 11
+497034.322545073
+ 21
+2343807.631464949
+ 31
+0.0
+  0
+LINE
+  5
+93
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497058.7766471263
+ 20
+2343858.3854694883
+ 30
+0.0
+ 11
+497029.0179958022
+ 21
+2343810.9461144367
+ 31
+0.0
+  0
+LINE
+  5
+94
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497053.4720984034
+ 20
+2343861.7001198498
+ 30
+0.0
+ 11
+497023.7134465312
+ 21
+2343814.260763925
+ 31
+0.0
+  0
+LINE
+  5
+95
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497048.16754968034
+ 20
+2343865.0147702117
+ 30
+0.0
+ 11
+497018.4088972608
+ 21
+2343817.575413414
+ 31
+0.0
+  0
+LINE
+  5
+96
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497042.86300095764
+ 20
+2343868.329420573
+ 30
+0.0
+ 11
+497013.1043479898
+ 21
+2343820.890062902
+ 31
+0.0
+  0
+LINE
+  5
+97
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497037.5584522345
+ 20
+2343871.6440709345
+ 30
+0.0
+ 11
+497007.799798719
+ 21
+2343824.2047123904
+ 31
+0.0
+  0
+LINE
+  5
+98
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497032.25390351156
+ 20
+2343874.958721296
+ 30
+0.0
+ 11
+497002.49524944846
+ 21
+2343827.5193618787
+ 31
+0.0
+  0
+LINE
+  5
+99
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497026.9493547885
+ 20
+2343878.273371658
+ 30
+0.0
+ 11
+496997.19070017757
+ 21
+2343830.8340113675
+ 31
+0.0
+  0
+LINE
+  5
+9A
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497021.6448060656
+ 20
+2343881.5880220192
+ 30
+0.0
+ 11
+496991.886150907
+ 21
+2343834.1486608554
+ 31
+0.0
+  0
+LINE
+  5
+9B
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497016.3402573427
+ 20
+2343884.902672381
+ 30
+0.0
+ 11
+496986.58160163625
+ 21
+2343837.463310344
+ 31
+0.0
+  0
+LINE
+  5
+9C
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497011.03570861986
+ 20
+2343888.217322743
+ 30
+0.0
+ 11
+496981.27705236536
+ 21
+2343840.777959832
+ 31
+0.0
+  0
+LINE
+  5
+9D
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497005.7311598967
+ 20
+2343891.531973104
+ 30
+0.0
+ 11
+496975.9725030946
+ 21
+2343844.0926093203
+ 31
+0.0
+  0
+LINE
+  5
+9E
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497032.65523685433
+ 20
+2343946.223455024
+ 30
+0.0
+ 11
+496970.66795382404
+ 21
+2343847.407258809
+ 31
+0.0
+  0
+LINE
+  5
+9F
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497027.3561282478
+ 20
+2343949.546777674
+ 30
+0.0
+ 11
+496965.36340455303
+ 21
+2343850.721908297
+ 31
+0.0
+  0
+LINE
+  5
+A0
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497022.0570196414
+ 20
+2343952.8701003245
+ 30
+0.0
+ 11
+496960.0588552824
+ 21
+2343854.0365577852
+ 31
+0.0
+  0
+LINE
+  5
+A1
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497016.7579110351
+ 20
+2343956.193422975
+ 30
+0.0
+ 11
+496954.75430601183
+ 21
+2343857.351207274
+ 31
+0.0
+  0
+LINE
+  5
+A2
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497011.45880242833
+ 20
+2343959.516745625
+ 30
+0.0
+ 11
+496949.44975674106
+ 21
+2343860.6658567623
+ 31
+0.0
+  0
+LINE
+  5
+A3
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497006.15969382203
+ 20
+2343962.840068276
+ 30
+0.0
+ 11
+496944.14520747005
+ 21
+2343863.9805062506
+ 31
+0.0
+  0
+LINE
+  5
+A4
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+497000.8605852156
+ 20
+2343966.163390926
+ 30
+0.0
+ 11
+496938.8406581994
+ 21
+2343867.2951557385
+ 31
+0.0
+  0
+LINE
+  5
+A5
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496995.5614766091
+ 20
+2343969.486713576
+ 30
+0.0
+ 11
+496933.53610892885
+ 21
+2343870.6098052277
+ 31
+0.0
+  0
+LINE
+  5
+A6
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496990.26236800256
+ 20
+2343972.810036226
+ 30
+0.0
+ 11
+496928.2315596581
+ 21
+2343873.9244547156
+ 31
+0.0
+  0
+LINE
+  5
+A7
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496984.9632593959
+ 20
+2343976.1333588767
+ 30
+0.0
+ 11
+496922.9270103872
+ 21
+2343877.239104204
+ 31
+0.0
+  0
+LINE
+  5
+A8
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496979.6641507896
+ 20
+2343979.456681527
+ 30
+0.0
+ 11
+496917.62246111664
+ 21
+2343880.5537536927
+ 31
+0.0
+  0
+LINE
+  5
+A9
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496974.3650421831
+ 20
+2343982.7800041772
+ 30
+0.0
+ 11
+496912.31791184586
+ 21
+2343883.8684031805
+ 31
+0.0
+  0
+LINE
+  5
+AA
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496969.0659335768
+ 20
+2343986.103326828
+ 30
+0.0
+ 11
+496907.0133625751
+ 21
+2343887.183052669
+ 31
+0.0
+  0
+LINE
+  5
+AB
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496963.76682497014
+ 20
+2343989.4266494783
+ 30
+0.0
+ 11
+496901.7088133042
+ 21
+2343890.497702157
+ 31
+0.0
+  0
+LINE
+  5
+AC
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496958.46771636384
+ 20
+2343992.7499721292
+ 30
+0.0
+ 11
+496896.4042640332
+ 21
+2343893.812351645
+ 31
+0.0
+  0
+LINE
+  5
+AD
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496953.1686077571
+ 20
+2343996.073294779
+ 30
+0.0
+ 11
+496891.09971476265
+ 21
+2343897.1270011337
+ 31
+0.0
+  0
+LINE
+  5
+AE
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496947.8694991508
+ 20
+2343999.3966174293
+ 30
+0.0
+ 11
+496885.7951654919
+ 21
+2343900.441650622
+ 31
+0.0
+  0
+LINE
+  5
+AF
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496942.57039054413
+ 20
+2344002.7199400794
+ 30
+0.0
+ 11
+496880.4906162212
+ 21
+2343903.7563001104
+ 31
+0.0
+  0
+LINE
+  5
+B0
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496937.2712819376
+ 20
+2344006.04326273
+ 30
+0.0
+ 11
+496875.18606695044
+ 21
+2343907.070949599
+ 31
+0.0
+  0
+LINE
+  5
+B1
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496931.9721733311
+ 20
+2344009.36658538
+ 30
+0.0
+ 11
+496869.88151767966
+ 21
+2343910.385599087
+ 31
+0.0
+  0
+LINE
+  5
+B2
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496926.67306472466
+ 20
+2344012.6899080304
+ 30
+0.0
+ 11
+496864.5769684088
+ 21
+2343913.700248576
+ 31
+0.0
+  0
+LINE
+  5
+B3
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496921.37395611836
+ 20
+2344016.013230681
+ 30
+0.0
+ 11
+496859.27241913823
+ 21
+2343917.0148980636
+ 31
+0.0
+  0
+LINE
+  5
+B4
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496916.07484751183
+ 20
+2344019.336553331
+ 30
+0.0
+ 11
+496853.96786986745
+ 21
+2343920.3295475524
+ 31
+0.0
+  0
+LINE
+  5
+B5
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496932.9492936494
+ 20
+2344058.007551009
+ 30
+0.0
+ 11
+496848.6633205969
+ 21
+2343923.6441970407
+ 31
+0.0
+  0
+LINE
+  5
+B6
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496927.616323923
+ 20
+2344061.2768944087
+ 30
+0.0
+ 11
+496843.358771326
+ 21
+2343926.958846529
+ 31
+0.0
+  0
+LINE
+  5
+B7
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496922.2833541967
+ 20
+2344064.5462378087
+ 30
+0.0
+ 11
+496838.05422205525
+ 21
+2343930.2734960173
+ 31
+0.0
+  0
+LINE
+  5
+B8
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496916.9503844704
+ 20
+2344067.815581209
+ 30
+0.0
+ 11
+496832.7496727847
+ 21
+2343933.588145506
+ 31
+0.0
+  0
+LINE
+  5
+B9
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496911.617414744
+ 20
+2344071.084924609
+ 30
+0.0
+ 11
+496827.4451235138
+ 21
+2343936.9027949944
+ 31
+0.0
+  0
+LINE
+  5
+BA
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496906.28444501746
+ 20
+2344074.354268009
+ 30
+0.0
+ 11
+496822.1405742428
+ 21
+2343940.2174444823
+ 31
+0.0
+  0
+LINE
+  5
+BB
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496900.95147529116
+ 20
+2344077.6236114088
+ 30
+0.0
+ 11
+496816.83602497226
+ 21
+2343943.5320939706
+ 31
+0.0
+  0
+LINE
+  5
+BC
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496895.61850556487
+ 20
+2344080.8929548087
+ 30
+0.0
+ 11
+496811.5314757017
+ 21
+2343946.8467434593
+ 31
+0.0
+  0
+LINE
+  5
+BD
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496890.28553583845
+ 20
+2344084.162298209
+ 30
+0.0
+ 11
+496806.2269264308
+ 21
+2343950.161392947
+ 31
+0.0
+  0
+LINE
+  5
+BE
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496884.95256611216
+ 20
+2344087.431641609
+ 30
+0.0
+ 11
+496800.92237716005
+ 21
+2343953.476042436
+ 31
+0.0
+  0
+LINE
+  5
+BF
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496879.61959638563
+ 20
+2344090.700985009
+ 30
+0.0
+ 11
+496795.6178278893
+ 21
+2343956.790691924
+ 31
+0.0
+  0
+LINE
+  5
+C0
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496874.28662665933
+ 20
+2344093.9703284088
+ 30
+0.0
+ 11
+496790.31327861873
+ 21
+2343960.1053414126
+ 31
+0.0
+  0
+LINE
+  5
+C1
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496894.477220534
+ 20
+2344137.927718544
+ 30
+0.0
+ 11
+496809.45296070294
+ 21
+2344002.3874346055
+ 31
+0.0
+  0
+LINE
+  5
+C2
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496889.1726670844
+ 20
+2344141.2423613705
+ 30
+0.0
+ 11
+496804.148470617
+ 21
+2344005.702178443
+ 31
+0.0
+  0
+LINE
+  5
+C3
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496883.8681136345
+ 20
+2344144.5570041966
+ 30
+0.0
+ 11
+496798.8439805313
+ 21
+2344009.01692228
+ 31
+0.0
+  0
+LINE
+  5
+C4
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496878.56356018456
+ 20
+2344147.8716470227
+ 30
+0.0
+ 11
+496793.5394904455
+ 21
+2344012.3316661175
+ 31
+0.0
+  0
+LINE
+  5
+C5
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496873.2590067347
+ 20
+2344151.1862898488
+ 30
+0.0
+ 11
+496788.2350003596
+ 21
+2344015.646409955
+ 31
+0.0
+  0
+LINE
+  5
+C6
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496867.95445328485
+ 20
+2344154.5009326753
+ 30
+0.0
+ 11
+496782.93051027413
+ 21
+2344018.9611537918
+ 31
+0.0
+  0
+LINE
+  5
+C7
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496862.64989983523
+ 20
+2344157.815575502
+ 30
+0.0
+ 11
+496777.6260201882
+ 21
+2344022.275897629
+ 31
+0.0
+  0
+LINE
+  5
+C8
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496857.34534638526
+ 20
+2344161.130218328
+ 30
+0.0
+ 11
+496772.3215301024
+ 21
+2344025.5906414664
+ 31
+0.0
+  0
+LINE
+  5
+C9
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496852.0407929354
+ 20
+2344164.444861154
+ 30
+0.0
+ 11
+496767.0170400165
+ 21
+2344028.9053853033
+ 31
+0.0
+  0
+LINE
+  5
+CA
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496846.7362394858
+ 20
+2344167.7595039806
+ 30
+0.0
+ 11
+496761.7125499308
+ 21
+2344032.2201291407
+ 31
+0.0
+  0
+LINE
+  5
+CB
+330
+17
+100
+AcDbEntity
+  8
+KHUNG_C52
+100
+AcDbLine
+ 10
+496841.4316860358
+ 20
+2344171.074146807
+ 30
+0.0
+ 11
+496756.40805984475
+ 21
+2344035.534872978
+ 31
+0.0
+  0
+TEXT
+  5
+CC
+330
+17
+100
+AcDbEntity
+  8
+BE_PIN
+100
+AcDbText
+ 10
+496867.65
+ 20
+2343986.04
+ 30
+0.0
+ 40
+4.0
+  1
+BÈ 1 — T = 156,8 kN, 77 dây
+  7
+VN
+ 11
+496867.65
+ 21
+2343986.04
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+CD
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497003.26
+ 20
+2343893.08
+ 30
+0.0
+ 11
+497077.92
+ 21
+2343921.81
+ 31
+0.0
+  0
+LINE
+  5
+CE
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496768.99
+ 20
+2344066.9
+ 30
+0.0
+ 11
+496754.15
+ 21
+2344076.18
+ 31
+0.0
+  0
+LINE
+  5
+CF
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496904.39
+ 20
+2344075.51
+ 30
+0.0
+ 11
+496967.46
+ 21
+2344096.59
+ 31
+0.0
+  0
+LINE
+  5
+D0
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496901.45
+ 20
+2343890.66
+ 30
+0.0
+ 11
+496892.18
+ 21
+2343875.82
+ 31
+0.0
+  0
+LINE
+  5
+D1
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497022.72
+ 20
+2343814.88
+ 30
+0.0
+ 11
+496970.2
+ 21
+2343756.54
+ 31
+0.0
+  0
+LINE
+  5
+D2
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496849.1
+ 20
+2344166.28
+ 30
+0.0
+ 11
+496824.67
+ 21
+2344212.18
+ 31
+0.0
+  0
+LINE
+  5
+D3
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496967.38
+ 20
+2343987.16
+ 30
+0.0
+ 11
+496986.29
+ 21
+2344063.49
+ 31
+0.0
+  0
+LINE
+  5
+D4
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496792.82
+ 20
+2343968.63
+ 30
+0.0
+ 11
+496777.97
+ 21
+2343977.9
+ 31
+0.0
+  0
+LINE
+  5
+D5
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496806.61
+ 20
+2344127.12
+ 30
+0.0
+ 11
+496789.17
+ 21
+2344202.63
+ 31
+0.0
+  0
+LINE
+  5
+D6
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497027.53
+ 20
+2343949.44
+ 30
+0.0
+ 11
+497089.67
+ 21
+2343989.62
+ 31
+0.0
+  0
+LINE
+  5
+D7
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496961.66
+ 20
+2343853.03
+ 30
+0.0
+ 11
+496924.84
+ 21
+2343794.09
+ 31
+0.0
+  0
+LINE
+  5
+D8
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497063.94
+ 20
+2343855.16
+ 30
+0.0
+ 11
+497097.92
+ 21
+2343853.98
+ 31
+0.0
+  0
+LINE
+  5
+D9
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496889.51
+ 20
+2344123.36
+ 30
+0.0
+ 11
+496965.44
+ 21
+2344114.05
+ 31
+0.0
+  0
+LINE
+  5
+DA
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496841.24
+ 20
+2343928.28
+ 30
+0.0
+ 11
+496831.97
+ 21
+2343913.44
+ 31
+0.0
+  0
+LINE
+  5
+DB
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496917.79
+ 20
+2344027.31
+ 30
+0.0
+ 11
+496980.92
+ 21
+2344064.51
+ 31
+0.0
+  0
+LINE
+  5
+DC
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496783.36
+ 20
+2344018.7
+ 30
+0.0
+ 11
+496774.08
+ 21
+2344003.85
+ 31
+0.0
+  0
+LINE
+  5
+DD
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496992.19
+ 20
+2343833.96
+ 30
+0.0
+ 11
+496943.35
+ 21
+2343779.7
+ 31
+0.0
+  0
+LINE
+  5
+DE
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497023.35
+ 20
+2343922.95
+ 30
+0.0
+ 11
+497072.91
+ 21
+2343932.64
+ 31
+0.0
+  0
+LINE
+  5
+DF
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496811.89
+ 20
+2343999.16
+ 30
+0.0
+ 11
+496795.4
+ 21
+2344005.0
+ 31
+0.0
+  0
+LINE
+  5
+E0
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496879.63
+ 20
+2344147.21
+ 30
+0.0
+ 11
+496889.0
+ 21
+2344223.64
+ 31
+0.0
+  0
+LINE
+  5
+E1
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497033.41
+ 20
+2343874.24
+ 30
+0.0
+ 11
+497087.27
+ 21
+2343902.89
+ 31
+0.0
+  0
+LINE
+  5
+E2
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496825.69
+ 20
+2344157.65
+ 30
+0.0
+ 11
+496802.54
+ 21
+2344193.29
+ 31
+0.0
+  0
+LINE
+  5
+E3
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496810.71
+ 20
+2343947.36
+ 30
+0.0
+ 11
+496801.44
+ 21
+2343932.52
+ 31
+0.0
+  0
+LINE
+  5
+E4
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496787.54
+ 20
+2344096.59
+ 30
+0.0
+ 11
+496772.7
+ 21
+2344105.86
+ 31
+0.0
+  0
+LINE
+  5
+E5
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496997.03
+ 20
+2343968.56
+ 30
+0.0
+ 11
+497006.33
+ 21
+2343983.39
+ 31
+0.0
+  0
+LINE
+  5
+E6
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496931.13
+ 20
+2343872.11
+ 30
+0.0
+ 11
+496904.73
+ 21
+2343806.74
+ 31
+0.0
+  0
+LINE
+  5
+E7
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496934.23
+ 20
+2344057.22
+ 30
+0.0
+ 11
+496974.66
+ 21
+2344079.16
+ 31
+0.0
+  0
+LINE
+  5
+E8
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497045.82
+ 20
+2343824.85
+ 30
+0.0
+ 11
+497090.29
+ 21
+2343811.26
+ 31
+0.0
+  0
+LINE
+  5
+E9
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496753.67
+ 20
+2344037.24
+ 30
+0.0
+ 11
+496744.4
+ 21
+2344022.4
+ 31
+0.0
+  0
+LINE
+  5
+EA
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496936.88
+ 20
+2344006.29
+ 30
+0.0
+ 11
+496983.12
+ 21
+2344062.06
+ 31
+0.0
+  0
+LINE
+  5
+EB
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496873.7
+ 20
+2344094.33
+ 30
+0.0
+ 11
+496885.86
+ 21
+2344106.91
+ 31
+0.0
+  0
+LINE
+  5
+EC
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496870.92
+ 20
+2343909.74
+ 30
+0.0
+ 11
+496861.65
+ 21
+2343894.89
+ 31
+0.0
+  0
+LINE
+  5
+ED
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496825.98
+ 20
+2343937.82
+ 30
+0.0
+ 11
+496816.7
+ 21
+2343922.98
+ 31
+0.0
+  0
+LINE
+  5
+EE
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497048.67
+ 20
+2343864.7
+ 30
+0.0
+ 11
+497092.29
+ 21
+2343893.01
+ 31
+0.0
+  0
+LINE
+  5
+EF
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496946.4
+ 20
+2343862.57
+ 30
+0.0
+ 11
+496910.08
+ 21
+2343804.49
+ 31
+0.0
+  0
+LINE
+  5
+F0
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496927.33
+ 20
+2344042.57
+ 30
+0.0
+ 11
+496983.48
+ 21
+2344066.41
+ 31
+0.0
+  0
+LINE
+  5
+F1
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497055.36
+ 20
+2343840.12
+ 30
+0.0
+ 11
+497094.09
+ 21
+2343828.27
+ 31
+0.0
+  0
+LINE
+  5
+F2
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497033.4
+ 20
+2343937.88
+ 30
+0.0
+ 11
+497073.89
+ 21
+2343938.63
+ 31
+0.0
+  0
+LINE
+  5
+F3
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496798.62
+ 20
+2344009.16
+ 30
+0.0
+ 11
+496787.49
+ 21
+2343995.65
+ 31
+0.0
+  0
+LINE
+  5
+F4
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496816.15
+ 20
+2344142.38
+ 30
+0.0
+ 11
+496793.87
+ 21
+2344194.85
+ 31
+0.0
+  0
+LINE
+  5
+F5
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497007.46
+ 20
+2343824.42
+ 30
+0.0
+ 11
+496966.37
+ 21
+2343758.71
+ 31
+0.0
+  0
+LINE
+  5
+F6
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496889.05
+ 20
+2344084.92
+ 30
+0.0
+ 11
+496966.84
+ 21
+2344103.61
+ 31
+0.0
+  0
+LINE
+  5
+F7
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496886.19
+ 20
+2343900.2
+ 30
+0.0
+ 11
+496876.91
+ 21
+2343885.36
+ 31
+0.0
+  0
+LINE
+  5
+F8
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496894.89
+ 20
+2344137.67
+ 30
+0.0
+ 11
+496973.62
+ 21
+2344148.73
+ 31
+0.0
+  0
+LINE
+  5
+F9
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496952.13
+ 20
+2343996.72
+ 30
+0.0
+ 11
+496982.8
+ 21
+2344059.02
+ 31
+0.0
+  0
+LINE
+  5
+FA
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497013.31
+ 20
+2343908.01
+ 30
+0.0
+ 11
+497075.3
+ 21
+2343925.84
+ 31
+0.0
+  0
+LINE
+  5
+FB
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496759.45
+ 20
+2344051.64
+ 30
+0.0
+ 11
+496744.61
+ 21
+2344060.91
+ 31
+0.0
+  0
+LINE
+  5
+FC
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496802.35
+ 20
+2343983.89
+ 30
+0.0
+ 11
+496785.41
+ 21
+2343988.27
+ 31
+0.0
+  0
+LINE
+  5
+FD
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497012.28
+ 20
+2343959.0
+ 30
+0.0
+ 11
+497021.58
+ 21
+2343973.83
+ 31
+0.0
+  0
+LINE
+  5
+FE
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496976.93
+ 20
+2343843.5
+ 30
+0.0
+ 11
+496939.3
+ 21
+2343783.29
+ 31
+0.0
+  0
+LINE
+  5
+FF
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496797.08
+ 20
+2344111.85
+ 30
+0.0
+ 11
+496782.23
+ 21
+2344121.12
+ 31
+0.0
+  0
+LINE
+  5
+100
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496864.36
+ 20
+2344156.75
+ 30
+0.0
+ 11
+496860.92
+ 21
+2344222.16
+ 31
+0.0
+  0
+LINE
+  5
+101
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497018.14
+ 20
+2343883.78
+ 30
+0.0
+ 11
+497080.39
+ 21
+2343916.87
+ 31
+0.0
+  0
+LINE
+  5
+102
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496835.23
+ 20
+2344172.91
+ 30
+0.0
+ 11
+496810.33
+ 21
+2344199.6
+ 31
+0.0
+  0
+LINE
+  5
+103
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496778.53
+ 20
+2344082.17
+ 30
+0.0
+ 11
+496763.69
+ 21
+2344091.44
+ 31
+0.0
+  0
+LINE
+  5
+104
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496795.45
+ 20
+2343956.9
+ 30
+0.0
+ 11
+496786.17
+ 21
+2343942.06
+ 31
+0.0
+  0
+LINE
+  5
+105
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496981.78
+ 20
+2343978.13
+ 30
+0.0
+ 11
+496991.08
+ 21
+2343992.95
+ 31
+0.0
+  0
+LINE
+  5
+106
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496915.87
+ 20
+2343881.65
+ 30
+0.0
+ 11
+496900.04
+ 21
+2343807.32
+ 31
+0.0
+  0
+LINE
+  5
+107
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496918.89
+ 20
+2344066.63
+ 30
+0.0
+ 11
+496968.1
+ 21
+2344093.36
+ 31
+0.0
+  0
+LINE
+  5
+108
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497036.28
+ 20
+2343809.59
+ 30
+0.0
+ 11
+497086.48
+ 21
+2343794.22
+ 31
+0.0
+  0
+LINE
+  5
+109
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496768.09
+ 20
+2344028.23
+ 30
+0.0
+ 11
+496758.82
+ 21
+2344013.39
+ 31
+0.0
+  0
+LINE
+  5
+10A
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496921.63
+ 20
+2344015.85
+ 30
+0.0
+ 11
+496939.71
+ 21
+2344018.36
+ 31
+0.0
+  0
+LINE
+  5
+10B
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496880.5
+ 20
+2344108.95
+ 30
+0.0
+ 11
+496897.94
+ 21
+2344107.57
+ 31
+0.0
+  0
+LINE
+  5
+10C
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496855.66
+ 20
+2343919.27
+ 30
+0.0
+ 11
+496846.38
+ 21
+2343904.43
+ 31
+0.0
+  0
+LINE
+  5
+10D
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496932.1
+ 20
+2344050.21
+ 30
+0.0
+ 11
+496978.59
+ 21
+2344069.93
+ 31
+0.0
+  0
+LINE
+  5
+10E
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496871.99
+ 20
+2344151.98
+ 30
+0.0
+ 11
+496868.32
+ 21
+2344222.38
+ 31
+0.0
+  0
+LINE
+  5
+10F
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496938.77
+ 20
+2343867.34
+ 30
+0.0
+ 11
+496906.52
+ 21
+2343804.09
+ 31
+0.0
+  0
+LINE
+  5
+110
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496773.76
+ 20
+2344074.54
+ 30
+0.0
+ 11
+496758.92
+ 21
+2344083.81
+ 31
+0.0
+  0
+LINE
+  5
+111
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496820.92
+ 20
+2344150.01
+ 30
+0.0
+ 11
+496797.7
+ 21
+2344193.72
+ 31
+0.0
+  0
+LINE
+  5
+112
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497035.16
+ 20
+2343944.65
+ 30
+0.0
+ 11
+497075.63
+ 21
+2343943.19
+ 31
+0.0
+  0
+LINE
+  5
+113
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496881.38
+ 20
+2344089.62
+ 30
+0.0
+ 11
+496891.6
+ 21
+2344102.25
+ 31
+0.0
+  0
+LINE
+  5
+114
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497050.59
+ 20
+2343832.48
+ 30
+0.0
+ 11
+497092.19
+ 21
+2343819.77
+ 31
+0.0
+  0
+LINE
+  5
+115
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496999.83
+ 20
+2343829.19
+ 30
+0.0
+ 11
+496949.29
+ 21
+2343773.1
+ 31
+0.0
+  0
+LINE
+  5
+116
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496878.55
+ 20
+2343904.97
+ 30
+0.0
+ 11
+496869.28
+ 21
+2343890.13
+ 31
+0.0
+  0
+LINE
+  5
+117
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496894.27
+ 20
+2344131.0
+ 30
+0.0
+ 11
+496968.61
+ 21
+2344115.2
+ 31
+0.0
+  0
+LINE
+  5
+118
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+496818.34
+ 20
+2343942.59
+ 30
+0.0
+ 11
+496809.07
+ 21
+2343927.75
+ 31
+0.0
+  0
+LINE
+  5
+119
+330
+17
+100
+AcDbEntity
+  8
+DAY_NEO
+100
+AcDbLine
+ 10
+497056.31
+ 20
+2343859.93
+ 30
+0.0
+ 11
+497097.9
+ 21
+2343865.78
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+11A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497035.16050118627
+ 20
+2343941.5742485677
+ 10
+497022.4536723655
+ 20
+2343949.5452272603
+  0
+LWPOLYLINE
+  5
+11B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497034.09770402726
+ 20
+2343939.880004725
+ 10
+497021.39087520656
+ 20
+2343947.8509834176
+  0
+LWPOLYLINE
+  5
+11C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497033.0349068688
+ 20
+2343938.185760883
+ 10
+497020.32807804807
+ 20
+2343946.156739576
+  0
+LWPOLYLINE
+  5
+11D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497031.9721097098
+ 20
+2343936.4915170404
+ 10
+497019.2652808891
+ 20
+2343944.462495733
+  0
+LWPOLYLINE
+  5
+11E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497030.90931255027
+ 20
+2343934.7972731967
+ 10
+497018.2024837296
+ 20
+2343942.7682518894
+  0
+LWPOLYLINE
+  5
+11F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497029.84651539125
+ 20
+2343933.103029354
+ 10
+497017.13968657056
+ 20
+2343941.0740080466
+  0
+LWPOLYLINE
+  5
+120
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497028.7837182323
+ 20
+2343931.4087855113
+ 10
+497016.0768894113
+ 20
+2343939.379764204
+  0
+CIRCLE
+  5
+121
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497036.6425643496
+ 20
+2343943.7202134924
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+122
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497033.67743565043
+ 20
+2343945.579786507
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+123
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497029.0125643496
+ 20
+2343948.5102134924
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+124
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497026.0474356502
+ 20
+2343950.369786507
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+125
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497022.4303038218
+ 20
+2343935.394274858
+ 30
+0.0
+ 40
+1.2
+  1
+B1-01: 7 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497022.4303038218
+ 21
+2343935.394274858
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+126
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497017.2501466004
+ 20
+2343952.809392819
+ 10
+497004.54331777996
+ 20
+2343960.7803715123
+  0
+LWPOLYLINE
+  5
+127
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497016.1873494414
+ 20
+2343951.1151489764
+ 10
+497003.480520621
+ 20
+2343959.0861276696
+  0
+LWPOLYLINE
+  5
+128
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497015.12455228297
+ 20
+2343949.4209051346
+ 10
+497002.41772346257
+ 20
+2343957.3918838277
+  0
+LWPOLYLINE
+  5
+129
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497014.061755124
+ 20
+2343947.726661292
+ 10
+497001.35492630355
+ 20
+2343955.697639985
+  0
+CIRCLE
+  5
+12A
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497013.7625643496
+ 20
+2343958.0702134925
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+12B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497010.7974356503
+ 20
+2343959.929786507
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+12C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497007.70834071375
+ 20
+2343951.7121506385
+ 30
+0.0
+ 40
+1.2
+  1
+B1-02: 4 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+497007.70834071375
+ 21
+2343951.7121506385
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+12D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497002.00298574066
+ 20
+2343962.3739187964
+ 10
+496989.2961569199
+ 20
+2343970.344897489
+  0
+LWPOLYLINE
+  5
+12E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497000.94018858165
+ 20
+2343960.6796749537
+ 10
+496988.23335976066
+ 20
+2343968.6506536463
+  0
+LWPOLYLINE
+  5
+12F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496999.8773914232
+ 20
+2343958.985431112
+ 10
+496987.17056260223
+ 20
+2343966.9564098045
+  0
+LWPOLYLINE
+  5
+130
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496998.8145942642
+ 20
+2343957.291187269
+ 10
+496986.1077654432
+ 20
+2343965.262165962
+  0
+CIRCLE
+  5
+131
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496998.51256434986
+ 20
+2343967.630213493
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+132
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496995.5474356504
+ 20
+2343969.4897865076
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+133
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496992.4611798537
+ 20
+2343961.2766766157
+ 30
+0.0
+ 40
+1.2
+  1
+B1-03: 4 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496992.4611798537
+ 21
+2343961.2766766157
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+134
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496986.75132328656
+ 20
+2343971.9412686178
+ 10
+496974.0444944661
+ 20
+2343979.912247311
+  0
+LWPOLYLINE
+  5
+135
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496985.68852612755
+ 20
+2343970.247024775
+ 10
+496972.98169730714
+ 20
+2343978.218003468
+  0
+LWPOLYLINE
+  5
+136
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496984.6257289691
+ 20
+2343968.552780933
+ 10
+496971.9189001484
+ 20
+2343976.523759626
+  0
+LWPOLYLINE
+  5
+137
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496983.5629318101
+ 20
+2343966.8585370905
+ 10
+496970.8561029894
+ 20
+2343974.829515783
+  0
+CIRCLE
+  5
+138
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496983.26256434905
+ 20
+2343977.200213492
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+139
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496980.29743565014
+ 20
+2343979.059786507
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+13A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496977.2095173998
+ 20
+2343970.844026437
+ 30
+0.0
+ 40
+1.2
+  1
+B1-04: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496977.2095173998
+ 21
+2343970.844026437
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+13B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496972.3527201194
+ 20
+2343980.97349536
+ 10
+496959.64589129866
+ 20
+2343988.9444740526
+  0
+LWPOLYLINE
+  5
+13C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496971.2899229607
+ 20
+2343979.2792515177
+ 10
+496958.58309413993
+ 20
+2343987.2502302104
+  0
+LWPOLYLINE
+  5
+13D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496970.22712580167
+ 20
+2343977.585007675
+ 10
+496957.520296981
+ 20
+2343985.5559863676
+  0
+LWPOLYLINE
+  5
+13E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496969.1643286427
+ 20
+2343975.8907638323
+ 10
+496956.45749982196
+ 20
+2343983.861742525
+  0
+CIRCLE
+  5
+13F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496968.8625643496
+ 20
+2343986.2302134926
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+140
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496965.89743565046
+ 20
+2343988.089786507
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+141
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496962.81091423234
+ 20
+2343979.8762531783
+ 30
+0.0
+ 40
+1.2
+  1
+B1-05: 4 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496962.81091423234
+ 21
+2343979.8762531783
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+142
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496957.10555925936
+ 20
+2343990.538021337
+ 10
+496944.3987304389
+ 20
+2343998.50900003
+  0
+LWPOLYLINE
+  5
+143
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496956.04276210064
+ 20
+2343988.8437774945
+ 10
+496943.3359332802
+ 20
+2343996.8147561876
+  0
+LWPOLYLINE
+  5
+144
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496954.9799649416
+ 20
+2343987.149533652
+ 10
+496942.27313612093
+ 20
+2343995.120512345
+  0
+LWPOLYLINE
+  5
+145
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496953.91716778267
+ 20
+2343985.455289809
+ 10
+496941.2103389619
+ 20
+2343993.426268502
+  0
+CIRCLE
+  5
+146
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496953.6125643497
+ 20
+2343995.790213493
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+147
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496950.6474356507
+ 20
+2343997.6497865077
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+148
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496947.5637533723
+ 20
+2343989.4407791556
+ 30
+0.0
+ 40
+1.2
+  1
+B1-06: 4 thanh
+ 50
+-32.1000000010404
+  7
+VN
+ 11
+496947.5637533723
+ 21
+2343989.4407791556
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+149
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496941.85389680526
+ 20
+2344000.105371158
+ 10
+496929.1470679848
+ 20
+2344008.076349851
+  0
+LWPOLYLINE
+  5
+14A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496940.7910996468
+ 20
+2343998.4111273163
+ 10
+496928.08427082637
+ 20
+2344006.3821060094
+  0
+LWPOLYLINE
+  5
+14B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496939.7283024878
+ 20
+2343996.7168834736
+ 10
+496927.02147366735
+ 20
+2344004.6878621667
+  0
+LWPOLYLINE
+  5
+14C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496938.6655053288
+ 20
+2343995.022639631
+ 10
+496925.9586765081
+ 20
+2344002.9936183235
+  0
+CIRCLE
+  5
+14D
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496938.362564349
+ 20
+2344005.360213492
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+14E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496935.39743565
+ 20
+2344007.2197865066
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+14F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496932.3120909184
+ 20
+2343999.0081289774
+ 30
+0.0
+ 40
+1.2
+  1
+B1-07: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496932.3120909184
+ 21
+2343999.0081289774
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+150
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496926.6067359455
+ 20
+2344009.6698971353
+ 10
+496913.89990712475
+ 20
+2344017.640875828
+  0
+LWPOLYLINE
+  5
+151
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496925.543938787
+ 20
+2344007.9756532935
+ 10
+496912.8371099663
+ 20
+2344015.946631986
+  0
+LWPOLYLINE
+  5
+152
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496924.48114162777
+ 20
+2344006.2814094503
+ 10
+496911.7743128073
+ 20
+2344014.2523881434
+  0
+LWPOLYLINE
+  5
+153
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496923.41834446875
+ 20
+2344004.5871656076
+ 10
+496910.71151564806
+ 20
+2344012.5581443007
+  0
+CIRCLE
+  5
+154
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496923.11256434926
+ 20
+2344014.9202134926
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+155
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496920.1474356501
+ 20
+2344016.779786507
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+156
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496917.06493005843
+ 20
+2344008.572654954
+ 30
+0.0
+ 40
+1.2
+  1
+B1-08: 4 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+496917.06493005843
+ 21
+2344008.572654954
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+157
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496934.0874624601
+ 20
+2344054.556886361
+ 10
+496921.3806336397
+ 20
+2344062.527865054
+  0
+LWPOLYLINE
+  5
+158
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496933.02466530114
+ 20
+2344052.8626425182
+ 10
+496920.3178364807
+ 20
+2344060.8336212113
+  0
+LWPOLYLINE
+  5
+159
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496931.9618681424
+ 20
+2344051.168398676
+ 10
+496919.25503932196
+ 20
+2344059.139377369
+  0
+LWPOLYLINE
+  5
+15A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496930.8990709834
+ 20
+2344049.4741548332
+ 10
+496918.19224216294
+ 20
+2344057.4451335263
+  0
+CIRCLE
+  5
+15B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496935.7219588189
+ 20
+2344056.3053640714
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+15C
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496932.7380411803
+ 20
+2344058.1346359286
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+15D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496924.54565657314
+ 20
+2344053.45964418
+ 30
+0.0
+ 40
+1.2
+  1
+B1-09: 4 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496924.54565657314
+ 21
+2344053.45964418
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+15E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496921.2112092551
+ 20
+2344062.6341447695
+ 10
+496911.3932872537
+ 20
+2344068.7929156316
+  0
+LWPOLYLINE
+  5
+15F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496920.14841209585
+ 20
+2344060.939900927
+ 10
+496910.33049009414
+ 20
+2344067.0986717883
+  0
+LWPOLYLINE
+  5
+160
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496919.08561493736
+ 20
+2344059.245657085
+ 10
+496909.267692936
+ 20
+2344065.4044279465
+  0
+LWPOLYLINE
+  5
+161
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496918.0228177784
+ 20
+2344057.5514132422
+ 10
+496908.2048957767
+ 20
+2344063.710184104
+  0
+LWPOLYLINE
+  5
+162
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496919.8489274387
+ 20
+2344054.0449615684
+ 10
+496907.14209861774
+ 20
+2344062.015940261
+  0
+CIRCLE
+  5
+163
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496920.3819588191
+ 20
+2344065.715364071
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+164
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496917.3980411801
+ 20
+2344067.544635928
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+165
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496913.49551302823
+ 20
+2344058.030450915
+ 30
+0.0
+ 40
+1.2
+  1
+B1-10: 5 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496913.49551302823
+ 21
+2344058.030450915
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+166
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496909.6972752587
+ 20
+2344069.85682195
+ 10
+496896.990446438
+ 20
+2344077.8278006427
+  0
+LWPOLYLINE
+  5
+167
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496908.6344780997
+ 20
+2344068.1625781073
+ 10
+496895.927649279
+ 20
+2344076.1335568
+  0
+LWPOLYLINE
+  5
+168
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496907.571680941
+ 20
+2344066.468334265
+ 10
+496894.8648521203
+ 20
+2344074.4393129577
+  0
+LWPOLYLINE
+  5
+169
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496906.508883782
+ 20
+2344064.7740904223
+ 10
+496893.80205496127
+ 20
+2344072.745069115
+  0
+CIRCLE
+  5
+16A
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496905.88195881934
+ 20
+2344074.5953640714
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+16B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496902.89804118074
+ 20
+2344076.4246359286
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+16C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496900.15546937165
+ 20
+2344068.7595797684
+ 30
+0.0
+ 40
+1.2
+  1
+B1-11: 4 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496900.15546937165
+ 21
+2344068.7595797684
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+16D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496890.64312271745
+ 20
+2344081.8094693064
+ 10
+496877.93629389675
+ 20
+2344089.780447999
+  0
+LWPOLYLINE
+  5
+16E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496889.5803255585
+ 20
+2344080.1152254636
+ 10
+496876.87349673774
+ 20
+2344088.0862041563
+  0
+LWPOLYLINE
+  5
+16F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496888.5175284
+ 20
+2344078.420981622
+ 10
+496875.8106995793
+ 20
+2344086.3919603145
+  0
+LWPOLYLINE
+  5
+170
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496887.45473124104
+ 20
+2344076.726737779
+ 10
+496874.7479024203
+ 20
+2344084.6977164717
+  0
+LWPOLYLINE
+  5
+171
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496886.391934082
+ 20
+2344075.0324939364
+ 10
+496873.68510526133
+ 20
+2344083.003472629
+  0
+LWPOLYLINE
+  5
+172
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496885.3291369225
+ 20
+2344073.3382500927
+ 10
+496872.6223081015
+ 20
+2344081.3092287853
+  0
+LWPOLYLINE
+  5
+173
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496884.2663397635
+ 20
+2344071.64400625
+ 10
+496871.5595109425
+ 20
+2344079.6149849426
+  0
+CIRCLE
+  5
+174
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496890.54195881874
+ 20
+2344084.0053640706
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+175
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496887.55804118013
+ 20
+2344085.834635928
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+176
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496882.87195881904
+ 20
+2344088.7053640713
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+177
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496879.88804118056
+ 20
+2344090.5346359285
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+178
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496877.912925353
+ 20
+2344075.6294955965
+ 30
+0.0
+ 40
+1.2
+  1
+B1-12: 7 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496877.912925353
+ 21
+2344075.6294955965
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+179
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496877.76686951285
+ 20
+2344089.8867277154
+ 10
+496866.49482557905
+ 20
+2344096.957667545
+  0
+LWPOLYLINE
+  5
+17A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496876.70407235634
+ 20
+2344088.192483877
+ 10
+496865.43202842283
+ 20
+2344095.2634237064
+  0
+LWPOLYLINE
+  5
+17B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496875.6412751973
+ 20
+2344086.498240034
+ 10
+496864.3692312638
+ 20
+2344093.5691798637
+  0
+LWPOLYLINE
+  5
+17C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496874.5784780383
+ 20
+2344084.8039961914
+ 10
+496863.3064341048
+ 20
+2344091.874936021
+  0
+CIRCLE
+  5
+17D
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496875.19195881934
+ 20
+2344093.4153640717
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+17E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496872.2080411806
+ 20
+2344095.2446359284
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+17F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496868.94245607156
+ 20
+2344088.339466106
+ 30
+0.0
+ 40
+1.2
+  1
+B1-13: 4 thanh
+ 50
+-32.09999999945242
+  7
+VN
+ 11
+496868.94245607156
+ 21
+2344088.339466106
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+180
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496897.8882386707
+ 20
+2344133.9270624933
+ 10
+496885.1814098497
+ 20
+2344141.898041186
+  0
+LWPOLYLINE
+  5
+181
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496896.8254415123
+ 20
+2344132.2328186515
+ 10
+496884.1186126913
+ 20
+2344140.203797344
+  0
+LWPOLYLINE
+  5
+182
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496895.76264435245
+ 20
+2344130.5385748073
+ 10
+496883.05581553176
+ 20
+2344138.5095535005
+  0
+LWPOLYLINE
+  5
+183
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496894.6998471932
+ 20
+2344128.8443309646
+ 10
+496881.99301837274
+ 20
+2344136.8153096577
+  0
+CIRCLE
+  5
+184
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496896.3740854316
+ 20
+2344136.7426433098
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+185
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496893.4059145677
+ 20
+2344138.5973566896
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+186
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496888.34643278294
+ 20
+2344132.829820311
+ 30
+0.0
+ 40
+1.2
+  1
+B1-14: 4 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496888.34643278294
+ 21
+2344132.829820311
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+187
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496881.3448965782
+ 20
+2344144.3046814245
+ 10
+496868.6380677571
+ 20
+2344152.275660117
+  0
+LWPOLYLINE
+  5
+188
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496880.2820994197
+ 20
+2344142.6104375827
+ 10
+496867.575270599
+ 20
+2344150.5814162754
+  0
+LWPOLYLINE
+  5
+189
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496879.21930226014
+ 20
+2344140.916193739
+ 10
+496866.51247343916
+ 20
+2344148.8871724317
+  0
+LWPOLYLINE
+  5
+18A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496878.1565051012
+ 20
+2344139.2219498963
+ 10
+496865.44967628014
+ 20
+2344147.192928589
+  0
+LWPOLYLINE
+  5
+18B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496877.09370794246
+ 20
+2344137.527706054
+ 10
+496864.3868791217
+ 20
+2344145.498684747
+  0
+LWPOLYLINE
+  5
+18C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496876.0309107829
+ 20
+2344135.833462211
+ 10
+496863.3240819622
+ 20
+2344143.8044409035
+  0
+LWPOLYLINE
+  5
+18D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496874.9681136239
+ 20
+2344134.139218368
+ 10
+496862.26128480316
+ 20
+2344142.1101970607
+  0
+CIRCLE
+  5
+18E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496881.11408543173
+ 20
+2344146.2826433093
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+18F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496878.14591456833
+ 20
+2344148.13735669
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+190
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496873.4740854315
+ 20
+2344151.0526433093
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+191
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496870.50591456814
+ 20
+2344152.90735669
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+192
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496868.61469921353
+ 20
+2344138.1247077147
+ 30
+0.0
+ 40
+1.2
+  1
+B1-15: 7 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496868.61469921353
+ 21
+2344138.1247077147
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+193
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496868.4686433729
+ 20
+2344152.381939833
+ 10
+496857.20047930855
+ 20
+2344159.4504458257
+  0
+LWPOLYLINE
+  5
+194
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496867.4058462144
+ 20
+2344150.6876959912
+ 10
+496856.13768215006
+ 20
+2344157.756201984
+  0
+LWPOLYLINE
+  5
+195
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496866.3430490546
+ 20
+2344148.993452147
+ 10
+496855.0748849905
+ 20
+2344156.06195814
+  0
+LWPOLYLINE
+  5
+196
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496865.2802518956
+ 20
+2344147.2992083044
+ 10
+496854.01208783156
+ 20
+2344154.3677142975
+  0
+CIRCLE
+  5
+197
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496865.8440854313
+ 20
+2344155.8226433094
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+198
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496862.8759145674
+ 20
+2344157.6773566892
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+199
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496859.6461698636
+ 20
+2344150.833461301
+ 30
+0.0
+ 40
+1.2
+  1
+B1-16: 4 thanh
+ 50
+-32.10000000336481
+  7
+VN
+ 11
+496859.6461698636
+ 21
+2344150.833461301
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+19A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496854.66647589527
+ 20
+2344161.04002317
+ 10
+496841.9596470746
+ 20
+2344169.0110018626
+  0
+LWPOLYLINE
+  5
+19B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496853.6036787371
+ 20
+2344159.3457793286
+ 10
+496840.8968499164
+ 20
+2344167.3167580212
+  0
+LWPOLYLINE
+  5
+19C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496852.5408815773
+ 20
+2344157.6515354845
+ 10
+496839.8340527563
+ 20
+2344165.622514177
+  0
+LWPOLYLINE
+  5
+19D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496851.4780844183
+ 20
+2344155.9572916417
+ 10
+496838.7712555973
+ 20
+2344163.9282703344
+  0
+CIRCLE
+  5
+19E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496850.5840854317
+ 20
+2344165.3526433096
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+19F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496847.615914568
+ 20
+2344167.20735669
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1A0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496845.1246700078
+ 20
+2344159.9427809883
+ 30
+0.0
+ 40
+1.2
+  1
+B1-17: 4 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496845.1246700078
+ 21
+2344159.9427809883
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1A1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496806.27210722363
+ 20
+2344007.244804391
+ 10
+496793.56527840317
+ 20
+2344015.2157830843
+  0
+LWPOLYLINE
+  5
+1A2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496807.33490438317
+ 20
+2344008.939048235
+ 10
+496794.6280755627
+ 20
+2344016.910026928
+  0
+LWPOLYLINE
+  5
+1A3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496808.3977015422
+ 20
+2344010.6332920776
+ 10
+496795.6908727217
+ 20
+2344018.6042707707
+  0
+LWPOLYLINE
+  5
+1A4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496809.46049870114
+ 20
+2344012.3275359203
+ 10
+496796.75366988074
+ 20
+2344020.2985146134
+  0
+CIRCLE
+  5
+1A5
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496800.1040677527
+ 20
+2344008.2326150183
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1A6
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496797.13593224605
+ 20
+2344010.0873849806
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1A7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496803.10708429094
+ 20
+2344016.313025267
+ 30
+0.0
+ 40
+1.2
+  1
+B1-18: 4 thanh
+ 50
+-32.10000000174932
+  7
+VN
+ 11
+496803.10708429094
+ 21
+2344016.313025267
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1A8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496791.0267733958
+ 20
+2344016.808184273
+ 10
+496778.31994457473
+ 20
+2344024.7791629657
+  0
+LWPOLYLINE
+  5
+1A9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496792.08957055554
+ 20
+2344018.502428117
+ 10
+496779.38274173485
+ 20
+2344026.47340681
+  0
+LWPOLYLINE
+  5
+1AA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496793.15236771456
+ 20
+2344020.19667196
+ 10
+496780.44553889387
+ 20
+2344028.1676506526
+  0
+LWPOLYLINE
+  5
+1AB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496794.2151648736
+ 20
+2344021.8909158027
+ 10
+496781.5083360528
+ 20
+2344029.8618944953
+  0
+CIRCLE
+  5
+1AC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496784.844067753
+ 20
+2344017.7726150188
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1AD
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496781.8759322466
+ 20
+2344019.6273849816
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1AE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496787.8617504632
+ 20
+2344025.8764051488
+ 30
+0.0
+ 40
+1.2
+  1
+B1-19: 4 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496787.8617504632
+ 21
+2344025.8764051488
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1AF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496775.7787650067
+ 20
+2344026.373241904
+ 10
+496763.07193618594
+ 20
+2344034.344220597
+  0
+LWPOLYLINE
+  5
+1B0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496776.8415621665
+ 20
+2344028.0674857483
+ 10
+496764.13473334577
+ 20
+2344036.038464441
+  0
+LWPOLYLINE
+  5
+1B1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496777.9043593255
+ 20
+2344029.761729591
+ 10
+496765.1975305048
+ 20
+2344037.7327082837
+  0
+LWPOLYLINE
+  5
+1B2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496778.9671564845
+ 20
+2344031.455973434
+ 10
+496766.2603276638
+ 20
+2344039.4269521264
+  0
+CIRCLE
+  5
+1B3
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496769.5740677538
+ 20
+2344027.302615019
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1B4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496766.60593224695
+ 20
+2344029.1573849814
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1B5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496772.6137420741
+ 20
+2344035.4414627803
+ 30
+0.0
+ 40
+1.2
+  1
+B1-20: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496772.6137420741
+ 21
+2344035.4414627803
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1B6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496762.9025118015
+ 20
+2344034.4505003127
+ 10
+496752.79724007356
+ 20
+2344040.789525318
+  0
+LWPOLYLINE
+  5
+1B7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496763.96530896134
+ 20
+2344036.1447441564
+ 10
+496753.8600372331
+ 20
+2344042.4837691616
+  0
+LWPOLYLINE
+  5
+1B8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496765.02810612036
+ 20
+2344037.838987999
+ 10
+496754.9228343921
+ 20
+2344044.1780130044
+  0
+LWPOLYLINE
+  5
+1B9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496766.0909032793
+ 20
+2344039.533231842
+ 10
+496755.98563155136
+ 20
+2344045.872256847
+  0
+CIRCLE
+  5
+1BA
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496755.1540677531
+ 20
+2344036.312615019
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1BB
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496752.18593224674
+ 20
+2344038.1673849816
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1BC
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496761.03826741537
+ 20
+2344042.7027443442
+ 30
+0.0
+ 40
+1.2
+  1
+B1-21: 4 thanh
+ 50
+-32.10000000117063
+  7
+VN
+ 11
+496761.03826741537
+ 21
+2344042.7027443442
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1BD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497030.1023826993
+ 20
+2343812.534826657
+ 10
+497017.3955538786
+ 20
+2343820.5058053494
+  0
+LWPOLYLINE
+  5
+1BE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497031.16517985886
+ 20
+2343814.2290705005
+ 10
+497018.45835103816
+ 20
+2343822.200049193
+  0
+LWPOLYLINE
+  5
+1BF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497032.2279770173
+ 20
+2343815.9233143423
+ 10
+497019.5211481966
+ 20
+2343823.894293035
+  0
+LWPOLYLINE
+  5
+1C0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497033.2907741763
+ 20
+2343817.617558185
+ 10
+497020.5839453556
+ 20
+2343825.5885368777
+  0
+CIRCLE
+  5
+1C1
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497024.2040842657
+ 20
+2343813.9526414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1C2
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497021.23591573414
+ 20
+2343815.807358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1C3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497026.937359766
+ 20
+2343821.603047531
+ 30
+0.0
+ 40
+1.2
+  1
+B1-22: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+497026.937359766
+ 21
+2343821.603047531
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1C4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497011.04571541457
+ 20
+2343824.4890515087
+ 10
+496998.3388865939
+ 20
+2343832.460030202
+  0
+LWPOLYLINE
+  5
+1C5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497012.1085125741
+ 20
+2343826.1832953524
+ 10
+496999.4016837537
+ 20
+2343834.1542740455
+  0
+LWPOLYLINE
+  5
+1C6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497013.1713097326
+ 20
+2343827.877539194
+ 10
+497000.46448091185
+ 20
+2343835.8485178873
+  0
+LWPOLYLINE
+  5
+1C7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497014.23410689156
+ 20
+2343829.571783037
+ 10
+497001.52727807115
+ 20
+2343837.54276173
+  0
+LWPOLYLINE
+  5
+1C8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497015.29690405057
+ 20
+2343831.2660268797
+ 10
+497002.5900752301
+ 20
+2343839.2370055728
+  0
+LWPOLYLINE
+  5
+1C9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497016.3597012096
+ 20
+2343832.9602707224
+ 10
+497003.6528723891
+ 20
+2343840.9312494155
+  0
+LWPOLYLINE
+  5
+1CA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497017.42249836854
+ 20
+2343834.654514565
+ 10
+497004.71566954814
+ 20
+2343842.6254932582
+  0
+CIRCLE
+  5
+1CB
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497008.9440842657
+ 20
+2343823.4926414434
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1CC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497005.9759157341
+ 20
+2343825.347358556
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1CD
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497001.31408426614
+ 20
+2343828.262641444
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1CE
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496998.3459157343
+ 20
+2343830.1173585565
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1CF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497011.06908395834
+ 20
+2343838.6400039117
+ 30
+0.0
+ 40
+1.2
+  1
+B1-23: 7 thanh
+ 50
+-32.10000000174932
+  7
+VN
+ 11
+497011.06908395834
+ 21
+2343838.6400039117
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1D0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496998.1694622097
+ 20
+2343832.5663099177
+ 10
+496986.8977100676
+ 20
+2343839.637066707
+  0
+LWPOLYLINE
+  5
+1D1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496999.232259369
+ 20
+2343834.260553761
+ 10
+496987.96050722717
+ 20
+2343841.3313105507
+  0
+LWPOLYLINE
+  5
+1D2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497000.2950565277
+ 20
+2343835.954797603
+ 10
+496989.0233043856
+ 20
+2343843.0255543925
+  0
+LWPOLYLINE
+  5
+1D3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497001.35785368667
+ 20
+2343837.649041446
+ 10
+496990.0861015446
+ 20
+2343844.719798235
+  0
+CIRCLE
+  5
+1D4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496993.6740842659
+ 20
+2343833.032641444
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1D5
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496990.70591573446
+ 20
+2343834.8873585565
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1D6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496995.7219776156
+ 20
+2343841.1844198406
+ 30
+0.0
+ 40
+1.2
+  1
+B1-24: 4 thanh
+ 50
+-32.10000000002711
+  7
+VN
+ 11
+496995.7219776156
+ 21
+2343841.1844198406
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1D7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496984.3592050621
+ 20
+2343841.2294678986
+ 10
+496971.6523762414
+ 20
+2343849.2004465912
+  0
+LWPOLYLINE
+  5
+1D8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496985.4220022208
+ 20
+2343842.923711741
+ 10
+496972.7151734001
+ 20
+2343850.8946904335
+  0
+LWPOLYLINE
+  5
+1D9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496986.48479937983
+ 20
+2343844.6179555836
+ 10
+496973.7779705591
+ 20
+2343852.5889342763
+  0
+LWPOLYLINE
+  5
+1DA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496987.54759653966
+ 20
+2343846.3121994273
+ 10
+496974.8407677186
+ 20
+2343854.28317812
+  0
+CIRCLE
+  5
+1DB
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496978.4140842657
+ 20
+2343842.5726414435
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1DC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496975.44591573416
+ 20
+2343844.427358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1DD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496981.1941821291
+ 20
+2343850.297688774
+ 30
+0.0
+ 40
+1.2
+  1
+B1-25: 4 thanh
+ 50
+-32.099999998942906
+  7
+VN
+ 11
+496981.1941821291
+ 21
+2343850.297688774
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1DE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496969.1111966729
+ 20
+2343850.7945255297
+ 10
+496956.4043678519
+ 20
+2343858.7655042224
+  0
+LWPOLYLINE
+  5
+1DF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496970.1739938316
+ 20
+2343852.488769372
+ 10
+496957.46716501063
+ 20
+2343860.4597480646
+  0
+LWPOLYLINE
+  5
+1E0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496971.23679099063
+ 20
+2343854.1830132147
+ 10
+496958.5299621696
+ 20
+2343862.1539919074
+  0
+LWPOLYLINE
+  5
+1E1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496972.2995881499
+ 20
+2343855.877257058
+ 10
+496959.5927593289
+ 20
+2343863.8482357506
+  0
+CIRCLE
+  5
+1E2
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496963.1440842657
+ 20
+2343852.1026414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1E3
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496960.17591573414
+ 20
+2343853.957358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1E4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496965.9461737394
+ 20
+2343859.8627464045
+ 30
+0.0
+ 40
+1.2
+  1
+B1-26: 4 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496965.9461737394
+ 21
+2343859.8627464045
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1E5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496950.054529388
+ 20
+2343862.748750382
+ 10
+496937.3477005673
+ 20
+2343870.7197290747
+  0
+LWPOLYLINE
+  5
+1E6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496951.11732654675
+ 20
+2343864.4429942244
+ 10
+496938.410497726
+ 20
+2343872.413972917
+  0
+LWPOLYLINE
+  5
+1E7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496952.1801237057
+ 20
+2343866.137238067
+ 10
+496939.473294885
+ 20
+2343874.1082167597
+  0
+LWPOLYLINE
+  5
+1E8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496953.242920865
+ 20
+2343867.8314819103
+ 10
+496940.53609204426
+ 20
+2343875.802460603
+  0
+LWPOLYLINE
+  5
+1E9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496954.30571802397
+ 20
+2343869.525725753
+ 10
+496941.5988892033
+ 20
+2343877.4967044457
+  0
+LWPOLYLINE
+  5
+1EA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496955.368515183
+ 20
+2343871.2199695953
+ 10
+496942.661686362
+ 20
+2343879.190948288
+  0
+LWPOLYLINE
+  5
+1EB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496956.431312342
+ 20
+2343872.914213438
+ 10
+496943.724483521
+ 20
+2343880.8851921307
+  0
+CIRCLE
+  5
+1EC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496947.8840842658
+ 20
+2343861.6426414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1ED
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496944.91591573396
+ 20
+2343863.497358556
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1EE
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496940.2540842656
+ 20
+2343866.4126414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1EF
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496937.2859157338
+ 20
+2343868.2673585555
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1F0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496950.0778979315
+ 20
+2343876.8997027846
+ 30
+0.0
+ 40
+1.2
+  1
+B1-27: 7 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496950.0778979315
+ 21
+2343876.8997027846
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1F1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496937.17827618314
+ 20
+2343870.8260087906
+ 10
+496925.90652404074
+ 20
+2343877.89676558
+  0
+LWPOLYLINE
+  5
+1F2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496938.2410733416
+ 20
+2343872.5202526324
+ 10
+496926.9693211992
+ 20
+2343879.5910094217
+  0
+LWPOLYLINE
+  5
+1F3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496939.3038705006
+ 20
+2343874.214496475
+ 10
+496928.0321183585
+ 20
+2343881.285253265
+  0
+LWPOLYLINE
+  5
+1F4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496940.3666676601
+ 20
+2343875.908740319
+ 10
+496929.094915518
+ 20
+2343882.979497108
+  0
+CIRCLE
+  5
+1F5
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496932.61408426525
+ 20
+2343871.182641443
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1F6
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496929.6459157338
+ 20
+2343873.0373585555
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1F7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496934.73079158907
+ 20
+2343879.4441187135
+ 30
+0.0
+ 40
+1.2
+  1
+B1-28: 4 thanh
+ 50
+-32.099999999893924
+  7
+VN
+ 11
+496934.73079158907
+ 21
+2343879.4441187135
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1F8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496923.36801903456
+ 20
+2343879.4891667697
+ 10
+496910.6611902136
+ 20
+2343887.4601454623
+  0
+LWPOLYLINE
+  5
+1F9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496924.4308161941
+ 20
+2343881.1834106133
+ 10
+496911.7239873731
+ 20
+2343889.154389306
+  0
+LWPOLYLINE
+  5
+1FA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496925.49361335253
+ 20
+2343882.877654455
+ 10
+496912.78678453184
+ 20
+2343890.8486331482
+  0
+LWPOLYLINE
+  5
+1FB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496926.55641051213
+ 20
+2343884.571898299
+ 10
+496913.8495816914
+ 20
+2343892.5428769914
+  0
+CIRCLE
+  5
+1FC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496917.35408426536
+ 20
+2343880.722641443
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+1FD
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496914.38591573393
+ 20
+2343882.5773585555
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+1FE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496920.20299610175
+ 20
+2343888.5573876454
+ 30
+0.0
+ 40
+1.2
+  1
+B1-29: 4 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496920.20299610175
+ 21
+2343888.5573876454
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+1FF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496908.96406674257
+ 20
+2343888.524749009
+ 10
+496896.2572379218
+ 20
+2343896.4957277016
+  0
+LWPOLYLINE
+  5
+200
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496910.0268639021
+ 20
+2343890.2189928526
+ 10
+496897.32003508136
+ 20
+2343898.1899715452
+  0
+LWPOLYLINE
+  5
+201
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496911.08966106054
+ 20
+2343891.9132366944
+ 10
+496898.38283223985
+ 20
+2343899.884215387
+  0
+LWPOLYLINE
+  5
+202
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496912.1524582201
+ 20
+2343893.607480538
+ 10
+496899.4456293994
+ 20
+2343901.5784592307
+  0
+CIRCLE
+  5
+203
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496902.9340842656
+ 20
+2343889.7326414436
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+204
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496899.9659157345
+ 20
+2343891.5873585567
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+205
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496905.79904380976
+ 20
+2343897.592969884
+ 30
+0.0
+ 40
+1.2
+  1
+B1-30: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496905.79904380976
+ 21
+2343897.592969884
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+206
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496889.9038113802
+ 20
+2343900.4812246584
+ 10
+496877.19698255946
+ 20
+2343908.452203351
+  0
+LWPOLYLINE
+  5
+207
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496890.96660853975
+ 20
+2343902.175468502
+ 10
+496878.259779719
+ 20
+2343910.1464471947
+  0
+LWPOLYLINE
+  5
+208
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496892.0294056982
+ 20
+2343903.869712344
+ 10
+496879.3225768775
+ 20
+2343911.8406910365
+  0
+LWPOLYLINE
+  5
+209
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496893.0922028577
+ 20
+2343905.5639561876
+ 10
+496880.385374037
+ 20
+2343913.53493488
+  0
+LWPOLYLINE
+  5
+20A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496894.15500001673
+ 20
+2343907.2582000303
+ 10
+496881.448171196
+ 20
+2343915.229178723
+  0
+LWPOLYLINE
+  5
+20B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496895.21779717517
+ 20
+2343908.952443872
+ 10
+496882.5109683545
+ 20
+2343916.9234225648
+  0
+LWPOLYLINE
+  5
+20C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496896.2805943347
+ 20
+2343910.646687716
+ 10
+496883.573765514
+ 20
+2343918.6176664084
+  0
+CIRCLE
+  5
+20D
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496887.6740842658
+ 20
+2343899.2726414436
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+20E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496884.7059157342
+ 20
+2343901.1273585563
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+20F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496880.0340842655
+ 20
+2343904.0426414437
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+210
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496877.0659157337
+ 20
+2343905.8973585563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+211
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496889.9271799243
+ 20
+2343914.6321770623
+ 30
+0.0
+ 40
+1.2
+  1
+B1-31: 7 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496889.9271799243
+ 21
+2343914.6321770623
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+212
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496877.0275581749
+ 20
+2343908.558483067
+ 10
+496865.7593941107
+ 20
+2343915.626989059
+  0
+LWPOLYLINE
+  5
+213
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496878.0903553347
+ 20
+2343910.2527269106
+ 10
+496866.82219127024
+ 20
+2343917.321232903
+  0
+LWPOLYLINE
+  5
+214
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496879.1531524929
+ 20
+2343911.9469707524
+ 10
+496867.8849884287
+ 20
+2343919.0154767446
+  0
+LWPOLYLINE
+  5
+215
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496880.2159496527
+ 20
+2343913.641214596
+ 10
+496868.9477855882
+ 20
+2343920.7097205883
+  0
+CIRCLE
+  5
+216
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496872.4040842656
+ 20
+2343908.8126414437
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+217
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496869.43591573404
+ 20
+2343910.6673585563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+218
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496874.58186762047
+ 20
+2343917.175467592
+ 30
+0.0
+ 40
+1.2
+  1
+B1-32: 4 thanh
+ 50
+-32.09999999890064
+  7
+VN
+ 11
+496874.58186762047
+ 21
+2343917.175467592
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+219
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496863.22539069894
+ 20
+2343917.216566406
+ 10
+496850.51856187824
+ 20
+2343925.187545099
+  0
+LWPOLYLINE
+  5
+21A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496864.2881878574
+ 20
+2343918.910810248
+ 10
+496851.58135903697
+ 20
+2343926.881788941
+  0
+LWPOLYLINE
+  5
+21B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496865.3509850167
+ 20
+2343920.605054091
+ 10
+496852.644156196
+ 20
+2343928.576032784
+  0
+LWPOLYLINE
+  5
+21C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496866.4137821762
+ 20
+2343922.2992979344
+ 10
+496853.7069533552
+ 20
+2343930.270276627
+  0
+CIRCLE
+  5
+21D
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496857.144084266
+ 20
+2343918.342641444
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+21E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496854.17591573443
+ 20
+2343920.1973585566
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+21F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496860.0603677657
+ 20
+2343926.2847872805
+ 30
+0.0
+ 40
+1.2
+  1
+B1-33: 4 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496860.0603677657
+ 21
+2343926.2847872805
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+220
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496848.82143840776
+ 20
+2343926.2521486455
+ 10
+496836.1146095868
+ 20
+2343934.223127338
+  0
+LWPOLYLINE
+  5
+221
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496849.8842355662
+ 20
+2343927.9463924873
+ 10
+496837.1774067452
+ 20
+2343935.91737118
+  0
+LWPOLYLINE
+  5
+222
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496850.9470327252
+ 20
+2343929.64063633
+ 10
+496838.2402039042
+ 20
+2343937.6116150226
+  0
+LWPOLYLINE
+  5
+223
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496852.00982988474
+ 20
+2343931.3348801737
+ 10
+496839.30300106405
+ 20
+2343939.3058588663
+  0
+CIRCLE
+  5
+224
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496842.7240842657
+ 20
+2343927.3526414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+225
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496839.75591573416
+ 20
+2343929.207358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+226
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496845.65641547437
+ 20
+2343935.32036952
+ 30
+0.0
+ 40
+1.2
+  1
+B1-34: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496845.65641547437
+ 21
+2343935.32036952
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+227
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496829.7611830451
+ 20
+2343938.2086242945
+ 10
+496817.0543542241
+ 20
+2343946.179602987
+  0
+LWPOLYLINE
+  5
+228
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496830.8239802033
+ 20
+2343939.9028681363
+ 10
+496818.1171513826
+ 20
+2343947.873846829
+  0
+LWPOLYLINE
+  5
+229
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496831.88677736255
+ 20
+2343941.597111979
+ 10
+496819.17994854157
+ 20
+2343949.5680906717
+  0
+LWPOLYLINE
+  5
+22A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496832.9495745221
+ 20
+2343943.2913558227
+ 10
+496820.2427457011
+ 20
+2343951.2623345153
+  0
+LWPOLYLINE
+  5
+22B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496834.0123716811
+ 20
+2343944.9855996654
+ 10
+496821.3055428604
+ 20
+2343952.956578358
+  0
+LWPOLYLINE
+  5
+22C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496835.0751688401
+ 20
+2343946.679843508
+ 10
+496822.36834001937
+ 20
+2343954.650822201
+  0
+LWPOLYLINE
+  5
+22D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496836.13796599855
+ 20
+2343948.37408735
+ 10
+496823.4311371781
+ 20
+2343956.345066043
+  0
+CIRCLE
+  5
+22E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496827.4640842655
+ 20
+2343936.8926414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+22F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496824.495915734
+ 20
+2343938.747358556
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+230
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496819.82408426557
+ 20
+2343941.6626414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+231
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496816.8559157336
+ 20
+2343943.5173585555
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+232
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496829.78455158835
+ 20
+2343952.3595766965
+ 30
+0.0
+ 40
+1.2
+  1
+B1-35: 7 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496829.78455158835
+ 21
+2343952.3595766965
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+233
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496816.88492984
+ 20
+2343946.285882703
+ 10
+496805.61676577607
+ 20
+2343953.3543886957
+  0
+LWPOLYLINE
+  5
+234
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496817.9477269987
+ 20
+2343947.9801265453
+ 10
+496806.6795629345
+ 20
+2343955.0486325375
+  0
+LWPOLYLINE
+  5
+235
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496819.01052415767
+ 20
+2343949.674370388
+ 10
+496807.7423600935
+ 20
+2343956.74287638
+  0
+LWPOLYLINE
+  5
+236
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496820.073321317
+ 20
+2343951.3686142312
+ 10
+496808.80515725305
+ 20
+2343958.437120224
+  0
+CIRCLE
+  5
+237
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496812.1940842657
+ 20
+2343946.4326414433
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+238
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496809.22591573425
+ 20
+2343948.287358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+239
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496814.439239285
+ 20
+2343954.902867228
+ 30
+0.0
+ 40
+1.2
+  1
+B1-36: 4 thanh
+ 50
+-32.1000000019321
+  7
+VN
+ 11
+496814.439239285
+ 21
+2343954.902867228
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+23A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496803.0782607686
+ 20
+2343954.946789884
+ 10
+496790.3714319479
+ 20
+2343962.917768577
+  0
+LWPOLYLINE
+  5
+23B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496804.14105792734
+ 20
+2343956.6410337263
+ 10
+496791.43422910664
+ 20
+2343964.6120124194
+  0
+LWPOLYLINE
+  5
+23C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496805.20385508635
+ 20
+2343958.335277569
+ 10
+496792.4970262656
+ 20
+2343966.306256262
+  0
+LWPOLYLINE
+  5
+23D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496806.2666522459
+ 20
+2343960.0295214127
+ 10
+496793.5598234254
+ 20
+2343968.000500106
+  0
+CIRCLE
+  5
+23E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496796.9340842658
+ 20
+2343955.9726414434
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+23F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496793.9659157342
+ 20
+2343957.827358556
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+240
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496799.91323783563
+ 20
+2343964.0150107592
+ 30
+0.0
+ 40
+1.2
+  1
+B1-37: 4 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496799.91323783563
+ 21
+2343964.0150107592
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+241
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497064.2557480964
+ 20
+2343852.494777271
+ 10
+497051.5489192759
+ 20
+2343860.465755964
+  0
+LWPOLYLINE
+  5
+242
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497063.1929509371
+ 20
+2343850.800533428
+ 10
+497050.4861221164
+ 20
+2343858.7715121205
+  0
+LWPOLYLINE
+  5
+243
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497062.1301537781
+ 20
+2343849.106289585
+ 10
+497049.42332495714
+ 20
+2343857.0772682778
+  0
+LWPOLYLINE
+  5
+244
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497061.0673566194
+ 20
+2343847.412045743
+ 10
+497048.3605277984
+ 20
+2343855.3830244355
+  0
+LWPOLYLINE
+  5
+245
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497060.0045594601
+ 20
+2343845.7178018996
+ 10
+497047.2977306391
+ 20
+2343853.6887805923
+  0
+LWPOLYLINE
+  5
+246
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497058.94176230085
+ 20
+2343844.0235580564
+ 10
+497046.23493348015
+ 20
+2343851.9945367496
+  0
+CIRCLE
+  5
+247
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497065.424084113
+ 20
+2343854.232641199
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+248
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497062.4559158868
+ 20
+2343856.0873588007
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+249
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497057.79408411303
+ 20
+2343859.002641199
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+24A
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497054.82591588655
+ 20
+2343860.8573588002
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+24B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497052.58834789053
+ 20
+2343848.009047403
+ 30
+0.0
+ 40
+1.2
+  1
+B1-38: 6 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+497052.58834789053
+ 21
+2343848.009047403
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+24C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497051.3794948916
+ 20
+2343860.57203568
+ 10
+497041.22346293274
+ 20
+2343866.942902518
+  0
+LWPOLYLINE
+  5
+24D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497050.3166977318
+ 20
+2343858.8777918364
+ 10
+497040.1606657732
+ 20
+2343865.2486586743
+  0
+LWPOLYLINE
+  5
+24E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497049.25390057283
+ 20
+2343857.1835479937
+ 10
+497039.0978686142
+ 20
+2343863.5544148316
+  0
+LWPOLYLINE
+  5
+24F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497048.19110341434
+ 20
+2343855.489304152
+ 10
+497038.03507145576
+ 20
+2343861.8601709898
+  0
+CIRCLE
+  5
+250
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497050.1540841132
+ 20
+2343863.7726411996
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+251
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497047.1859158867
+ 20
+2343865.6273588007
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+252
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497043.113087435
+ 20
+2343858.674737571
+ 30
+0.0
+ 40
+1.2
+  1
+B1-39: 4 thanh
+ 50
+-32.100000001286844
+  7
+VN
+ 11
+497043.113087435
+ 21
+2343858.674737571
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+253
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497038.6849579256
+ 20
+2343868.535303707
+ 10
+497025.9781291046
+ 20
+2343876.5062823994
+  0
+LWPOLYLINE
+  5
+254
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497037.62216076604
+ 20
+2343866.8410598636
+ 10
+497024.9153319453
+ 20
+2343874.812038556
+  0
+LWPOLYLINE
+  5
+255
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497036.559363607
+ 20
+2343865.146816021
+ 10
+497023.85253478633
+ 20
+2343873.1177947135
+  0
+LWPOLYLINE
+  5
+256
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497035.4965664483
+ 20
+2343863.4525721786
+ 10
+497022.7897376276
+ 20
+2343871.423550871
+  0
+CIRCLE
+  5
+257
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497034.89408411295
+ 20
+2343873.312641199
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+258
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497031.9259158867
+ 20
+2343875.167358801
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+259
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497029.143152038
+ 20
+2343867.438061525
+ 30
+0.0
+ 40
+1.2
+  1
+B1-40: 4 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+497029.143152038
+ 21
+2343867.438061525
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+25A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497023.4324479426
+ 20
+2343878.1031851824
+ 10
+497010.72561912215
+ 20
+2343886.0741638755
+  0
+LWPOLYLINE
+  5
+25B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497022.3696507831
+ 20
+2343876.408941339
+ 10
+497009.6628219623
+ 20
+2343884.379920032
+  0
+LWPOLYLINE
+  5
+25C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497021.30685362406
+ 20
+2343874.714697496
+ 10
+497008.6000248033
+ 20
+2343882.685676189
+  0
+LWPOLYLINE
+  5
+25D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497020.24405646534
+ 20
+2343873.0204536538
+ 10
+497007.53722764464
+ 20
+2343880.991432347
+  0
+CIRCLE
+  5
+25E
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497019.6240841133
+ 20
+2343882.8526411992
+ 30
+0.0
+ 40
+0.6
+  0
+CIRCLE
+  5
+25F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497016.6559158866
+ 20
+2343884.7073588
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+260
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497013.89064205496
+ 20
+2343877.0059430003
+ 30
+0.0
+ 40
+1.2
+  1
+B1-41: 4 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+497013.89064205496
+ 21
+2343877.0059430003
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+261
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497036.30801053817
+ 20
+2343943.2153525534
+ 10
+497023.6011817172
+ 20
+2343951.186331246
+  0
+LWPOLYLINE
+  5
+262
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497027.80563326593
+ 20
+2343929.6614018115
+ 10
+497015.0988044452
+ 20
+2343937.632380504
+  0
+CIRCLE
+  5
+263
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497034.37689332804
+ 20
+2343939.3319571014
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+264
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497021.45221885556
+ 20
+2343933.646891158
+ 30
+0.0
+ 40
+1.2
+  1
+B1-42: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+497021.45221885556
+ 21
+2343933.646891158
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+265
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497026.7428361069
+ 20
+2343927.967157969
+ 10
+497014.0360072862
+ 20
+2343935.9381366614
+  0
+LWPOLYLINE
+  5
+266
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497025.6800389474
+ 20
+2343926.272914125
+ 10
+497012.9732101264
+ 20
+2343934.2438928178
+  0
+CIRCLE
+  5
+267
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497032.4231066715
+ 20
+2343936.428042898
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+268
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497019.3266245369
+ 20
+2343930.2584034717
+ 30
+0.0
+ 40
+1.2
+  1
+B1-43: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497019.3266245369
+ 21
+2343930.2584034717
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+269
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497024.61724178895
+ 20
+2343924.5786702833
+ 10
+497011.91041296796
+ 20
+2343932.549648976
+  0
+LWPOLYLINE
+  5
+26A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497023.55444462964
+ 20
+2343922.88442644
+ 10
+497010.84761580895
+ 20
+2343930.855405133
+  0
+CIRCLE
+  5
+26B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497024.3268933279
+ 20
+2343924.4019571017
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+26C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497017.2010302193
+ 20
+2343926.8699157867
+ 30
+0.0
+ 40
+1.2
+  1
+B1-44: 2 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+497017.2010302193
+ 21
+2343926.8699157867
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+26D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497022.4916474701
+ 20
+2343921.190182597
+ 10
+497009.7848186494
+ 20
+2343929.1611612896
+  0
+LWPOLYLINE
+  5
+26E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497021.42885031115
+ 20
+2343919.495938754
+ 10
+497008.7220214904
+ 20
+2343927.466917447
+  0
+CIRCLE
+  5
+26F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497022.3731066715
+ 20
+2343921.498042898
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+270
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497015.07543590077
+ 20
+2343923.4814281007
+ 30
+0.0
+ 40
+1.2
+  1
+B1-45: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+497015.07543590077
+ 21
+2343923.4814281007
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+271
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497015.0520673569
+ 20
+2343909.3304756973
+ 10
+497002.3452385359
+ 20
+2343917.30145439
+  0
+LWPOLYLINE
+  5
+272
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497013.98927019845
+ 20
+2343907.6362318555
+ 10
+497001.2824413774
+ 20
+2343915.607210548
+  0
+CIRCLE
+  5
+273
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497014.2868933283
+ 20
+2343909.4619571017
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+274
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497007.6358557879
+ 20
+2343911.6217212016
+ 30
+0.0
+ 40
+1.2
+  1
+B1-46: 2 thanh
+ 50
+-32.099999998942906
+  7
+VN
+ 11
+497007.6358557879
+ 21
+2343911.6217212016
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+275
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497012.92647303944
+ 20
+2343905.9419880128
+ 10
+497000.21964421845
+ 20
+2343913.9129667054
+  0
+LWPOLYLINE
+  5
+276
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497011.8636758799
+ 20
+2343904.247744169
+ 10
+496999.1568470589
+ 20
+2343912.2187228617
+  0
+CIRCLE
+  5
+277
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497012.33310667175
+ 20
+2343906.558042898
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+278
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497005.5102614694
+ 20
+2343908.233233515
+ 30
+0.0
+ 40
+1.2
+  1
+B1-47: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497005.5102614694
+ 21
+2343908.233233515
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+279
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497005.4868929259
+ 20
+2343894.082281113
+ 10
+496992.78006410546
+ 20
+2343902.0532598062
+  0
+LWPOLYLINE
+  5
+27A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497004.4240957653
+ 20
+2343892.3880372676
+ 10
+496991.7172669445
+ 20
+2343900.3590159607
+  0
+CIRCLE
+  5
+27B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497004.2368933283
+ 20
+2343894.5319571015
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+27C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496998.0706813549
+ 20
+2343896.373526614
+ 30
+0.0
+ 40
+1.2
+  1
+B1-48: 2 thanh
+ 50
+-32.1000000010404
+  7
+VN
+ 11
+496998.0706813549
+ 21
+2343896.373526614
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+27D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497003.36129860656
+ 20
+2343890.6937934253
+ 10
+496990.6544697858
+ 20
+2343898.6647721184
+  0
+LWPOLYLINE
+  5
+27E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497002.2985014467
+ 20
+2343888.9995495817
+ 10
+496989.59167262627
+ 20
+2343896.970528275
+  0
+CIRCLE
+  5
+27F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497002.28310667165
+ 20
+2343891.6280428977
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+280
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496995.94508703647
+ 20
+2343892.985038928
+ 30
+0.0
+ 40
+1.2
+  1
+B1-49: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496995.94508703647
+ 21
+2343892.985038928
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+281
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496935.2349718112
+ 20
+2344056.197990346
+ 10
+496922.5281429905
+ 20
+2344064.1689690384
+  0
+LWPOLYLINE
+  5
+282
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496929.92098601675
+ 20
+2344047.726771133
+ 10
+496920.0183518226
+ 20
+2344053.938681852
+  0
+CIRCLE
+  5
+283
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496933.0273474723
+ 20
+2344051.694091192
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+284
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496924.9696689197
+ 20
+2344050.8327264925
+ 30
+0.0
+ 40
+1.2
+  1
+B1-50: 2 thanh
+ 50
+-32.09999999771898
+  7
+VN
+ 11
+496924.9696689197
+ 21
+2344050.8327264925
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+285
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496928.8581888572
+ 20
+2344046.0325272894
+ 10
+496916.1513600362
+ 20
+2344054.003505982
+  0
+LWPOLYLINE
+  5
+286
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496927.79539169825
+ 20
+2344044.3382834466
+ 10
+496915.08856287727
+ 20
+2344052.3092621393
+  0
+CIRCLE
+  5
+287
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496931.17265252816
+ 20
+2344048.7259088084
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+288
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496921.44197728776
+ 20
+2344048.3237727927
+ 30
+0.0
+ 40
+1.2
+  1
+B1-51: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496921.44197728776
+ 21
+2344048.3237727927
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+289
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496926.7325945395
+ 20
+2344042.6440396043
+ 10
+496914.02576571854
+ 20
+2344050.615018297
+  0
+LWPOLYLINE
+  5
+28A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496925.6697973802
+ 20
+2344040.949795761
+ 10
+496912.96296855924
+ 20
+2344048.920774454
+  0
+CIRCLE
+  5
+28B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496928.257347472
+ 20
+2344044.0540911914
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+28C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496919.31638296973
+ 20
+2344044.935285107
+ 30
+0.0
+ 40
+1.2
+  1
+B1-52: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496919.31638296973
+ 21
+2344044.935285107
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+28D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496924.6070002215
+ 20
+2344039.255551919
+ 10
+496911.9001714005
+ 20
+2344047.2265306115
+  0
+LWPOLYLINE
+  5
+28E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496923.54420306225
+ 20
+2344037.561308076
+ 10
+496910.83737424156
+ 20
+2344045.532286769
+  0
+CIRCLE
+  5
+28F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496926.4026525274
+ 20
+2344041.0859088073
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+290
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496917.19078865193
+ 20
+2344041.5467974227
+ 30
+0.0
+ 40
+1.2
+  1
+B1-53: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496917.19078865193
+ 21
+2344041.5467974227
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+291
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496918.2302172673
+ 20
+2344029.0900888625
+ 10
+496905.52338844654
+ 20
+2344037.061067555
+  0
+LWPOLYLINE
+  5
+292
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496919.2930144257
+ 20
+2344030.7843327043
+ 10
+496906.586185605
+ 20
+2344038.755311397
+  0
+CIRCLE
+  5
+293
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496918.717347472
+ 20
+2344028.7940911916
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+294
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496912.93960001535
+ 20
+2344034.769822051
+ 30
+0.0
+ 40
+1.2
+  1
+B1-54: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496912.93960001535
+ 21
+2344034.769822051
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+295
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496916.10462294874
+ 20
+2344025.701601176
+ 10
+496903.39779412776
+ 20
+2344033.6725798687
+  0
+LWPOLYLINE
+  5
+296
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496917.1674201083
+ 20
+2344027.3958450197
+ 10
+496904.4605912876
+ 20
+2344035.3668237124
+  0
+CIRCLE
+  5
+297
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496916.8626525278
+ 20
+2344025.825908808
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+298
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496910.81400569796
+ 20
+2344031.3813343663
+ 30
+0.0
+ 40
+1.2
+  1
+B1-55: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496910.81400569796
+ 21
+2344031.3813343663
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+299
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496897.8582485518
+ 20
+2344136.3068105048
+ 10
+496885.1514197311
+ 20
+2344144.2777891974
+  0
+LWPOLYLINE
+  5
+29A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496892.54426275654
+ 20
+2344127.8355912906
+ 10
+496879.83743393584
+ 20
+2344135.8065699833
+  0
+CIRCLE
+  5
+29B
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496895.1973867196
+ 20
+2344132.4840666666
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+29C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496886.1908483462
+ 20
+2344131.821080637
+ 30
+0.0
+ 40
+1.2
+  1
+B1-56: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496886.1908483462
+ 21
+2344131.821080637
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+29D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496891.481465597
+ 20
+2344126.141347447
+ 10
+496878.774636776
+ 20
+2344134.1123261396
+  0
+LWPOLYLINE
+  5
+29E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496890.418668438
+ 20
+2344124.447103604
+ 10
+496877.711839617
+ 20
+2344132.418082297
+  0
+CIRCLE
+  5
+29F
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496893.342613281
+ 20
+2344129.5159333334
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2A0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496884.0652540275
+ 20
+2344128.4325929508
+ 30
+0.0
+ 40
+1.2
+  1
+B1-57: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496884.0652540275
+ 21
+2344128.4325929508
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2A1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496890.53337074985
+ 20
+2344122.0142157366
+ 10
+496877.8265419294
+ 20
+2344129.9851944298
+  0
+LWPOLYLINE
+  5
+2A2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496889.4705735903
+ 20
+2344120.319971893
+ 10
+496876.76374476956
+ 20
+2344128.2909505856
+  0
+CIRCLE
+  5
+2A3
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496890.4373867197
+ 20
+2344124.844066667
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2A4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496883.11715917994
+ 20
+2344124.305461239
+ 30
+0.0
+ 40
+1.2
+  1
+B1-58: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496883.11715917994
+ 21
+2344124.305461239
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2A5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496888.407776431
+ 20
+2344118.62572805
+ 10
+496875.70094761054
+ 20
+2344126.596706743
+  0
+LWPOLYLINE
+  5
+2A6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496887.344979272
+ 20
+2344116.931484207
+ 10
+496874.6381504516
+ 20
+2344124.9024629
+  0
+CIRCLE
+  5
+2A7
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496888.5826132805
+ 20
+2344121.8759333333
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2A8
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496880.9915648618
+ 20
+2344120.9169735536
+ 30
+0.0
+ 40
+1.2
+  1
+B1-59: 2 thanh
+ 50
+-32.10000000174932
+  7
+VN
+ 11
+496880.9915648618
+ 21
+2344120.9169735536
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2A9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496883.09379063605
+ 20
+2344110.154508836
+ 10
+496870.3869618153
+ 20
+2344118.125487529
+  0
+LWPOLYLINE
+  5
+2AA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496882.03099347703
+ 20
+2344108.4602649934
+ 10
+496869.32416465634
+ 20
+2344116.4312436865
+  0
+CIRCLE
+  5
+2AB
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496881.4273867197
+ 20
+2344110.434066667
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2AC
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496875.6775790667
+ 20
+2344112.44575434
+ 30
+0.0
+ 40
+1.2
+  1
+B1-60: 2 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+496875.6775790667
+ 21
+2344112.44575434
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2AD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496880.9681963189
+ 20
+2344106.766021152
+ 10
+496868.26136749814
+ 20
+2344114.736999845
+  0
+LWPOLYLINE
+  5
+2AE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496879.9053991599
+ 20
+2344105.0717773093
+ 10
+496867.1985703389
+ 20
+2344113.042756002
+  0
+CIRCLE
+  5
+2AF
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496879.57261328027
+ 20
+2344107.465933333
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2B0
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496873.5519847494
+ 20
+2344109.0572666554
+ 30
+0.0
+ 40
+1.2
+  1
+B1-61: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496873.5519847494
+ 21
+2344109.0572666554
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2B1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496849.38033226645
+ 20
+2344166.716950062
+ 10
+496836.673503446
+ 20
+2344174.6879287553
+  0
+LWPOLYLINE
+  5
+2B2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496841.7902226904
+ 20
+2344169.117281579
+ 10
+496835.61070628616
+ 20
+2344172.993684911
+  0
+CIRCLE
+  5
+2B3
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496836.15736148297
+ 20
+2344174.394082437
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2B4
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496838.70046448824
+ 20
+2344171.0554832453
+ 30
+0.0
+ 40
+1.2
+  1
+B1-62: 2 thanh
+ 50
+-32.099999996303495
+  7
+VN
+ 11
+496838.70046448824
+ 21
+2344171.0554832453
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2B5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496840.72742553166
+ 20
+2344167.4230377367
+ 10
+496834.547909128
+ 20
+2344171.29944107
+  0
+LWPOLYLINE
+  5
+2B6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496839.6646283721
+ 20
+2344165.728793893
+ 10
+496833.4851119682
+ 20
+2344169.6051972257
+  0
+LWPOLYLINE
+  5
+2B7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496838.6018312131
+ 20
+2344164.0345500503
+ 10
+496832.42231480894
+ 20
+2344167.910953383
+  0
+CIRCLE
+  5
+2B8
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496834.30263851694
+ 20
+2344171.4259175635
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2B9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496835.512073011
+ 20
+2344165.9727517166
+ 30
+0.0
+ 40
+1.2
+  1
+B1-63: 3 thanh
+ 50
+-32.09999999964481
+  7
+VN
+ 11
+496835.512073011
+ 21
+2344165.9727517166
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2BA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496839.8151578347
+ 20
+2344151.4687554766
+ 10
+496827.1083290139
+ 20
+2344159.4397341693
+  0
+LWPOLYLINE
+  5
+2BB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496838.75236067566
+ 20
+2344149.774511634
+ 10
+496826.04553185496
+ 20
+2344157.7454903265
+  0
+CIRCLE
+  5
+2BC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496826.6173614827
+ 20
+2344159.134082436
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2BD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496832.39894626534
+ 20
+2344153.7600009805
+ 30
+0.0
+ 40
+1.2
+  1
+B1-64: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496832.39894626534
+ 21
+2344153.7600009805
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2BE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496837.68956351664
+ 20
+2344148.080267791
+ 10
+496824.98273469595
+ 20
+2344156.051246484
+  0
+LWPOLYLINE
+  5
+2BF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496836.6267663579
+ 20
+2344146.386023949
+ 10
+496823.9199375375
+ 20
+2344154.357002642
+  0
+CIRCLE
+  5
+2C0
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496824.7626385164
+ 20
+2344156.165917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2C1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496830.2733519477
+ 20
+2344150.3715132955
+ 30
+0.0
+ 40
+1.2
+  1
+B1-65: 2 thanh
+ 50
+-32.10000000174932
+  7
+VN
+ 11
+496830.2733519477
+ 21
+2344150.3715132955
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2C2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496834.50117203966
+ 20
+2344142.997536263
+ 10
+496821.79434321896
+ 20
+2344150.9685149556
+  0
+LWPOLYLINE
+  5
+2C3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496835.56396919896
+ 20
+2344144.691780106
+ 10
+496822.8571403785
+ 20
+2344152.6627587993
+  0
+CIRCLE
+  5
+2C4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496821.8473614833
+ 20
+2344151.4940824364
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2C5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496829.2105547887
+ 20
+2344148.6772694527
+ 30
+0.0
+ 40
+1.2
+  1
+B1-66: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496829.2105547887
+ 21
+2344148.6772694527
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2C6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496832.3755777214
+ 20
+2344139.609048577
+ 10
+496819.6687489007
+ 20
+2344147.58002727
+  0
+LWPOLYLINE
+  5
+2C7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496833.4383748804
+ 20
+2344141.3032924198
+ 10
+496820.73154605995
+ 20
+2344149.274271113
+  0
+CIRCLE
+  5
+2C8
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496819.99263851676
+ 20
+2344148.5259175627
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2C9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496827.0849604702
+ 20
+2344145.2887817663
+ 30
+0.0
+ 40
+1.2
+  1
+B1-67: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496827.0849604702
+ 21
+2344145.2887817663
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2CA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496830.24998340395
+ 20
+2344136.2205608925
+ 10
+496817.54315458325
+ 20
+2344144.1915395856
+  0
+LWPOLYLINE
+  5
+2CB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496829.187186245
+ 20
+2344134.5263170497
+ 10
+496816.48035742424
+ 20
+2344142.497295743
+  0
+CIRCLE
+  5
+2CC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496817.07736148307
+ 20
+2344143.8640824365
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2CD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496822.8337718346
+ 20
+2344138.5118063963
+ 30
+0.0
+ 40
+1.2
+  1
+B1-68: 2 thanh
+ 50
+-32.1000000010404
+  7
+VN
+ 11
+496822.8337718346
+ 21
+2344138.5118063963
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2CE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496828.12438908516
+ 20
+2344132.832073206
+ 10
+496815.4175602644
+ 20
+2344140.8030518987
+  0
+LWPOLYLINE
+  5
+2CF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496827.06159192673
+ 20
+2344131.1378293643
+ 10
+496814.35476310627
+ 20
+2344139.1088080574
+  0
+CIRCLE
+  5
+2D0
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496815.2226385165
+ 20
+2344140.895917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2D1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496820.70817751647
+ 20
+2344135.123318711
+ 30
+0.0
+ 40
+1.2
+  1
+B1-69: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496820.70817751647
+ 21
+2344135.123318711
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2D2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496820.68480897247
+ 20
+2344120.9723663074
+ 10
+496807.977980152
+ 20
+2344128.9433450005
+  0
+LWPOLYLINE
+  5
+2D3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496819.62201181345
+ 20
+2344119.2781224647
+ 10
+496806.91518299305
+ 20
+2344127.2491011578
+  0
+CIRCLE
+  5
+2D4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496807.5373614835
+ 20
+2344128.604082437
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2D5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496813.26859740325
+ 20
+2344123.263611811
+ 30
+0.0
+ 40
+1.2
+  1
+B1-70: 2 thanh
+ 50
+-32.10000000174932
+  7
+VN
+ 11
+496813.26859740325
+ 21
+2344123.263611811
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2D6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496818.5592146542
+ 20
+2344117.5838786215
+ 10
+496805.8523858332
+ 20
+2344125.554857314
+  0
+LWPOLYLINE
+  5
+2D7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496817.4964174952
+ 20
+2344115.8896347787
+ 10
+496804.7895886742
+ 20
+2344123.8606134714
+  0
+CIRCLE
+  5
+2D8
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496805.6826385168
+ 20
+2344125.6359175635
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2D9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496811.1430030847
+ 20
+2344119.875124125
+ 30
+0.0
+ 40
+1.2
+  1
+B1-71: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496811.1430030847
+ 21
+2344119.875124125
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2DA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496811.1196345412
+ 20
+2344105.724171723
+ 10
+496798.41280572076
+ 20
+2344113.695150416
+  0
+LWPOLYLINE
+  5
+2DB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496810.0568373817
+ 20
+2344104.029927879
+ 10
+496797.350008561
+ 20
+2344112.0009065717
+  0
+CIRCLE
+  5
+2DC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496798.00736148324
+ 20
+2344113.3340824367
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2DD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496803.7034229713
+ 20
+2344108.0154172257
+ 30
+0.0
+ 40
+1.2
+  1
+B1-72: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496803.7034229713
+ 21
+2344108.0154172257
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2DE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496808.99404022266
+ 20
+2344102.3356840364
+ 10
+496796.28721140197
+ 20
+2344110.306662729
+  0
+LWPOLYLINE
+  5
+2DF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496807.93124306423
+ 20
+2344100.6414401946
+ 10
+496795.22441424377
+ 20
+2344108.6124188877
+  0
+CIRCLE
+  5
+2E0
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496796.1526385167
+ 20
+2344110.365917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2E1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496801.577828654
+ 20
+2344104.626929541
+ 30
+0.0
+ 40
+1.2
+  1
+B1-73: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496801.577828654
+ 21
+2344104.626929541
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2E2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496801.55446010974
+ 20
+2344090.4759771377
+ 10
+496788.8476312893
+ 20
+2344098.446955831
+  0
+LWPOLYLINE
+  5
+2E3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496800.49166295043
+ 20
+2344088.7817332945
+ 10
+496787.78483412974
+ 20
+2344096.752711987
+  0
+CIRCLE
+  5
+2E4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496788.46736148297
+ 20
+2344098.0740824365
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2E5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496794.1382485401
+ 20
+2344092.767222641
+ 30
+0.0
+ 40
+1.2
+  1
+B1-74: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496794.1382485401
+ 21
+2344092.767222641
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2E6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496799.4288657915
+ 20
+2344087.0874894517
+ 10
+496786.7220369707
+ 20
+2344095.0584681444
+  0
+LWPOLYLINE
+  5
+2E7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496798.36606863275
+ 20
+2344085.3932456095
+ 10
+496785.6592398123
+ 20
+2344093.3642243026
+  0
+CIRCLE
+  5
+2E8
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496786.6126385164
+ 20
+2344095.1059175627
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2E9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496792.01265422255
+ 20
+2344089.378734956
+ 30
+0.0
+ 40
+1.2
+  1
+B1-75: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496792.01265422255
+ 21
+2344089.378734956
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2EA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496791.9892856782
+ 20
+2344075.227782552
+ 10
+496779.2824568572
+ 20
+2344083.198761245
+  0
+LWPOLYLINE
+  5
+2EB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496793.05208283773
+ 20
+2344076.922026396
+ 10
+496780.34525401704
+ 20
+2344084.893005089
+  0
+CIRCLE
+  5
+2EC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496779.45736148325
+ 20
+2344083.6540824366
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2ED
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496786.6986684274
+ 20
+2344080.9075157424
+ 30
+0.0
+ 40
+1.2
+  1
+B1-76: 2 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+496786.6986684274
+ 21
+2344080.9075157424
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2EE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496789.8636913605
+ 20
+2344071.8392948676
+ 10
+496777.15686254005
+ 20
+2344079.8102735607
+  0
+LWPOLYLINE
+  5
+2EF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496790.92648851895
+ 20
+2344073.5335387094
+ 10
+496778.2196596982
+ 20
+2344081.504517402
+  0
+CIRCLE
+  5
+2F0
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496777.6026385167
+ 20
+2344080.685917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2F1
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496784.5730741086
+ 20
+2344077.5190280555
+ 30
+0.0
+ 40
+1.2
+  1
+B1-77: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496784.5730741086
+ 21
+2344077.5190280555
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2F2
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496787.73809704196
+ 20
+2344068.450807181
+ 10
+496775.0312682212
+ 20
+2344076.421785874
+  0
+LWPOLYLINE
+  5
+2F3
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496786.67529988324
+ 20
+2344066.756563339
+ 10
+496773.9684710628
+ 20
+2344074.727542032
+  0
+CIRCLE
+  5
+2F4
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496774.68736148305
+ 20
+2344076.0240824367
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2F5
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496780.321885473
+ 20
+2344070.7420526855
+ 30
+0.0
+ 40
+1.2
+  1
+B1-78: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496780.321885473
+ 21
+2344070.7420526855
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2F6
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496785.6125027242
+ 20
+2344065.062319496
+ 10
+496772.90567390376
+ 20
+2344073.0332981893
+  0
+LWPOLYLINE
+  5
+2F7
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496784.549705565
+ 20
+2344063.368075653
+ 10
+496771.8428767442
+ 20
+2344071.3390543456
+  0
+CIRCLE
+  5
+2F8
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496772.8326385163
+ 20
+2344073.055917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2F9
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496778.1962911546
+ 20
+2344067.353564999
+ 30
+0.0
+ 40
+1.2
+  1
+B1-79: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496778.1962911546
+ 21
+2344067.353564999
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2FA
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496782.42411124695
+ 20
+2344059.9795879675
+ 10
+496769.71728242596
+ 20
+2344067.95056666
+  0
+LWPOLYLINE
+  5
+2FB
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496783.48690840596
+ 20
+2344061.6738318102
+ 10
+496770.78007958527
+ 20
+2344069.644810503
+  0
+CIRCLE
+  5
+2FC
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496769.91736148327
+ 20
+2344068.3840824366
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+2FD
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496777.13349399564
+ 20
+2344065.6593211563
+ 30
+0.0
+ 40
+1.2
+  1
+B1-80: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496777.13349399564
+ 21
+2344065.6593211563
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+2FE
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496780.2985169287
+ 20
+2344056.5911002816
+ 10
+496767.591688108
+ 20
+2344064.5620789747
+  0
+LWPOLYLINE
+  5
+2FF
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496781.3613140882
+ 20
+2344058.2853441252
+ 10
+496768.6544852675
+ 20
+2344066.2563228183
+  0
+CIRCLE
+  5
+300
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496768.06263851695
+ 20
+2344065.4159175633
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+301
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496775.00789967785
+ 20
+2344062.270833472
+ 30
+0.0
+ 40
+1.2
+  1
+B1-81: 2 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+496775.00789967785
+ 21
+2344062.270833472
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+302
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496772.858936816
+ 20
+2344044.7313933834
+ 10
+496760.1521079956
+ 20
+2344052.7023720765
+  0
+LWPOLYLINE
+  5
+303
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496773.9217339745
+ 20
+2344046.425637225
+ 10
+496761.2149051537
+ 20
+2344054.396615918
+  0
+CIRCLE
+  5
+304
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496760.377361483
+ 20
+2344053.124082437
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+305
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496767.5683195641
+ 20
+2344050.4111265717
+ 30
+0.0
+ 40
+1.2
+  1
+B1-82: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496767.5683195641
+ 21
+2344050.4111265717
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+306
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496770.7333424975
+ 20
+2344041.342905697
+ 10
+496758.02651367645
+ 20
+2344049.3138843896
+  0
+LWPOLYLINE
+  5
+307
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496771.79613965703
+ 20
+2344043.0371495406
+ 10
+496759.08931083657
+ 20
+2344051.0081282337
+  0
+CIRCLE
+  5
+308
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496758.52263851627
+ 20
+2344050.155917563
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+309
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496765.4427252468
+ 20
+2344047.022638887
+ 30
+0.0
+ 40
+1.2
+  1
+B1-83: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+496765.4427252468
+ 21
+2344047.022638887
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+30A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496824.37798107864
+ 20
+2343993.526075891
+ 10
+496811.6711522579
+ 20
+2344001.497054584
+  0
+LWPOLYLINE
+  5
+30B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496824.30908310367
+ 20
+2343991.2083602594
+ 10
+496811.6022542829
+ 20
+2343999.179338952
+  0
+CIRCLE
+  5
+30C
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496812.8173545148
+ 20
+2344000.644086791
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+30D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496817.9556686933
+ 20
+2343995.1938496055
+ 30
+0.0
+ 40
+1.2
+  1
+B1-84: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+496817.9556686933
+ 21
+2343995.1938496055
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+30E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496823.24628594465
+ 20
+2343989.5141164167
+ 10
+496810.53945712367
+ 20
+2343997.4850951093
+  0
+LWPOLYLINE
+  5
+30F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496822.18348878593
+ 20
+2343987.8198725744
+ 10
+496809.47665996494
+ 20
+2343995.790851267
+  0
+CIRCLE
+  5
+310
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496810.9626454851
+ 20
+2343997.6759132086
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+311
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496815.83007437544
+ 20
+2343991.805361921
+ 30
+0.0
+ 40
+1.2
+  1
+B1-85: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496815.83007437544
+ 21
+2343991.805361921
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+312
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496815.80670583167
+ 20
+2343977.654409518
+ 10
+496803.099877011
+ 20
+2343985.6253882106
+  0
+LWPOLYLINE
+  5
+313
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496814.7439086721
+ 20
+2343975.9601656743
+ 10
+496802.03707985143
+ 20
+2343983.931144367
+  0
+CIRCLE
+  5
+314
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496803.2773545149
+ 20
+2343985.374086791
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+315
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496808.39049426175
+ 20
+2343979.945655021
+ 30
+0.0
+ 40
+1.2
+  1
+B1-86: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496808.39049426175
+ 21
+2343979.945655021
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+316
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496813.6811115132
+ 20
+2343974.2659218316
+ 10
+496800.9742826924
+ 20
+2343982.2369005242
+  0
+LWPOLYLINE
+  5
+317
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496812.6183143547
+ 20
+2343972.57167799
+ 10
+496799.911485534
+ 20
+2343980.5426566824
+  0
+CIRCLE
+  5
+318
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496801.42264548515
+ 20
+2343982.4059132086
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+319
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496806.2648999443
+ 20
+2343976.5571673363
+ 30
+0.0
+ 40
+1.2
+  1
+B1-87: 2 thanh
+ 50
+-32.0999999996518
+  7
+VN
+ 11
+496806.2648999443
+ 21
+2343976.5571673363
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+31A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496806.2415314005
+ 20
+2343962.406214933
+ 10
+496793.53470257943
+ 20
+2343970.3771936256
+  0
+LWPOLYLINE
+  5
+31B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496807.30432855943
+ 20
+2343964.1004587756
+ 10
+496794.59749973874
+ 20
+2343972.0714374688
+  0
+CIRCLE
+  5
+31C
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496793.7473545149
+ 20
+2343970.114086791
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+31D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496800.95091414906
+ 20
+2343968.085948122
+ 30
+0.0
+ 40
+1.2
+  1
+B1-88: 2 thanh
+ 50
+-32.10000000115858
+  7
+VN
+ 11
+496800.95091414906
+ 21
+2343968.085948122
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+31E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496800.9275456052
+ 20
+2343953.934995719
+ 10
+496788.2207167845
+ 20
+2343961.905974412
+  0
+LWPOLYLINE
+  5
+31F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+496808.36712571816
+ 20
+2343965.794702618
+ 10
+496795.6602968972
+ 20
+2343973.7656813106
+  0
+CIRCLE
+  5
+320
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+496791.8926454848
+ 20
+2343967.1459132084
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+321
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+496802.01371130766
+ 20
+2343969.7801919645
+ 30
+0.0
+ 40
+1.2
+  1
+B1-89: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+496802.01371130766
+ 21
+2343969.7801919645
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+322
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497056.90088017524
+ 20
+2343840.5819305135
+ 10
+497044.19405135425
+ 20
+2343848.552909206
+  0
+LWPOLYLINE
+  5
+323
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497057.9636773345
+ 20
+2343842.2761743567
+ 10
+497045.2568485135
+ 20
+2343850.2471530493
+  0
+CIRCLE
+  5
+324
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497056.28736612
+ 20
+2343841.604079539
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+325
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497051.610262924
+ 20
+2343846.2616637032
+ 30
+0.0
+ 40
+1.2
+  1
+B1-90: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497051.610262924
+ 21
+2343846.2616637032
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+326
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497055.8380830165
+ 20
+2343838.887686671
+ 10
+497043.1312541955
+ 20
+2343846.858665364
+  0
+LWPOLYLINE
+  5
+327
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497054.7752858567
+ 20
+2343837.1934428276
+ 10
+497042.0684570362
+ 20
+2343845.1644215207
+  0
+CIRCLE
+  5
+328
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497054.43263388006
+ 20
+2343838.635920461
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+329
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497048.4218714464
+ 20
+2343841.178932174
+ 30
+0.0
+ 40
+1.2
+  1
+B1-91: 2 thanh
+ 50
+-32.10000000163117
+  7
+VN
+ 11
+497048.4218714464
+ 21
+2343841.178932174
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+32A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497052.64969153923
+ 20
+2343833.804955143
+ 10
+497039.94286271854
+ 20
+2343841.7759338357
+  0
+LWPOLYLINE
+  5
+32B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497051.5868943797
+ 20
+2343832.1107112993
+ 10
+497038.88006555894
+ 20
+2343840.081689992
+  0
+CIRCLE
+  5
+32C
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497051.51736611954
+ 20
+2343833.964079539
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+32D
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497045.2334799693
+ 20
+2343836.096200646
+ 30
+0.0
+ 40
+1.2
+  1
+B1-92: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+497045.2334799693
+ 21
+2343836.096200646
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+32E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497050.5240972207
+ 20
+2343830.4164674566
+ 10
+497037.8172684
+ 20
+2343838.3874461493
+  0
+LWPOLYLINE
+  5
+32F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497049.4613000617
+ 20
+2343828.722223614
+ 10
+497036.754471241
+ 20
+2343836.6932023065
+  0
+CIRCLE
+  5
+330
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497049.66263387946
+ 20
+2343830.99592046
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+331
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497043.10788565135
+ 20
+2343832.7077129604
+ 30
+0.0
+ 40
+1.2
+  1
+B1-93: 2 thanh
+ 50
+-32.09999999953365
+  7
+VN
+ 11
+497043.10788565135
+ 21
+2343832.7077129604
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+332
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497047.3357057437
+ 20
+2343825.3337359284
+ 10
+497034.6288769227
+ 20
+2343833.304714621
+  0
+LWPOLYLINE
+  5
+333
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497048.3985029027
+ 20
+2343827.027979771
+ 10
+497035.6916740817
+ 20
+2343834.998958464
+  0
+CIRCLE
+  5
+334
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497046.74736612005
+ 20
+2343826.334079539
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+335
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497042.0450884922
+ 20
+2343831.0134691177
+ 30
+0.0
+ 40
+1.2
+  1
+B1-94: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497042.0450884922
+ 21
+2343831.0134691177
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+336
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497046.27290858474
+ 20
+2343823.6394920857
+ 10
+497033.5660797637
+ 20
+2343831.6104707783
+  0
+LWPOLYLINE
+  5
+337
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497045.2101114257
+ 20
+2343821.945248243
+ 10
+497032.50328260474
+ 20
+2343829.9162269356
+  0
+CIRCLE
+  5
+338
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497044.8926338802
+ 20
+2343823.365920461
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+339
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497038.85669701523
+ 20
+2343825.9307375895
+ 30
+0.0
+ 40
+1.2
+  1
+B1-95: 2 thanh
+ 50
+-32.099999999061055
+  7
+VN
+ 11
+497038.85669701523
+ 21
+2343825.9307375895
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+33A
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497037.77053131274
+ 20
+2343810.0855413442
+ 10
+497031.3346042429
+ 20
+2343814.122790784
+  0
+LWPOLYLINE
+  5
+33B
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497038.83332847146
+ 20
+2343811.7797851865
+ 10
+497032.3974014016
+ 20
+2343815.8170346264
+  0
+LWPOLYLINE
+  5
+33C
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497036.7077341532
+ 20
+2343808.3912975006
+ 10
+497030.2718070836
+ 20
+2343812.428546941
+  0
+CIRCLE
+  5
+33D
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497037.2073661198
+ 20
+2343811.0740795387
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+33E
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497033.4897706184
+ 20
+2343810.4099222207
+ 30
+0.0
+ 40
+1.2
+  1
+B1-96: 3 thanh
+ 50
+-32.100000002540156
+  7
+VN
+ 11
+497033.4897706184
+ 21
+2343810.4099222207
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+33F
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497035.64493699477
+ 20
+2343806.697053659
+ 10
+497022.938108174
+ 20
+2343814.6680323514
+  0
+LWPOLYLINE
+  5
+340
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 43
+0.3
+ 10
+497039.8961256305
+ 20
+2343813.4740290293
+ 10
+497033.4601985609
+ 20
+2343817.511278469
+  0
+CIRCLE
+  5
+341
+330
+17
+100
+AcDbEntity
+  8
+BICH_NEO
+100
+AcDbCircle
+ 10
+497035.3526338795
+ 20
+2343808.10592046
+ 30
+0.0
+ 40
+0.6
+  0
+TEXT
+  5
+342
+330
+17
+100
+AcDbEntity
+  8
+GIA_CUONG_40x60
+100
+AcDbText
+ 10
+497036.6781620957
+ 20
+2343815.492653749
+ 30
+0.0
+ 40
+1.2
+  1
+B1-97: 2 thanh
+ 50
+-32.099999999565256
+  7
+VN
+ 11
+497036.6781620957
+ 21
+2343815.492653749
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+343
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344174.377
+ 30
+0.0
+ 40
+6.0
+  1
+SƠ ĐỒ TỔNG HỘP 40x60 GIA CƯỜNG TẠI CÁC VỊ TRÍ NEO — HỒ CHIỀNG DONG, 1 BÈ (GC-01)
+  7
+VN
+ 11
+497124.529
+ 21
+2344174.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+344
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344164.377
+ 30
+0.0
+ 40
+3.0
+  1
+Thanh lấy từ bản vẽ khung có gia cường "CT-KC-BE-0n ... - GIA CƯỜNG TẠI VỊ TRÍ NEO.dwg" (chi tiết từng thanh, từng móc); mặt bằng neo: web (77 dây, cáp chữ Y). Đơn vị: m.
+  7
+VN
+ 11
+497124.529
+ 21
+2344164.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+345
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344152.377
+ 30
+0.0
+ 40
+3.0
+  1
+BÈ 1: 97 cụm, 302 thanh, 4.388 m hộp 40x60 gia cường, 3.586 móc "几"; T = 156,8 kN
+  7
+VN
+ 11
+497124.529
+ 21
+2344152.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+346
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344146.377
+ 30
+0.0
+ 40
+3.5
+  1
+TỔNG: 97 cụm, 302 thanh, 4.388 m
+  7
+VN
+ 11
+497124.529
+ 21
+2344146.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+347
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344136.377
+ 30
+0.0
+ 40
+2.6
+  1
+GHI CHÚ:
+  7
+VN
+ 11
+497124.529
+ 21
+2344136.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+348
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344131.377
+ 30
+0.0
+ 40
+2.6
+  1
+1. Mỗi dây neo có 2 bích (cáp 2 nhánh chữ Y) cách nhau 3,5 m, vòng tròn đỏ. Mã cụm và số thanh: sheet GiaCuong_TaiNeo của bảng vật tư bè pin.
+  7
+VN
+ 11
+497124.529
+ 21
+2344131.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+349
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344126.377
+ 30
+0.0
+ 40
+2.6
+  1
+2. Thanh nằm trên hàng phao, theo phương hộp 40x60 kết cấu. Bích trên cạnh song song hộp: thanh dọc cạnh trên hàng phao thứ 2 tính từ mép;
+  7
+VN
+ 11
+497124.529
+ 21
+2344126.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34A
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344121.377
+ 30
+0.0
+ 40
+2.6
+  1
+   bích trên cạnh vuông góc: mỗi bích một thanh từ dầm C52 ngoài cùng chạy vào trong.
+  7
+VN
+ 11
+497124.529
+ 21
+2344121.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34B
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344116.377
+ 30
+0.0
+ 40
+2.6
+  1
+3. Hộp kẹp vào MỌI dầm C52 nó cắt qua bằng móc "几" (2 đai ốc thoi M10×30 + 1 bulông M10×120).
+  7
+VN
+ 11
+497124.529
+ 21
+2344116.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34C
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344111.377
+ 30
+0.0
+ 40
+2.6
+  1
+4. Số thanh = MAX(1; số bích × 0,7 T × 1,2 / (số dầm C52 thanh cắt qua × 7 kN)); sức chịu móc 7 kN là GIẢ ĐỊNH, chờ số liệu Mibet.
+  7
+VN
+ 11
+497124.529
+ 21
+2344111.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34D
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344106.377
+ 30
+0.0
+ 40
+2.6
+  1
+5. Nét xám mảnh: phương dầm C52 (vẽ 1/5 số dầm). Nét xanh: dây neo. Chi tiết liên kết bích – hộp do nhà cung cấp bè lập và xác nhận.
+  7
+VN
+ 11
+497124.529
+ 21
+2344106.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34E
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344101.377
+ 30
+0.0
+ 40
+2.6
+  1
+6. Dây nối BÈ 2 – BÈ 4 (T24-..): 1 bích mỗi đầu, bích chịu cả lực dây nối (GIẢ ĐỊNH của catalogue), thay cho 0,7 T.
+  7
+VN
+ 11
+497124.529
+ 21
+2344101.377
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+34F
+330
+17
+100
+AcDbEntity
+  8
+GHI_CHU
+100
+AcDbText
+ 10
+497124.529
+ 20
+2344096.377
+ 30
+0.0
+ 40
+2.6
+  1
+7. Vị trí bích lấy theo mặt bằng neo; khung trên bản vẽ rộng hơn đường bao bè 1,3–2 m ở một cạnh nên bích có thể lệch ~1 m dọc mép.
+  7
+VN
+ 11
+497124.529
+ 21
+2344096.377
+ 31
+0.0
+100
+AcDbText
+  0
+ENDSEC
+  0
+SECTION
+  2
+OBJECTS
+  0
+DICTIONARY
+  5
+A
+330
+0
+100
+AcDbDictionary
+281
+1
+  3
+ACAD_COLOR
+350
+B
+  3
+ACAD_GROUP
+350
+C
+  3
+ACAD_LAYOUT
+350
+D
+  3
+ACAD_MATERIAL
+350
+E
+  3
+ACAD_MLEADERSTYLE
+350
+F
+  3
+ACAD_MLINESTYLE
+350
+10
+  3
+ACAD_PLOTSETTINGS
+350
+11
+  3
+ACAD_PLOTSTYLENAME
+350
+12
+  3
+ACAD_SCALELIST
+350
+14
+  3
+ACAD_TABLESTYLE
+350
+15
+  3
+ACAD_VISUALSTYLE
+350
+16
+  3
+EZDXF_META
+350
+2D
+  0
+DICTIONARY
+  5
+B
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+C
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+D
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Model
+350
+1A
+  3
+Layout1
+350
+1E
+  0
+DICTIONARY
+  5
+E
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+ByBlock
+350
+1F
+  3
+ByLayer
+350
+20
+  3
+Global
+350
+21
+  0
+DICTIONARY
+  5
+F
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Standard
+350
+2C
+  0
+DICTIONARY
+  5
+10
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Standard
+350
+22
+  0
+DICTIONARY
+  5
+11
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+ACDBDICTIONARYWDFLT
+  5
+12
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Normal
+350
+13
+100
+AcDbDictionaryWithDefault
+340
+13
+  0
+ACDBPLACEHOLDER
+  5
+13
+330
+12
+  0
+DICTIONARY
+  5
+14
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+15
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+16
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+2dWireframe
+350
+5A
+  3
+Basic
+350
+5B
+  3
+Brighten
+350
+5C
+  3
+ColorChange
+350
+5D
+  3
+Conceptual
+350
+5E
+  3
+Dim
+350
+5F
+  3
+EdgeColorOff
+350
+60
+  3
+Facepattern
+350
+61
+  3
+Flat
+350
+62
+  3
+FlatWithEdges
+350
+63
+  3
+Gouraud
+350
+64
+  3
+GouraudWithEdges
+350
+65
+  3
+Hidden
+350
+66
+  3
+JitterOff
+350
+67
+  3
+Linepattern
+350
+68
+  3
+Modeling
+350
+69
+  3
+OverhangOff
+350
+6A
+  3
+Realistic
+350
+6B
+  3
+Shaded
+350
+6C
+  3
+Shaded with edges
+350
+6D
+  3
+Shades of Gray
+350
+6E
+  3
+Sketchy
+350
+6F
+  3
+Thicken
+350
+70
+  3
+Wireframe
+350
+71
+  3
+X-Ray
+350
+72
+  0
+LAYOUT
+  5
+1A
+330
+D
+100
+AcDbPlotSettings
+  1
+
+  4
+A3
+  6
+
+ 40
+7.5
+ 41
+20.0
+ 42
+7.5
+ 43
+20.0
+ 44
+420.0
+ 45
+297.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+0.0
+140
+0.0
+141
+0.0
+142
+1.0
+143
+1.0
+ 70
+1024
+ 72
+1
+ 73
+0
+ 74
+5
+  7
+
+ 75
+16
+ 76
+0
+ 77
+2
+ 78
+300
+147
+1.0
+148
+0.0
+149
+0.0
+100
+AcDbLayout
+  1
+Model
+ 70
+1
+ 71
+0
+ 10
+0.0
+ 20
+0.0
+ 11
+420.0
+ 21
+297.0
+ 12
+0.0
+ 22
+0.0
+ 32
+0.0
+ 14
+1e+20
+ 24
+1e+20
+ 34
+1e+20
+ 15
+-1e+20
+ 25
+-1e+20
+ 35
+-1e+20
+146
+0.0
+ 13
+0.0
+ 23
+0.0
+ 33
+0.0
+ 16
+1.0
+ 26
+0.0
+ 36
+0.0
+ 17
+0.0
+ 27
+1.0
+ 37
+0.0
+ 76
+1
+330
+17
+  0
+LAYOUT
+  5
+1E
+330
+D
+100
+AcDbPlotSettings
+  1
+
+  4
+A3
+  6
+
+ 40
+7.5
+ 41
+20.0
+ 42
+7.5
+ 43
+20.0
+ 44
+420.0
+ 45
+297.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+0.0
+140
+0.0
+141
+0.0
+142
+1.0
+143
+1.0
+ 70
+0
+ 72
+1
+ 73
+0
+ 74
+5
+  7
+
+ 75
+16
+ 76
+0
+ 77
+2
+ 78
+300
+147
+1.0
+148
+0.0
+149
+0.0
+100
+AcDbLayout
+  1
+Layout1
+ 70
+1
+ 71
+1
+ 10
+0.0
+ 20
+0.0
+ 11
+420.0
+ 21
+297.0
+ 12
+0.0
+ 22
+0.0
+ 32
+0.0
+ 14
+1e+20
+ 24
+1e+20
+ 34
+1e+20
+ 15
+-1e+20
+ 25
+-1e+20
+ 35
+-1e+20
+146
+0.0
+ 13
+0.0
+ 23
+0.0
+ 33
+0.0
+ 16
+1.0
+ 26
+0.0
+ 36
+0.0
+ 17
+0.0
+ 27
+1.0
+ 37
+0.0
+ 76
+1
+330
+1B
+  0
+MATERIAL
+  5
+1F
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+ByBlock
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MATERIAL
+  5
+20
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+ByLayer
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MATERIAL
+  5
+21
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+Global
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MLINESTYLE
+  5
+22
+102
+{ACAD_REACTORS
+330
+10
+102
+}
+330
+10
+100
+AcDbMlineStyle
+  2
+Standard
+ 70
+0
+  3
+
+ 62
+256
+ 51
+90.0
+ 52
+90.0
+ 71
+2
+ 49
+0.5
+ 62
+256
+  6
+BYLAYER
+ 49
+-0.5
+ 62
+256
+  6
+BYLAYER
+  0
+MLEADERSTYLE
+  5
+2C
+102
+{ACAD_REACTORS
+330
+F
+102
+}
+330
+F
+100
+AcDbMLeaderStyle
+179
+2
+170
+2
+171
+1
+172
+0
+ 90
+2
+ 40
+0.0
+ 41
+0.0
+173
+1
+ 91
+-1056964608
+ 92
+-2
+290
+1
+ 42
+2.0
+291
+1
+ 43
+8.0
+  3
+Standard
+ 44
+4.0
+300
+
+342
+29
+174
+1
+175
+1
+176
+0
+178
+1
+ 93
+-1056964608
+ 45
+4.0
+292
+0
+297
+0
+ 46
+4.0
+ 94
+-1056964608
+ 47
+1.0
+ 49
+1.0
+140
+1.0
+294
+1
+141
+0.0
+177
+0
+142
+1.0
+295
+0
+296
+0
+143
+3.75
+271
+0
+272
+9
+273
+9
+  0
+DICTIONARY
+  5
+2D
+330
+A
+100
+AcDbDictionary
+280
+1
+281
+1
+  3
+CREATED_BY_EZDXF
+350
+2E
+  3
+WRITTEN_BY_EZDXF
+350
+352
+  0
+DICTIONARYVAR
+  5
+2E
+330
+2D
+100
+DictionaryVariables
+280
+0
+  1
+1.4.5 @ 2026-11-07T15:14:43.070369+00:00
+  0
+VISUALSTYLE
+  5
+5A
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+2dWireframe
+ 70
+4
+ 90
+0
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+5B
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Basic
+ 70
+7
+ 90
+1
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+5C
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Brighten
+ 70
+12
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+5D
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+ColorChange
+ 70
+16
+ 90
+2
+ 40
+0.6
+ 62
+8
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+5E
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Conceptual
+ 70
+9
+ 90
+3
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+5F
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Dim
+ 70
+11
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+60
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+EdgeColorOff
+ 70
+22
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+61
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Facepattern
+ 70
+15
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+62
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Flat
+ 70
+0
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+63
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+FlatWithEdges
+ 70
+1
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+64
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Gouraud
+ 70
+2
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+65
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+GouraudWithEdges
+ 70
+3
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+66
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Hidden
+ 70
+6
+ 90
+1
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+67
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+JitterOff
+ 70
+20
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+68
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Linepattern
+ 70
+14
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+69
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Modeling
+ 70
+10
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+6A
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+OverhangOff
+ 70
+21
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+6B
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Realistic
+ 70
+8
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+6C
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Shaded
+ 70
+27
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+6D
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Shaded with edges
+ 70
+26
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+6E
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Shades of Gray
+ 70
+23
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+6F
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Sketchy
+ 70
+24
+ 90
+1
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+70
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Thicken
+ 70
+13
+ 90
+2
+ 40
+0.6
+ 62
+7
+290
+0
+291
+1
+  0
+VISUALSTYLE
+  5
+71
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+Wireframe
+ 70
+5
+ 90
+0
+ 40
+0.6
+ 62
+7
+290
+0
+291
+0
+  0
+VISUALSTYLE
+  5
+72
+102
+{ACAD_REACTORS
+330
+16
+102
+}
+330
+16
+100
+AcDbVisualStyle
+  2
+X-Ray
+ 70
+25
+ 90
+2
+ 40
+0.5
+ 62
+7
+290
+0
+291
+0
+  0
+DICTIONARYVAR
+  5
+352
+330
+2D
+100
+DictionaryVariables
+280
+0
+  1
+1.4.5 @ 2026-11-07T15:14:43.093486+00:00
+  0
+ENDSEC
+  0
+EOF

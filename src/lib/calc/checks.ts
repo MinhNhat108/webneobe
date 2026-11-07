@@ -301,20 +301,24 @@ export function runChecks(
   const eq = results.mooringAnalysis;
   const layout = state.line.layout;
   if (eq && layout) {
-    const limit = layout.minGap_m / 2;
+    const limit = (layout.minGap_m ?? Infinity) / 2;
     const c12: CheckSpec = {
       id: 'C12',
       label: 'Độ trôi ngang của bè (cân bằng tĩnh, mọi mực nước)',
       formula: 'u_max ≤ khe hở nhỏ nhất tới bè bên cạnh / 2',
       unit: 'm',
-      threshold: `≤ ${limit.toFixed(2)} m`,
+      threshold: Number.isFinite(limit) ? `≤ ${limit.toFixed(2)} m` : 'không có bè bên cạnh',
       isMandatory: true
     };
     const u = eq.maxDrift_m;
+    if (layout.minGap_m === undefined) {
+      checks.push(skipped(c12, `Không có bè bên cạnh trong hồ; độ trôi lớn nhất ${Number.isFinite(u) ? u.toFixed(2) + ' m' : 'không giữ được'}.`));
+    } else {
     const worst = eq.levels.reduce((a, b) => (b.maxDrift_m > a.maxDrift_m ? b : a), eq.levels[0]);
     checks.push(evaluated(c12, Number.isFinite(u) ? u / limit : Number.POSITIVE_INFINITY,
       Number.isFinite(u) ? `${u.toFixed(2)} m` : 'không giữ được', Number.isFinite(u) ? u : null,
       `Lớn nhất ở mực nước ${worst.level_m} m (${eq.compensation === 'seasonal' ? 'căng chỉnh dây theo mực nước' : 'cáp cắt cố định'}); khe hở nhỏ nhất ${layout.minGap_m.toFixed(1)} m.`));
+    }
   }
 
   // ---- C10 — T_dây <= P_max (rated allowable pile holding capacity) -------

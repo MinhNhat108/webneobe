@@ -124,6 +124,7 @@ export interface MooringCoordinate {
 import raftCatalogue from './huoiVanhRaftCatalogue.json';
 import { ACTIVE_LAKE_ID } from './lakes';
 import { BAN_MONG_RAFTS, banMongProjectFrom } from './banMongProject';
+import { CHIENG_DONG_RAFTS, chiengDongProjectFrom } from './chiengDongProject';
 import type { Attachment } from '../lib/calc/types';
 
 /** The Huổi Vanh rafts, whichever lake is shown. */
@@ -431,10 +432,12 @@ export const HUOI_VANH_PROJECT = {
 
 /** The Hồ Bản Mòng project (src/data/banMongProject.ts). */
 export const BAN_MONG_PROJECT = banMongProjectFrom(HUOI_VANH_PROJECT);
+/** The Hồ Chiềng Dong project (src/data/chiengDongProject.ts). */
+export const CHIENG_DONG_PROJECT = chiengDongProjectFrom(HUOI_VANH_PROJECT);
 
 /**
  * The ACTIVE lake's raft catalogue and default project (src/data/lakes.ts).
  * The names are historical: with Hồ Bản Mòng selected they hold Bản Mòng.
  */
-export const HUOI_VANH_RAFTS: RaftSummaryItem[] = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_RAFTS : HUOI_VANH_RAFT_CATALOGUE;
-export const HUOI_VANH_DEFAULT_PROJECT: typeof HUOI_VANH_PROJECT = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;
+export const HUOI_VANH_RAFTS: RaftSummaryItem[] = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_RAFTS : ACTIVE_LAKE_ID === 'chieng-dong' ? CHIENG_DONG_RAFTS : HUOI_VANH_RAFT_CATALOGUE;
+export const HUOI_VANH_DEFAULT_PROJECT: typeof HUOI_VANH_PROJECT = ACTIVE_LAKE_ID === 'ban-mong' ? BAN_MONG_PROJECT : ACTIVE_LAKE_ID === 'chieng-dong' ? CHIENG_DONG_PROJECT : HUOI_VANH_PROJECT;

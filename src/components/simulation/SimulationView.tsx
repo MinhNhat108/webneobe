@@ -94,7 +94,7 @@ export const SimulationView: React.FC = () => {
 
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `MoPhong_${ACTIVE_LAKE_ID === 'ban-mong' ? 'BanMong' : 'HuoiVanh'}_3D_Vw_${windParams.speed}ms_Dir_${windParams.direction}deg.png`;
+    a.download = `MoPhong_${ACTIVE_LAKE_ID === 'ban-mong' ? 'BanMong' : ACTIVE_LAKE_ID === 'chieng-dong' ? 'ChiengDong' : 'HuoiVanh'}_3D_Vw_${windParams.speed}ms_Dir_${windParams.direction}deg.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -118,7 +118,7 @@ export const SimulationView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              {ACTIVE_LAKE_ID === 'ban-mong'
+              {ACTIVE_LAKE_ID !== 'huoi-vanh'
                 ? <>Mô hình 3D của {RAFT_POLYGONS_V2.length} cụm bè điện mặt trời nổi trên địa hình IFC thật của {ACTIVE_LAKE.name}: {LAYOUT_COUNTS.shorePoints} điểm neo bờ bằng cọc khoan nhồi D350, {LAYOUT_COUNTS.bedBases} điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, {LAYOUT_COUNTS.sharedBases} đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), {LAYOUT_COUNTS.lines} tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>
                 : <>Mô hình 3D của {RAFT_POLYGONS_V2.length} cụm bè điện mặt trời nổi trên địa hình IFC thật của hồ Huổi Vanh: {LAYOUT_COUNTS.shorePoints} điểm neo bờ bằng cọc khoan nhồi D350 (cọc đôi ở {HUOI_VANH_RAFTS.reduce((n, r) => n + ((r.shorePilesPerPoint ?? 1) > 1 ? (r.shorePileLight ? r.shorePileLight.heavyLines.length : r.shoreAnchors) : 0), 0)} điểm, mô hình vẽ một cọc đại diện mỗi điểm), {LAYOUT_COUNTS.bedBases} điểm neo đáy theo phương án đang chọn (mặc định đế BTCT + vít xoắn, {LAYOUT_COUNTS.sharedBases} đế dùng chung hai bè; mô hình vẽ đế, không vẽ vít), {LAYOUT_COUNTS.lines} tuyến cáp neo nối từ bích bè tới điểm neo; lực căng và hệ số an toàn lấy trực tiếp từ bộ tính toán của dự án.</>}
             </p>

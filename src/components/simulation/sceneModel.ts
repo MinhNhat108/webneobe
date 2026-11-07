@@ -39,6 +39,8 @@ import huoiVanhTerrain from '../../data/huoiVanhTerrainMesh.json';
 import huoiVanhPiles from '../../data/huoiVanhPiles_v2.json';
 import banMongTerrain from '../../data/banMong/terrainMesh.json';
 import banMongPiles from '../../data/banMong/piles.json';
+import chiengDongTerrain from '../../data/chiengDong/terrainMesh.json';
+import chiengDongPiles from '../../data/chiengDong/piles.json';
 import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 import { HUOI_VANH_RAFTS, HUOI_VANH_DEFAULT_PROJECT, RaftSummaryItem, MooringCoordinate } from '../../data/huoiVanhProject';
 import { MOORING_LINES_V2, RAFT_POLYGONS_V2, RaftPolygonV2 } from '../../data/huoiVanhLayout';
@@ -58,15 +60,16 @@ export const MNDB_M = ACTIVE_LAKE.levels.mndb_m;
 /** Mực nước lũ kiểm tra. */
 export const MNLKT_M = ACTIVE_LAKE.levels.mnlkt_m;
 const BAN_MONG = ACTIVE_LAKE_ID === 'ban-mong';
-const terrainMesh = BAN_MONG ? banMongTerrain : huoiVanhTerrain;
-const pilesV2 = BAN_MONG ? banMongPiles : huoiVanhPiles;
+const CHIENG_DONG = ACTIVE_LAKE_ID === 'chieng-dong';
+const terrainMesh = BAN_MONG ? banMongTerrain : CHIENG_DONG ? chiengDongTerrain : huoiVanhTerrain;
+const pilesV2 = BAN_MONG ? banMongPiles : CHIENG_DONG ? chiengDongPiles : huoiVanhPiles;
 
 interface TerrainFile {
   bounds: { minX: number; maxX: number; minY: number; maxY: number };
   nx: number;
   ny: number;
   rowOrder: 'south-to-north';
-  ifcWaterSurface_m: number;
+  ifcWaterSurface_m: number | null;
   /** IFC = project + this, when the water slab is not MNDB (Bản Mòng: 0). */
   projectDatumOffset_m?: number;
   elevations: Array<Array<number | null>>;
@@ -81,17 +84,17 @@ if (TERRAIN.rowOrder !== 'south-to-north') {
 export const IFC_WATER_SURFACE_M = TERRAIN.ifcWaterSurface_m;
 /** IFC elevation = project elevation + this. */
 export const IFC_DATUM_OFFSET_M = TERRAIN.projectDatumOffset_m
-  ?? Math.round((IFC_WATER_SURFACE_M - MNDB_M) * 1000) / 1000;
+  ?? Math.round(((IFC_WATER_SURFACE_M ?? MNDB_M) - MNDB_M) * 1000) / 1000;
 
 /** Horizontal origin of the three.js scene (Huổi Vanh: kept from the original canvas; Bản Mòng: middle of the rafts). */
 const raftMid = (k: 'x' | 'y') => {
   const v = RAFT_POLYGONS_V2.flatMap((p) => p.points.map((q) => q[k]));
   return Math.round(((Math.min(...v) + Math.max(...v)) / 2) * 100) / 100;
 };
-export const ORIGIN_X = BAN_MONG ? raftMid('x') : 110.33;
-export const ORIGIN_Y = BAN_MONG ? raftMid('y') : 61.66;
+export const ORIGIN_X = ACTIVE_LAKE_ID !== 'huoi-vanh' ? raftMid('x') : 110.33;
+export const ORIGIN_Y = ACTIVE_LAKE_ID !== 'huoi-vanh' ? raftMid('y') : 61.66;
 /** Size of the camera presets and the ground grid against the Huổi Vanh scene (Bản Mòng spreads over ~720 m). */
-export const SCENE_SCALE = BAN_MONG ? 1.8 : 1;
+export const SCENE_SCALE = BAN_MONG ? 1.8 : CHIENG_DONG ? 1.4 : 1;
 /** Lowest modelled ground, project datum. */
 export const LOWEST_GROUND_M = Math.min(...TERRAIN.elevations.flat().filter((z): z is number => z !== null)) - IFC_DATUM_OFFSET_M;
 

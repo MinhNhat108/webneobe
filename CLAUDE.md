@@ -78,6 +78,17 @@ Web có hai tab dự án ở đầu Header: **Hồ Huổi Vanh | Hồ Bản Mòn
 
 ---
 
+## 1C. HỒ CHIỀNG DONG — TAB THỨ BA (2026-11-07)
+Xã Chiềng Mai, tỉnh Sơn La; Pre-FS 5 MW / 6,25 MWp. Tab `chieng-dong` (`lakes.ts`: `codePrefix` CD, `filePrefix` HOCHIENGDONG, `docsDir` docs_chieng_dong; `isDeepLake()` = mọi hồ trừ Huổi Vanh). Dữ liệu `src/data/chiengDong/`, dự án `src/data/chiengDongProject.ts` (`CHIENG_DONG_PROJECT`), test `src/data/__tests__/chiengDongLake.test.ts`. Các nhánh code trước đây `=== 'ban-mong'` nghĩa "hồ sâu" nay là `!== 'huoi-vanh'` (Header PA1, AppShell, lakeCaveats, store, sceneModel, SimulationControls / View, FinalDesignSection; `buildRaftCatalogue.ts` `BAN_MONG = LAKE.id !== 'huoi-vanh'`).
+- **Cao trình (Pre-FS):** MNC 740,5 / MNDBT 760,0 / MNKT (P = 0,2 %) 761,12 m — dao động 20,6 m: tính như Bản Mòng (cân bằng theo mực nước, bù liên tục + khóa bão). IFC `IFC dia hinh.ifc` chỉ có Toposolid, cao độ tuyệt đối, CÙNG hệ VN-2000 với bản vẽ (không có tấm mặt nước: `extractTerrainFromIfc.mjs` cho phép thiếu, `ifcWaterSurface_m: null`, `projectDatumOffset_m: 0`).
+- **Bè:** 1 bè. Đường bao "Floor Plan - MN Copy 1.dxf" (50.135 m², không nhãn — importer `importRaftLayoutBanMong.mjs --lake=chieng-dong` lấy tên bè duy nhất của `panelsByRaft`) có thêm khối ~146 × 41 m KHÔNG có trong khung KC-BE01; Chủ đầu tư 07/11: "bè thật là bè 8484 tấm" → đường bao = khung KC-BE01 xoay ngược (212,1°) về VN-2000, 9/12 đỉnh lấy đúng đỉnh MN Copy 1: **44.298 m²**, `Tài liệu hồ Chiềng Dong/HOCHIENGDONG_BO_TRI_BE_PIN_1_BE_8484_TAM.dxf`. Đáy thiết kế 734,45 m (nước ~6 m ở MNC, ~25,6 m ở MNDBT). Bảng Revit (tờ CT-BE01 / MB-BP-01, đọc từ DXF → `Tài liệu hồ Chiềng Dong/HOCHIENGDONG_BANG_REVIT_BE_PIN.json`): 8.484 tấm / 303 dải, 12 SG-510HX, phao 8.624 + 1.196 + 434 = 10.254, phao đỡ cáp 1.110; khung C52 292 / 35.921,73 m, hộp 36 / 7.917,60 m (CAD khớp).
+- **Kết quả (20 m/s, 10°):** 77 dây = 47 cọc bờ (48 cọc) + 30 đế ĐƠN (cạnh tây nam, bờ > 80 m); T 156,8 kN (sàn F/(6 cos 30°); cân bằng 135,5, đứt 1 dây 187), cáp PES-48; 30 đế 127,7 m³, 120 vít; khóa bão hỏng tới 348 kN. C12 KHÔNG áp dụng (một bè: `minGap_m` bỏ trống). Planner hội tụ lần 1.
+- **Gia cường 40x60** (`buildHuoiVanhRaftReinforcement.py --lake=chieng-dong`, khung KC-BE01 đã xoay để vẽ): fit có chặn khoảng cách 3 m (`ROBUST_CAP_M`) và bám trục ±5°; bám góc thì tính lại độ dịch khi tọa độ xa gốc > 100 km (VN-2000: 0,1° quanh gốc dời ~4 km; Bản Mòng giữ như cũ). 97 cụm, 302 thanh, 4.388 m, 3.586 móc. Kiểm tra cụm trong bảng vật tư bè (cả Bản Mòng): tổng móc × P_KEP ≥ lực cụm (thanh sát cụm bên cạnh có thể ngắn ≥ 6 m).
+- **Bảng vật tư bè pin:** `python scripts/buildBanMongRaftBOQ.py "<…_BANG_REVIT_BE_PIN.json>" <vật tư neo> <mẫu hình> <out> <GC-01.dxf> <reinforcement.json> <thư mục kc1.dxf> --lake=chieng-dong` (JSON thay PDF) → Excel tính lại.
+- Hồ sơ: `docs/mat-bang-neo-chieng-dong/`, `Tài liệu hồ Chiềng Dong/Hồ sơ tính toán neo 07-11-2026/`, web 14 mục `public/docs_chieng_dong/`. Còn mở: vùng gió Sơn La, thiết bị bù + khóa, khảo sát, 4 đế lộ khô ở MNC, dây tì sườn dốc.
+
+---
+
 ## 2. TIÊU CHUẨN KỸ THUẬT & CÔNG THỨC ÁP DỤNG
 - **Tải trọng gió:** TCVN 2737:2023 — vùng II-B, $q_0 = 0{,}54\,\text{kN/m}^2$ (V ≈ 29,7 m/s). Engine dùng nghiêng 10° cho Huổi Vanh (từ 28/10/2026; Bản Mòng 12°), $C_d = 1{,}15$, hệ số che chắn 0,55 và **vận tốc mặc định $V = 20\,\text{m/s}$ ($q = 0{,}25\,\text{kN/m}^2$) theo quyết định của Chủ đầu tư** — xem cảnh báo ở mục 1; kiểm tra bão thì nhập 30 m/s ở Tab 2.
 - **Thủy lực & kết hợp:** DNV-ST-0119 & TCVN 6170-3:1998 — dòng chảy và sóng nhỏ kết hợp $1{,}05 \times F_{\text{wind}}$.
@@ -136,7 +147,7 @@ Web có hai tab dự án ở đầu Header: **Hồ Huổi Vanh | Hồ Bản Mòn
 ---
 
 ## 4. QUY TẮC PHÁT TRIỂN & KIỂM THỬ
-- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 298 tests tại 2026-10-30 (Huổi Vanh: mặt bằng 4 bè, 18.914 tấm pin theo bản vẽ bè pin 28/10, bản sửa neo bờ 28/10, cọc bờ theo lực của chính dây, pin nghiêng 10°), gồm 12 test Hồ Bản Mòng (mặt bằng 6 bè 30/10, 16.912 tấm) và 5 test mô hình cân bằng).
+- Lệnh chạy test: `npx vitest run` (Toàn bộ tests phải luôn luôn PASS — 304 tests tại 2026-11-07 (Huổi Vanh: mặt bằng 4 bè, 18.914 tấm pin theo bản vẽ bè pin 28/10, bản sửa neo bờ 28/10, cọc bờ theo lực của chính dây, pin nghiêng 10°), gồm 12 test Hồ Bản Mòng (mặt bằng 6 bè 30/10, 16.912 tấm), 6 test Hồ Chiềng Dong và 5 test mô hình cân bằng).
 - Lệnh build dự án: `npm run build` (Không được có lỗi TypeScript hay Vite build).
 - Luôn đảm bảo tính trung thực kỹ thuật, không làm tròn cẩu thả dẫn đến sai lệch an toàn kết cấu thủy công.
 - Trả lời người dùng bằng tiếng Việt; chữ trên bản vẽ mới phải có dấu.

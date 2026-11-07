@@ -126,6 +126,32 @@ export const LAKES = {
     // sheets came: ~16 900 shared by area (2915 / 4191 / 713 / 2095 / 2809 / 4177).
     // Before: 8 rafts, 18 240 panels from the sheets CT-BP of "221026 BỐ TRÍ BÈ PIN HỒ BẢN MÒNG.pdf".
     panelsByRaft: { 'BÈ 1': 2912, 'BÈ 2': 4200, 'BÈ 3': 700, 'BÈ 4': 2100, 'BÈ 5': 2800, 'BÈ 6': 4200 }
+  },
+  // Hồ Chiềng Dong (xã Chiềng Mai, tỉnh Sơn La), 2026-11-07: one raft "CHUGIAP-HOCHIENGDONG ver 2 - Floor Plan - MN
+  // Copy 1.dxf", IFC terrain "IFC dia hinh.ifc". Same deep-lake basis as Bản Mòng (range 20,6 m).
+  'chieng-dong': {
+    id: 'chieng-dong',
+    files: {
+      polygons: 'src/data/chiengDong/raftPolygons.json',
+      coords: 'src/data/chiengDong/coordinates.json',
+      piles: 'src/data/chiengDong/piles.json',
+      terrain: 'src/data/chiengDong/terrainMesh.json',
+      catalogue: 'src/data/chiengDong/raftCatalogue.json',
+      ties: 'src/data/chiengDong/ties.json'
+    },
+    // Pre-FS "26.11.10 Pre FS ĐMT nổi hồ Chiềng Dong", thông số hồ chứa: MNDBT +760,0; MNC +740,5; MNKT (P = 0,2 %) +761,12.
+    mndb: 760.0,
+    waterDepth: {},
+    defaultDepth: null,
+    bedOnTerrain: true,
+    bedMaxGround: 759.5,
+    gapLimited: [],
+    singleBaseFacingOk: true,
+    maxShoreSpan: 80,
+    shoreFirst: true,
+    raftTies: [],
+    // table "SỐ TẤM PIN MẶT TRỜI THEO BÈ" of the sheets CT-BE01 / MB-BP-01 (Revit, 2026-11-07): 303 rows, 8 484 panels
+    panelsByRaft: { 'BÈ 1': 8484 }
   }
 };
 

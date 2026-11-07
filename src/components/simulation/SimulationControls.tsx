@@ -35,9 +35,9 @@ import {
 import { useProjectStore } from '../../store/useProjectStore';
 
 /** Slider range of the reservoir level, project datum. */
-// Huổi Vanh 378.5–390.0; Bản Mòng from 1.5 m under MNC (649.5) to 2 m over MNLKT (669.05)
-export const WATER_LEVEL_MIN_M = ACTIVE_LAKE_ID === 'ban-mong' ? 648.0 : 378.5;
-export const WATER_LEVEL_MAX_M = ACTIVE_LAKE_ID === 'ban-mong' ? 671.0 : 390.0;
+// Huổi Vanh 378.5–390.0; deep lakes from 1.5 m under MNC to 2 m over MNLKT (Bản Mòng 648.0–671.0)
+export const WATER_LEVEL_MIN_M = ACTIVE_LAKE_ID === 'huoi-vanh' ? 378.5 : Math.floor(ACTIVE_LAKE.levels.mnc_m - 1.5);
+export const WATER_LEVEL_MAX_M = ACTIVE_LAKE_ID === 'huoi-vanh' ? 390.0 : Math.ceil(ACTIVE_LAKE.levels.mnlkt_m + 2);
 
 interface SimulationControlsProps {
   windParams: WindParams;
@@ -535,7 +535,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               </div>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              {ACTIVE_LAKE_ID === 'ban-mong'
+              {ACTIVE_LAKE_ID !== 'huoi-vanh'
                 ? <>Địa hình là Toposolid của file {ACTIVE_LAKE.ifc.file}, cao độ tuyệt đối (không quy đổi).</>
                 : <>Địa hình là Toposolid của file IFC, quy đổi về cao độ dự án: mặt nước mô hình IFC 402,0 m ≡ MNDB 384,5 m
               (lệch 17,5 m).</>} Nước chỉ dâng trong lòng hồ, tính từ các cụm bè ra.

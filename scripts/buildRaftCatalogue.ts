@@ -43,20 +43,21 @@ import { fileURLToPath } from 'node:url';
 import { calculateProject } from '../src/lib/calc';
 import { buildRaftProjectState, lightShorePileState, CABLE_MBL_KN } from '../src/lib/calc/raftState';
 import type { ProjectState } from '../src/lib/calc/types';
-import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
+import { HUOI_VANH_PROJECT, BAN_MONG_PROJECT, CHIENG_DONG_PROJECT, type RaftSummaryItem, type MooringCoordinate } from '../src/data/huoiVanhProject';
 import { lakeFromArgv } from './lakeConfig.mjs';
 import { SCREW_BASE_DEFAULTS } from '../src/lib/calc/screwAnchorBed';
 import { analyseMooring, groupSideForce, STANDBY_SPAN_M, STANDBY_SLACK_M, type MooringLayoutInput } from '../src/lib/calc/mooringEquilibrium';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const LAKE = lakeFromArgv();
-const BAN_MONG = LAKE.id === 'ban-mong';
+// a deep reservoir (Bản Mòng, Chiềng Dong): equilibrium on the real lines, compensated, storm lock
+const BAN_MONG = LAKE.id !== 'huoi-vanh';
 const OUT = LAKE.abs.catalogue;
 const dry = process.argv.includes('--dry');
 const polygons: Array<{ id: number; name: string; area_m2: number; perimeter_m: number; designBed_m?: number; points: Array<{ x: number; y: number }> }> =
   JSON.parse(fs.readFileSync(LAKE.abs.polygons, 'utf8'));
 const lines: MooringCoordinate[] = JSON.parse(fs.readFileSync(LAKE.abs.coords, 'utf8'));
-const PROJECT = BAN_MONG ? BAN_MONG_PROJECT : HUOI_VANH_PROJECT;
+const PROJECT = LAKE.id === 'ban-mong' ? BAN_MONG_PROJECT : LAKE.id === 'chieng-dong' ? CHIENG_DONG_PROJECT : HUOI_VANH_PROJECT;
 
 // HOHUOIVANH.BỐ TRÍ BÈ PIN.pdf, 2026-10-08 (shared by area) / Bản Mòng: per raft from the drawing
 const PANELS_BY_RAFT = LAKE.panelsByRaft;
@@ -163,7 +164,8 @@ function mooringLayoutOf(poly: (typeof polygons)[number]): MooringLayoutInput {
   const bed = poly.designBed_m ?? LAKE.mndb - (WATER_DEPTH[poly.name] ?? DEFAULT_DEPTH_M);
   return {
     floatLevel_m: Math.round((bed + DRAFT_M) * 100) / 100,
-    minGap_m: Math.round(Math.min(...polygons.filter((q) => q.name !== poly.name).map((q) => ringGap(poly.points, q.points))) * 100) / 100,
+    // left out when the lake has no other raft (Chiềng Dong): C12 does not apply
+    ...(polygons.length > 1 ? { minGap_m: Math.round(Math.min(...polygons.filter((q) => q.name !== poly.name).map((q) => ringGap(poly.points, q.points))) * 100) / 100 } : {}),
     lines: own.filter((l) => l.span >= STANDBY_SPAN_M).map((l) => ({
       code: l.code, type: l.type, azimuth_deg: l.azimuth, span_m: l.span,
       pin_m: Math.round((l.zAnchor + (l.type === 'SHORE' ? SHORE_ARM_M : BASE_PIN_M)) * 100) / 100

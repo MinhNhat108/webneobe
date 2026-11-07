@@ -31,9 +31,16 @@ from shapely.ops import unary_union
 from xlsx_apply_flags import add_apply_flags
 
 ROOT = Path(__file__).resolve().parent.parent
-PDF, MOORING_XLSX, TEMPLATE, OUT, OUT_DXF, REINF, KC_DIR = sys.argv[1:8]
+ARGS = [a for a in sys.argv[1:] if not a.startswith('--')]
+PDF, MOORING_XLSX, TEMPLATE, OUT, OUT_DXF, REINF, KC_DIR = ARGS[:7]
+LAKE = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--lake=')), 'ban-mong')
+# Hồ Chiềng Dong (2026-11-07): the Revit tables are in the DXF sheets CT-BE01 / MB-BP-01, written to a .json (no PDF)
+LK = {'ban-mong': dict(dir='banMong', up='HỒ BẢN MÒNG', name='Bản Mòng', sheet='CT-BP', sheets='CT-BP-01…06', cable='MB-B01-01',
+                      kc='CT-KC-BE-01…06', doc='BO TRI BE PIN HO BAN MONG', date='30/10/2026'),
+     'chieng-dong': dict(dir='chiengDong', up='HỒ CHIỀNG DONG', name='Chiềng Dong', sheet='CT-BE01', sheets='CT-BE01', cable='MB-BP-01',
+                         kc='KC-BE01', doc='CHUGIAP-HOCHIENGDONG ver 2', date='07/11/2026')}[LAKE]
 RJ = json.load(open(REINF, encoding='utf-8'))['rafts']
-RAFTS = [f'BÈ {i}' for i in range(1, 7)]
+RAFTS = sorted(RJ, key=lambda n: int(n.split()[-1]))
 NR = len(RAFTS)
 assert set(RAFTS) == set(RJ), RJ.keys()
 
@@ -68,7 +75,7 @@ def kc_table(path):
 KC_TABLE = {n: kc_table(Path(KC_DIR) / f'kc{i}.dxf') for i, n in enumerate(RAFTS, start=1)}
 
 # ------------------------------------------------------------------ tables of the sheets CT-BP (Revit)
-doc = pymupdf.open(PDF)
+doc = pymupdf.open(PDF) if PDF.lower().endswith('.pdf') else None
 
 
 def after(ls, *keys, n=2, start=0):
@@ -81,7 +88,7 @@ def after(ls, *keys, n=2, start=0):
 
 num = lambda s: int(s.replace('.', '').replace(',', ''))
 SHEETS = {}
-for i, name in enumerate(RAFTS, start=1):
+for i, name in enumerate(RAFTS if doc else [], start=1):
     page = next(k for k, p in enumerate(doc) if f'CT-BP-0{i}' in p.get_text())
     ls = [l.strip() for l in doc[page].get_text().splitlines()]
     assert f'BỐTRÍ BÈ PIN 0{i}' in ls, name
@@ -98,9 +105,18 @@ for i, name in enumerate(RAFTS, start=1):
               fs=(num(fs_n), num(fs_r)), fwi=(num(wi_n), num(wi_r)), fwa=(num(wa_n), num(wa_r)), total=num(tot))
     assert s_['fs'][0] + s_['fwi'][0] + s_['fwa'][0] == s_['total'], (name, s_)
     SHEETS[name] = s_
-mb = next(k for k, p in enumerate(doc) if 'MB-B01-01' in p.get_text())
-(cr, cn), _ = after([l.strip() for l in doc[mb].get_text().splitlines()], 'ĐỠ CÁP')
-CABLE_FLOATS = (num(cr), num(cn))  # rows, floats (whole lake)
+if doc:
+    mb = next(k for k, p in enumerate(doc) if 'MB-B01-01' in p.get_text())
+    (cr, cn), _ = after([l.strip() for l in doc[mb].get_text().splitlines()], 'ĐỠ CÁP')
+    CABLE_FLOATS = (num(cr), num(cn))  # rows, floats (whole lake)
+else:
+    J = json.load(open(PDF, encoding='utf-8'))
+    for name in RAFTS:
+        s_ = dict(J['rafts'][name], page=None, scale=None)
+        s_['fs'], s_['fwi'], s_['fwa'] = tuple(s_['fs']), tuple(s_['fwi']), tuple(s_['fwa'])
+        assert s_['fs'][0] + s_['fwi'][0] + s_['fwa'][0] == s_['total'], (name, s_)
+        SHEETS[name] = s_
+    CABLE_FLOATS = tuple(J['cableFloats'])
 
 
 def sheet_outline(page, scale, dpi=150):
@@ -118,7 +134,7 @@ def sheet_outline(page, scale, dpi=150):
     cnt = max(cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0], key=cv2.contourArea)
     return cv2.contourArea(cnt) * mpp * mpp
 
-data = ROOT / 'src' / 'data' / 'banMong'
+data = ROOT / 'src' / 'data' / LK['dir']
 polys = {r['name']: r for r in json.load(open(data / 'raftPolygons.json', encoding='utf-8'))}
 catalogue = {r['name']: r for r in json.load(open(data / 'raftCatalogue.json', encoding='utf-8'))}
 lines = json.load(open(data / 'coordinates.json', encoding='utf-8'))
@@ -185,7 +201,7 @@ GD = [
     ('GAMMA', 'Hệ số tải trọng cho lực dây', GAMMA, '', 'Như kiểm tra cọc (pileBendingLoadFactor)'),
     ('K_Y', 'Phần lực dây vào MỘT bích (cáp 2 nhánh chữ Y)', K_Y, '× T', 'Chia đều ở góc 60°: 0,58 T; lấy 0,7 T vì 2 nhánh có thể dài lệch nhau (cùng giả định với bảng vật tư neo, sheet KiemTra_Nhanh)'),
     ('K_XF', 'Số chỗ dầm C52 vượt qua một hàng phao, trên 1 m dầm', 0.5, 'điểm/m', 'ĐO trên bản vẽ CAD khung: hàng phao đỡ pin cách nhau ~2,0 m'),
-    ('B_C52', 'Khoảng cách trung bình giữa các dầm C52 (theo phương hộp)', B_C52, 'm', 'ĐO trên bản vẽ CAD khung 6 bè. Chỉ dùng ước lượng bulông M10×120 hộp kết cấu – dầm (1 bộ mỗi giao điểm); hộp gia cường đếm giao điểm trên bản vẽ'),
+    ('B_C52', 'Khoảng cách trung bình giữa các dầm C52 (theo phương hộp)', B_C52, 'm', f'ĐO trên bản vẽ CAD khung {NR} bè. Chỉ dùng ước lượng bulông M10×120 hộp kết cấu – dầm (1 bộ mỗi giao điểm); hộp gia cường đếm giao điểm trên bản vẽ'),
 ]
 gd['A1'] = 'THÔNG SỐ GIẢ ĐỊNH — ô tô vàng là ô NHẬP, sửa là cả file tự tính lại (bản vẽ gia cường vẽ theo giá trị mặc định)'; gd['A1'].font = Font(name='Calibri', size=13, bold=True)
 for j, h in enumerate(['Mã', 'Thông số', 'Giá trị', 'Đơn vị', 'Ghi chú']):
@@ -201,14 +217,14 @@ for col, w in zip('ABCDE', [9, 52, 10, 10, 110]): gd.column_dimensions[col].widt
 
 # ---- DuLieuBanVe
 dl = wb.create_sheet('DuLieuBanVe', 0)
-dl['A1'] = 'SỐ LIỆU LẤY TỪ BẢN VẼ "BO TRI BE PIN HO BAN MONG" (bảng Revit trên các tờ CT-BP-01…06, MB-B01-01) VÀ BẢN VẼ CAD KHUNG "CT-KC-BE-01…06" (30/10/2026)'; dl['A1'].font = Font(name='Calibri', size=13, bold=True)
+dl['A1'] = f'SỐ LIỆU LẤY TỪ BẢN VẼ "{LK["doc"]}" (bảng Revit trên các tờ {LK["sheets"]}, {LK["cable"]}) VÀ BẢN VẼ CAD KHUNG "{LK["kc"]}" ({LK["date"]})'; dl['A1'].font = Font(name='Calibri', size=13, bold=True)
 for j, h in enumerate(['Mã', 'Hạng mục'] + RAFTS + ['TỔNG', 'Nguồn']):
     c = dl.cell(3, j + 1, h); c.font = FB; c.fill = HEAD; c.alignment = CENTER
 DL = [
-    ('PV', 'Tấm pin (tấm)', lambda n: SHEETS[n]['pv'], 'Bảng "THỐNG KÊ TẤM PIN MẶT TRỜI" (tờ CT-BP), cột Số tấm pin'),
+    ('PV', 'Tấm pin (tấm)', lambda n: SHEETS[n]['pv'], f'Bảng "THỐNG KÊ TẤM PIN MẶT TRỜI" (tờ {LK["sheet"]}), cột Số tấm pin'),
     ('DPV', 'Dải pin (hàng)', lambda n: SHEETS[n]['dpv'], 'Như trên, cột SỐ LƯỢNG HÀNG'),
     ('STR', 'Số string', lambda n: SHEETS[n]['strings'], 'Như trên, cột So string'),
-    ('I510', 'Inverter SG-510HX (bộ)', lambda n: SHEETS[n]['inv'], 'Bảng "INVESTER" (tờ CT-BP)'),
+    ('I510', 'Inverter SG-510HX (bộ)', lambda n: SHEETS[n]['inv'], f'Bảng "INVESTER" (tờ {LK["sheet"]})'),
     ('FS', 'Phao đỡ pin — Main Floater (cái)', lambda n: SHEETS[n]['fs'][0], 'Bảng "SỐ PHAO NỔI THEO BÈ", dòng "Dai phao do pin"'),
     ('FSR', 'Số hàng phao đỡ pin', lambda n: SHEETS[n]['fs'][1], 'Như trên, cột SỐ LƯỢNG HÀNG'),
     ('FWA', 'Phao đi lại kèm đỡ inverter (cái)', lambda n: SHEETS[n]['fwi'][0], 'Dòng "Dải phao đi lại kèm đỡ invester"'),
@@ -237,7 +253,7 @@ for i, (code, label, fn, src) in enumerate(DL):
     dl[f'{D_TOT}{r}'] = f'=SUM({RC[0]}{r}:{RC[-1]}{r})'; dl[f'{D_TOT}{r}'].number_format = dl[f'{RC[0]}{r}'].number_format
 r = 4 + len(DL); D['FC'] = r
 dl.cell(r, 1, 'FC'); dl.cell(r, 2, 'Phao đỡ cáp điện giữa các bè (cái, cả hồ)'); dl[f'{D_TOT}{r}'] = CABLE_FLOATS[1]
-dl[f'{D_SRC}{r}'] = f'Tờ MB-B01-01, bảng "SỐ PHAO ĐỠ CÁP": {CABLE_FLOATS[0]} hàng, {CABLE_FLOATS[1]} phao (không chia theo bè)'
+dl[f'{D_SRC}{r}'] = f'Tờ {LK["cable"]}, bảng "SỐ PHAO ĐỠ CÁP": {CABLE_FLOATS[0]} hàng, {CABLE_FLOATS[1]} phao (không chia theo bè)'
 LAST_DL = r
 grid(dl, 3, LAST_DL, 4 + NR)
 for j, w in enumerate([8, 44] + [11] * NR + [12, 90]): dl.column_dimensions[COL(j + 1)].width = w
@@ -247,11 +263,11 @@ gc = wb.create_sheet('GiaCuong_TaiNeo')
 gc['A1'] = 'HỘP 40x60 GIA CƯỜNG TẠI VỊ TRÍ NEO — VẼ TRÊN BẢN VẼ KHUNG KẾT CẤU "CT-KC-BE-01…06" (lớp GC-*), CÁP 2 NHÁNH CHỮ Y (2 bích mỗi dây, cách nhau 3,5 m)'
 gc['A2'] = ('Mỗi thanh nằm trên một hàng phao, theo phương hộp 40x60 kết cấu (vuông góc dầm C52), kẹp móc "几" vào MỌI dầm C52 nó cắt qua — số dầm cắt qua ĐẾM trên bản vẽ khung. '
             'Bích trên cạnh song song với hộp: các bích trong 14 m dùng chung thanh dọc cạnh (hàng phao thứ 2 tính từ mép); bích trên cạnh vuông góc: mỗi bích một thanh từ dầm C52 ngoài cùng vào trong. '
-            'Số thanh cần = MAX(1; ROUNDUP(số bích × K_Y × T × γ / (dầm C52 cắt qua × P_KEP))); cột "Số thanh vẽ" là số thanh trên bản vẽ (theo giá trị mặc định ở GiaDinh) — sửa P_KEP mà cột Kiểm tra báo THIẾU thì phải vẽ thêm thanh.')
+            'Số thanh cần = MAX(1; ROUNDUP(số bích × K_Y × T × γ / (dầm C52 cắt qua × P_KEP))); cột "Số thanh vẽ" là số thanh trên bản vẽ (theo giá trị mặc định ở GiaDinh; thanh sát thanh của cụm bên cạnh có thể ngắn hơn, tối thiểu 6 m). Kiểm tra: tổng số móc "几" của các thanh vẽ × P_KEP ≥ lực thiết kế cụm — sửa P_KEP mà báo THIẾU thì phải vẽ thêm thanh.')
 for a in ('A1', 'A2'): gc[a].font = FB if a == 'A1' else F
 gc.merge_cells('A2:S2'); gc['A2'].alignment = WRAP; gc.row_dimensions[2].height = 62
 HDR = ['Bè', 'Mã cụm (trên bản vẽ)', 'Cách bố trí', 'Bích trong cụm (mã dây + a/b)', 'Số bích', 'T dây (kN, gió 20 m/s)', 'Lực thiết kế cụm = (số bích dây neo × K_Y × T + lực dây nối) × γ (kN)', 'Dầm C52 cắt qua — thanh ít nhất (ĐO CAD)',
-       'Sức chịu 1 thanh (kN)', 'Số thanh cần', 'Số thanh vẽ', 'Kiểm tra', 'Tổng dài (m, ĐO CAD)', 'Số cây cấp hàng', 'Số mối nối', 'Móc "几" (cái, ĐO CAD)', 'Đai ốc thoi M10×30 (bộ)', 'Bulông M10×120 (bộ)', 'Khối lượng (kg)']
+       'Sức chịu 1 thanh (kN)', 'Số thanh cần (mọi thanh như thanh ngắn nhất)', 'Số thanh vẽ', 'Kiểm tra: tổng móc × P_KEP ≥ lực cụm', 'Tổng dài (m, ĐO CAD)', 'Số cây cấp hàng', 'Số mối nối', 'Móc "几" (cái, ĐO CAD)', 'Đai ốc thoi M10×30 (bộ)', 'Bulông M10×120 (bộ)', 'Khối lượng (kg)']
 for j, h in enumerate(HDR):
     c = gc.cell(3, j + 1, h); c.font = FB; c.fill = HEAD; c.alignment = CENTER
 gc.row_dimensions[3].height = 62
@@ -263,7 +279,7 @@ for i, (name, cid, kind, codes, c) in enumerate(clusters):
     tieKN = sum(L for k, L in zip(codes, c['cleatLoad_kN']) if k.startswith('T'))
     design = f'={nY}*F{r}*{G["K_Y"]}*{G["GAMMA"]}' + (f'+{tieKN:.1f}*{G["GAMMA"]}' if tieKN else '')
     vals = [name, cid, kind, ', '.join(codes), len(codes), T[name], design, min(b['nC52'] for b in bars),
-            f'=H{r}*{G["P_KEP"]}', f'=MAX(1,ROUNDUP(G{r}/I{r}-0.0005,0))', len(bars), f'=IF(K{r}>=J{r},"ĐỦ","THIẾU")', round(sum(b['L_m'] for b in bars), 3),
+            f'=H{r}*{G["P_KEP"]}', f'=MAX(1,ROUNDUP(G{r}/I{r}-0.0005,0))', len(bars), f'=IF(P{r}*{G["P_KEP"]}>=G{r}-0.05,"ĐỦ","THIẾU")', round(sum(b['L_m'] for b in bars), 3),
             f'={pieces}', f'=N{r}-K{r}', sum(b['nC52'] for b in bars), f'=2*P{r}', f'=P{r}', f'=M{r}*{G["M_H"]}']
     for j, v in enumerate(vals): gc.cell(r, j + 1, v)
     gc[f'G{r}'].number_format = '0.0'; gc[f'I{r}'].number_format = '0.0'; gc[f'M{r}'].number_format = '0.0'; gc[f'S{r}'].number_format = '#,##0.0'
@@ -273,11 +289,11 @@ for col, w in zip('ABCDEFGHIJKLMNOPQRS', [8, 10, 18, 34, 7, 10, 14, 12, 10, 9, 9
 
 # ---- DoiChieu_MatBang
 dc = wb.create_sheet('DoiChieu_MatBang')
-dc['A1'] = 'ĐỐI CHIẾU TỜ CT-BP VÀ KHUNG CT-KC-BE (30/10/2026) VỚI MẶT BẰNG BÈ MÀ WEB DÙNG TÍNH NEO (bản vẽ CAD bố trí bè 30/10/2026)'; dc['A1'].font = Font(name='Calibri', size=13, bold=True)
+dc['A1'] = f'ĐỐI CHIẾU TỜ {LK["sheet"]} VÀ KHUNG {LK["kc"]} ({LK["date"]}) VỚI MẶT BẰNG BÈ MÀ WEB DÙNG TÍNH NEO'; dc['A1'].font = Font(name='Calibri', size=13, bold=True)
 dc['A2'] = ('Diện tích tờ CT-BP đo trên ảnh tờ (tỷ lệ in trên tờ, gồm cả mép phao); diện tích khung = phần phủ của dầm C52, hộp 40x60 và dải phao trên bản vẽ khung. '
             'Bản vẽ khung là mặt bằng neo xoay quanh gốc tọa độ: góc xoay và độ lệch khi khớp đường bao vào mép dải phao.')
 dc.merge_cells('A2:K2'); dc['A2'].alignment = WRAP; dc.row_dimensions[2].height = 34
-H2 = ['Bè', 'Diện tích khung CAD (m²)', 'Diện tích trên web (m²)', 'Lệch diện tích', 'Tấm pin (tờ CT-BP = web)', 'Dầm C52 TB 1 thanh (m)', 'Hộp 40x60 TB 1 thanh (m)', 'Góc xoay khung (°)', 'Lệch khớp TB (m)', 'Số dây neo', 'Diện tích tờ CT-BP (m²)']
+H2 = ['Bè', 'Diện tích khung CAD (m²)', 'Diện tích trên web (m²)', 'Lệch diện tích', f'Tấm pin (tờ {LK["sheet"]} = web)', 'Dầm C52 TB 1 thanh (m)', 'Hộp 40x60 TB 1 thanh (m)', 'Góc xoay khung (°)', 'Lệch khớp TB (m)', 'Số dây neo', f'Diện tích tờ {LK["sheet"]} (m², đo trên PDF)']
 for j, h in enumerate(H2):
     c = dc.cell(3, j + 1, h); c.font = FB; c.fill = HEAD; c.alignment = CENTER
 dc.row_dimensions[3].height = 48
@@ -285,7 +301,7 @@ for i, n in enumerate(RAFTS):
     r = 4 + i
     row = [n, round(frame_area(i + 1)), polys[n]['area_m2'], f'=B{r}/C{r}-1', catalogue[n]['solarPanelCount'],
            f"=DuLieuBanVe!{RC[i]}{D['C52L']}/DuLieuBanVe!{RC[i]}{D['C52N']}", f"=DuLieuBanVe!{RC[i]}{D['HL']}/DuLieuBanVe!{RC[i]}{D['HN']}",
-           round(RJ[n]['fit']['rot_deg'], 2), round(RJ[n]['fit']['meanDist_m'], 2), lineCount[n], round(sheet_outline(SHEETS[n]['page'], SHEETS[n]['scale']))]
+           round(RJ[n]['fit']['rot_deg'], 2), round(RJ[n]['fit']['meanDist_m'], 2), lineCount[n], round(sheet_outline(SHEETS[n]['page'], SHEETS[n]['scale'])) if doc else None]
     for j, v in enumerate(row): dc.cell(r, j + 1, v)
     dc[f'D{r}'].number_format = '+0.0%;-0.0%'
     for col in 'FG': dc[f'{col}{r}'].number_format = '0.0'
@@ -321,8 +337,8 @@ def barsum(sheet, col, n): return f"SUMIF('{sheet}'!$A$4:$A${BAR_LAST[sheet]},\"
 
 # ---- TongHop
 th = wb.create_sheet('TongHop', 0)
-th['A1'] = 'BẢNG TỔNG HỢP VẬT TƯ BÈ PIN — 6 BÈ HỒ BẢN MÒNG (khung kết cấu "CT-KC-BE-01…06" 30/10/2026, HD lắp Mibet MRac G5)'
-th['A2'] = ('Nguồn: BV = lấy đúng bảng Revit trên tờ CT-BP; CAD = đếm / đo trên bản vẽ khung kết cấu; ƯL = ước lượng theo thông số sheet GiaDinh '
+th['A1'] = f'BẢNG TỔNG HỢP VẬT TƯ BÈ PIN — {NR} BÈ {LK["up"]} (khung kết cấu "{LK["kc"]}" {LK["date"]}, HD lắp Mibet MRac G5)'
+th['A2'] = (f'Nguồn: BV = lấy đúng bảng Revit trên tờ {LK["sheet"]}; CAD = đếm / đo trên bản vẽ khung kết cấu; ƯL = ước lượng theo thông số sheet GiaDinh '
             '(phải đối chiếu BOM nhà sản xuất); NEO = theo mặt bằng neo trên web. Mục D vẽ trên bản vẽ khung có gia cường (lớp GC-*).')
 th.merge_cells(f'A1:{T_NOTE}1'); th.merge_cells(f'A2:{T_NOTE}2')
 th['A1'].font = Font(name='Calibri', size=13, bold=True); th['A2'].alignment = WRAP; th.row_dimensions[1].height = 17; th.row_dimensions[2].height = 34
@@ -339,13 +355,13 @@ NPV = sum(catalogue[n]['solarPanelCount'] for n in RAFTS)
 NINV = sum(SHEETS[n]['inv'] for n in RAFTS)
 ITEMS = [
     ('A. PIN, INVERTER, PHAO NỔI',),
-    ('Tấm pin mặt trời', 'tấm', lambda j: '=' + dlref('PV', j), 'same', 'BV', f'{NPV:,} tấm theo bảng từng tờ CT-BP (30/10/2026); lực gió và lực dây trên web tính theo số tấm từng bè này'.replace(',', '.')),
+    ('Tấm pin mặt trời', 'tấm', lambda j: '=' + dlref('PV', j), 'same', 'BV', f'{NPV:,} tấm theo bảng tờ {LK["sheets"]} ({LK["date"]}); lực gió và lực dây trên web tính theo số tấm từng bè này'.replace(',', '.')),
     ('Inverter SG-510HX', 'bộ', lambda j: '=' + dlref('I510', j), 'same', 'BV', f'{NINV} inverter; bản vẽ không có SG350HX'),
     ('Phao đỡ pin (Main Floater G5G)', 'cái', lambda j: '=' + dlref('FS', j), 'same', 'BV', ''),
     ('Phao đi lại (Walkway Floater) — nhóm 1', 'cái', lambda j: '=' + dlref('FWA', j), 'same', 'BV', 'Dải phao đi lại kèm đỡ inverter. Bản vẽ chia phao đi lại thành 2 dòng; cần nhà sản xuất xác nhận là 1 hay 2 loại phao'),
     ('Phao đi lại (Walkway Floater) — nhóm 2', 'cái', lambda j: '=' + dlref('FWB', j), 'same', 'BV', 'Dải phao đi lại'),
     ('Tổng phao', 'cái', lambda j: '=' + dlref('FT', j), 'same', 'BV', ''),
-    ('Phao đỡ cáp điện giữa các bè', 'cái', None, 'cable', 'BV', f'Tờ MB-B01-01: {CABLE_FLOATS[0]:,} hàng × 2 = {CABLE_FLOATS[1]:,} phao, cả hồ (không chia theo bè)'.replace(',', '.')),
+    ('Phao đỡ cáp điện giữa các bè', 'cái', None, 'cable', 'BV', f'Tờ {LK["cable"]}: {CABLE_FLOATS[0]:,} hàng × 2 = {CABLE_FLOATS[1]:,} phao, cả hồ (không chia theo bè)'.replace(',', '.')),
     ('Bộ bulông nhựa nối phao', 'bộ', lambda j: f'=ROUNDUP({dlref("FT", j)}*{G["K_FB"]},0)', 'hh', 'ƯL', 'Tổng phao bè × hệ số K_FB ở GiaDinh'),
     ('B. DẦM C52 (đặt trên rãnh phao)',),
     ('Dầm C52 — số thanh liên tục', 'thanh', lambda j: '=' + dlref('C52N', j), 'same', 'CAD', 'Đếm trên bản vẽ CAD khung kết cấu (đối chiếu bảng tờ CT-KC-BE: DoiChieu_KhungThep)'),
@@ -452,6 +468,17 @@ NOTES = [
     'Chưa gồm: cáp neo, phụ kiện đầu cáp, thiết bị bù mực nước, cọc khoan nhồi, đế neo (xem bảng thống kê vật tư neo Bản Mòng), cáp điện DC/AC, máng cáp, tủ điện, tấm lối đi, vận chuyển.',
     'Hình minh họa ở cột C chép từ bảng vật tư bè pin Huổi Vanh trước đây (cắt từ tài liệu Mibet): chỉ để nhận dạng loại vật tư, không phải bản vẽ chế tạo.',
 ]
+if LAKE == 'chieng-dong':
+    NOTES = [
+        'Nguồn: bảng Revit trên các tờ CT-BE01 "CHI TIẾT BÈ PIN 01" (tấm pin, phao, inverter) và MB-BP-01 "BỐ TRÍ BÈ PIN MẶT TRỜI" (phao đỡ cáp) của "CHUGIAP-HOCHIENGDONG ver 2" (Chủ đầu tư 07/11/2026), đọc từ DXF (file HOCHIENGDONG_BANG_REVIT_BE_PIN.json, script kiểm tổng bảng phao); khung kết cấu "KC-BE01 - KHUNG KẾT CẤU BÈ PIN 1.dwg"; HD lắp Mibet MRac G5. Script: scripts/buildHuoiVanhRaftReinforcement.py --lake=chieng-dong, scripts/buildBanMongRaftBOQ.py --lake=chieng-dong.',
+        f'Số tấm pin {NPV:,} tấm (303 dải), 12 inverter SG-510HX; lực gió, lực dây, cáp, cọc, đế trên web và trong thuyết minh, bảng tính, bảng vật tư neo đều tính theo số tấm này.'.replace(',', '.'),
+        'Dầm C52, hộp 40x60 kết cấu ĐO từng thanh trên bản vẽ CAD khung (sheet C52_TungThanh, Hop40x60_TungThanh); đối chiếu bảng "THỐNG KÊ KHUNG THÉP" trên tờ khung ở sheet DoiChieu_KhungThep.',
+        'Bản vẽ khung được Chủ đầu tư xoay cho dễ vẽ: khung = mặt bằng neo xoay 212,1° quanh gốc tọa độ VN-2000, lệch trung bình 0,39 m. Đường bao tính neo lấy theo khung này (44.298 m², 07/11/2026): đường bao trong "Floor Plan - MN Copy 1.dxf" có thêm một khối ~146 × 41 m ở cạnh đông bắc không có trong khung — Chủ đầu tư xác nhận bè thật là bè 8.484 tấm của khung.',
+        'Hộp 40x60 gia cường tại vị trí neo: vẽ thêm vào bản vẽ khung (lớp GC-HOP 40x60 GIA CUONG, GC-BICH NEO, GC-DAY NEO, GC-GHI CHU). Cáp 2 nhánh chữ Y, 2 bích mỗi dây cách nhau 3,5 m, mỗi bích chịu K_Y × T; T là lực dây của bè trong bảng vật tư neo (gió 20 m/s, bù mực nước liên tục + khóa bão). P_KEP = 7 kN mỗi móc "几" là GIẢ ĐỊNH — cần số liệu Mibet; chi tiết liên kết bích – hộp do nhà cung cấp bè lập.',
+        'Khối lượng thép theo tiết diện GIẢ ĐỊNH (C52 ≈ 2,36 kg/m; hộp 40×60×2,0 ≈ 3,01 kg/m). Gá đỡ, kẹp tấm pin, bulông nối phao, bulông M8 / M10 là ƯỚC LƯỢNG theo hệ số (sheet GiaDinh) — thay bằng BOM của nhà sản xuất khi có.',
+        'Chưa gồm: cáp neo, phụ kiện đầu cáp, thiết bị bù mực nước, cọc khoan nhồi, đế neo (xem bảng thống kê vật tư neo Chiềng Dong), cáp điện DC/AC, máng cáp, tủ điện, tấm lối đi, vận chuyển.',
+        'Hình minh họa ở cột C chép từ bảng vật tư bè pin Huổi Vanh trước đây (cắt từ tài liệu Mibet): chỉ để nhận dạng loại vật tư.',
+    ]
 for i, t in enumerate(NOTES):
     gh.cell(3 + i, 1, i + 1); gh.cell(3 + i, 2, t).alignment = WRAP
 grid(gh, 3, 2 + len(NOTES), 2)
@@ -516,7 +543,7 @@ for name, cid, kind, codes, c in clusters:
     txt(f"{cid}: {c['n']} thanh", ((x0 + x1) / 2, (y0 + y1) / 2), 1.2, 'GIA_CUONG_40x60', ang)
 xs = [p['x'] for n in RAFTS for p in polys[n]['points']]; ys = [p['y'] for n in RAFTS for p in polys[n]['points']]
 X0, Y0 = max(xs) + 60, max(ys)
-txt('SƠ ĐỒ TỔNG HỘP 40x60 GIA CƯỜNG TẠI CÁC VỊ TRÍ NEO — HỒ BẢN MÒNG, 6 BÈ (GC-01)', (X0, Y0), 6.0)
+txt(f'SƠ ĐỒ TỔNG HỘP 40x60 GIA CƯỜNG TẠI CÁC VỊ TRÍ NEO — {LK["up"]}, {NR} BÈ (GC-01)', (X0, Y0), 6.0)
 txt(f'Thanh lấy từ bản vẽ khung có gia cường "CT-KC-BE-0n ... - GIA CƯỜNG TẠI VỊ TRÍ NEO.dwg" (chi tiết từng thanh, từng móc); mặt bằng neo: web ({len(lines)} dây, cáp chữ Y). Đơn vị: m.', (X0, Y0 - 10), 3.0)
 y = Y0 - 22
 for n in RAFTS:

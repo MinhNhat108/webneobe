@@ -133,8 +133,8 @@ export const AppShell: React.FC<AppShellProps> = ({ onLock }) => {
           {activeSection === 'compare' && (
             <div className="section-stack">
               <ScrewBasePanel />
-              {/* Hồ Bản Mòng: PA1 (driven lake-bed piles) dropped by the owner 2026-10-24 */}
-              {ACTIVE_LAKE_ID !== 'ban-mong' && <OptionComparisonView />}
+              {/* deep lakes: PA1 (driven lake-bed piles) dropped by the owner 2026-10-24 (Bản Mòng) */}
+              {ACTIVE_LAKE_ID === 'huoi-vanh' && <OptionComparisonView />}
             </div>
           )}
 

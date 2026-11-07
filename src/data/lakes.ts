@@ -1,5 +1,5 @@
 /**
- * The lakes (projects) the app can show: Hồ Huổi Vanh and Hồ Bản Mòng. The
+ * The lakes (projects) the app can show: Hồ Huổi Vanh, Hồ Bản Mòng and Hồ Chiềng Dong. The
  * lake is chosen with the tabs in the header and kept in the browser
  * (`mooring_active_lake`); switching reloads the page, so every module-level
  * constant of the data layer (`huoiVanhProject.ts`, `huoiVanhLayout.ts`, the
@@ -13,7 +13,7 @@
  *
  * The levels are pinned equal to scripts/lakeConfig.mjs by lakes.test.ts.
  */
-export type LakeId = 'huoi-vanh' | 'ban-mong';
+export type LakeId = 'huoi-vanh' | 'ban-mong' | 'chieng-dong';
 
 export interface LakeInfo {
   id: LakeId;
@@ -36,7 +36,13 @@ export interface LakeInfo {
   ifc: { file: string; datumNote: string };
   /** Code wind the default 20 m/s is compared with (TCVN 2737:2023). */
   codeWind: { zone: string; speed_ms: number; q0_kPa: number; confirmed: boolean };
+  /** Prefix of the attached files (HOHUOIVANH_…) and their folder under public/. */
+  filePrefix: string;
+  docsDir: string;
 }
+
+/** A deep reservoir (Bản Mòng, Chiềng Dong: ~20 m of drawdown) rather than the shallow Huổi Vanh. */
+export const isDeepLake = (id: LakeId): boolean => id !== 'huoi-vanh';
 
 export const LAKES: Record<LakeId, LakeInfo> = {
   'huoi-vanh': {
@@ -50,7 +56,9 @@ export const LAKES: Record<LakeId, LakeInfo> = {
     levels: { mnc_m: 380.0, mndb_m: 384.5, mnlkt_m: 386.0 },
     levelsSource: 'Thông số hồ chứa Huổi Vanh',
     ifc: { file: 'dia hinh ho.ifc', datumNote: 'quy đổi cao độ −17,5 m' },
-    codeWind: { zone: 'II-B', speed_ms: 29.7, q0_kPa: 0.54, confirmed: true }
+    codeWind: { zone: 'II-B', speed_ms: 29.7, q0_kPa: 0.54, confirmed: true },
+    filePrefix: 'HOHUOIVANH',
+    docsDir: 'docs_huoi_vanh'
   },
   'ban-mong': {
     id: 'ban-mong',
@@ -65,7 +73,26 @@ export const LAKES: Record<LakeId, LakeInfo> = {
     levelsSource: 'Thông số kỹ thuật hồ Bản Mòng (Pre-FS ĐMT nổi hồ Bản Mòng)',
     ifc: { file: 'CHUGIAP.ifc', datumNote: 'cao độ tuyệt đối, không quy đổi' },
     // Not yet looked up for Sơn La: the Huổi Vanh code wind is kept as the comparison until it is.
-    codeWind: { zone: 'II-B', speed_ms: 29.7, q0_kPa: 0.54, confirmed: false }
+    codeWind: { zone: 'II-B', speed_ms: 29.7, q0_kPa: 0.54, confirmed: false },
+    filePrefix: 'HOBANMONG',
+    docsDir: 'docs_ban_mong'
+  },
+  'chieng-dong': {
+    id: 'chieng-dong',
+    name: 'Hồ Chiềng Dong',
+    shortName: 'Chiềng Dong',
+    province: 'Xã Chiềng Mai, Tỉnh Sơn La',
+    codePrefix: 'CD',
+    projectId: 'chieng-dong-fpv',
+    storageKey: 'mooring-calc-storage-chieng-dong',
+    // Pre-FS "26.11.10 Pre FS ĐMT nổi hồ Chiềng Dong": MNDBT +760,0; MNC +740,5; MNKT (P = 0,2 %) +761,12.
+    levels: { mnc_m: 740.5, mndb_m: 760.0, mnlkt_m: 761.12 },
+    levelsSource: 'Thông số kỹ thuật hồ Chiềng Dong (Pre-FS ĐMT nổi hồ Chiềng Dong)',
+    ifc: { file: 'IFC dia hinh.ifc', datumNote: 'cao độ tuyệt đối, hệ VN-2000, không quy đổi' },
+    // Not yet looked up for Sơn La: the Huổi Vanh code wind is kept as the comparison until it is.
+    codeWind: { zone: 'II-B', speed_ms: 29.7, q0_kPa: 0.54, confirmed: false },
+    filePrefix: 'HOCHIENGDONG',
+    docsDir: 'docs_chieng_dong'
   }
 };
 
@@ -74,7 +101,7 @@ const ACTIVE_KEY = 'mooring_active_lake';
 function readActiveLake(): LakeId {
   try {
     const v = globalThis.localStorage?.getItem(ACTIVE_KEY);
-    if (v === 'ban-mong' || v === 'huoi-vanh') return v;
+    if (v === 'ban-mong' || v === 'huoi-vanh' || v === 'chieng-dong') return v;
   } catch {
     // storage blocked: fall back to the first lake
   }

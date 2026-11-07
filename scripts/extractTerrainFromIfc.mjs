@@ -134,28 +134,31 @@ const terrainTris = shellTriangles(topoShell).map((t) => t.map(([x, y, z]) => [x
 
 // ---------------------------------------------------------------- water slab
 const waterSlab = [...ent].find(([, e]) => e.type === 'IFCSLAB' && /mat nuoc/i.test(e.args));
-if (!waterSlab) throw new Error('No water-surface slab ("mat nuoc") found in the IFC');
-let waterTop = -Infinity;
-let waterPlace = null;
-for (const [id, e] of ent) {
-  if (e.type !== 'IFCFACETEDBREP') continue;
-  const own = ownerOf(id);
-  if (own.id !== waterSlab[0]) continue;
-  waterPlace = own.place;
-  for (const [a, b, c] of shellTriangles(refs(e.args)[0])) {
-    waterTop = Math.max(waterTop, a[2] + own.place.z, b[2] + own.place.z, c[2] + own.place.z);
+// Hồ Chiềng Dong (2026-11-07): the IFC has the Toposolid only, in absolute elevations — no water slab is needed.
+if (!waterSlab && LAKE.id === 'huoi-vanh') throw new Error('No water-surface slab ("mat nuoc") found in the IFC');
+let waterTop = waterSlab ? -Infinity : null;
+if (waterSlab) {
+  let waterPlace = null;
+  for (const [id, e] of ent) {
+    if (e.type !== 'IFCFACETEDBREP') continue;
+    const own = ownerOf(id);
+    if (own.id !== waterSlab[0]) continue;
+    waterPlace = own.place;
+    for (const [a, b, c] of shellTriangles(refs(e.args)[0])) {
+      waterTop = Math.max(waterTop, a[2] + own.place.z, b[2] + own.place.z, c[2] + own.place.z);
+    }
   }
-}
-if (!Number.isFinite(waterTop)) {
-  // An extruded slab (IFCEXTRUDEDAREASOLID, Bản Mòng) placed at its storey and extruded downwards: its top is the placement level.
-  waterPlace = placement(refs(waterSlab[1].args).find((r) => ent.get(r)?.type === 'IFCLOCALPLACEMENT'));
-  waterTop = waterPlace.z;
-}
-if (!Number.isFinite(waterTop)) throw new Error('Water slab has no geometry');
-// Both objects must share the site origin in plan, otherwise X/Y would not
-// line up with each other (nor with the raft outlines).
-if (Math.abs(waterPlace.x - topoPlace.x) > 0.01 || Math.abs(waterPlace.y - topoPlace.y) > 0.01) {
-  throw new Error('Toposolid and water slab are not in the same site frame');
+  if (!Number.isFinite(waterTop)) {
+    // An extruded slab (IFCEXTRUDEDAREASOLID, Bản Mòng) placed at its storey and extruded downwards: its top is the placement level.
+    waterPlace = placement(refs(waterSlab[1].args).find((r) => ent.get(r)?.type === 'IFCLOCALPLACEMENT'));
+    waterTop = waterPlace.z;
+  }
+  if (!Number.isFinite(waterTop)) throw new Error('Water slab has no geometry');
+  // Both objects must share the site origin in plan, otherwise X/Y would not
+  // line up with each other (nor with the raft outlines).
+  if (Math.abs(waterPlace.x - topoPlace.x) > 0.01 || Math.abs(waterPlace.y - topoPlace.y) > 0.01) {
+    throw new Error('Toposolid and water slab are not in the same site frame');
+  }
 }
 
 // ---------------------------------------------------------------- rasterise
@@ -199,8 +202,8 @@ const out = {
   units: 'm',
   frame: 'IFC local site frame (same X/Y as the raft outlines and mooring layout)',
   rowOrder: 'south-to-north',
-  ifcWaterSurface_m: Math.round(waterTop * 1000) / 1000,
-  ...(LAKE.id === 'ban-mong' ? { projectDatumOffset_m: 0 } : {}),
+  ifcWaterSurface_m: waterTop === null ? null : Math.round(waterTop * 1000) / 1000,
+  ...(LAKE.id !== 'huoi-vanh' ? { projectDatumOffset_m: 0 } : {}),
   bounds: { minX, maxX, minY, maxY },
   nx,
   ny,

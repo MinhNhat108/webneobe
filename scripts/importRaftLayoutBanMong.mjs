@@ -23,11 +23,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { LAKES, ROOT } from './lakeConfig.mjs';
 
-const LAKE = LAKES['ban-mong'];
+// --lake=<id> (default Bản Mòng; Hồ Chiềng Dong 2026-11-07: one raft, the drawing has no label)
+const LAKE = LAKES[process.argv.find((a) => a.startsWith('--lake='))?.slice('--lake='.length) ?? 'ban-mong'];
 const POLYS = path.join(ROOT, LAKE.files.polygons);
 const COORDS = path.join(ROOT, LAKE.files.coords);
 const TERRAIN = JSON.parse(fs.readFileSync(path.join(ROOT, LAKE.files.terrain), 'utf8'));
-const dxfPath = process.argv[2];
+const dxfPath = process.argv.slice(2).find((a) => !a.startsWith('--'));
 const dry = process.argv.includes('--dry');
 if (!dxfPath) { console.error('usage: node scripts/importRaftLayoutBanMong.mjs "<plan.dxf>" [--dry]'); process.exit(1); }
 // the raft numbers of the current plan: the keys of panelsByRaft in lakeConfig (6 rafts since 2026-10-30)
@@ -117,7 +118,8 @@ function groundUnder(ring) {
 }
 
 const rafts = loops.filter((r) => Math.abs(signedArea(r)) > 500).map((ring) => {
-  const label = labels.find((l) => inRing(l, ring));
+  // a single-raft lake whose drawing carries no label (Chiềng Dong): the one raft of the config
+  const label = labels.find((l) => inRing(l, ring)) ?? (ORDER.length === 1 && !labels.length ? { text: ORDER[0] } : null);
   if (!label) throw new Error('a raft outline has no label inside it');
   const pts = signedArea(ring) > 0 ? ring : [...ring].reverse();
   return { label: label.text, ring: pts };
@@ -149,5 +151,5 @@ if (!dry) {
   fs.mkdirSync(path.dirname(POLYS), { recursive: true });
   fs.writeFileSync(POLYS, JSON.stringify(polygons, null, 2) + '\n');
   fs.writeFileSync(COORDS, '[]\n');
-  console.log('written', path.relative(ROOT, POLYS), path.relative(ROOT, COORDS), '— now run scripts/planMooringLayoutV2.mjs --lake=ban-mong');
+  console.log('written', path.relative(ROOT, POLYS), path.relative(ROOT, COORDS), `— now run scripts/planMooringLayoutV2.mjs --lake=${LAKE.id}`);
 }

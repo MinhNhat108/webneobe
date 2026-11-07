@@ -20,7 +20,7 @@ import { buildRaftProjectState } from '../src/lib/calc/raftState';
 import type { ProjectState } from '../src/lib/calc/types';
 import { HUOI_VANH_DEFAULT_PROJECT, HUOI_VANH_RAFTS } from '../src/data/huoiVanhProject';
 import { buildFinalDesign, finalDesignNote, vn, FINAL_OPTION_DATE, FINAL_OPTION_TITLE } from '../src/lib/io/finalDesignWorkbook';
-import { ACTIVE_LAKE_ID } from '../src/data/lakes';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../src/data/lakes';
 
 const HV = ACTIVE_LAKE_ID === 'huoi-vanh';
 
@@ -111,7 +111,7 @@ body.push(table(
 body.push(para('Đơn giá cọc khoan nhồi và sà lan là giá tham khảo thị trường do Chủ đầu tư cung cấp, không phải báo giá nhà thầu. ' +
   (d.cost.unpriced.length > 0 ? `${d.cost.unpriced.length} hạng mục của đế và vít xoắn CHƯA CÓ ĐƠN GIÁ nên chưa nằm trong tổng. ` : '') +
   'Chưa gồm: cáp neo và phụ kiện, tai neo và khóa đầu vít của đế, bích neo đầu cọc, khảo sát, thử tải.', { size: 20 }));
-body.push(para(`Bảng từng cọc khoan nhồi (${T.shorePiles} cọc), từng bước tính của mỗi đế và chiều dài cắt ${T.lines} dây: xem file ${HV ? 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx' : 'HOBANMONG_BANG_TINH_NEO.xlsx'}.`, { size: 20 }));
+body.push(para(`Bảng từng cọc khoan nhồi (${T.shorePiles} cọc), từng bước tính của mỗi đế và chiều dài cắt ${T.lines} dây: xem file ${HV ? 'HOHUOIVANH_BANG_TINH_PHUONG_AN_CHOT.xlsx' : `${ACTIVE_LAKE.filePrefix}_BANG_TINH_NEO.xlsx`}.`, { size: 20 }));
 
 const doc = new Document({
   styles: { default: { document: { run: { font: FONT, language: LANG } } } },
@@ -123,7 +123,7 @@ const doc = new Document({
 const buf = await Packer.toBuffer(doc);
 const out = HV
   ? [path.join(here, '../docs/mat-bang-neo-huoi-vanh/THUYET_MINH_TINH_TOAN.docx'), path.join(here, '../public/docs_huoi_vanh/HOHUOIVANH_THUYET_MINH_PHUONG_AN_CHOT.docx')]
-  : [path.join(here, `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}/THUYET_MINH_TINH_TOAN.docx`), path.join(here, '../public/docs_ban_mong/HOBANMONG_THUYET_MINH_TINH_TOAN.docx')];
+  : [path.join(here, `../docs/mat-bang-neo-${ACTIVE_LAKE_ID}/THUYET_MINH_TINH_TOAN.docx`), path.join(here, `../public/${ACTIVE_LAKE.docsDir}/${ACTIVE_LAKE.filePrefix}_THUYET_MINH_TINH_TOAN.docx`)];
 fs.mkdirSync(path.dirname(out[0]), { recursive: true });
 for (const f of out) fs.writeFileSync(f, buf);
 console.log(JSON.stringify({ files: out.map((f) => path.basename(f)), bytes: buf.length, sections: finalDesignNote(d).length, rafts: d.rafts.length, bases: d.schedule.bases.length }));

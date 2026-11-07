@@ -109,7 +109,7 @@ function huoiVanhCaveats(): string[] {
 }
 
 export function lakeCaveats(): string[] {
-  if (ACTIVE_LAKE_ID !== 'ban-mong') return huoiVanhCaveats();
+  if (ACTIVE_LAKE_ID === 'huoi-vanh') return huoiVanhCaveats();
   const { mnc_m, mndb_m, mnlkt_m } = ACTIVE_LAKE.levels;
   const out: string[] = [];
   out.push(
@@ -120,11 +120,13 @@ export function lakeCaveats(): string[] {
   const lf = HUOI_VANH_RAFTS.filter((r) => r.lockFailure);
   if (lf.length) {
     const sf = lf.map((r) => (CABLE_MBL_KN[r.selectedCable] ?? 0) / r.lockFailure!.maxTension_kN);
+    // a range, or one value when all rafts agree (a single-raft lake)
+    const span = (v: number[], d: number) => (vn(Math.min(...v), d) === vn(Math.max(...v), d) ? vn(v[0], d) : `${vn(Math.min(...v), d)}–${vn(Math.max(...v), d)}`);
     const dr = lf.map((r) => r.lockFailure!.drift_m), tt = lf.map((r) => r.lockFailure!.maxTension_kN);
     out.push(
       `Nếu khóa của thiết bị bù KHÔNG khóa kịp, đối trọng chỉ giữ lực căng ${vn(lf[0].lockFailure!.setTension_kN, 0)} kN và hành trình dư ${vn(lf[0].lockFailure!.stroke_m, 0)} m mỗi chiều: ` +
-      `bè trôi ${vn(Math.min(...dr), 1)}–${vn(Math.max(...dr), 1)} m (tới hết hành trình rồi dây mới căng) và lực dây vọt tới ${vn(Math.min(...tt), 0)}–${vn(Math.max(...tt), 0)} kN ` +
-      `(hệ số an toàn cáp chỉ ${vn(Math.min(...sf), 1)}–${vn(Math.max(...sf), 1)}; đế và cọc không được tính cho lực này). Đối trọng treo tự do KHÔNG đủ giữ bè: ` +
+      `bè trôi ${span(dr, 1)} m (tới hết hành trình rồi dây mới căng) và lực dây vọt tới ${span(tt, 0)} kN ` +
+      `(hệ số an toàn cáp chỉ ${span(sf, 1)}; đế và cọc không được tính cho lực này). Đối trọng treo tự do KHÔNG đủ giữ bè: ` +
       'cần bộ khóa / phanh chủ động, dự phòng, kiểm tra định kỳ.'
     );
   }

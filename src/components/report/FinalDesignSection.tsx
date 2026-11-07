@@ -5,7 +5,7 @@ import {
   buildFinalDesign, buildFinalDesignWorkbook, finalDesignFileName, finalDesignNote, vn, FINAL_OPTION_DATE, FINAL_OPTION_TITLE
 } from '../../lib/io/finalDesignWorkbook';
 import * as XLSX from 'xlsx';
-import { ACTIVE_LAKE_ID } from '../../data/lakes';
+import { ACTIVE_LAKE, ACTIVE_LAKE_ID } from '../../data/lakes';
 
 /** One hook so the report, the quotation and the Excel button use the same settled design. */
 export function useFinalDesign() {
@@ -54,8 +54,8 @@ export const FinalDesignSection: React.FC = () => {
           <div className="text-xs font-bold text-brand-600 uppercase tracking-widest">Thuyết minh tính toán — phương án chốt (cả {d.rafts.length} bè)</div>
           <h1 className="text-lg md:text-xl font-black mt-1">{FINAL_OPTION_TITLE}</h1>
           <div className="text-xs text-slate-600 mt-1">
-            {ACTIVE_LAKE_ID === 'ban-mong'
-              ? <>Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày {FINAL_OPTION_DATE} (CHƯA chốt riêng cho Bản Mòng) · {d.name}</>
+            {ACTIVE_LAKE_ID !== 'huoi-vanh'
+              ? <>Áp dụng phương án Chủ đầu tư đã chốt cho Huổi Vanh ngày {FINAL_OPTION_DATE} (CHƯA chốt riêng cho {ACTIVE_LAKE.shortName}) · {d.name}</>
               : <>Chủ đầu tư chốt ngày {FINAL_OPTION_DATE} · {d.name}</>}
           </div>
         </div>

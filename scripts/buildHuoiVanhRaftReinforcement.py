@@ -3,6 +3,7 @@ Hộp 40x60 gia cường tại các vị trí neo, vẽ TRÊN bản vẽ khung k
 
   python scripts/buildHuoiVanhRaftReinforcement.py <thư mục kc1.dxf…kc4.dxf> <bảng vật tư neo .xlsx> <thư mục kết quả>
   python scripts/buildHuoiVanhRaftReinforcement.py <thư mục kc1.dxf…kc6.dxf> <bảng vật tư neo .xlsx> <thư mục kết quả> --lake=ban-mong
+  python scripts/buildHuoiVanhRaftReinforcement.py <thư mục kc1.dxf> <bảng vật tư neo .xlsx> <thư mục kết quả> --lake=chieng-dong
 
 - Bản Mòng (6 bè): kc<i>.dxf = "CHUGIAP-HOBANMONG ver 2-Sheet - CT-KC-BE-0<i> - BỐ TRÍ KHUNG KẾT CẤU BÈ PIN 0<i>.dxf"
   (tờ Revit: khung là MỘT block ở model space tại 0,0, các dầm / hộp / phao là block lồng bên trong).
@@ -30,10 +31,17 @@ import openpyxl
 from ezdxf import bbox
 
 ROOT = Path(__file__).resolve().parent.parent
-BAN_MONG = '--lake=ban-mong' in sys.argv
+LAKE = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--lake=')), 'huoi-vanh')
+# deep lakes (Bản Mòng, Chiềng Dong): Revit sheets, data under src/data/<lake>/
+BAN_MONG = LAKE != 'huoi-vanh'
+LAKE_DIR = {'ban-mong': 'banMong', 'chieng-dong': 'chiengDong'}.get(LAKE)
+# Chiềng Dong (2026-11-07): the frame sheet KC-BE01 (rotated for drawing) lacks a ~5 900 m² block of the outline the
+# mooring is computed on; a capped distance fits the parts they share, and a wider snap of the rotation onto the axes
+ROBUST_CAP_M = 3.0 if LAKE == 'chieng-dong' else None
+SNAP_DEG = 5.0 if LAKE == 'chieng-dong' else 2.5
 KC_DIR, MOORING_XLSX, OUT_DIR = [Path(a) for a in sys.argv[1:] if not a.startswith('--')][:3]
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-RAFTS = [f'BÈ {i}' for i in range(1, 7 if BAN_MONG else 5)]
+RAFTS = [r['name'] for r in json.load(open(Path(__file__).resolve().parent.parent / 'src' / 'data' / LAKE_DIR / 'raftPolygons.json', encoding='utf-8'))] if BAN_MONG else [f'BÈ {i}' for i in range(1, 5)]
 
 CLEAT_GAP, L_GC, P_KEP, K_Y, GAMMA = 3500.0, 15000.0, 7.0, 0.7, 1.2  # mm, mm, kN, -, -
 CLUSTER_SPAN = L_GC - 1000.0
@@ -63,14 +71,14 @@ def members(i):
 
 # ------------------------------------------------------------------ web layout and line tension
 data = ROOT / 'src' / 'data'
-polys = {r['name']: r for r in json.load(open(data / ('banMong/raftPolygons.json' if BAN_MONG else 'huoiVanhRaftPolygons_v2.json'), encoding='utf-8'))}
-lines = json.load(open(data / ('banMong/coordinates.json' if BAN_MONG else 'huoiVanhCoordinates_v2.json'), encoding='utf-8'))
+polys = {r['name']: r for r in json.load(open(data / (f'{LAKE_DIR}/raftPolygons.json' if BAN_MONG else 'huoiVanhRaftPolygons_v2.json'), encoding='utf-8'))}
+lines = json.load(open(data / (f'{LAKE_DIR}/coordinates.json' if BAN_MONG else 'huoiVanhCoordinates_v2.json'), encoding='utf-8'))
 # Ties between two rafts (lakeConfig raftTies, banMong/ties.json): ONE cleat at each end, carrying the whole tie design load
 # of the catalogue (mooringLayout.group.tieDesign_kN), not the 0,7 T of a cleat of a Y-branched mooring line.
 TIE_ENDS = []
-if BAN_MONG and (data / 'banMong/ties.json').exists():
-    cat = {r['name']: r for r in json.load(open(data / 'banMong/raftCatalogue.json', encoding='utf-8'))}
-    for t in json.load(open(data / 'banMong/ties.json', encoding='utf-8')):
+if BAN_MONG and (data / f'{LAKE_DIR}/ties.json').exists():
+    cat = {r['name']: r for r in json.load(open(data / f'{LAKE_DIR}/raftCatalogue.json', encoding='utf-8'))}
+    for t in json.load(open(data / f'{LAKE_DIR}/ties.json', encoding='utf-8')):
         for me, other in ((t['a'], t['b']), (t['b'], t['a'])):
             TIE_ENDS.append(dict(raft=me['raft'], code=t['code'], x=me['x'], y=me['y'], ox=other['x'], oy=other['y'],
                                  kN=cat[me['raft']]['mooringLayout']['group']['tieDesign_kN']))
@@ -98,7 +106,10 @@ def fit(name, M):
     S = np.array([p + (q - p) * t for p, q in zip(pts, np.roll(pts, -1, 0)) for t in np.linspace(0, 1, max(2, int(np.linalg.norm(q - p))))])
     def cost(a, tx, ty):
         q = S @ rot(a).T + [tx, ty]
-        return float(dt[np.clip(((q[:, 1] - y0) / G).astype(int), 0, H - 1), np.clip(((q[:, 0] - x0) / G).astype(int), 0, W - 1)].mean())
+        d = dt[np.clip(((q[:, 1] - y0) / G).astype(int), 0, H - 1), np.clip(((q[:, 0] - x0) / G).astype(int), 0, W - 1)]
+        # Chiềng Dong: the frame drawing lacks a part of the outline (a block of ~146 × 41 m): far points are capped so the
+        # rest still fits
+        return float(np.minimum(d, ROBUST_CAP_M).mean() if ROBUST_CAP_M else d.mean())
     fw, fh = W * G - 10, H * G - 10
     best = None
     for a10 in range(0, 3600, 5):  # coarse: the outline's box must match the strips' box
@@ -115,8 +126,17 @@ def fit(name, M):
         E = [(np.linalg.norm(q - p), math.degrees(math.atan2(*(q - p)[::-1])) % 90) for p, q in zip(pts, np.roll(pts, -1, 0))]
         d = max(set(round(e[1], 1) for e in E), key=lambda a: sum(L for L, b in E if abs(b - a) < 0.2))
         snap = min((k * 90 - d for k in range(-1, 6)), key=lambda a: abs(a - best[1]))
-        if abs(snap - best[1]) < 2.5:
-            best = (cost(snap, best[2], best[3]), snap % 360, best[2], best[3]); fixed = True
+        if abs(snap - best[1]) < SNAP_DEG:
+            # the shift again for the snapped angle: the rotation is about the ORIGIN, and in VN-2000 (Chiềng Dong,
+            # y ≈ 2 344 000 m) 0,1° moves the outline by kilometres
+            # (Bản Mòng, local coordinates within ~1 km of the origin: the coarse shift is kept, as for its published drawings)
+            if np.abs(pts).max() < 1e5:
+                best = (cost(snap, best[2], best[3]), snap % 360, best[2], best[3])
+            else:
+                q = pts @ rot(snap).T
+                t = np.array([x0 + 5 + fw / 2, y0 + 5 + fh / 2]) - (q.max(0) + q.min(0)) / 2
+                best = (cost(snap, *t), snap % 360, t[0], t[1])
+            fixed = True
     for sa, stt in ((0.2, 1.0), (0.05, 0.25), (0.01, 0.05)):
         improved = True
         while improved:

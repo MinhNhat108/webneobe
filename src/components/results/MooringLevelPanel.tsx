@@ -37,7 +37,7 @@ export const MooringLevelPanel: React.FC = () => {
   const L = currentProject.line;
   const isActive = (m: (typeof MODES)[number]) =>
     (L.levelCompensation ?? 'fixed') === m.levelCompensation && (m.levelCompensation === 'fixed' || (L.adjustStep_m ?? 0) === m.adjustStep_m);
-  const limit = layout.minGap_m / 2;
+  const limit = (layout.minGap_m ?? Infinity) / 2;
 
   return (
     <div className="card">
@@ -79,7 +79,7 @@ export const MooringLevelPanel: React.FC = () => {
                 <th className="p-2 text-right">Số dây căng</th>
                 <th className="p-2 text-right">T khi đứt 1 dây (kN)</th>
                 <th className="p-2 text-right">HSAT cáp (≥ {vn(currentProject.criteria.sfLineIntact, 1)})</th>
-                <th className="p-2 text-right">Độ trôi lớn nhất (≤ {vn(limit, 2)} m)</th>
+                <th className="p-2 text-right">Độ trôi lớn nhất{Number.isFinite(limit) ? <> (≤ {vn(limit, 2)} m)</> : null}</th>
                 <th className="p-2 text-center">Kết luận bè</th>
               </tr>
             </thead>
@@ -130,7 +130,7 @@ export const MooringLevelPanel: React.FC = () => {
           </table>
           <p className="mt-1 text-[11px] text-slate-500">
             Bè chỉ phân tích từ mực nước {vn(layout.floatLevel_m, 2)} m (đáy thiết kế + mớn nước) trở lên; thấp hơn bè nằm trên đáy.
-            Khe hở nhỏ nhất tới bè bên cạnh {vn(layout.minGap_m, 2)} m.
+            {layout.minGap_m === undefined ? 'Hồ chỉ có một bè: không có khe hở tới bè bên cạnh.' : <>Khe hở nhỏ nhất tới bè bên cạnh {vn(layout.minGap_m, 2)} m.</>}
           </p>
         </div>
       </div>

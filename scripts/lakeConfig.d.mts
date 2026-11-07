@@ -14,5 +14,5 @@ export interface ScriptLake {
   singleBaseFacingOk?: boolean;
 }
 export const ROOT: string;
-export const LAKES: Record<'huoi-vanh' | 'ban-mong', ScriptLake>;
+export const LAKES: Record<'huoi-vanh' | 'ban-mong' | 'chieng-dong', ScriptLake>;
 export function lakeFromArgv(argv?: string[]): ScriptLake & { abs: ScriptLake['files'] };

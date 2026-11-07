@@ -215,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
           >
             🔵 Đế BTCT + vít xoắn (PHƯƠNG ÁN CHỐT 12/10/2026)
           </button>
-          {ACTIVE_LAKE_ID !== 'ban-mong' && <button
+          {ACTIVE_LAKE_ID === 'huoi-vanh' && <button
             type="button"
             onClick={() => setMooringOption('PA1_PILE')}
             className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
@@ -256,7 +256,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport, onGoToReport, onGo
         <div className="border-t border-rose-500/40 bg-rose-500/15 text-rose-100">
           <details className="max-w-app mx-auto px-4 sm:px-6 lg:px-8 py-1 text-[11px] leading-snug">
             <summary className="cursor-pointer font-semibold">
-              ⚠️ {lakeCaveats().length} vấn đề còn mở của {ACTIVE_LAKE.name} ({ACTIVE_LAKE_ID === 'ban-mong' ? 'dao động mực nước, bè chạm đáy, đế neo, vùng gió' : 'chỉnh dây theo mực nước, dây dự phòng'}) — bấm để xem
+              ⚠️ {lakeCaveats().length} vấn đề còn mở của {ACTIVE_LAKE.name} ({ACTIVE_LAKE_ID !== 'huoi-vanh' ? 'dao động mực nước, bè chạm đáy, đế neo, vùng gió' : 'chỉnh dây theo mực nước, dây dự phòng'}) — bấm để xem
             </summary>
             <div className="space-y-0.5 mt-1">
               {lakeCaveats().map((c) => <div key={c}>⚠️ {c}</div>)}

@@ -28,10 +28,14 @@ import linesV2 from './huoiVanhCoordinates_v2.json';
 import banMongPolygons from './banMong/raftPolygons.json';
 import banMongLines from './banMong/coordinates.json';
 import banMongTies from './banMong/ties.json';
+import chiengDongPolygons from './chiengDong/raftPolygons.json';
+import chiengDongLines from './chiengDong/coordinates.json';
+import chiengDongTies from './chiengDong/ties.json';
 import type { MooringCoordinate } from './huoiVanhProject';
 import { ACTIVE_LAKE_ID } from './lakes';
 
 const BAN_MONG = ACTIVE_LAKE_ID === 'ban-mong';
+const CHIENG_DONG = ACTIVE_LAKE_ID === 'chieng-dong';
 
 export interface RaftPolygonV2 {
   id: number;
@@ -45,8 +49,8 @@ export interface RaftPolygonV2 {
 }
 
 /** The active lake's raft outlines and mooring lines. */
-export const RAFT_POLYGONS_V2: RaftPolygonV2[] = (BAN_MONG ? banMongPolygons : polygonsV2) as RaftPolygonV2[];
-export const MOORING_LINES_V2: MooringCoordinate[] = (BAN_MONG ? banMongLines : linesV2) as MooringCoordinate[];
+export const RAFT_POLYGONS_V2: RaftPolygonV2[] = (BAN_MONG ? banMongPolygons : CHIENG_DONG ? chiengDongPolygons : polygonsV2) as RaftPolygonV2[];
+export const MOORING_LINES_V2: MooringCoordinate[] = (BAN_MONG ? banMongLines : CHIENG_DONG ? chiengDongLines : linesV2) as MooringCoordinate[];
 
 /** A tie rope joining two rafts cleat to cleat across a narrow gap, in place of a shared lake-bed base (Hồ Bản Mòng, lakeConfig raftTies). */
 export interface RaftTie {
@@ -59,7 +63,7 @@ export interface RaftTie {
   base: { x: number; y: number; z: number };
 }
 /** The ties of the active lake (none at Huổi Vanh). */
-export const RAFT_TIES: RaftTie[] = (BAN_MONG ? banMongTies : []) as RaftTie[];
+export const RAFT_TIES: RaftTie[] = (BAN_MONG ? banMongTies : CHIENG_DONG ? chiengDongTies : []) as RaftTie[];
 
 /** One lake-bed base with the line(s) tied to it: one, or two facing lines of two rafts (a shared base). */
 export interface BedAnchor {

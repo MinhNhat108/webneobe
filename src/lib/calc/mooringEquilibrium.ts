@@ -329,7 +329,8 @@ export interface MooringLayoutInput {
   /** Lowest level at which the raft floats: design bed (median IFC ground under it) + draft, m. */
   floatLevel_m: number;
   /** Smallest clear distance from the raft to another raft, m (drift check: half of it). */
-  minGap_m: number;
+  /** Smallest clear gap to the other rafts, m; left out when the lake has no other raft (Chiềng Dong). */
+  minGap_m?: number;
   lines: EqLine[];
   /**
    * Lines left out of `lines`: shorter than STANDBY_SPAN_M in plan, installed with STANDBY_SLACK_M of slack

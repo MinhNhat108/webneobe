@@ -130,7 +130,21 @@ export const AttachmentPanel: React.FC = () => {
                 Đồng bộ lại
               </button>
             </div>
-            {ACTIVE_LAKE_ID === 'ban-mong' ? (
+            {ACTIVE_LAKE_ID === 'chieng-dong' ? (
+              <>
+                <p className="text-slate-600 text-[11px]">
+                  Hồ sơ của hồ Chiềng Dong (chỉ tài liệu của hồ này):
+                </p>
+                <ul className="list-disc list-inside text-[11px] text-slate-700 space-y-1 pl-1">
+                  <li><strong>Thuyết minh tính toán, bảng tính Excel, bản vẽ neo</strong> (.docx / .xlsx / .dxf / .dwg)</li>
+                  <li><strong>Thống kê vật tư neo, cáp neo</strong> và <strong>vật tư bè pin</strong> (.xlsx), bảng thống kê neo từng điểm</li>
+                  <li><strong>Bố trí bè pin của Chủ đầu tư</strong>, đường bao bè, mực nước, địa hình IFC, Pre-FS</li>
+                </ul>
+                <p className="text-slate-500 text-[11px]">
+                  Hồ sơ tính toán neo của Chiềng Dong là hồ sơ ĐỂ XEM XÉT: phương án neo, thiết bị bù mực nước + khóa bão và khảo sát địa chất chưa được chốt.
+                </p>
+              </>
+            ) : ACTIVE_LAKE_ID === 'ban-mong' ? (
               <>
                 <p className="text-slate-600 text-[11px]">
                   Hồ sơ gốc của hồ Bản Mòng (chỉ tài liệu của hồ này):

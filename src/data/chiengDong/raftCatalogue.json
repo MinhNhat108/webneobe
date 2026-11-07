@@ -15,16 +15,16 @@
         {
           "code": "B1-D01",
           "type": "SHORE",
-          "azimuth_deg": 69,
-          "span_m": 80,
-          "pin_m": 759.72
+          "azimuth_deg": 79,
+          "span_m": 82.5,
+          "pin_m": 759.64
         },
         {
           "code": "B1-D02",
-          "type": "BED",
-          "azimuth_deg": 302,
-          "span_m": 17.5,
-          "pin_m": 737.42
+          "type": "SHORE",
+          "azimuth_deg": 312,
+          "span_m": 86,
+          "pin_m": 759.67
         },
         {
           "code": "B1-D03",
@@ -35,10 +35,10 @@
         },
         {
           "code": "B1-D04",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 735.18
+          "type": "SHORE",
+          "azimuth_deg": 182,
+          "span_m": 83,
+          "pin_m": 759.66
         },
         {
           "code": "B1-D05",
@@ -57,9 +57,9 @@
         {
           "code": "B1-D07",
           "type": "SHORE",
-          "azimuth_deg": 13.9,
-          "span_m": 78.64,
-          "pin_m": 760.1
+          "azimuth_deg": 12.1,
+          "span_m": 73.5,
+          "pin_m": 759.63
         },
         {
           "code": "B1-D08",
@@ -105,17 +105,17 @@
         },
         {
           "code": "B1-D14",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 738.28
+          "type": "SHORE",
+          "azimuth_deg": 197,
+          "span_m": 88.5,
+          "pin_m": 759.64
         },
         {
           "code": "B1-D15",
           "type": "SHORE",
-          "azimuth_deg": 59.5,
-          "span_m": 73.28,
-          "pin_m": 759.72
+          "azimuth_deg": 52.2,
+          "span_m": 91.63,
+          "pin_m": 762.05
         },
         {
           "code": "B1-D16",
@@ -155,9 +155,9 @@
         {
           "code": "B1-D21",
           "type": "SHORE",
-          "azimuth_deg": 62,
-          "span_m": 61.01,
-          "pin_m": 759.69
+          "azimuth_deg": 67,
+          "span_m": 61,
+          "pin_m": 759.61
         },
         {
           "code": "B1-D22",
@@ -168,38 +168,38 @@
         },
         {
           "code": "B1-D23",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 740.46
+          "type": "SHORE",
+          "azimuth_deg": 227,
+          "span_m": 91,
+          "pin_m": 759.67
         },
         {
           "code": "B1-D24",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 302,
-          "span_m": 17.5,
-          "pin_m": 737.44
+          "span_m": 83.5,
+          "pin_m": 759.66
         },
         {
           "code": "B1-D25",
-          "type": "BED",
-          "azimuth_deg": 32.1,
-          "span_m": 17.5,
-          "pin_m": 734.55
+          "type": "SHORE",
+          "azimuth_deg": 357.1,
+          "span_m": 99.5,
+          "pin_m": 759.63
         },
         {
           "code": "B1-D26",
           "type": "SHORE",
-          "azimuth_deg": 202,
-          "span_m": 70.5,
-          "pin_m": 759.66
+          "azimuth_deg": 197,
+          "span_m": 71,
+          "pin_m": 759.65
         },
         {
           "code": "B1-D27",
           "type": "SHORE",
-          "azimuth_deg": 61.5,
-          "span_m": 46,
-          "pin_m": 759.6
+          "azimuth_deg": 57.1,
+          "span_m": 60.52,
+          "pin_m": 761.58
         },
         {
           "code": "B1-D28",
@@ -218,9 +218,9 @@
         {
           "code": "B1-D30",
           "type": "SHORE",
-          "azimuth_deg": 39.7,
-          "span_m": 72.45,
-          "pin_m": 760.34
+          "azimuth_deg": 37.1,
+          "span_m": 76.5,
+          "pin_m": 760.96
         },
         {
           "code": "B1-D31",
@@ -231,38 +231,38 @@
         },
         {
           "code": "B1-D32",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 212,
-          "span_m": 17.51,
-          "pin_m": 735.14
+          "span_m": 89,
+          "pin_m": 759.75
         },
         {
           "code": "B1-D33",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 739.31
+          "type": "SHORE",
+          "azimuth_deg": 192,
+          "span_m": 95,
+          "pin_m": 759.67
         },
         {
           "code": "B1-D34",
           "type": "SHORE",
           "azimuth_deg": 57,
-          "span_m": 52,
-          "pin_m": 759.74
+          "span_m": 58.49,
+          "pin_m": 763.67
         },
         {
           "code": "B1-D35",
           "type": "SHORE",
-          "azimuth_deg": 212,
-          "span_m": 68.5,
-          "pin_m": 759.65
+          "azimuth_deg": 207,
+          "span_m": 74.5,
+          "pin_m": 761.24
         },
         {
           "code": "B1-D36",
           "type": "SHORE",
-          "azimuth_deg": 67,
-          "span_m": 61,
-          "pin_m": 760.86
+          "azimuth_deg": 53.8,
+          "span_m": 67.77,
+          "pin_m": 761.74
         },
         {
           "code": "B1-D37",
@@ -274,9 +274,9 @@
         {
           "code": "B1-D38",
           "type": "SHORE",
-          "azimuth_deg": 88.9,
-          "span_m": 40.5,
-          "pin_m": 759.88
+          "azimuth_deg": 83.9,
+          "span_m": 42,
+          "pin_m": 759.66
         },
         {
           "code": "B1-D39",
@@ -289,57 +289,57 @@
           "code": "B1-D40",
           "type": "SHORE",
           "azimuth_deg": 337,
-          "span_m": 57,
-          "pin_m": 759.69
+          "span_m": 74,
+          "pin_m": 761.27
         },
         {
           "code": "B1-D41",
           "type": "SHORE",
-          "azimuth_deg": 212,
-          "span_m": 77.5,
-          "pin_m": 759.77
+          "azimuth_deg": 227,
+          "span_m": 78,
+          "pin_m": 759.75
         },
         {
           "code": "B1-D42",
           "type": "SHORE",
-          "azimuth_deg": 76.5,
-          "span_m": 80,
-          "pin_m": 759.66
+          "azimuth_deg": 80.5,
+          "span_m": 89.03,
+          "pin_m": 762.07
         },
         {
           "code": "B1-D43",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 735.02
+          "type": "SHORE",
+          "azimuth_deg": 182,
+          "span_m": 92,
+          "pin_m": 759.64
         },
         {
           "code": "B1-D44",
           "type": "SHORE",
-          "azimuth_deg": 82,
-          "span_m": 79.5,
-          "pin_m": 759.71
+          "azimuth_deg": 27,
+          "span_m": 94.5,
+          "pin_m": 759.62
         },
         {
           "code": "B1-D45",
-          "type": "SHORE",
-          "azimuth_deg": 26.2,
-          "span_m": 69.44,
-          "pin_m": 759.63
+          "type": "BED",
+          "azimuth_deg": 32.1,
+          "span_m": 17.5,
+          "pin_m": 737.2
         },
         {
           "code": "B1-D46",
           "type": "SHORE",
-          "azimuth_deg": 74,
-          "span_m": 64.5,
-          "pin_m": 759.66
+          "azimuth_deg": 79,
+          "span_m": 66.5,
+          "pin_m": 759.73
         },
         {
           "code": "B1-D47",
-          "type": "BED",
-          "azimuth_deg": 302,
-          "span_m": 17.5,
-          "pin_m": 738
+          "type": "SHORE",
+          "azimuth_deg": 317,
+          "span_m": 94,
+          "pin_m": 759.93
         },
         {
           "code": "B1-D48",
@@ -350,24 +350,24 @@
         },
         {
           "code": "B1-D49",
-          "type": "BED",
-          "azimuth_deg": 32.1,
-          "span_m": 17.5,
-          "pin_m": 734.55
+          "type": "SHORE",
+          "azimuth_deg": 67.1,
+          "span_m": 91,
+          "pin_m": 760.63
         },
         {
           "code": "B1-D50",
           "type": "SHORE",
-          "azimuth_deg": 212,
+          "azimuth_deg": 217,
           "span_m": 71,
-          "pin_m": 759.7
+          "pin_m": 759.75
         },
         {
           "code": "B1-D51",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 302,
-          "span_m": 17.51,
-          "pin_m": 738.07
+          "span_m": 82.5,
+          "pin_m": 759.61
         },
         {
           "code": "B1-D52",
@@ -379,9 +379,9 @@
         {
           "code": "B1-D53",
           "type": "SHORE",
-          "azimuth_deg": 62,
-          "span_m": 70.5,
-          "pin_m": 759.6
+          "azimuth_deg": 72,
+          "span_m": 78,
+          "pin_m": 763.93
         },
         {
           "code": "B1-D54",
@@ -392,38 +392,38 @@
         },
         {
           "code": "B1-D55",
-          "type": "BED",
-          "azimuth_deg": 302,
-          "span_m": 17.5,
-          "pin_m": 737.39
+          "type": "SHORE",
+          "azimuth_deg": 307,
+          "span_m": 84.5,
+          "pin_m": 759.74
         },
         {
           "code": "B1-D56",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 741.69
+          "type": "SHORE",
+          "azimuth_deg": 222,
+          "span_m": 94,
+          "pin_m": 759.72
         },
         {
           "code": "B1-D57",
-          "type": "BED",
-          "azimuth_deg": 32.1,
-          "span_m": 17.5,
-          "pin_m": 735.49
+          "type": "SHORE",
+          "azimuth_deg": 2.1,
+          "span_m": 97,
+          "pin_m": 762.07
         },
         {
           "code": "B1-D58",
           "type": "SHORE",
           "azimuth_deg": 192,
-          "span_m": 76,
-          "pin_m": 759.76
+          "span_m": 84,
+          "pin_m": 762.48
         },
         {
           "code": "B1-D59",
           "type": "SHORE",
-          "azimuth_deg": 61.5,
+          "azimuth_deg": 66.5,
           "span_m": 56,
-          "pin_m": 759.99
+          "pin_m": 759.74
         },
         {
           "code": "B1-D60",
@@ -448,66 +448,66 @@
         },
         {
           "code": "B1-D63",
-          "type": "BED",
-          "azimuth_deg": 94.5,
-          "span_m": 17.49,
-          "pin_m": 735.55
+          "type": "SHORE",
+          "azimuth_deg": 89.5,
+          "span_m": 95.5,
+          "pin_m": 762.1
         },
         {
           "code": "B1-D64",
-          "type": "BED",
-          "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 736.62
+          "type": "SHORE",
+          "azimuth_deg": 207,
+          "span_m": 94,
+          "pin_m": 762.01
         },
         {
           "code": "B1-D65",
           "type": "SHORE",
-          "azimuth_deg": 67,
-          "span_m": 50.5,
+          "azimuth_deg": 55.8,
+          "span_m": 51.47,
           "pin_m": 759.6
         },
         {
           "code": "B1-D66",
           "type": "SHORE",
-          "azimuth_deg": 357,
-          "span_m": 70.5,
-          "pin_m": 759.61
+          "azimuth_deg": 2,
+          "span_m": 71,
+          "pin_m": 759.64
         },
         {
           "code": "B1-D67",
           "type": "SHORE",
-          "azimuth_deg": 207,
-          "span_m": 71,
-          "pin_m": 760.13
+          "azimuth_deg": 202,
+          "span_m": 83.5,
+          "pin_m": 763.87
         },
         {
           "code": "B1-D68",
-          "type": "BED",
-          "azimuth_deg": 302,
-          "span_m": 17.5,
-          "pin_m": 737.4
+          "type": "SHORE",
+          "azimuth_deg": 307,
+          "span_m": 93,
+          "pin_m": 762.34
         },
         {
           "code": "B1-D69",
           "type": "SHORE",
           "azimuth_deg": 332,
-          "span_m": 49.49,
-          "pin_m": 759.72
+          "span_m": 54,
+          "pin_m": 761.03
         },
         {
           "code": "B1-D70",
           "type": "SHORE",
-          "azimuth_deg": 92.1,
-          "span_m": 40.5,
+          "azimuth_deg": 82.1,
+          "span_m": 44,
           "pin_m": 759.71
         },
         {
           "code": "B1-D71",
-          "type": "BED",
-          "azimuth_deg": 39,
-          "span_m": 16.25,
-          "pin_m": 735.55
+          "type": "SHORE",
+          "azimuth_deg": 80.6,
+          "span_m": 89.58,
+          "pin_m": 760.83
         },
         {
           "code": "B1-D72",
@@ -519,23 +519,23 @@
         {
           "code": "B1-D73",
           "type": "SHORE",
-          "azimuth_deg": 222,
-          "span_m": 75.5,
-          "pin_m": 759.65
+          "azimuth_deg": 227,
+          "span_m": 83,
+          "pin_m": 762.22
         },
         {
           "code": "B1-D74",
-          "type": "BED",
+          "type": "SHORE",
           "azimuth_deg": 212,
-          "span_m": 17.5,
-          "pin_m": 735.04
+          "span_m": 92,
+          "pin_m": 759.8
         },
         {
           "code": "B1-D75",
           "type": "SHORE",
-          "azimuth_deg": 102,
-          "span_m": 76,
-          "pin_m": 761.34
+          "azimuth_deg": 97,
+          "span_m": 81,
+          "pin_m": 762.02
         },
         {
           "code": "B1-D76",
@@ -554,11 +554,11 @@
       ]
     },
     "cableCount": 77,
-    "shoreAnchors": 47,
-    "bedAnchors": 30,
+    "shoreAnchors": 66,
+    "bedAnchors": 11,
     "selectedCable": "PES-48",
     "waterDepth_m": 25.5,
-    "bedAnchorDist_m": 16.2,
+    "bedAnchorDist_m": 17.4,
     "shoreAnchorDist_m": 34,
     "shorePileD_m": 0.35,
     "shorePileL_m": 6.5,
@@ -572,7 +572,7 @@
     "shorePilesPerPoint": 2,
     "pileRebarRs_MPa": 435,
     "shorePileLight": {
-      "tension_kN": 90.6,
+      "tension_kN": 88.1,
       "shorePileL_m": 6.5,
       "shoreRebarCount": 6,
       "shoreRebarDia_mm": 28,
@@ -584,8 +584,8 @@
     "lockFailure": {
       "setTension_kN": 5,
       "stroke_m": 3,
-      "drift_m": 5.5,
-      "maxTension_kN": 344
+      "drift_m": 4.9,
+      "maxTension_kN": 320
     }
   }
 ]

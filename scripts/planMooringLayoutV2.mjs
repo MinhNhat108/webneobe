@@ -58,7 +58,9 @@ const dryRun = process.argv.includes('--dry');
 const MAX_SPACING = 15.0;    // m, C9
 const MIN_STANDOFF = 5.0;    // m, G1
 const OPEN_STANDOFF = 17.5;  // m, preferred pile offset in open water
-const MIN_PILE_GAP = 3.0;    // m, G4 (when a shore pile is involved)
+// m, G4 (when a shore pile is involved); per lake (lakeConfig minPileGap) or --pile-gap=. Hồ Chiềng Dong 2026-11-07:
+// piles 3 m apart on a small spit (10 piles, ~9 T pulling one bank tip) share their passive soil wedges — spread out.
+const MIN_PILE_GAP = Number(process.argv.find((a) => a.startsWith('--pile-gap='))?.split('=')[1] ?? LAKE.minPileGap ?? 3.0);
 // Two LAKE-BED anchors: the screw-pile bases are up to 4.75 m square (diagonal
 // 6.7 m), so their centres are kept 7 m apart and no two bases can overlap
 // whatever their orientation.
@@ -697,7 +699,7 @@ if (process.argv.includes('--explain')) {
       if (g < SHORE_LEVEL) continue;
       const why = [];
       for (const q2 of polygons) { if (inRing(q, q2.points)) why.push('inside ' + q2.name); else if (q2.name !== c.raft && clearance(q, q2.points) < MIN_STANDOFF) why.push('<5 m from ' + q2.name); else if (q2.name !== c.raft && segOverRing(cleat, q, q2.points)) why.push('over ' + q2.name); }
-      for (const o of coords) { if (o === c) continue; if (dist(anchorOf(o), q) < MIN_PILE_GAP) why.push('<3 m from ' + o.code); if (segCross(cleat, q, cleatOf(o), anchorOf(o))) why.push('crosses ' + o.code + '(' + o.type + ')'); }
+      for (const o of coords) { if (o === c) continue; if (dist(anchorOf(o), q) < MIN_PILE_GAP) why.push(`<${MIN_PILE_GAP} m from ` + o.code); if (segCross(cleat, q, cleatOf(o), anchorOf(o))) why.push('crosses ' + o.code + '(' + o.type + ')'); }
       reason = `shore level at ${sp} m: ${why.join(', ') || 'feasible?'}`; break;
     }
     console.log('EXPLAIN R1', c.code, c.raft, 'span', c.span, '-', reason);

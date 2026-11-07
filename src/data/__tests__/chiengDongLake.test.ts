@@ -71,15 +71,18 @@ describe('Hồ Chiềng Dong tab', () => {
     expect(RAFT_TIES).toEqual([]);
   });
 
-  it('mooring layout: C9, shore piles on the bank within 80 m, bases on the IFC ground under water', () => {
+  it('mooring layout: C9, shore piles on the bank within 100 m (owner 07/11: optimised), bases on the IFC ground under water', () => {
     expect(LAYOUT_COUNTS.lines).toBe(MOORING_LINES_V2.length);
     const r = HUOI_VANH_RAFTS[0];
     expect(MOORING_LINES_V2.length).toBe(r.cableCount);
     expect(r.perimeter_m / r.cableCount).toBeLessThanOrEqual(15);
     for (const l of MOORING_LINES_V2.filter((q) => q.type === 'SHORE')) {
       expect(groundAt(l.xAnchor, l.yAnchor)!, l.code).toBeGreaterThanOrEqual(MNDB_M - 0.5 - 0.02);
-      expect(l.span, l.code).toBeLessThanOrEqual(80);
+      expect(l.span, l.code).toBeLessThanOrEqual(100);
     }
+    // shore piles at least 8 m apart (lakeConfig minPileGap, owner 07/11: no pile clusters on the spits)
+    const sh = MOORING_LINES_V2.filter((q) => q.type === 'SHORE');
+    for (const p of sh) for (const q of sh) if (p !== q) expect(Math.hypot(p.xAnchor - q.xAnchor, p.yAnchor - q.yAnchor), `${p.code}/${q.code}`).toBeGreaterThanOrEqual(8 - 0.02);
     for (const b of bedAnchorsOf()) {
       expect(b.z, b.id).toBeCloseTo(groundAt(b.x, b.y)!, 1);
       expect(b.z, b.id).toBeLessThanOrEqual(MNDB_M - 0.5);

@@ -74,7 +74,7 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_thuyet_minh_docx',
         name: '1. Thuyết minh tính toán hệ neo — 1 bè, 8.484 tấm pin nghiêng 10°, 07/11/2026 (HOCHIENGDONG_THUYET_MINH_TINH_TOAN.docx)',
         mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        size: 23807,
+        size: 22746,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_THUYET_MINH_TINH_TOAN.docx'
       },
@@ -82,15 +82,15 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_bang_tinh_xlsx',
         name: '2. Bảng tính Excel hệ neo — 1 bè, 8.484 tấm pin nghiêng 10°, 07/11/2026, lực dây cân bằng theo mực nước (HOCHIENGDONG_BANG_TINH_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 255810,
+        size: 243026,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_BANG_TINH_NEO.xlsx'
       },
       {
         id: 'cd_mb_neo_dxf',
-        name: '3. Bản vẽ CAD bố trí neo — 1 bè, 8.484 tấm pin nghiêng 10°, ưu tiên neo bờ, 07/11/2026 (HOCHIENGDONG_MAT_BANG_NEO_1_BE.dxf)',
+        name: '3. Bản vẽ CAD bố trí neo — 1 bè, 8.484 tấm pin nghiêng 10°, tầm dây bờ 100 m, cọc bờ cách nhau ≥ 8 m, 07/11/2026 (HOCHIENGDONG_MAT_BANG_NEO_1_BE.dxf)',
         mime: 'application/dxf',
-        size: 180164,
+        size: 163593,
         kind: 'dxf' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_MAT_BANG_NEO_1_BE.dxf'
       },
@@ -98,7 +98,7 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_thong_ke_neo_xlsx',
         name: '4. Thống kê vật tư neo và cáp neo, đặt hàng — 1 bè, 8.484 tấm pin nghiêng 10°, 07/11/2026 (HOCHIENGDONG_THONG_KE_VAT_TU_NEO.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 518622,
+        size: 518378,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_THONG_KE_VAT_TU_NEO.xlsx'
       },
@@ -114,7 +114,7 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_thong_ke_be_pin_xlsx',
         name: '6. Thống kê vật tư bè pin và cấu kiện bè pin — tấm pin / phao / inverter theo bảng Revit tờ CT-BE01, khung đo trên bản vẽ CAD KC-BE01, có hộp 40x60 gia cường tại vị trí neo, 07/11/2026 (HOCHIENGDONG_THONG_KE_VAT_TU_BE_PIN.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 557272,
+        size: 557266,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_THONG_KE_VAT_TU_BE_PIN.xlsx'
       },
@@ -122,7 +122,7 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_gia_cuong_dxf',
         name: '7. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01 — theo bản vẽ khung kết cấu KC-BE01, 07/11/2026 (HOCHIENGDONG_GIA_CUONG_40x60_TAI_NEO.dxf)',
         mime: 'application/dxf',
-        size: 188553,
+        size: 188549,
         kind: 'dxf' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_GIA_CUONG_40x60_TAI_NEO.dxf'
       },
@@ -130,23 +130,23 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_khung_1_dwg',
         name: '8. Khung kết cấu BÈ 1 có hộp 40x60 gia cường tại vị trí neo — tờ KC-BE01 của Chủ đầu tư 07/11/2026, lớp GC-* thêm 07/11/2026 (HOCHIENGDONG_KHUNG_KET_CAU_BE_PIN_1_GIA_CUONG_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 27489096,
+        size: 27488992,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_KHUNG_KET_CAU_BE_PIN_1_GIA_CUONG_TAI_NEO.dwg'
       },
       {
         id: 'cd_mb_neo_dwg',
-        name: '9. Bản vẽ CAD bố trí neo, bản DWG — ký hiệu C1… (cọc bờ), D1… (đế), 07/11/2026 (HOCHIENGDONG_MAT_BANG_NEO_1_BE.dwg)',
+        name: '9. Bản vẽ CAD bố trí neo, bản DWG — ký hiệu C1… (cọc bờ), D1… (đế), 07/11/2026 (HOCHIENGDONG_MAT_BANG_NEO_1_BE_CHOT.dwg)',
         mime: 'application/acad',
-        size: 72684,
+        size: 65739,
         kind: 'other' as const,
-        remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_MAT_BANG_NEO_1_BE.dwg'
+        remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_MAT_BANG_NEO_1_BE_CHOT.dwg'
       },
       {
         id: 'cd_bang_thong_ke_neo_xlsx',
-        name: '10. Bảng thống kê neo từng điểm — cọc bờ, đế vít xoắn, chiều dài cắt cáp; 1 bè, 8.484 tấm pin nghiêng 10°, 07/11/2026 (HOCHIENGDONG_BANG_THONG_KE_NEO_1_BE.xlsx)',
+        name: '10. Bảng thống kê neo từng điểm — 66 cọc bờ, 11 đế vít xoắn, chiều dài cắt cáp; 1 bè, 8.484 tấm pin nghiêng 10°, 07/11/2026 (HOCHIENGDONG_BANG_THONG_KE_NEO_1_BE.xlsx)',
         mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        size: 239654,
+        size: 234718,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_BANG_THONG_KE_NEO_1_BE.xlsx'
       },
@@ -154,7 +154,7 @@ export function chiengDongProjectFrom(hv: typeof HUOI_VANH_PROJECT): typeof HUOI
         id: 'cd_gia_cuong_dwg',
         name: '11. Sơ đồ tổng hộp 40x60 gia cường tại các vị trí neo GC-01, bản DWG — 07/11/2026 (HOCHIENGDONG_GIA_CUONG_40x60_TAI_NEO.dwg)',
         mime: 'application/acad',
-        size: 52126,
+        size: 52765,
         kind: 'other' as const,
         remoteUrl: 'docs_chieng_dong/HOCHIENGDONG_GIA_CUONG_40x60_TAI_NEO.dwg'
       },

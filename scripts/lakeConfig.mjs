@@ -147,7 +147,15 @@ export const LAKES = {
     bedMaxGround: 759.5,
     gapLimited: [],
     singleBaseFacingOk: true,
-    maxShoreSpan: 80,
+    // owner 2026-11-07 "bố trí lại neo cho tối ưu", raft kept as drawn. Same raft, reach 80 / 90 / 100 / 110 m:
+    // 47 / 63 / 70 / 70 shore lines, 30 / 14 / 7 / 7 bases, main cable 3 462 / 4 577 / 5 127 m, T 156,8 kN PES-48 in all
+    // (floor F/(6 cos 30°)), storm-lock failure 344 / 317 / 317 kN. 100 m CHOSEN: fewest bases in deep water; each base
+    // saved costs ~70–80 m of cable and one shore pile.
+    maxShoreSpan: 100,
+    // shore piles at least 8 m apart (owner 2026-11-07 on the pile clusters of the spits): with 3 m, 10 piles on one spit
+    // pulled ~9 T one way (passive wedges overlapping, bank stability not checked); 5 / 6 / 8 m → largest cluster within
+    // 15 m 9 / 8 / 6 piles (5,9 T), bases 9 / 9 / 11. 8 m CHOSEN.
+    minPileGap: 8,
     shoreFirst: true,
     raftTies: [],
     // table "SỐ TẤM PIN MẶT TRỜI THEO BÈ" of the sheets CT-BE01 / MB-BP-01 (Revit, 2026-11-07): 303 rows, 8 484 panels

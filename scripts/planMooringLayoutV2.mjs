@@ -30,6 +30,7 @@
  *   G3   no two lines cross; no line passes over a raft other than its own;
  *        no line runs back across its own raft
  *   G4   any two anchors >= 3.0 m apart; two lake-bed anchors >= 7.0 m apart
+ *   G5   no lake-bed base within 3.5 m of another lake-bed cable
  *        (room for the screw-pile bases)
  *   R1   (owner, 2026-10-08) near the shore the anchor is a BORED PILE, also at
  *        the water's edge: a lake-bed line with no raft facing it within 45 m
@@ -65,6 +66,8 @@ const MIN_PILE_GAP = Number(process.argv.find((a) => a.startsWith('--pile-gap=')
 // 6.7 m), so their centres are kept 7 m apart and no two bases can overlap
 // whatever their orientation.
 const MIN_BED_GAP = 7.0;     // m, G4 between two lake-bed anchors
+// m, G5: a lake-bed base (up to 4.75 m square, half diagonal 3.4 m) stays this far from any other lake-bed cable
+const MIN_BASE_CLEAR = 3.5;
 const MIN_CLEAT_GAP = 6.0;   // m, spacing of fittings on the pontoon edge
 const MNDB = LAKE.mndb;      // m, normal water level (Huổi Vanh 384.5, Bản Mòng 662.76)
 // Lake-bed level under each raft = MNDB - design water depth (same depth the
@@ -706,12 +709,16 @@ if (process.argv.includes('--explain')) {
   }
 }
 
+// Two lines of ONE raft on one base (lakeConfig sameRaftBases; Hồ Chiềng Dong 2026-11-08: in the 90° inner corner of the
+// raft the single bases sat under the neighbouring cables; tried, not used). Placed by hand; a re-run keeps them.
+const SAME_RAFT_BASES = (LAKE.sameRaftBases ?? []).map((p) => new Set(p));
+const sameRaftPair = (a, b) => SAME_RAFT_BASES.some((p) => p.has(a.code) && p.has(b.code));
 // ---- Step 2d (R2): one base shared by two facing lines ---------------------
 for (const c of coords) { if (c.type === 'BED') { delete c.anchorId; delete c.sharedWith; } }
 // Two lines of two rafts already ending on the same point ARE a shared base (a re-run keeps what it made).
 for (const a of coords) {
   if (a.type !== 'BED' || a.sharedWith) continue;
-  const b = coords.find((o) => o !== a && o.type === 'BED' && !o.sharedWith && o.raft !== a.raft && dist(anchorOf(o), anchorOf(a)) < 0.011);
+  const b = coords.find((o) => o !== a && o.type === 'BED' && !o.sharedWith && (o.raft !== a.raft || sameRaftPair(a, o)) && dist(anchorOf(o), anchorOf(a)) < 0.011);
   if (b) { a.sharedWith = b.code; b.sharedWith = a.code; }
 }
 // Repeated until nothing changes: a pair blocked by a neighbouring single anchor may pass once that neighbour is paired.
@@ -1141,6 +1148,7 @@ if (polygons.some((p) => widestArc(p.name).gap > maxArcOf(p.name))) closeOpenArc
 for (const a of coords) {
   if (a.type !== 'BED' || !a.sharedWith || a.code > a.sharedWith) continue;
   const b = coords.find((o) => o.code === a.sharedWith);
+  if (a.raft === b.raft) continue; // a base of two lines of one raft: the midpoint of its cleats is at the raft edge
   const mid = { x: r2((a.xRaft + b.xRaft) / 2), y: r2((a.yRaft + b.yRaft) / 2) };
   if (dist(mid, anchorOf(a)) < 0.5) continue;
   const others = coords.filter((o) => o !== a && o !== b);
@@ -1228,6 +1236,10 @@ for (let i = 0; i < coords.length; i++) {
     if (isTieLine(a) && isTieLine(b)) continue;
     const gap = a.type === 'BED' && b.type === 'BED' ? MIN_BED_GAP : MIN_PILE_GAP;
     if (dist(anchorOf(a), anchorOf(b)) < gap - 1e-6) errors.push(`G4 ${a.code}/${b.code}`);
+    // G5: no lake-bed base under another lake-bed cable (Hồ Chiềng Dong 2026-11-08: DV-003 sat 0,16 m from B1-D39)
+    for (const [p, q] of [[a, b], [b, a]]) {
+      if (p.type === 'BED' && q.type === 'BED' && !isTieLine(p) && !isTieLine(q) && distToSeg(anchorOf(p), cleatOf(q), anchorOf(q)) < MIN_BASE_CLEAR - 1e-6) errors.push(`G5 base of ${p.code} under ${q.code}`);
+    }
   }
 }
 if (new Set(coords.map((c) => c.code)).size !== coords.length) errors.push('duplicate line code');
@@ -1294,7 +1306,7 @@ if (errors.length) {
   console.error(`\n${errors.length} violation(s):\n  ${errors.join('\n  ')}`);
   process.exit(1);
 }
-console.log('\nall invariants hold (C9, G1..G4)');
+console.log('\nall invariants hold (C9, G1..G5)');
 if (!dryRun) {
   fs.writeFileSync(COORDS, JSON.stringify(coords, null, 2) + '\n');
   fs.writeFileSync(PILES, JSON.stringify(piles, null, 2) + '\n');

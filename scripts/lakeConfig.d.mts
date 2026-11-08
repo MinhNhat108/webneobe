@@ -11,6 +11,8 @@ export interface ScriptLake {
   /** Panels of each raft from the drawing; without it the plan total is shared by area. */
   panelsByRaft?: Record<string, number>;
   minPileGap?: number;
+  /** Pairs of line codes of ONE raft kept on one shared lake-bed base (placed by hand). */
+  sameRaftBases?: string[][];
   /** R3: a single base facing a raft without room for a partner is reported, not a violation. */
   singleBaseFacingOk?: boolean;
 }

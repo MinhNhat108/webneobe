@@ -158,6 +158,12 @@ export const LAKES = {
     minPileGap: 8,
     shoreFirst: true,
     raftTies: [],
+    // owner 2026-11-08 (inner 90° corner west of the raft): base DV-003 (B1-D19) sat 0,16 m under cable B1-D39 (planner G5
+    // now forbids it). Fixed by hand: the cleat of B1-D39 moved 5,4 m up its edge, cable on the edge normal (az 212°);
+    // eq. 141,1 -> 142,0 kN, T 156,8 kN unchanged, bases unchanged, storm-lock failure 320 -> 325 kN. Two lines of the
+    // raft on ONE base (planner sameRaftBases) were tried and rejected: D39 + D48 → 10 bases but a 6,75 m base, +3,5 m³,
+    // lock failure 518 kN; + D16 + D08 → 9 bases, 80,6 m³, T 171 kN, +37 m cable, lock failure 523 kN.
+    sameRaftBases: [],
     // table "SỐ TẤM PIN MẶT TRỜI THEO BÈ" of the sheets CT-BE01 / MB-BP-01 (Revit, 2026-11-07): 303 rows, 8 484 panels
     panelsByRaft: { 'BÈ 1': 8484 }
   }

@@ -83,6 +83,13 @@ describe('Hồ Chiềng Dong tab', () => {
     // shore piles at least 8 m apart (lakeConfig minPileGap, owner 07/11: no pile clusters on the spits)
     const sh = MOORING_LINES_V2.filter((q) => q.type === 'SHORE');
     for (const p of sh) for (const q of sh) if (p !== q) expect(Math.hypot(p.xAnchor - q.xAnchor, p.yAnchor - q.yAnchor), `${p.code}/${q.code}`).toBeGreaterThanOrEqual(8 - 0.02);
+    // no lake-bed base under another lake-bed cable (planner G5; owner 08/11: DV-003 sat 0,16 m under B1-D39)
+    const bd = MOORING_LINES_V2.filter((q) => q.type === 'BED');
+    const seg = (px: number, py: number, l: (typeof bd)[number]) => {
+      const dx = l.xAnchor - l.xRaft, dy = l.yAnchor - l.yRaft, t = Math.max(0, Math.min(1, ((px - l.xRaft) * dx + (py - l.yRaft) * dy) / (dx * dx + dy * dy)));
+      return Math.hypot(px - l.xRaft - t * dx, py - l.yRaft - t * dy);
+    };
+    for (const b of bd) for (const l of bd) if (l.anchorId !== b.anchorId) expect(seg(b.xAnchor, b.yAnchor, l), `${b.code} under ${l.code}`).toBeGreaterThanOrEqual(3.5);
     for (const b of bedAnchorsOf()) {
       expect(b.z, b.id).toBeCloseTo(groundAt(b.x, b.y)!, 1);
       expect(b.z, b.id).toBeLessThanOrEqual(MNDB_M - 0.5);

@@ -281,9 +281,9 @@
         {
           "code": "B1-D39",
           "type": "BED",
-          "azimuth_deg": 219.5,
+          "azimuth_deg": 212,
           "span_m": 17.5,
-          "pin_m": 735.58
+          "pin_m": 735.7
         },
         {
           "code": "B1-D40",
@@ -572,7 +572,7 @@
     "shorePilesPerPoint": 2,
     "pileRebarRs_MPa": 435,
     "shorePileLight": {
-      "tension_kN": 88.1,
+      "tension_kN": 87.8,
       "shorePileL_m": 6.5,
       "shoreRebarCount": 6,
       "shoreRebarDia_mm": 28,
@@ -585,7 +585,7 @@
       "setTension_kN": 5,
       "stroke_m": 3,
       "drift_m": 4.9,
-      "maxTension_kN": 320
+      "maxTension_kN": 325
     }
   }
 ]
